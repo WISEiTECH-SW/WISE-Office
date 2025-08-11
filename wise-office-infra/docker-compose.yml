@@ -1,0 +1,34 @@
+version: '3.8'
+
+
+services:
+  database: 
+    container_name: postgres_container
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    volumes:
+      - "C:\\docker_postgresql_data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck: # 컨테이너가 DB 연결을 받을 준비가 되었는지 확인
+      test: ["CMD-SHELL", "pg_isready -U wiseitech -d backoffice"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  # application:
+  #   container_name: backoffice_app
+  #   build: 
+  #     context: ../wise-office-server/backoffice
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     database:
+  #         condition: service_healthy #healthcheck가 정상이 될 때까지 대기
+  #   ports:
+  #     - "8080:8080"
+    
+      

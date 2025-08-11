@@ -1,0 +1,6 @@
+@echo off
+echo stop spring boot server...
+docker stop backoffice_app
+echo remove spring boot container...
+docker rm backoffice_app
+echo complete!
