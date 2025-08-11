@@ -1,4 +1,4 @@
-package kr.co.wise.domain.Project.entity;
+package kr.co.wise.office.domain.Project.entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,8 +19,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import kr.co.wise.domain.attendant.entity.AttendantEntity;
-import kr.co.wise.domain.member.entity.MemberEntity;
+import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
+import kr.co.wise.office.domain.member.entity.MemberEntity;
 
 @Entity
 @Getter

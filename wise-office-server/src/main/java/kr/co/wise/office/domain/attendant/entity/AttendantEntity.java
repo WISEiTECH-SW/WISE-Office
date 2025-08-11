@@ -1,4 +1,4 @@
-package kr.co.wise.domain.attendant.entity;
+package kr.co.wise.office.domain.attendant.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import kr.co.wise.domain.Project.entity.ProjectEntity;
-import kr.co.wise.domain.member.entity.MemberEntity;
+import kr.co.wise.office.domain.Project.entity.ProjectEntity;
+import kr.co.wise.office.domain.member.entity.MemberEntity;
 
 @Entity
 @Getter

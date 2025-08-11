@@ -1,4 +1,4 @@
-package kr.co.wise.domain.member.entity;
+package kr.co.wise.office.domain.member.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import kr.co.wise.domain.Log.entity.LogEntity;
-import kr.co.wise.domain.attendant.entity.AttendantEntity;
-import kr.co.wise.domain.comment.entity.CommentEntity;
+import kr.co.wise.office.domain.Log.entity.LogEntity;
+import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
+import kr.co.wise.office.domain.comment.entity.CommentEntity;
 
 @Entity
 @Getter

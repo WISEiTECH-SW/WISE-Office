@@ -1,4 +1,4 @@
-package kr.co.wise;
+package kr.co.wise.office;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package kr.co.wise;
+package kr.co.wise.office;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

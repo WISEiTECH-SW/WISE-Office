@@ -1,4 +1,4 @@
-package kr.co.wise.domain.comment.entity;
+package kr.co.wise.office.domain.comment.entity;
 
 import java.time.LocalDateTime;
 
@@ -20,8 +20,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import kr.co.wise.domain.Log.entity.LogEntity;
-import kr.co.wise.domain.member.entity.MemberEntity;
+import kr.co.wise.office.domain.Log.entity.LogEntity;
+import kr.co.wise.office.domain.member.entity.MemberEntity;
 
 @Entity
 @Getter

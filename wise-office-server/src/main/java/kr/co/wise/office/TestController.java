@@ -1,4 +1,4 @@
-package kr.co.wise;
+package kr.co.wise.office;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package kr.co.wise.config;
+package kr.co.wise.office.config;
 
 import java.util.List;
 

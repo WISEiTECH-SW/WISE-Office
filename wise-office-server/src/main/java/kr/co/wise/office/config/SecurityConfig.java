@@ -1,4 +1,4 @@
-package kr.co.wise.config;
+package kr.co.wise.office.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
