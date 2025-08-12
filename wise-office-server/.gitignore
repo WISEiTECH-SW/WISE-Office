@@ -39,3 +39,5 @@ out/
 # applicaiton.properties 
 *.env
 *.yml
+
+run.bat
