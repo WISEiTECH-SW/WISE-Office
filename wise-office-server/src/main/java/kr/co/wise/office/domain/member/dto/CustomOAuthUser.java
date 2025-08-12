@@ -11,12 +11,14 @@ public class CustomOAuthUser implements OAuth2User {
     private final String email;
     private final Map<String, Object> attributes;
     private final Collection<? extends GrantedAuthority> authorities;
+    private boolean isExistingMember;
 
 
-    public CustomOAuthUser(Map<String, Object> attributes, Collection<? extends GrantedAuthority> authorities, String email) {
+    public CustomOAuthUser(Map<String, Object> attributes, Collection<? extends GrantedAuthority> authorities, String email, boolean isExistingMember) {
         this.email = email;
         this.attributes = attributes;
         this.authorities = authorities;
+        this.isExistingMember = isExistingMember;
     }
 
 
@@ -36,6 +38,9 @@ public class CustomOAuthUser implements OAuth2User {
     }
 
 
+    public boolean checkExistingMember(){
+        return isExistingMember;
+    }
 
 
 }
