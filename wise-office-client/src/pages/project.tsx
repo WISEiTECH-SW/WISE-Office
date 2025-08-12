@@ -11,21 +11,25 @@ import {
     Pen,
 } from "lucide-react";
 
-interface LogEntry {
-    id: number;
-    title: string;
-    user: string;
-    content: string;
-    date: string;
-    comments: Comment[];
-}
+import { LogEntry } from "@/components/project";
+import { addLog } from "@/components/project";
+import { ProjectParticipants } from "@/components/project";
 
-interface Comment {
-    id: number;
-    user: string;
-    content: string;
-    date: string;
-}
+// interface LogEntry {
+//     id: number;
+//     title: string;
+//     user: string;
+//     content: string;
+//     date: string;
+//     comments: Comment[];
+// }
+
+// interface Comment {
+//     id: number;
+//     user: string;
+//     content: string;
+//     date: string;
+// }
 
 const WiseTechProject = () => {
     const [logs, setLogs] = useState<LogEntry[]>([
@@ -98,11 +102,11 @@ const WiseTechProject = () => {
     const [newComment, setNewComment] = useState("");
 
     const participants = [
+        "USER_01",
         "USER_02",
-        "USER_02",
-        "USER_02",
-        "USER_02",
-        "USER_02",
+        "USER_03",
+        "USER_04",
+        "USER_05",
     ];
 
     const addComment = () => {
@@ -137,10 +141,6 @@ const WiseTechProject = () => {
             });
             setNewComment("");
         }
-    };
-
-    const addLog = () => {
-        // log 생성 메서드
     };
 
     const deleteLog = (id: number) => {
@@ -386,30 +386,7 @@ const WiseTechProject = () => {
 
                     {/* 참여자 Section - Right */}
                     <div className="col-span-3">
-                        <div className="bg-white rounded-lg shadow-sm">
-                            <div className="bg-gray-100 px-4 py-3 rounded-t-lg">
-                                <h3 className="text-lg font-semibold text-gray-800">
-                                    참여자
-                                </h3>
-                            </div>
-                            <div className="p-4">
-                                <div className="space-y-3">
-                                    {participants.map((participant, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex items-center space-x-3"
-                                        >
-                                            <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
-                                                <User className="w-5 h-5 text-white" />
-                                            </div>
-                                            <span className="text-sm font-medium text-gray-800">
-                                                {participant}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                        <ProjectParticipants participants={participants} />
                     </div>
                 </div>
             </div>
