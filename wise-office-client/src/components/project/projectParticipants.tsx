@@ -1,8 +1,6 @@
 import React from "react";
-import ProjectParticipantItem from "./projectParticipantItem";
+import ProjectParticipantItem from "./ProjectParticipantItem";
 
-// 참여자 목록 컴포넌트의 props 타입을 정의합니다.
-// 참여자 이름의 배열을 받습니다.
 interface ProjectParticipantsProps {
     participants: string[];
 }
