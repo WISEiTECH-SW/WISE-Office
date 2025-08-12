@@ -1,10 +1,10 @@
 package kr.co.wise.office.domain.member.service;
 
-import jakarta.transaction.Transactional;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Transactional
 @Service
+@Slf4j
 public class MemberService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
 
@@ -50,8 +50,9 @@ public class MemberService extends DefaultOAuth2UserService {
         providerId = attributes.get("sub").toString();
         email = attributes.get("email").toString();
         username = attributes.get("name").toString();
+        boolean isExistingMember = false;
 
-        //System.out.println("oauth2 login success!! " + username + " email " + email);
+        log.info("oauth2 login success!! " + username + " email " + email);
 
         // DB 조회 -> 있으면 업데이트, 없으면 신규 가입
         Optional<MemberEntity> entity = memberRepository.findByEmail(email);
@@ -60,8 +61,8 @@ public class MemberService extends DefaultOAuth2UserService {
             // role 조회
             role = entity.get().getRoleType().name();
 
-            // TODO : Log 찍는걸로 바꿔야 함
-            //System.out.println("IN DB : " + role + "username : " + entity.get().getName());
+            log.info("IN DB : " + role + "username : " + entity.get().getName());
+            isExistingMember = true;
         } else {
             // 신규 유저 추가
             MemberEntity newMemberEntity = MemberEntity.builder()
@@ -71,13 +72,13 @@ public class MemberService extends DefaultOAuth2UserService {
                     .email(email)
                     .build();
 
-            // TODO : Log 찍는걸로 바꿔야 함
-            //System.out.println("INSERT NEW USER IN DB : " + role + "email : " + email);
+            log.info("INSERT NEW USER IN DB : " + role + "email : " + email);
             memberRepository.save(newMemberEntity);
         }
 
         authorities = List.of(new SimpleGrantedAuthority(role));
-
-        return new CustomOAuthUser(attributes, authorities, email);
+        return new CustomOAuthUser(attributes, authorities, email, isExistingMember);
     }
+
+
 }
