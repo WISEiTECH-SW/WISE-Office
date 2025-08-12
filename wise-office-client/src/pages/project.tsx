@@ -11,6 +11,7 @@ import {
     Pen,
 } from "lucide-react";
 
+import { ProjectDetails, ProjectData } from "@/components/project";
 // import { LogEntry } from "@/components/project";
 import { addLog } from "@/components/project";
 import { ProjectParticipants } from "@/components/project";
@@ -32,6 +33,24 @@ interface Comment {
 }
 
 const WiseTechProject = () => {
+    // project 설명 header
+    const projectData: ProjectData = {
+        title: "Project 1",
+        duration: "2024.01 ~ 2026.12",
+        status: "3차년도",
+        manager: "User_01",
+        participantsCount: 6,
+    };
+
+    const handleEdit = () => {
+        alert("수정 버튼 클릭");
+    };
+
+    const handleDelete = () => {
+        alert("삭제 버튼 클릭");
+    };
+
+    // Log
     const [logs, setLogs] = useState<LogEntry[]>([
         {
             id: 1,
@@ -101,6 +120,7 @@ const WiseTechProject = () => {
     const [selectedLog, setSelectedLog] = useState<LogEntry | null>(logs[0]);
     const [newComment, setNewComment] = useState("");
 
+    //우측 사이드바
     const participants = [
         "USER_01",
         "USER_02",
@@ -109,6 +129,7 @@ const WiseTechProject = () => {
         "USER_05",
     ];
 
+    //댓글
     const addComment = () => {
         if (newComment.trim() && selectedLog) {
             const comment: Comment = {
@@ -143,6 +164,7 @@ const WiseTechProject = () => {
         }
     };
 
+    //로그삭제
     const deleteLog = (id: number) => {
         setLogs(logs.filter((log) => log.id !== id));
         if (selectedLog?.id === id) {
@@ -154,72 +176,11 @@ const WiseTechProject = () => {
         <div className="min-h-screen bg-gray-50">
             <div className="p-6">
                 {/* Project Header */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-                    <div className="flex justify-between items-center mb-4">
-                        <h1 className="text-2xl font-bold text-gray-800">
-                            Project 1
-                        </h1>
-                        <div className="flex gap-2">
-                            <button className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
-                                수정
-                            </button>
-                            <button className="px-4 py-2 bg-gray-500 text-white text-sm rounded hover:bg-gray-600">
-                                삭제
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-4 gap-6">
-                        <div className="flex items-center space-x-3">
-                            <Calendar className="w-5 h-5 text-blue-600" />
-                            <div>
-                                <div className="text-sm font-medium text-gray-600">
-                                    프로젝트 기간
-                                </div>
-                                <div className="text-base font-semibold text-gray-800">
-                                    2024.01 ~ 2026.12
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center space-x-3">
-                            <TrendingUp className="w-5 h-5 text-blue-600" />
-                            <div>
-                                <div className="text-sm font-medium text-gray-600">
-                                    진행 상태
-                                </div>
-                                <div className="text-base font-semibold text-gray-800">
-                                    2차년도
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center space-x-3">
-                            <User className="w-5 h-5 text-blue-600" />
-                            <div>
-                                <div className="text-sm font-medium text-gray-600">
-                                    책임자
-                                </div>
-                                <div className="text-base font-semibold text-gray-800">
-                                    User_01
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center space-x-3">
-                            <Users className="w-5 h-5 text-blue-600" />
-                            <div>
-                                <div className="text-sm font-medium text-gray-600">
-                                    참여인원
-                                </div>
-                                <div className="text-base font-semibold text-gray-800">
-                                    6명
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <ProjectDetails
+                    project={projectData}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                />
                 <div className="grid grid-cols-12 gap-6">
                     {/* LOG List Sidebar - Left */}
                     <div className="col-span-3">

@@ -1,3 +1,11 @@
+export interface ProjectData {
+    title: string;
+    duration: string;
+    status: string;
+    manager: string;
+    participantsCount: number;
+}
+
 export interface LogEntry {
     id: number;
     title: string;
