@@ -1,11 +1,11 @@
-package kr.co.wise.office;
+package kr.co.wise.office.api;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-public class TestController {
+public class HealthCheckController {
     
 
     @GetMapping("/health")

@@ -46,6 +46,9 @@ public class MemberEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "provider_id")
+    private String providerId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "authority")
     private MemberRoleType roleType;
