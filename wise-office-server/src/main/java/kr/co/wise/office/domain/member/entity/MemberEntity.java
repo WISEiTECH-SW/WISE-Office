@@ -46,10 +46,15 @@ public class MemberEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "provider_id")
+    private String providerId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "authority")
     private MemberRoleType roleType;
 
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @OneToMany(mappedBy = "member")
     @Builder.Default
@@ -65,4 +70,8 @@ public class MemberEntity {
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
 
+    public void updateInfo(String username, String imageUrl) {
+        this.name = username;
+        this.imageUrl = imageUrl;
+    }
 }
