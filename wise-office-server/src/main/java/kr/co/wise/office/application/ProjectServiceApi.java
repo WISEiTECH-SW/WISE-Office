@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class ProjectServiceApi {
 
         response.forEach(
                 project ->
-                        project.setAttendant(attendantsName.getOrDefault(project.getProjectId(), new ArrayList<>())));
+                        project.setAttendant(attendantsName.getOrDefault(project.getProjectId(), Collections.emptyList())));
         // list 반환시 정렬 기준 미정
         //response.sort(Comparator.comparingLong(ProjectListResponse::getProjectId).reversed());
 

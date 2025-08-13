@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -24,10 +24,10 @@ public class ProjectService {
     /**
      * 모든 프로젝트와 매니저를 정보를 페이징없이 반환
      */
-     @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<ProjectListResponse> searchAllProjectWithManager(){
         return projectRepository.findAllProjectWithManager()
-                .orElse(new ArrayList<>())
+                .orElse(Collections.emptyList())
                 .stream()
                 .map(ProjectListResponse::loadProjectInfo).toList();
     }
@@ -53,6 +53,7 @@ public class ProjectService {
      * @param projectId 상세 조회할 프로젝트 페이지 번호
      * @param currentUserEmail 현재 로그인 중인 유저의 email
      */
+    @Transactional(readOnly = true)
     public ProjectDetailResponse searchProjectWithManager(long projectId, String currentUserEmail) {
         ProjectEntity projectWithManager = projectRepository.findProjectWithManager(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
