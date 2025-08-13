@@ -30,7 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "프로젝트 생성 API", description = "프로젝트 생성/조회/수정/삭제를 위한 API입니다.")
-@RequestMapping("/api/project")
+@RequestMapping("/api/projects")
 public class ProjectController {
 
     private final ProjectServiceApi projectServiceApi;
