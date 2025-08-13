@@ -86,5 +86,12 @@ public class MemberService extends DefaultOAuth2UserService {
         return new CustomOAuthUser(attributes, authorities, email, isExistingMember);
     }
 
+    public MemberEntity findByEmail(String email) {
+        return memberRepository.findByEmail(email).get();
+    }
+
+    public List<MemberEntity> findByIds(List<Long> attendants) {
+        return memberRepository.findByIds(attendants).orElse(new ArrayList<>());
+    }
 
 }
