@@ -1,5 +1,5 @@
 const addLog = () => {
-    console.log("로그 작성");
+    alert("새 로그 작성");
 };
 
 export { addLog };

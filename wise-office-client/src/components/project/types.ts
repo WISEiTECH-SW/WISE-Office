@@ -6,18 +6,18 @@ export interface ProjectData {
     participantsCount: number;
 }
 
-export interface LogEntry {
+export interface Comment {
+    id: number;
+    user: string;
+    content: string;
+    date: string;
+}
+
+export interface Log {
     id: number;
     title: string;
     user: string;
     content: string;
     date: string;
     comments: Comment[];
-}
-
-export interface Comment {
-    id: number;
-    user: string;
-    content: string;
-    date: string;
 }
