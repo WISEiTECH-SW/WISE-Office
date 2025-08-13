@@ -42,12 +42,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.addCookie(cookie);
 
         if(customOAuthUser.checkExistingMember()){
-            // 로그인 한경우
-            response.sendRedirect("http://localhost:3000/");
+            response.sendRedirect("http://localhost:3000/"); // 로그인 한경우
         }
         else {
-            // 안한경우
-            response.sendRedirect("http://localhost:3000/mypage");
+            // 안한경우 
+            response.sendRedirect("http://localhost:3000/account"); // 로그인을 하지 않은 경우
         }
     }
 }

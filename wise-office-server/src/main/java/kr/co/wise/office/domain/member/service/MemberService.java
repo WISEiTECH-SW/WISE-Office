@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class MemberService extends DefaultOAuth2UserService {
         Map<String, Object> attributes;
         List<GrantedAuthority> authorities;
 
-        String providerId, email, username;
+        String providerId, email, username, imageUrl;
         String role =  MemberRoleType.WORKER.name();
 
         // OAuth2 서버 제공자
@@ -50,9 +51,9 @@ public class MemberService extends DefaultOAuth2UserService {
         providerId = attributes.get("sub").toString();
         email = attributes.get("email").toString();
         username = attributes.get("name").toString();
+        imageUrl = attributes.get("picture").toString();
         boolean isExistingMember = false;
 
-        log.info("oauth2 login success!! " + username + " email " + email);
 
         // DB 조회 -> 있으면 업데이트, 없으면 신규 가입
         Optional<MemberEntity> entity = memberRepository.findByEmail(email);
@@ -61,8 +62,12 @@ public class MemberService extends DefaultOAuth2UserService {
             // role 조회
             role = entity.get().getRoleType().name();
 
+            MemberEntity existingMember = entity.get();
+            existingMember.updateInfo(username, imageUrl);
+
             log.info("IN DB : " + role + "username : " + entity.get().getName());
             isExistingMember = true;
+            memberRepository.save(existingMember);
         } else {
             // 신규 유저 추가
             MemberEntity newMemberEntity = MemberEntity.builder()
@@ -70,6 +75,7 @@ public class MemberService extends DefaultOAuth2UserService {
                     .name(username)
                     .roleType(MemberRoleType.WORKER)
                     .email(email)
+                    .imageUrl(imageUrl)
                     .build();
 
             log.info("INSERT NEW USER IN DB : " + role + "email : " + email);
