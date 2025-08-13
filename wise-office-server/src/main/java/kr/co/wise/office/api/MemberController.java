@@ -19,16 +19,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @Tag(name = "member", description = "회원 조회 관련 API 입니다.")
 @AllArgsConstructor
-@Controller
-@RequestMapping("/api")
+@RestController
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -42,7 +42,7 @@ public class MemberController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     array = @ArraySchema(schema = @Schema(implementation = MemberListResponse.class))))
     })
-    @GetMapping("/members")
+    @GetMapping
     public ResponseEntity<List<MemberListResponse>> viewAllMemberInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal String currentUserEmail
     ) {
@@ -59,7 +59,7 @@ public class MemberController {
                     schema = @Schema(implementation = IsManagerResponse.class))
             ),
     })
-    @GetMapping("is-manager")
+    @GetMapping("/is-manager")
     public ResponseEntity<IsManagerResponse> checkIsManager() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         GrantedAuthority grantedAuthority = authentication.getAuthorities().stream().toList().get(0);
