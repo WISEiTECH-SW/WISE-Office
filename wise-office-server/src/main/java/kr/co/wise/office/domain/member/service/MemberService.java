@@ -1,6 +1,7 @@
 package kr.co.wise.office.domain.member.service;
 
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
+import kr.co.wise.office.domain.member.dto.MemberListResponse;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,12 +88,25 @@ public class MemberService extends DefaultOAuth2UserService {
         return new CustomOAuthUser(attributes, authorities, email, isExistingMember);
     }
 
+    @Transactional(readOnly = true)
     public MemberEntity findByEmail(String email) {
         return memberRepository.findByEmail(email).get();
     }
 
+    @Transactional(readOnly = true)
     public List<MemberEntity> findByIds(List<Long> attendants) {
         return memberRepository.findByIds(attendants).orElse(new ArrayList<>());
     }
+
+    @Transactional(readOnly = true)
+    public List<MemberListResponse> searchAllMemberInfo(String currentUserEmail){
+        List<MemberEntity> members = memberRepository.findAll();
+
+        List<MemberEntity> exceptLoginUser = members.stream().filter(m -> !m.getEmail().equals(currentUserEmail)).toList();
+
+        return exceptLoginUser.stream().map(MemberListResponse::loadMemberInfo).toList();
+    }
+
+
 
 }
