@@ -39,14 +39,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
         if (JWTUtil.isValid(accessToken)) {
 
-            String username = JWTUtil.getUsername(accessToken);
+            String email = JWTUtil.getUsername(accessToken);
             String role = JWTUtil.getRole(accessToken);
 
             List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            Authentication auth = new UsernamePasswordAuthenticationToken(email, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
-
+            filterChain.doFilter(request,response);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
