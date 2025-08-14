@@ -7,7 +7,6 @@ export { default as ProjectLogWriteButton } from "./ProjectLogWriteButton";
 
 // Center
 export { default as ProjectLog } from "./ProjectLog";
-
 // Right-Sidebar
 export { default as ProjectAttendantList } from "./ProjectAttendantList";
 
