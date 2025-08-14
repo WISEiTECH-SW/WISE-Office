@@ -16,16 +16,27 @@ import {
     createCommentToLog,
     deleteCommentFromLog,
 } from "@/lib/project/comment";
+import { getAttendantCount } from "@/lib/common/util";
 
 const WiseTechProject = () => {
-    // 예시 데이터 -> 백에서 데이터 받는 것으로 변경
+    // 예시 데이터 -> 백에서 받는 데이터로 변경 예정
+    //참여자 예시 데이터
+    const data_attendant = [
+        "USER_01",
+        "USER_02",
+        "USER_03",
+        "USER_04",
+        "USER_05",
+        "USER_06",
+    ];
+
     // 프로젝트 정보 예시 데이터
     const data_projectInfo: ProjectData = {
         title: "Project 1",
-        duration: "2024.01 ~ 2026.12",
-        status: "3차년도",
         manager: "User_01",
-        participantsCount: 6,
+        participantsCount: getAttendantCount(data_attendant),
+        start: new Date("2022-01-01"),
+        end: new Date("2026-12-31"),
     };
 
     // 로그 & 댓글 예시 데이터
@@ -101,16 +112,7 @@ const WiseTechProject = () => {
         },
     ]);
 
-    //우측 사이드바 예시 데이터
-    const data_attendant = [
-        "USER_01",
-        "USER_02",
-        "USER_03",
-        "USER_04",
-        "USER_05",
-    ];
-
-    // UI Default 값 설정
+    // UI 초기 값 설정
     const [selectedLog, setSelectedLog] = useState<Log | null>(
         data_logComment[0]
     );
