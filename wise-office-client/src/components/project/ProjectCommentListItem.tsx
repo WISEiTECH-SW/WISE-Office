@@ -2,12 +2,15 @@ import React from "react";
 import { User, XCircle } from "lucide-react";
 import { Comment } from "./types";
 
-interface CommentItemProps {
+interface ProjectCommentListItemProps {
     comment: Comment;
     onDelete: (commentId: number) => void;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, onDelete }) => {
+const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
+    comment,
+    onDelete,
+}) => {
     return (
         <div className="flex gap-3">
             <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
@@ -38,4 +41,4 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onDelete }) => {
     );
 };
 
-export default CommentItem;
+export default ProjectCommentListItem;

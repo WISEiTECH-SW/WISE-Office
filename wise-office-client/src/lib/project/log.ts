@@ -14,7 +14,7 @@ export const createLog = (
     user: string
 ): Log => {
     return {
-        id: Date.now(), // 실제로는 백엔드에서 고유 ID를 부여해야 합니다.
+        id: Date.now(),
         title,
         user,
         content,

@@ -1,11 +1,11 @@
 import React from "react";
 import { User } from "lucide-react";
 
-interface ProjectParticipantItemProps {
+interface ProjectAttendantItemProps {
     name: string;
 }
 
-const ProjectParticipantItem: React.FC<ProjectParticipantItemProps> = ({
+const ProjectAttendantItem: React.FC<ProjectAttendantItemProps> = ({
     name,
 }) => {
     return (
@@ -18,4 +18,4 @@ const ProjectParticipantItem: React.FC<ProjectParticipantItemProps> = ({
     );
 };
 
-export default ProjectParticipantItem;
+export default ProjectAttendantItem;

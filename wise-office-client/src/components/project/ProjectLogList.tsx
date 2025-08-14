@@ -1,5 +1,5 @@
 import React from "react";
-import ProjectLogItem from "./ProjectLogItem";
+import ProjectLogListItem from "./ProjectLogListItem";
 import { Log } from "./types";
 
 interface ProjectLogListProps {
@@ -23,7 +23,7 @@ const ProjectLogList: React.FC<ProjectLogListProps> = ({
 
             <div className="max-h-96 overflow-y-auto">
                 {logs.map((log) => (
-                    <ProjectLogItem
+                    <ProjectLogListItem
                         key={log.id}
                         log={log}
                         isSelected={selectedLog?.id === log.id}
