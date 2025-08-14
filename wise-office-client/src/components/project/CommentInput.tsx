@@ -3,13 +3,13 @@ import { User, Send } from "lucide-react";
 
 interface CommentInputProps {
     value: string;
-    //onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onSubmit: () => void;
 }
 
 const CommentInput: React.FC<CommentInputProps> = ({
     value,
-    //onChange,
+    onChange,
     onSubmit,
 }) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -27,7 +27,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
             <div className="flex-1">
                 <textarea
                     value={value}
-                    //onChange={onChange}
+                    onChange={onChange}
                     onKeyDown={handleKeyDown}
                     placeholder="댓글을 입력하세요..."
                     className="w-full p-3 border border-gray-300 rounded-lg resize-none h-20 text-sm"
