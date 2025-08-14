@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
     ProjectInfo,
@@ -10,10 +10,15 @@ import {
     Log,
 } from "@/components/project";
 
-import { addLog } from "@/lib/project/log";
-import { editProjectInfo, deleteProject } from "@/lib/project/button";
+import { createLog, deleteLog } from "@/lib/project/log";
+import { editProjectInfo, deleteProject } from "@/lib/project/info";
+import {
+    createCommentToLog,
+    deleteCommentFromLog,
+} from "@/lib/project/comment";
 
 const WiseTechProject = () => {
+    // 예시 데이터 -> 백에서 데이터 받는 것으로 변경
     // 프로젝트 정보 예시 데이터
     const projectData: ProjectData = {
         title: "Project 1",
@@ -23,7 +28,7 @@ const WiseTechProject = () => {
         participantsCount: 6,
     };
 
-    // 로그 & 댓글 데이터 예시
+    // 로그 & 댓글 예시 데이터
     const [logs, setLogs] = useState<Log[]>([
         {
             id: 1,
@@ -44,6 +49,12 @@ const WiseTechProject = () => {
                     user: "USER_03",
                     content: "일정 조정이 필요할 것 같습니다.",
                     date: "2025-08-08 17:00",
+                },
+                {
+                    id: 5,
+                    user: "USER_04",
+                    content: "확인했습니다.",
+                    date: "2025-08-08 17:30",
                 },
             ],
         },
@@ -90,10 +101,6 @@ const WiseTechProject = () => {
         },
     ]);
 
-    // 로그, 댓글 혼합 type 설정
-    const [selectedLog, setSelectedLog] = useState<Log | null>(logs[0]);
-    const [newComment, setNewComment] = useState("");
-
     //우측 사이드바 예시 데이터
     const participants = [
         "USER_01",
@@ -103,53 +110,82 @@ const WiseTechProject = () => {
         "USER_05",
     ];
 
-    //댓글 작성 메소드
-    const addComment = () => {
-        if (newComment.trim() && selectedLog) {
-            const comment: Comment = {
-                id: Date.now(),
-                user: "USER_01",
-                content: newComment,
-                date: new Date()
-                    .toLocaleString("ko-KR", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })
-                    .replace(/\. /g, "-")
-                    .replace(".", "")
-                    .replace(", ", " "),
-            };
+    // UI Default 값 설정
+    const [selectedLog, setSelectedLog] = useState<Log | null>(logs[0]);
+    const [newComment, setNewComment] = useState("");
+    useEffect(() => {
+        setNewComment("");
+    }, [selectedLog]);
 
-            const updatedLogs = logs.map((log) =>
-                log.id === selectedLog.id
-                    ? { ...log, comments: [...log.comments, comment] }
-                    : log
-            );
+    // 이벤트 핸들러 (백단 연결, 인가 기능 필요)
+    // 로그 생성 핸들러
+    const handleAddLog = () => {
+        //모달에서 받아야함
+        const newLog = createLog(
+            "Test Create Log",
+            "Test Create Log",
+            "Tester"
+        );
+        setLogs((prevLogs) => [newLog, ...prevLogs]);
+        setSelectedLog(newLog);
+    };
 
+    // 로그 삭제 핸들러
+    const handleDeleteLog = (logId: number) => {
+        if (window.confirm("정말 이 로그를 삭제하시겠습니까?")) {
+            const updatedLogs = deleteLog(logs, logId);
             setLogs(updatedLogs);
-            setSelectedLog({
-                ...selectedLog,
-                comments: [...selectedLog.comments, comment],
-            });
-            setNewComment("");
+
+            if (selectedLog?.id === logId) {
+                setSelectedLog(updatedLogs.length > 0 ? updatedLogs[0] : null);
+            }
         }
     };
 
-    //로그 삭제 메소드
-    const deleteLog = (id: number) => {
-        setLogs(logs.filter((log) => log.id !== id));
-        if (selectedLog?.id === id) {
-            setSelectedLog(logs.find((log) => log.id !== id) || null);
+    // 댓글 생성 핸들러
+    const handleAddComment = () => {
+        if (!selectedLog || newComment.trim() === "") {
+            return;
+        }
+
+        // 백 연결 필요
+        const updatedLogs = createCommentToLog(
+            logs,
+            selectedLog.id,
+            newComment,
+            "Tester"
+        );
+
+        setLogs(updatedLogs);
+        setNewComment("");
+
+        // 선택된 로그 상태를 업데이트하여 즉시 UI에 반영
+        const newlySelectedLog = updatedLogs.find(
+            (log) => log.id === selectedLog.id
+        );
+        if (newlySelectedLog) {
+            setSelectedLog(newlySelectedLog);
+        }
+    };
+
+    // 댓글 삭제 핸들러
+    const handleDeleteComment = (logId: number, commentId: number) => {
+        // 백 연결 필요
+        const updatedLogs = deleteCommentFromLog(logs, logId, commentId);
+        setLogs(updatedLogs);
+
+        const newlySelectedLog = updatedLogs.find(
+            (log) => log.id === selectedLog?.id
+        );
+        if (newlySelectedLog) {
+            setSelectedLog(newlySelectedLog);
         }
     };
 
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="p-6">
-                {/* Project Header */}
+                {/* Project Information */}
                 <ProjectInfo
                     project={projectData}
                     onEdit={editProjectInfo}
@@ -162,10 +198,10 @@ const WiseTechProject = () => {
                             logs={logs}
                             selectedLog={selectedLog}
                             onSelectLog={setSelectedLog}
-                            onDeleteLog={deleteLog}
+                            onDeleteLog={handleDeleteLog}
                         />
                         <div className="mt-2">
-                            <ProjectLogWriteButton onClick={addLog} />
+                            <ProjectLogWriteButton onClick={handleAddLog} />
                         </div>
                     </div>
 
@@ -174,10 +210,11 @@ const WiseTechProject = () => {
                         <ProjectLog
                             selectedLog={selectedLog}
                             newComment={newComment}
-                            // onCommentChange={(e) =>
-                            //     setNewComment(e.target.value)
-                            // }
-                            onAddComment={addComment}
+                            onCommentChange={(e) =>
+                                setNewComment(e.target.value)
+                            }
+                            onAddComment={handleAddComment}
+                            onDeleteComment={handleDeleteComment}
                         />
                     </div>
 
