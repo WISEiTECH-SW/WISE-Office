@@ -11,6 +11,7 @@ import {
 } from "@/components/project";
 
 import { addLog } from "@/lib/project/log";
+import { editProjectInfo, deleteProject } from "@/lib/project/button";
 
 const WiseTechProject = () => {
     // 프로젝트 정보 예시 데이터
@@ -20,15 +21,6 @@ const WiseTechProject = () => {
         status: "3차년도",
         manager: "User_01",
         participantsCount: 6,
-    };
-
-    // 버튼 메소드(임시)
-    const handleEdit = () => {
-        alert("수정 버튼 클릭");
-    };
-
-    const handleDelete = () => {
-        alert("삭제 버튼 클릭");
     };
 
     // 로그 & 댓글 데이터 예시
@@ -160,8 +152,8 @@ const WiseTechProject = () => {
                 {/* Project Header */}
                 <ProjectInfo
                     project={projectData}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
+                    onEdit={editProjectInfo}
+                    onDelete={deleteProject}
                 />
                 <div className="grid grid-cols-12 gap-6">
                     {/* LOG List Sidebar - Left */}
