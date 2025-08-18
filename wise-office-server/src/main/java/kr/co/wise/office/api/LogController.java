@@ -44,6 +44,7 @@ public class LogController {
     })
     public ResponseEntity<List<LogListResponse>> listAllLogs(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+            @PathVariable(value = "projectId") long projectId) {
             @Parameter(description = "로그 조회할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId) {
 
         List<LogListResponse> responses = logServiceApi.getAllLogs(projectId, loginUser.getName());
