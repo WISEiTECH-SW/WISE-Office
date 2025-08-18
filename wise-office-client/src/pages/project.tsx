@@ -11,25 +11,25 @@ import {
     Pen,
 } from "lucide-react";
 
-import { LogEntry } from "@/components/project";
+// import { LogEntry } from "@/components/project";
 import { addLog } from "@/components/project";
 import { ProjectParticipants } from "@/components/project";
 
-// interface LogEntry {
-//     id: number;
-//     title: string;
-//     user: string;
-//     content: string;
-//     date: string;
-//     comments: Comment[];
-// }
+interface LogEntry {
+    id: number;
+    title: string;
+    user: string;
+    content: string;
+    date: string;
+    comments: Comment[];
+}
 
-// interface Comment {
-//     id: number;
-//     user: string;
-//     content: string;
-//     date: string;
-// }
+interface Comment {
+    id: number;
+    user: string;
+    content: string;
+    date: string;
+}
 
 const WiseTechProject = () => {
     const [logs, setLogs] = useState<LogEntry[]>([
