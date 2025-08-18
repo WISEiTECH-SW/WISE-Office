@@ -21,3 +21,9 @@ export interface Log {
     date: string;
     comments: Comment[];
 }
+
+export interface LogInputData {
+    title: string;
+    content: string;
+    timestamp: string;
+}

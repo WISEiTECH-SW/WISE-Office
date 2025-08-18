@@ -5,9 +5,11 @@ import {
     ProjectLogList,
     ProjectLogWriteButton,
     ProjectLog,
+    ProjectLogInput,
     ProjectAttendantList,
     ProjectData,
     Log,
+    LogInputData,
 } from "@/components/project";
 
 import { createLog, deleteLog } from "@/lib/project/log";
@@ -123,12 +125,13 @@ const ProjectPage = () => {
 
     // 이벤트 핸들러 (백단 연결, 인가 기능 필요)
     // 로그 생성 핸들러
-    const handleAddLog = () => {
-        //모달에서 받아야함
+    const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+
+    const handleAddLog = (logInputData: LogInputData) => {
         const newLog = createLog(
-            "Test Create Log",
-            "Test Create Log",
-            "Tester"
+            logInputData.title,
+            logInputData.content,
+            "tester" // user id
         );
         setLogs((prevLogs) => [newLog, ...prevLogs]);
         setSelectedLog(newLog);
@@ -209,7 +212,9 @@ const ProjectPage = () => {
                             onDeleteLog={handleDeleteLog}
                         />
                         <div className="mt-2">
-                            <ProjectLogWriteButton onClick={handleAddLog} />
+                            <ProjectLogWriteButton
+                                onClick={() => setIsLogModalOpen(true)}
+                            />
                         </div>
                     </div>
 
@@ -232,6 +237,12 @@ const ProjectPage = () => {
                     </div>
                 </div>
             </div>
+
+            <ProjectLogInput
+                isOpen={isLogModalOpen}
+                onClose={() => setIsLogModalOpen(false)}
+                onSubmit={handleAddLog}
+            />
         </div>
     );
 };
