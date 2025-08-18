@@ -2,15 +2,14 @@ import React from "react";
 import { Trash2, MessageCircle } from "lucide-react";
 import { Log } from "./types";
 
-// props의 타입을 명확하게 정의
-interface ProjectLogItemProps {
+interface ProjectLogListItemProps {
     log: Log;
     isSelected: boolean;
     onSelect: (log: Log) => void;
     onDelete: (logId: number) => void;
 }
 
-const ProjectLogItem: React.FC<ProjectLogItemProps> = ({
+const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
     log,
     isSelected,
     onSelect,
@@ -49,4 +48,4 @@ const ProjectLogItem: React.FC<ProjectLogItemProps> = ({
     );
 };
 
-export default ProjectLogItem;
+export default ProjectLogListItem;

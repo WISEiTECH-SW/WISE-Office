@@ -1,13 +1,13 @@
 import React from "react";
 import { User, Send } from "lucide-react";
 
-interface CommentInputProps {
+interface ProjectCommentInputProps {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onSubmit: () => void;
 }
 
-const CommentInput: React.FC<CommentInputProps> = ({
+const ProjectCommentInput: React.FC<ProjectCommentInputProps> = ({
     value,
     onChange,
     onSubmit,
@@ -18,7 +18,6 @@ const CommentInput: React.FC<CommentInputProps> = ({
             onSubmit();
         }
     };
-
     return (
         <div className="flex gap-3 mb-6">
             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
@@ -46,4 +45,4 @@ const CommentInput: React.FC<CommentInputProps> = ({
     );
 };
 
-export default CommentInput;
+export default ProjectCommentInput;

@@ -1,11 +1,11 @@
 import React from "react";
 import { Log } from "./types";
 
-interface LogDetailContentProps {
+interface ProjectLogDetailProps {
     log: Log;
 }
 
-const LogDetailContent: React.FC<LogDetailContentProps> = ({ log }) => {
+const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({ log }) => {
     return (
         <>
             <div className="border-b p-6">
@@ -25,4 +25,4 @@ const LogDetailContent: React.FC<LogDetailContentProps> = ({ log }) => {
     );
 };
 
-export default LogDetailContent;
+export default ProjectLogDetail;

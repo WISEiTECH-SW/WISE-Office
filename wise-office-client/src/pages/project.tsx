@@ -5,7 +5,7 @@ import {
     ProjectLogList,
     ProjectLogWriteButton,
     ProjectLog,
-    ProjectParticipants,
+    ProjectAttendantList,
     ProjectData,
     Log,
 } from "@/components/project";
@@ -20,7 +20,7 @@ import {
 const WiseTechProject = () => {
     // 예시 데이터 -> 백에서 데이터 받는 것으로 변경
     // 프로젝트 정보 예시 데이터
-    const projectData: ProjectData = {
+    const data_projectInfo: ProjectData = {
         title: "Project 1",
         duration: "2024.01 ~ 2026.12",
         status: "3차년도",
@@ -29,7 +29,7 @@ const WiseTechProject = () => {
     };
 
     // 로그 & 댓글 예시 데이터
-    const [logs, setLogs] = useState<Log[]>([
+    const [data_logComment, setLogs] = useState<Log[]>([
         {
             id: 1,
             title: "프로젝트 계획서 작성",
@@ -102,7 +102,7 @@ const WiseTechProject = () => {
     ]);
 
     //우측 사이드바 예시 데이터
-    const participants = [
+    const data_attendant = [
         "USER_01",
         "USER_02",
         "USER_03",
@@ -111,7 +111,9 @@ const WiseTechProject = () => {
     ];
 
     // UI Default 값 설정
-    const [selectedLog, setSelectedLog] = useState<Log | null>(logs[0]);
+    const [selectedLog, setSelectedLog] = useState<Log | null>(
+        data_logComment[0]
+    );
     const [newComment, setNewComment] = useState("");
     useEffect(() => {
         setNewComment("");
@@ -133,7 +135,7 @@ const WiseTechProject = () => {
     // 로그 삭제 핸들러
     const handleDeleteLog = (logId: number) => {
         if (window.confirm("정말 이 로그를 삭제하시겠습니까?")) {
-            const updatedLogs = deleteLog(logs, logId);
+            const updatedLogs = deleteLog(data_logComment, logId);
             setLogs(updatedLogs);
 
             if (selectedLog?.id === logId) {
@@ -150,7 +152,7 @@ const WiseTechProject = () => {
 
         // 백 연결 필요
         const updatedLogs = createCommentToLog(
-            logs,
+            data_logComment,
             selectedLog.id,
             newComment,
             "Tester"
@@ -171,7 +173,11 @@ const WiseTechProject = () => {
     // 댓글 삭제 핸들러
     const handleDeleteComment = (logId: number, commentId: number) => {
         // 백 연결 필요
-        const updatedLogs = deleteCommentFromLog(logs, logId, commentId);
+        const updatedLogs = deleteCommentFromLog(
+            data_logComment,
+            logId,
+            commentId
+        );
         setLogs(updatedLogs);
 
         const newlySelectedLog = updatedLogs.find(
@@ -187,15 +193,15 @@ const WiseTechProject = () => {
             <div className="p-6">
                 {/* Project Information */}
                 <ProjectInfo
-                    project={projectData}
+                    project={data_projectInfo}
                     onEdit={editProjectInfo}
                     onDelete={deleteProject}
                 />
                 <div className="grid grid-cols-12 gap-6">
-                    {/* LOG List Sidebar - Left */}
+                    {/* LOG List - Left */}
                     <div className="col-span-3">
                         <ProjectLogList
-                            logs={logs}
+                            logs={data_logComment}
                             selectedLog={selectedLog}
                             onSelectLog={setSelectedLog}
                             onDeleteLog={handleDeleteLog}
@@ -205,7 +211,7 @@ const WiseTechProject = () => {
                         </div>
                     </div>
 
-                    {/* LOG Detail - Center */}
+                    {/* LOG & Comment - Center */}
                     <div className="col-span-6">
                         <ProjectLog
                             selectedLog={selectedLog}
@@ -218,9 +224,9 @@ const WiseTechProject = () => {
                         />
                     </div>
 
-                    {/* 참여자 Section - Right */}
+                    {/* Attendant List - Right */}
                     <div className="col-span-3">
-                        <ProjectParticipants participants={participants} />
+                        <ProjectAttendantList attendants={data_attendant} />
                     </div>
                 </div>
             </div>

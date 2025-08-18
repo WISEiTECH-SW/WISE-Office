@@ -1,9 +1,9 @@
 import React from "react";
-import CommentInput from "./CommentInput";
-import CommentItem from "./CommentItem";
 import { Comment } from "./types";
+import ProjectCommentListItem from "./ProjectCommentListItem";
+import ProjectCommentInput from "./ProjectCommentInput";
 
-interface LogCommentSectionProps {
+interface ProjectCommentListProps {
     comments: Comment[];
     newComment: string;
     onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -11,7 +11,7 @@ interface LogCommentSectionProps {
     onDeleteComment: (commentId: number) => void;
 }
 
-const LogCommentSection: React.FC<LogCommentSectionProps> = ({
+const ProjectCommentList: React.FC<ProjectCommentListProps> = ({
     comments,
     newComment,
     onCommentChange,
@@ -23,17 +23,17 @@ const LogCommentSection: React.FC<LogCommentSectionProps> = ({
             <h3 className="font-semibold text-gray-800 mb-4">
                 댓글 ({comments.length})
             </h3>
-            <CommentInput
+            <ProjectCommentInput
                 value={newComment}
                 onChange={onCommentChange}
                 onSubmit={onAddComment}
             />
             <div className="space-y-4">
                 {comments.map((comment) => (
-                    <CommentItem
+                    <ProjectCommentListItem
                         key={comment.id}
                         comment={comment}
-                        onDelete={() => onDeleteComment(comment.id)} // onDeleteComment 함수를 전달합니다.
+                        onDelete={() => onDeleteComment(comment.id)}
                     />
                 ))}
             </div>
@@ -41,4 +41,4 @@ const LogCommentSection: React.FC<LogCommentSectionProps> = ({
     );
 };
 
-export default LogCommentSection;
+export default ProjectCommentList;
