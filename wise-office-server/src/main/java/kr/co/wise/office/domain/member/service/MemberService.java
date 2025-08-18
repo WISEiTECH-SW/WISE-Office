@@ -1,7 +1,11 @@
 package kr.co.wise.office.domain.member.service;
 
+import kr.co.wise.office.domain.Project.Service.ProjectService;
+import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
+import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import kr.co.wise.office.domain.member.dto.MemberListResponse;
+import kr.co.wise.office.domain.member.dto.MyAccountResponse;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
@@ -24,9 +28,11 @@ import java.util.Optional;
 @Slf4j
 public class MemberService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
+    private final AttendantService attendantService;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, AttendantService attendantService) {
         this.memberRepository = memberRepository;
+        this.attendantService = attendantService;
     }
 
     /**
@@ -44,7 +50,7 @@ public class MemberService extends DefaultOAuth2UserService {
         List<GrantedAuthority> authorities;
 
         String providerId, email, username, imageUrl;
-        String role =  MemberRoleType.WORKER.name();
+        String role = MemberRoleType.WORKER.name();
 
         // OAuth2 서버 제공자
         String registrationId = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
@@ -56,10 +62,9 @@ public class MemberService extends DefaultOAuth2UserService {
         imageUrl = attributes.get("picture").toString();
         boolean isExistingMember = false;
 
-
         // DB 조회 -> 있으면 업데이트, 없으면 신규 가입
         Optional<MemberEntity> entity = memberRepository.findByEmail(email);
-        //존재하는 경우
+        // 존재하는 경우
         if (entity.isPresent()) {
             // role 조회
             role = entity.get().getRoleType().name();
@@ -99,14 +104,22 @@ public class MemberService extends DefaultOAuth2UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberListResponse> searchAllMemberInfo(String currentUserEmail){
+    public List<MemberListResponse> searchAllMemberInfo(String currentUserEmail) {
         List<MemberEntity> members = memberRepository.findAll();
 
-        List<MemberEntity> exceptLoginUser = members.stream().filter(m -> !m.getEmail().equals(currentUserEmail)).toList();
+        List<MemberEntity> exceptLoginUser = members.stream().filter(m -> !m.getEmail().equals(currentUserEmail))
+                .toList();
 
         return exceptLoginUser.stream().map(MemberListResponse::loadMemberInfo).toList();
     }
 
-
+    @Transactional(readOnly = true)
+    public MyAccountResponse getMyAccountInfo(String currentUserEmail) {
+        MemberEntity account = memberRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new RuntimeException("해당 이메일로 회원을 찾을 수 없습니다." + currentUserEmail));
+        MyAccountResponse response = MyAccountResponse.loadMyAccountInfo(account,
+                attendantService.getProjectsByAttendants(account));
+        return response;
+    }
 
 }

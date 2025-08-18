@@ -5,6 +5,7 @@ import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.Project.repository.ProjectRepository;
+import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.service.MemberService;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class ProjectService {
      * 모든 프로젝트와 매니저를 정보를 페이징없이 반환
      */
     @Transactional(readOnly = true)
-    public List<ProjectListResponse> searchAllProjectWithManager(){
+    public List<ProjectListResponse> searchAllProjectWithManager() {
         return projectRepository.findAllProjectWithManager()
                 .orElse(Collections.emptyList())
                 .stream()
@@ -50,7 +51,7 @@ public class ProjectService {
     }
 
     /**
-     * @param projectId 상세 조회할 프로젝트 페이지 번호
+     * @param projectId        상세 조회할 프로젝트 페이지 번호
      * @param currentUserEmail 현재 로그인 중인 유저의 email
      */
     @Transactional(readOnly = true)
@@ -60,7 +61,7 @@ public class ProjectService {
 
         ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
 
-        if(!currentUserEmail.equals("anonymousUser")){
+        if (!currentUserEmail.equals("anonymousUser")) {
             MemberEntity loginUser = memberService.findByEmail(currentUserEmail);
             response.setCanModify(projectWithManager.getMember().getId().equals(loginUser.getId()));
         }
