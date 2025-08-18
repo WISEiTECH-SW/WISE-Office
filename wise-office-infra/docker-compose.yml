@@ -14,6 +14,8 @@ services:
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            TZ: Asia/Seoul
+            PGTZ: Asia/Seoul
         healthcheck: # 컨테이너가 DB 연결을 받을 준비가 되었는지 확인
             test: ["CMD-SHELL", "pg_isready -U wiseitech -d backoffice"]
             interval: 10s
