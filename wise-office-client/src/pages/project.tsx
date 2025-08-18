@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { User, Trash2, Plus, Send, MessageCircle, Pen } from "lucide-react";
 
-import { ProjectInfo, ProjectData } from "@/components/project";
 import {
+    ProjectInfo,
     ProjectLogList,
     ProjectLogWriteButton,
+    ProjectLog,
+    ProjectParticipants,
+    ProjectData,
     Log,
 } from "@/components/project";
-import { addLog } from "@/components/project";
-import { ProjectParticipants } from "@/components/project";
+
+import { addLog } from "@/lib/project/log";
 
 const WiseTechProject = () => {
     // 프로젝트 정보 예시 데이터
@@ -177,103 +179,14 @@ const WiseTechProject = () => {
 
                     {/* LOG Detail - Center */}
                     <div className="col-span-6">
-                        {selectedLog ? (
-                            <div className="bg-white rounded-lg shadow-sm">
-                                {/* Log Header */}
-                                <div className="border-b p-6">
-                                    <h2 className="text-xl font-bold text-gray-800 mb-2">
-                                        {selectedLog.title}
-                                    </h2>
-                                    <div className="flex items-center text-sm text-gray-500">
-                                        <span className="font-medium">
-                                            {selectedLog.user}
-                                        </span>
-                                        <span className="mx-2">•</span>
-                                        <span>{selectedLog.date}</span>
-                                    </div>
-                                </div>
-
-                                {/* Log Content */}
-                                <div className="p-6 border-b">
-                                    <p className="text-gray-700 leading-relaxed">
-                                        {selectedLog.content}
-                                    </p>
-                                </div>
-
-                                {/* Comments Section */}
-                                <div className="p-6">
-                                    <h3 className="font-semibold text-gray-800 mb-4">
-                                        댓글 ({selectedLog.comments.length})
-                                    </h3>
-
-                                    {/* Comment Input */}
-                                    <div className="flex gap-3 mb-6">
-                                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                                            <User className="w-4 h-4 text-white" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <textarea
-                                                value={newComment}
-                                                onChange={(e) =>
-                                                    setNewComment(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                placeholder="댓글을 입력하세요..."
-                                                className="w-full p-3 border border-gray-300 rounded-lg resize-none h-20 text-sm"
-                                            />
-                                            <div className="flex justify-end mt-2">
-                                                <button
-                                                    onClick={addComment}
-                                                    className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center gap-1"
-                                                >
-                                                    <Send className="w-4 h-4" />
-                                                    댓글 작성
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Comments List */}
-                                    <div className="space-y-4">
-                                        {selectedLog.comments.map((comment) => (
-                                            <div
-                                                key={comment.id}
-                                                className="flex gap-3"
-                                            >
-                                                <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-                                                    <User className="w-4 h-4 text-white" />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <div className="bg-gray-50 rounded-lg p-3">
-                                                        <div className="flex items-center justify-between mb-1">
-                                                            <span className="font-medium text-sm text-gray-800">
-                                                                {comment.user}
-                                                            </span>
-                                                            <span className="text-xs text-gray-500">
-                                                                {comment.date}
-                                                            </span>
-                                                        </div>
-                                                        <p className="text-sm text-gray-700">
-                                                            {comment.content}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-                                <div className="text-gray-400 mb-2">
-                                    <MessageCircle className="w-16 h-16 mx-auto" />
-                                </div>
-                                <p className="text-gray-500">
-                                    로그를 선택해주세요
-                                </p>
-                            </div>
-                        )}
+                        <ProjectLog
+                            selectedLog={selectedLog}
+                            newComment={newComment}
+                            // onCommentChange={(e) =>
+                            //     setNewComment(e.target.value)
+                            // }
+                            onAddComment={addComment}
+                        />
                     </div>
 
                     {/* 참여자 Section - Right */}
