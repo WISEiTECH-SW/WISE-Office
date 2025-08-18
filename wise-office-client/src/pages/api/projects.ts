@@ -5,7 +5,8 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const server = process.env.SERVER_URL!;
-    const backendUrl = `${server}/api/projects`;
+    const backendUrl = `${server}/api/v2/projects`;
+    console.log("[proxy] : ", backendUrl);
 
     try {
         const r = await fetch(backendUrl, {

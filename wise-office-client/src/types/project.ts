@@ -1,7 +1,7 @@
 export type ISODate = `${number}-${number}-${number}`;
 
 export interface Project {
-    member_pk: number;
+    projectId: number;
     projectTitle: string;
     start: ISODate;
     end: ISODate;
