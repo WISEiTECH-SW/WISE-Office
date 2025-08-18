@@ -18,7 +18,7 @@ import {
 } from "@/lib/project/comment";
 import { getAttendantCount } from "@/lib/common/util";
 
-const WiseTechProject = () => {
+const ProjectPage = () => {
     // 예시 데이터 -> 백에서 받는 데이터로 변경 예정
     //참여자 예시 데이터
     const data_attendant = [
@@ -236,4 +236,4 @@ const WiseTechProject = () => {
     );
 };
 
-export default WiseTechProject;
+export default ProjectPage;
