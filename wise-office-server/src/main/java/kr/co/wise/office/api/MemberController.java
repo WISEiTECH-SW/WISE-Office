@@ -68,8 +68,7 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity<MyAccountResponse> viewMyAccount(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
-        System.out.println(
-                "=== 로그인된 사용자 정보: " + memberService.getMyAccountInfo(loginUser.getName()));
+        log.info("=== 로그인된 사용자 정보: " + memberService.getMyAccountInfo(loginUser.getName()));
         return ResponseEntity.status(HttpStatus.OK).body(memberService.getMyAccountInfo(loginUser.getName()));
     }
 }
