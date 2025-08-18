@@ -145,7 +145,9 @@ public class AttendantService {
                 .orElse(Collections.emptyList());
 
         List<ProjectEntity> projects = attendants.stream().map(AttendantEntity::getProject).toList();
-        return projects.stream()
-                .map(ProjectListResponse::loadProjectInfo).toList();
+        List<ProjectListResponse> response = projects.stream().map(ProjectListResponse::loadProjectInfo).toList();
+
+        getAttendantsNameV2(response);
+        return response;
     }
 }
