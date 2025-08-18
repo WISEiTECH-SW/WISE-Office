@@ -21,6 +21,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberService memberService;
 
+    private static final String NOT_FOUND_PROJECT = "존재하지 않는 프로젝트입니다.";
+
     /**
      * 모든 프로젝트와 매니저를 정보를 페이징없이 반환
      */
@@ -71,7 +73,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public ProjectDetailResponse searchProjectWithManagerV2(long projectId) {
         ProjectEntity projectWithManager = projectRepository.findById(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_PROJECT));
 
         ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
 
@@ -79,4 +81,7 @@ public class ProjectService {
     }
 
 
+    public ProjectEntity findById(long projectId) {
+        return projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException((NOT_FOUND_PROJECT)));
+    }
 }

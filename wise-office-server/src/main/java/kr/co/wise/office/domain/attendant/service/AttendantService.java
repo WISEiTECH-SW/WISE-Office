@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class AttendantService {
 
+    private static final String NOT_FOUND_ATTENDANT = "존재하지 않는 참여자입니다.";
+
     private final AttendantRepository attendantRepository;
 
     public void makeAttendants(List<MemberEntity> attendants, ProjectEntity project) {
@@ -149,5 +151,9 @@ public class AttendantService {
 
         getAttendantsNameV2(response);
         return response;
+    }
+
+    public AttendantEntity validateParticipatingProject(MemberEntity loginUser, ProjectEntity project) {
+        return attendantRepository.findByMemberAndProject(loginUser, project).orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_ATTENDANT));
     }
 }
