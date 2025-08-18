@@ -39,25 +39,21 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
             </div>
             <div className="grid grid-cols-4 gap-6">
                 <ProjectInfoItem
-                    // lucide-react 컴포넌트를 직접 전달
                     icon={<Calendar className="w-5 h-5 text-blue-600" />}
                     label="프로젝트 기간"
                     value={project.duration}
                 />
                 <ProjectInfoItem
-                    // lucide-react 컴포넌트를 직접 전달
                     icon={<TrendingUp className="w-5 h-5 text-blue-600" />}
                     label="진행 상태"
                     value={project.status}
                 />
                 <ProjectInfoItem
-                    // lucide-react 컴포넌트를 직접 전달
                     icon={<User className="w-5 h-5 text-blue-600" />}
                     label="책임자"
                     value={project.manager}
                 />
                 <ProjectInfoItem
-                    // lucide-react 컴포넌트를 직접 전달
                     icon={<Users className="w-5 h-5 text-blue-600" />}
                     label="참여인원"
                     value={`${project.participantsCount}명`}

@@ -1,39 +1,17 @@
 import React, { useState } from "react";
-import {
-    Calendar,
-    TrendingUp,
-    User,
-    Users,
-    Trash2,
-    Plus,
-    Send,
-    MessageCircle,
-    Pen,
-} from "lucide-react";
+import { User, Trash2, Plus, Send, MessageCircle, Pen } from "lucide-react";
 
-import { ProjectDetails, ProjectData } from "@/components/project";
-// import { LogEntry } from "@/components/project";
+import { ProjectInfo, ProjectData } from "@/components/project";
+import {
+    ProjectLogList,
+    ProjectLogWriteButton,
+    Log,
+} from "@/components/project";
 import { addLog } from "@/components/project";
 import { ProjectParticipants } from "@/components/project";
 
-interface LogEntry {
-    id: number;
-    title: string;
-    user: string;
-    content: string;
-    date: string;
-    comments: Comment[];
-}
-
-interface Comment {
-    id: number;
-    user: string;
-    content: string;
-    date: string;
-}
-
 const WiseTechProject = () => {
-    // project 설명 header
+    // 프로젝트 정보 예시 데이터
     const projectData: ProjectData = {
         title: "Project 1",
         duration: "2024.01 ~ 2026.12",
@@ -42,6 +20,7 @@ const WiseTechProject = () => {
         participantsCount: 6,
     };
 
+    // 버튼 메소드(임시)
     const handleEdit = () => {
         alert("수정 버튼 클릭");
     };
@@ -50,8 +29,8 @@ const WiseTechProject = () => {
         alert("삭제 버튼 클릭");
     };
 
-    // Log
-    const [logs, setLogs] = useState<LogEntry[]>([
+    // 로그 & 댓글 데이터 예시
+    const [logs, setLogs] = useState<Log[]>([
         {
             id: 1,
             title: "프로젝트 계획서 작성",
@@ -117,10 +96,11 @@ const WiseTechProject = () => {
         },
     ]);
 
-    const [selectedLog, setSelectedLog] = useState<LogEntry | null>(logs[0]);
+    // 로그, 댓글 혼합 type 설정
+    const [selectedLog, setSelectedLog] = useState<Log | null>(logs[0]);
     const [newComment, setNewComment] = useState("");
 
-    //우측 사이드바
+    //우측 사이드바 예시 데이터
     const participants = [
         "USER_01",
         "USER_02",
@@ -129,7 +109,7 @@ const WiseTechProject = () => {
         "USER_05",
     ];
 
-    //댓글
+    //댓글 작성 메소드
     const addComment = () => {
         if (newComment.trim() && selectedLog) {
             const comment: Comment = {
@@ -164,7 +144,7 @@ const WiseTechProject = () => {
         }
     };
 
-    //로그삭제
+    //로그 삭제 메소드
     const deleteLog = (id: number) => {
         setLogs(logs.filter((log) => log.id !== id));
         if (selectedLog?.id === id) {
@@ -176,7 +156,7 @@ const WiseTechProject = () => {
         <div className="min-h-screen bg-gray-50">
             <div className="p-6">
                 {/* Project Header */}
-                <ProjectDetails
+                <ProjectInfo
                     project={projectData}
                     onEdit={handleEdit}
                     onDelete={handleDelete}
@@ -184,63 +164,14 @@ const WiseTechProject = () => {
                 <div className="grid grid-cols-12 gap-6">
                     {/* LOG List Sidebar - Left */}
                     <div className="col-span-3">
-                        <div className="bg-white rounded-lg shadow-sm">
-                            <div className="bg-gray-100 px-4 py-3 rounded-t-lg flex justify-between items-center">
-                                <h2 className="text-lg font-semibold text-gray-800">
-                                    LOG
-                                </h2>
-                                <button className="text-blue-600 hover:text-blue-800">
-                                    <Plus className="w-5 h-5" />
-                                </button>
-                            </div>
-
-                            <div className="max-h-96 overflow-y-auto">
-                                {logs.map((log) => (
-                                    <div
-                                        key={log.id}
-                                        onClick={() => setSelectedLog(log)}
-                                        className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
-                                            selectedLog?.id === log.id
-                                                ? "bg-blue-50 border-l-4 border-l-blue-500"
-                                                : ""
-                                        }`}
-                                    >
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="font-medium text-sm text-gray-800 line-clamp-2">
-                                                {log.title}
-                                            </h3>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    deleteLog(log.id);
-                                                }}
-                                                className="text-gray-400 hover:text-red-500 ml-2"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                        <div className="text-xs text-gray-500 mb-1">
-                                            {log.user}
-                                        </div>
-                                        <div className="text-xs text-gray-400">
-                                            {log.date}
-                                        </div>
-                                        <div className="flex items-center mt-2 text-xs text-gray-500">
-                                            <MessageCircle className="w-3 h-3 mr-1" />
-                                            {log.comments.length}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="flex justify-center mt-2">
-                            <button
-                                onClick={addLog}
-                                className="w-full py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center justify-center gap-1"
-                            >
-                                <Pen className="w-4 h-4" />
-                                로그 작성
-                            </button>
+                        <ProjectLogList
+                            logs={logs}
+                            selectedLog={selectedLog}
+                            onSelectLog={setSelectedLog}
+                            onDeleteLog={deleteLog}
+                        />
+                        <div className="mt-2">
+                            <ProjectLogWriteButton onClick={addLog} />
                         </div>
                     </div>
 
