@@ -1,6 +1,6 @@
 import React from "react";
 import ProjectInfoItem from "./ProjectInfoItem";
-import { ProjectData } from "./types";
+import { ProjectData } from "@/components/project/types";
 import { Calendar, TrendingUp, User, Users } from "lucide-react";
 import {
     calculateProjectDuration,

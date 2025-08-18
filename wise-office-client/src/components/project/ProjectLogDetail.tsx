@@ -1,5 +1,5 @@
 import React from "react";
-import { Log } from "./types";
+import { Log } from "@/components/project/types";
 
 interface ProjectLogDetailProps {
     log: Log;

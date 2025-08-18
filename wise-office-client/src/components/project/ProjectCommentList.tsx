@@ -1,5 +1,5 @@
 import React from "react";
-import { Comment } from "./types";
+import { Comment } from "@/components/project/types";
 import ProjectCommentListItem from "./ProjectCommentListItem";
 import ProjectCommentInput from "./ProjectCommentInput";
 

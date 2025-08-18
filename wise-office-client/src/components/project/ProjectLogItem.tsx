@@ -1,6 +1,6 @@
 import React from "react";
 import { Trash2, MessageCircle } from "lucide-react";
-import { Log } from "./types";
+import { Log } from "@/components/project/types";
 
 // props의 타입을 명확하게 정의
 interface ProjectLogItemProps {

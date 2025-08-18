@@ -1,6 +1,6 @@
 import React from "react";
 import ProjectLogListItem from "./ProjectLogListItem";
-import { Log } from "./types";
+import { Log } from "@/components/project/types";
 
 interface ProjectLogListProps {
     logs: Log[];

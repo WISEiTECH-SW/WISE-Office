@@ -1,6 +1,6 @@
 import React from "react";
 import { Trash2, MessageCircle } from "lucide-react";
-import { Log } from "./types";
+import { Log } from "@/components/project/types";
 
 interface ProjectLogListItemProps {
     log: Log;

@@ -1,6 +1,6 @@
 import React from "react";
 import { User, XCircle } from "lucide-react";
-import { Comment } from "./types";
+import { Comment } from "@/components/project/types";
 
 interface ProjectCommentListItemProps {
     comment: Comment;
