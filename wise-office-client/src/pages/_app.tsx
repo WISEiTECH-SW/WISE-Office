@@ -2,6 +2,9 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import LoginButton from "@/components/LoginButton";
 
+import { User } from "lucide-react";
+const logo = "logo.png";
+
 export default function MyApp({ Component, pageProps }: AppProps) {
     return (
         <div className="min-h-screen flex flex-col">

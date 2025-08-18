@@ -2,6 +2,8 @@ export interface ProjectData {
     title: string;
     manager: string;
     participantsCount: number;
+    start: Date;
+    end: Date;
 }
 
 export interface Comment {
