@@ -1,10 +1,8 @@
 import React from "react";
 import ProjectInfoItem from "./ProjectInfoItem";
-import { ProjectData } from "./types"; // ProjectData 인터페이스를 import
-// lucide-react에서 필요한 아이콘들을 import 합니다.
+import { ProjectData } from "./types";
 import { Calendar, TrendingUp, User, Users } from "lucide-react";
 
-// 컴포넌트의 props 타입을 정의합니다.
 interface ProjectDetailsProps {
     project: ProjectData;
     onEdit?: () => void;

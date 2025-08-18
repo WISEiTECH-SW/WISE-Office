@@ -7,15 +7,17 @@ import LogCommentSection from "./LogCommentSection";
 interface ProjectLogDetailProps {
     selectedLog: Log | null;
     newComment: string;
-    //onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onAddComment: () => void;
+    onDeleteComment: (logId: number, commentId: number) => void;
 }
 
 const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
     selectedLog,
     newComment,
-    //onCommentChange,
+    onCommentChange,
     onAddComment,
+    onDeleteComment,
 }) => {
     if (!selectedLog) {
         return (
@@ -34,8 +36,11 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
             <LogCommentSection
                 comments={selectedLog.comments}
                 newComment={newComment}
-                //onCommentChange={onCommentChange}
+                onCommentChange={onCommentChange}
                 onAddComment={onAddComment}
+                onDeleteComment={(commentId) =>
+                    onDeleteComment(selectedLog.id, commentId)
+                }
             />
         </div>
     );
