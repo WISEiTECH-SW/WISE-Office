@@ -8,8 +8,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import kr.co.wise.office.domain.member.dto.IsManagerResponse;
 import kr.co.wise.office.domain.member.dto.MemberListResponse;
+import kr.co.wise.office.domain.member.dto.MyAccountResponse;
 import kr.co.wise.office.domain.member.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,31 +36,19 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(
-            summary = "전체 멤버 정보 조회",
-            description = "모든 회원의 직급, 계급, 이름, PK 값을 반환합니다, 현재 로그인 중인 사람은 반환되지 않습니다."
-    )
+    @Operation(summary = "전체 멤버 정보 조회", description = "모든 회원의 직급, 계급, 이름, PK 값을 반환합니다, 현재 로그인 중인 사람은 반환되지 않습니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "멤버 정보 조회 성공",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = MemberListResponse.class))))
+            @ApiResponse(responseCode = "200", description = "멤버 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = MemberListResponse.class))))
     })
     @GetMapping
     public ResponseEntity<List<MemberListResponse>> viewAllMemberInfo(
-            @Parameter(hidden = true) @AuthenticationPrincipal String currentUserEmail
-    ) {
+            @Parameter(hidden = true) @AuthenticationPrincipal String currentUserEmail) {
         return ResponseEntity.status(HttpStatus.OK).body(memberService.searchAllMemberInfo(currentUserEmail));
     }
 
-    @Operation(
-            summary = "매니저 권한 확인",
-            description = "현재 로그인한 사용자가 매니저 권한(ROLE_MANAGER)을 가지고 있는지 여부를 반환합니다."
-    )
+    @Operation(summary = "매니저 권한 확인", description = "현재 로그인한 사용자가 매니저 권한(ROLE_MANAGER)을 가지고 있는지 여부를 반환합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "body의 isManager 값이 true면 Manager, false면 WORKER",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = IsManagerResponse.class))
-            ),
+            @ApiResponse(responseCode = "200", description = "body의 isManager 값이 true면 Manager, false면 WORKER", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = IsManagerResponse.class))),
     })
     @GetMapping("/is-manager")
     public ResponseEntity<IsManagerResponse> checkIsManager() {
@@ -67,5 +58,16 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(new IsManagerResponse(isManager));
     }
 
-
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @Operation(summary = "마이페이지 정보 조회", description = "현재 로그인한 사용자의 세부 정보를 반환합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "마이페이지 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = MyAccountResponse.class))),
+    })
+    @GetMapping("/me")
+    public ResponseEntity<MyAccountResponse> viewMyAccount(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser user) {
+        System.out.println(
+                "=== 로그인된 사용자 정보: " + memberService.getMyAccountInfo(user.getName()));
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMyAccountInfo(user.getName()));
+    }
 }

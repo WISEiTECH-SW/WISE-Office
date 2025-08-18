@@ -1,5 +1,6 @@
 package kr.co.wise.office.domain.attendant.service;
 
+import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.attendant.repository.AttendantRepository;
@@ -7,7 +8,6 @@ import kr.co.wise.office.domain.member.entity.MemberEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +32,9 @@ public class AttendantService {
         attendantRepository.saveAll(entities);
     }
 
-
     public Map<Long, List<String>> getAttendantsName(List<Long> projectIds) {
-        List<AttendantEntity> allWithMemberAndProject = attendantRepository.findAllWithMemberAndProject(projectIds)
+        List<AttendantEntity> allWithMemberAndProject = attendantRepository
+                .findAllWithMemberAndProject(projectIds)
                 .orElse(Collections.emptyList());
 
         return allWithMemberAndProject.stream()
@@ -44,9 +44,16 @@ public class AttendantService {
                         // Value 설정 => List<String>
                         Collectors.mapping(
                                 attendant -> attendant.getMember().getName(),
-                                Collectors.toList()
-                        )
-                ));
+                                Collectors.toList())));
+    }
+
+    public List<ProjectListResponse> getProjectsByAttendants(MemberEntity loginUser) {
+        List<AttendantEntity> attendants = attendantRepository.findAllByMemberId(loginUser.getId())
+                .orElse(Collections.emptyList());
+
+        List<ProjectEntity> projects = attendants.stream().map(AttendantEntity::getProject).toList();
+        return projects.stream()
+                .map(ProjectListResponse::loadProjectInfo).toList();
     }
 
 }
