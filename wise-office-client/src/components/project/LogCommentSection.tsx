@@ -6,14 +6,14 @@ import { Comment } from "./types";
 interface LogCommentSectionProps {
     comments: Comment[];
     newComment: string;
-    onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    //onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onAddComment: () => void;
 }
 
 const LogCommentSection: React.FC<LogCommentSectionProps> = ({
     comments,
     newComment,
-    onCommentChange,
+    //onCommentChange,
     onAddComment,
 }) => {
     return (
@@ -23,7 +23,7 @@ const LogCommentSection: React.FC<LogCommentSectionProps> = ({
             </h3>
             <CommentInput
                 value={newComment}
-                onChange={onCommentChange}
+                //onChange={onCommentChange}
                 onSubmit={onAddComment}
             />
             <div className="space-y-4">
