@@ -43,7 +43,7 @@ public class LogController {
     })
     public ResponseEntity<List<LogListResponse>> listAllLogs(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @PathVariable(value = "projectId") long projectId) {
+            @Parameter(description = "로그 조회할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId) {
 
         List<LogListResponse> responses = logServiceApi.getAllLogs(projectId, loginUser.getName());
         return ResponseEntity.status(HttpStatus.OK).body(responses);
@@ -60,7 +60,7 @@ public class LogController {
     })
     @PostMapping("/{projectId}")
     public ResponseEntity<LogCreateResponse> createLog(@Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-                                                       @PathVariable(value = "projectId") long projectId,
+                                                       @Parameter(description = "생성할 프로젝트 번호(pk값)")  @PathVariable(value = "projectId") long projectId,
                                                        @RequestBody LogCreateRequest request) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new LogCreateResponse(logServiceApi.createLog(loginUser.getName(), projectId, request)));
@@ -75,8 +75,8 @@ public class LogController {
     })
     @GetMapping("/{projectId}/{logId}")
     public ResponseEntity<LogDetailResponse> viewDetailLogs(
-            @PathVariable(value = "projectId") long projectId,
-            @PathVariable(value = "logId") long logId,
+            @Parameter(description = "로그 조회할 프로젝트 번호(프로젝트 pk값)") @PathVariable(value = "projectId") long projectId,
+            @Parameter(description = "로그 조회할 로그 번호(로그 pk값)")  @PathVariable(value = "logId") long logId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
 
         LogDetailResponse detailLogs = logServiceApi.getDetailLogs(logId, projectId, loginUser.getName());
