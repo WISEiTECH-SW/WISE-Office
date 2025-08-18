@@ -7,7 +7,7 @@ import ProjectCommentList from "./ProjectCommentList";
 interface ProjectLogProps {
     selectedLog: Log | null;
     newComment: string;
-    //onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onAddComment: () => void;
     onDeleteComment: (logId: number, commentId: number) => void;
 }
@@ -15,7 +15,7 @@ interface ProjectLogProps {
 const ProjectLog: React.FC<ProjectLogProps> = ({
     selectedLog,
     newComment,
-    //onCommentChange,
+    onCommentChange,
     onAddComment,
     onDeleteComment,
 }) => {
@@ -36,7 +36,7 @@ const ProjectLog: React.FC<ProjectLogProps> = ({
             <ProjectCommentList
                 comments={selectedLog.comments}
                 newComment={newComment}
-                //onCommentChange={onCommentChange}
+                onCommentChange={onCommentChange}
                 onAddComment={onAddComment}
                 onDeleteComment={(commentId) =>
                     onDeleteComment(selectedLog.id, commentId)
