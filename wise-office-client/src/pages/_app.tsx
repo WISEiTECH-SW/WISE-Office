@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import Link from "next/link";
 import type { AppProps } from "next/app";
 import LoginButton from "@/components/LoginButton";
 
@@ -6,7 +7,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     return (
         <div className="min-h-screen flex flex-col">
             <header className="flex justify-between items-center bg-blue-600 text-white p-4">
-                <h1 className="text-lg font-bold">Wise Office</h1>
+                <Link href="/" className="text-lg font-bold">
+                    <h1>Wise Office</h1>
+                </Link>
                 <LoginButton />
             </header>
 
