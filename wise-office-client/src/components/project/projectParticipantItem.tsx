@@ -1,8 +1,6 @@
 import React from "react";
 import { User } from "lucide-react";
 
-// 참여자 아이템의 props 타입을 정의합니다.
-// 이 예시에서는 참여자의 이름을 받습니다.
 interface ProjectParticipantItemProps {
     name: string;
 }
