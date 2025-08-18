@@ -4,7 +4,6 @@ import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,7 +28,7 @@ public class ProjectListResponse {
         response.setStart(projectEntity.getStartYear());
         response.setEnd(projectEntity.getEndYear());
         response.setCurrentYear(LocalDate.now().getYear() - projectEntity.getStartYear().getYear() + 1);
-        response.managerName = projectEntity.getMember().getName();
+        //response.managerName = projectEntity.getMember().getName();
         return response;
     }
 

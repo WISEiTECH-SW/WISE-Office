@@ -2,7 +2,6 @@ package kr.co.wise.office.domain.Project.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
-import kr.co.wise.office.domain.member.entity.MemberEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +14,7 @@ public class ProjectDetailResponse {
 
     private long projectId;
     private String projectTitle;
+    private String detail;
     private LocalDate start;
     private LocalDate end;
     private int currentYear;
@@ -30,8 +30,8 @@ public class ProjectDetailResponse {
         response.setProjectTitle(projectEntity.getTitle());
         response.setStart(projectEntity.getStartYear());
         response.setEnd(projectEntity.getEndYear());
+        response.setDetail(projectEntity.getDetail());
         response.setCurrentYear(LocalDate.now().getYear() - projectEntity.getStartYear().getYear() + 1);
-        response.setManagerName(projectEntity.getMember().getName());
         response.setCanModify(false);
         return response;
     }

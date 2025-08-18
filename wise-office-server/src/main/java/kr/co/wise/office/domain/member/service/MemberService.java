@@ -1,7 +1,5 @@
 package kr.co.wise.office.domain.member.service;
 
-import kr.co.wise.office.domain.Project.Service.ProjectService;
-import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import kr.co.wise.office.domain.member.dto.MemberListResponse;
@@ -91,6 +89,11 @@ public class MemberService extends DefaultOAuth2UserService {
 
         authorities = List.of(new SimpleGrantedAuthority(role));
         return new CustomOAuthUser(attributes, authorities, email, isExistingMember);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberEntity findById(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."));
     }
 
     @Transactional(readOnly = true)

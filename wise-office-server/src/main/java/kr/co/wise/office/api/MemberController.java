@@ -14,6 +14,7 @@ import kr.co.wise.office.domain.member.dto.MemberListResponse;
 import kr.co.wise.office.domain.member.dto.MyAccountResponse;
 import kr.co.wise.office.domain.member.service.MemberService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/members")
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -42,8 +44,8 @@ public class MemberController {
     })
     @GetMapping
     public ResponseEntity<List<MemberListResponse>> viewAllMemberInfo(
-            @Parameter(hidden = true) @AuthenticationPrincipal String currentUserEmail) {
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.searchAllMemberInfo(currentUserEmail));
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.searchAllMemberInfo(loginUser.getName()));
     }
 
     @Operation(summary = "매니저 권한 확인", description = "현재 로그인한 사용자가 매니저 권한(ROLE_MANAGER)을 가지고 있는지 여부를 반환합니다.")
@@ -65,9 +67,8 @@ public class MemberController {
     })
     @GetMapping("/me")
     public ResponseEntity<MyAccountResponse> viewMyAccount(
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser user) {
-        System.out.println(
-                "=== 로그인된 사용자 정보: " + memberService.getMyAccountInfo(user.getName()));
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMyAccountInfo(user.getName()));
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
+        log.info("=== 로그인된 사용자 정보: " + memberService.getMyAccountInfo(loginUser.getName()));
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMyAccountInfo(loginUser.getName()));
     }
 }

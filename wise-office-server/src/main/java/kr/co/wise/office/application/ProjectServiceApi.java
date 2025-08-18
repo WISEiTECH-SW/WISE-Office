@@ -7,7 +7,6 @@ import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
-import kr.co.wise.office.domain.member.repository.MemberRepository;
 import kr.co.wise.office.domain.member.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,6 @@ public class ProjectServiceApi {
     private final ProjectService projectService;
     private final AttendantService attendantService;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
     // 메인화면 조회시 모든 프로젝트 간략 정보를 가져오는 메소드
     @Transactional(readOnly = true)
@@ -54,7 +52,6 @@ public class ProjectServiceApi {
         return response;
     }
 
-
     // 프로젝트를 생성하는 메소드
     @Transactional
     public Long createProject(ProjectCreateRequest request, String projectMakerEmail) throws IllegalAccessException { // 반환 타입을 Long으로 변경
@@ -66,10 +63,9 @@ public class ProjectServiceApi {
 
         //프로젝트 참여자들 조회 및 참여자 테이블 저장
         List<MemberEntity> attendants = memberService.findByIds(request.attendants());
-        attendantService.makeAttandants(attendants, projectEntity);
+        attendantService.makeAttendants(attendants, projectEntity);
 
         return projectEntity.getId(); // 생성된 프로젝트 ID 반환
     }
-
 }
 
