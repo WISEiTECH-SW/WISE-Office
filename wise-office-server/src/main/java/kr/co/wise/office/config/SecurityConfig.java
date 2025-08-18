@@ -3,6 +3,7 @@ package kr.co.wise.office.config;
 import kr.co.wise.office.security.filter.JWTFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,21 +32,20 @@ public class SecurityConfig {
         this.oauth2FailureHandler = oauth2FailureHandler;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
-
-    //auth.requestMatchers(new String[]{"/projects", "/oauth**", "/health", "/swagger-ui.html.", "/"}
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-    
+        http.cors(cors -> cors.configurationSource(corsConfiguration()));
+
         http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
         http.oauth2Login(
                 oauth2 -> oauth2.successHandler(oauth2SuccessHandler).failureHandler(oauth2FailureHandler)
-        .permitAll());
+                        .permitAll());
 
+        //auth.requestMatchers(new String[]{"/projects", "/oauth**", "/health", "/swagger-ui.html.", "/"}
         http.exceptionHandling(exceptionConfig ->
                 exceptionConfig.accessDeniedHandler(customAccessDeniedHandler));
         http.addFilterBefore(new JWTFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -58,15 +58,18 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfiguration(){
         CorsConfiguration corsConfig = new CorsConfiguration();
 
-        corsConfig.setAllowedMethods(List.of("*"));
-        corsConfig.setAllowedHeaders(List.of("*"));
-        corsConfig.setAllowedOriginPatterns(List.of("*"));
-        corsConfig.setAllowCredentials(true); // 쿠기
+        corsConfig.setAllowedMethods(
+                List.of(HttpMethod.GET.name(), HttpMethod.POST.name(),
+                        HttpMethod.DELETE.name(), HttpMethod.PATCH.name(),
+                        HttpMethod.PUT.name(), HttpMethod.OPTIONS.name()));
+        corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        corsConfig.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+        corsConfig.setAllowCredentials(true); // 쿠키
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
 
         return source;
     }
-    
+
 }

@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import kr.co.wise.office.util.JWTUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,7 +45,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
             List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(email, null, authorities);
+            CustomOAuthUser customUser = new CustomOAuthUser(
+                    Collections.EMPTY_MAP,
+                    authorities,
+                    email,
+                    true
+            );
+
+            Authentication auth = new UsernamePasswordAuthenticationToken(customUser, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
             filterChain.doFilter(request,response);
         } else {
