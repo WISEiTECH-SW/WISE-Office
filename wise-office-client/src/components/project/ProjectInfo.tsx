@@ -2,6 +2,10 @@ import React from "react";
 import ProjectInfoItem from "./ProjectInfoItem";
 import { ProjectData } from "./types";
 import { Calendar, TrendingUp, User, Users } from "lucide-react";
+import {
+    calculateProjectDuration,
+    formatDateToYearMonth,
+} from "@/lib/common/util";
 
 interface ProjectDetailsProps {
     project: ProjectData;
@@ -14,6 +18,8 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
     onEdit,
     onDelete,
 }) => {
+    const duration = calculateProjectDuration(project.start, project.end);
+
     return (
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="flex justify-between items-center mb-4">
@@ -39,12 +45,14 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
                 <ProjectInfoItem
                     icon={<Calendar className="w-5 h-5 text-blue-600" />}
                     label="프로젝트 기간"
-                    value={project.duration}
+                    value={`${formatDateToYearMonth(
+                        project.start
+                    )} ~ ${formatDateToYearMonth(project.end)}`}
                 />
                 <ProjectInfoItem
                     icon={<TrendingUp className="w-5 h-5 text-blue-600" />}
                     label="진행 상태"
-                    value={project.status}
+                    value={duration}
                 />
                 <ProjectInfoItem
                     icon={<User className="w-5 h-5 text-blue-600" />}
