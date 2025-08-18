@@ -15,6 +15,7 @@ import kr.co.wise.office.domain.Project.dto.ProjectCreateRequest;
 import kr.co.wise.office.domain.Project.dto.ProjectCreateResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
+import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -58,9 +59,9 @@ public class ProjectControllerV2 {
     })
     @PostMapping
     public ResponseEntity<ProjectCreateResponse> createProjectV2(@Parameter(description = "생성할 프로젝트의 정보", required = true) @RequestBody ProjectCreateRequest request,
-                                                                 @Parameter(hidden = true) @AuthenticationPrincipal String currentUserEmail) throws IllegalAccessException {
+                                                                 @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) throws IllegalAccessException {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ProjectCreateResponse(projectServiceApiV2.createProjectV2(request, currentUserEmail)));
+                .body(new ProjectCreateResponse(projectServiceApiV2.createProjectV2(request, loginUser.getName())));
     }
 
     @Operation(summary = "프로젝트 상세 조회 V2", description = "상세 프로젝트 내역을 조회합니다.")
@@ -71,8 +72,8 @@ public class ProjectControllerV2 {
     })
     @GetMapping(value = "/{projectId}")
     public ResponseEntity<ProjectDetailResponse> viewDetailProjectV2(@Parameter(description = "상세조회할 프로젝트 번호", required = true) @PathVariable("projectId") long projectId,
-                                                                   @Parameter(hidden = true) @AuthenticationPrincipal String currentUserEmail) {
-        return ResponseEntity.status(HttpStatus.OK).body(projectServiceApiV2.getDetailProjectV2(projectId, currentUserEmail));
+                                                                   @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
+        return ResponseEntity.status(HttpStatus.OK).body(projectServiceApiV2.getDetailProjectV2(projectId, loginUser.getName()));
     }
 
 }
