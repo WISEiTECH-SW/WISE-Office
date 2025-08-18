@@ -5,7 +5,6 @@ import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.Project.repository.ProjectRepository;
-import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.service.MemberService;
 import lombok.AllArgsConstructor;
@@ -39,13 +38,13 @@ public class ProjectService {
      * @return long : 생성된 프로젝트 PK 번호
      */
     @Transactional
-    public ProjectEntity makeProject(ProjectCreateRequest request, MemberEntity manager) {
+    public ProjectEntity makeProject(ProjectCreateRequest request, MemberEntity creator) {
         ProjectEntity projectEntity = ProjectEntity.builder()
                 .title(request.projectTitle())
                 .detail(request.content()) // content를 detail로 매핑
                 .startYear(request.start())
                 .endYear(request.end())
-                .member(manager)
+                .member(creator)
                 .build();
         return projectRepository.save(projectEntity);
     }
@@ -63,9 +62,21 @@ public class ProjectService {
 
         if (!currentUserEmail.equals("anonymousUser")) {
             MemberEntity loginUser = memberService.findByEmail(currentUserEmail);
-            response.setCanModify(projectWithManager.getMember().getId().equals(loginUser.getId()));
+            //response.setCanModify(projectWithManager.getMember().getId().equals(loginUser.getId()));
         }
 
         return response;
     }
+
+    @Transactional(readOnly = true)
+    public ProjectDetailResponse searchProjectWithManagerV2(long projectId) {
+        ProjectEntity projectWithManager = projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+
+        ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
+
+        return response;
+    }
+
+
 }

@@ -36,7 +36,6 @@ public class ProjectController {
     private final ProjectServiceApi projectServiceApi;
 
     @Operation(summary = "프로젝트 조회", description = "프로젝트 리스트를 조회합니다")
-
     @GetMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로젝트 조회 성공. 프로젝트 리스트가 반환됩니다.",
@@ -48,9 +47,7 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(projectServiceApi.getAllProjectInfo());
     }
 
-
     @Operation(summary = "프로젝트 생성", description = "신규 프로젝트를 생성합니다. 'MANAGER' 권한이 있는 유저만 API 호출이 가능합니다..",
-            // JWT 인증이 필요한 API임을 명시
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "프로젝트 생성 성공, 생성된 프로젝트의 PK 값이 반환됩니다. 상세조회시 사용",
@@ -58,11 +55,10 @@ public class ProjectController {
                             schema = @Schema(implementation = ProjectCreateResponse.class))),
             @ApiResponse(responseCode = "403", description = "접근 권한 없음 (MANAGER 역할 아님)", content = @Content)
     })
-    @PreAuthorize("hasRole('MANAGER')") // Manager 역할만 접근 가능하도록 설정
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProjectCreateResponse> createProject(@Parameter(description = "생성할 프로젝트의 정보", required = true) @RequestBody ProjectCreateRequest request, // 반환 타입을 Long으로 변경
                                                                @Parameter(hidden = true) @AuthenticationPrincipal String currentUserEmail) throws IllegalAccessException {
-
         log.info("현재 로그인한 유져 : " + currentUserEmail);
         log.info(request.toString());
         Long projectId = projectServiceApi.createProject(request, currentUserEmail);
@@ -81,4 +77,3 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(projectServiceApi.getDetailProject(projectId, currentUserEmail));
     }
 }
-
