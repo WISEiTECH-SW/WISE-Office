@@ -5,9 +5,11 @@ import {
     ProjectLogList,
     ProjectLogWriteButton,
     ProjectLog,
+    ProjectLogInput,
     ProjectAttendantList,
     ProjectData,
     Log,
+    LogInputData,
 } from "@/components/project";
 
 import { createLog, deleteLog } from "@/lib/project/log";
@@ -17,6 +19,8 @@ import {
     deleteCommentFromLog,
 } from "@/lib/project/comment";
 import { getAttendantCount } from "@/lib/common/util";
+import { Logs } from "lucide-react";
+import { timeStamp } from "console";
 
 const ProjectPage = () => {
     // 예시 데이터 -> 백에서 받는 데이터로 변경 예정
@@ -123,15 +127,49 @@ const ProjectPage = () => {
 
     // 이벤트 핸들러 (백단 연결, 인가 기능 필요)
     // 로그 생성 핸들러
-    const handleAddLog = () => {
-        //모달에서 받아야함
-        const newLog = createLog(
-            "Test Create Log",
-            "Test Create Log",
-            "Tester"
-        );
-        setLogs((prevLogs) => [newLog, ...prevLogs]);
-        setSelectedLog(newLog);
+    const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+    const [editingLog, setEditingLog] = useState<Log | null>(null);
+
+    const handleAddLog = (logInputData: LogInputData) => {
+        // 로그 수정
+        if (editingLog) {
+            const updatedLogs = data_logComment.map((log) =>
+                log.id === editingLog.id
+                    ? {
+                          ...log,
+                          ...logInputData,
+                          date: new Date().toISOString(),
+                      }
+                    : log
+            );
+            setLogs(updatedLogs);
+
+            const changedLog = updatedLogs.find(
+                (log) => log.id === editingLog.id
+            );
+            if (changedLog) {
+                setSelectedLog(changedLog);
+            }
+            setEditingLog(null);
+        } else {
+            const newLog = createLog(
+                logInputData.title,
+                logInputData.content,
+                "tester" // user id
+            );
+            setLogs((prevLogs) => [newLog, ...prevLogs]);
+            setSelectedLog(newLog);
+        }
+    };
+
+    const handleEditLog = (log: Log) => {
+        setEditingLog(log);
+        setIsLogModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsLogModalOpen(false);
+        setEditingLog(null);
     };
 
     // 로그 삭제 핸들러
@@ -209,7 +247,9 @@ const ProjectPage = () => {
                             onDeleteLog={handleDeleteLog}
                         />
                         <div className="mt-2">
-                            <ProjectLogWriteButton onClick={handleAddLog} />
+                            <ProjectLogWriteButton
+                                onClick={() => setIsLogModalOpen(true)}
+                            />
                         </div>
                     </div>
 
@@ -223,6 +263,7 @@ const ProjectPage = () => {
                             }
                             onAddComment={handleAddComment}
                             onDeleteComment={handleDeleteComment}
+                            handleEditLog={handleEditLog}
                         />
                     </div>
 
@@ -232,6 +273,13 @@ const ProjectPage = () => {
                     </div>
                 </div>
             </div>
+
+            <ProjectLogInput
+                isOpen={isLogModalOpen}
+                onClose={handleCloseModal}
+                onSubmit={handleAddLog}
+                editingLog={editingLog}
+            />
         </div>
     );
 };
