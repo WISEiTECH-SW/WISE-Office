@@ -10,6 +10,7 @@ interface ProjectLogProps {
     onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onAddComment: () => void;
     onDeleteComment: (logId: number, commentId: number) => void;
+    handleEditLog: (log: Log) => void;
 }
 
 const ProjectLog: React.FC<ProjectLogProps> = ({
@@ -18,6 +19,7 @@ const ProjectLog: React.FC<ProjectLogProps> = ({
     onCommentChange,
     onAddComment,
     onDeleteComment,
+    handleEditLog,
 }) => {
     if (!selectedLog) {
         return (
@@ -32,7 +34,7 @@ const ProjectLog: React.FC<ProjectLogProps> = ({
 
     return (
         <div className="bg-white rounded-lg shadow-sm">
-            <ProjectLogDetail log={selectedLog} />
+            <ProjectLogDetail log={selectedLog} handleEditLog={handleEditLog} />
             <ProjectCommentList
                 comments={selectedLog.comments}
                 newComment={newComment}

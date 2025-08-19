@@ -1,19 +1,31 @@
 import React, { useState } from "react";
 import { X, FileText } from "lucide-react";
-import { LogInputData } from "@/components/project/types";
+import { LogInputData, Log } from "@/components/project/types";
 
 interface ProjectLogInputProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (logData: LogInputData) => void;
+    editingLog?: Log | null;
 }
 const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
     isOpen,
     onClose,
     onSubmit,
+    editingLog,
 }) => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+
+    React.useEffect(() => {
+        if (editingLog) {
+            setTitle(editingLog.title);
+            setContent(editingLog.content);
+        } else {
+            setTitle("");
+            setContent("");
+        }
+    }, [editingLog, isOpen]);
 
     const handleSubmit = () => {
         if (!title.trim() || !content.trim()) return;
@@ -48,7 +60,7 @@ const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
                             <FileText className="w-4 h-4 text-white" />
                         </div>
                         <h2 className="text-xl font-semibold text-gray-900">
-                            로그 작성
+                            {editingLog ? "로그 수정" : "로그 작성"}
                         </h2>
                     </div>
                     <button
@@ -104,7 +116,7 @@ const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
                         className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
                     >
                         <FileText className="w-4 h-4" />
-                        <span>로그 작성</span>
+                        <span>{editingLog ? "로그 수정" : "로그 작성"}</span>
                     </button>
                 </div>
             </div>

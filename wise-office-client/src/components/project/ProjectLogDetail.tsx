@@ -3,9 +3,13 @@ import { Log } from "@/components/project/types";
 
 interface ProjectLogDetailProps {
     log: Log;
+    handleEditLog: (log: Log) => void;
 }
 
-const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({ log }) => {
+const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
+    log,
+    handleEditLog,
+}) => {
     return (
         <>
             <div className="border-b p-6">
@@ -16,6 +20,13 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({ log }) => {
                     <span className="font-medium">{log.user}</span>
                     <span className="mx-2">•</span>
                     <span>{log.date}</span>
+                    <span className="mx-2">•</span>
+                    <button
+                        className="text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
+                        onClick={() => handleEditLog(log)}
+                    >
+                        수정
+                    </button>
                 </div>
             </div>
             <div className="p-6 border-b">
