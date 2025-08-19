@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import UserProfile from "../components/account/UserProfile";
-import ProjectCards_my from "@/components/account/ProjectCards_my";
 import MyInfo from "@/components/account/MyInfo";
 import axios from 'axios';
+import ProjectCardsMy from "@/components/account/ProjectCardsMy";
 
 
 export const api = axios.create({
@@ -56,7 +56,7 @@ export default function Account() {
 
             {/* 프로젝트 영역 */}
             <section className="col-span-12 md:col-span-7 bg-white rounded-lg shadow-md p-6">
-                <ProjectCards_my {...profile} />
+                <ProjectCardsMy {...profile} />
             </section>
         </div>
         </div>
