@@ -1,7 +1,8 @@
 import "@/styles/globals.css";
 import Link from "next/link";
 import type { AppProps } from "next/app";
-import LoginButton from "@/components/LoginButton";
+import LoginButton from "@/components/header/LoginButton";
+import HeaderAuth from "@/components/header/HeaderAuth";
 
 import { User } from "lucide-react";
 const logo = "logo.png";
@@ -13,7 +14,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <Link href="/" className="text-lg font-bold">
                     <h1>Wise Office</h1>
                 </Link>
-                <LoginButton />
+                <HeaderAuth />
             </header>
 
             <main className="flex-grow p-4">

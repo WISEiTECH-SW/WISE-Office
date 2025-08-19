@@ -6,7 +6,6 @@ export default async function handler(
 ) {
     const server = process.env.SERVER_URL!;
     const backendUrl = `${server}/api/v2/projects`;
-    console.log("[proxy] : ", backendUrl);
 
     try {
         const r = await fetch(backendUrl, {
@@ -22,7 +21,7 @@ export default async function handler(
 
         const data = await r.json();
         res.status(r.status).json(data);
-        console.log("request data: ", data);
+        // console.log("request data: ", data);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Proxy error" });
