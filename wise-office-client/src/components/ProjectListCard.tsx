@@ -8,7 +8,7 @@ type Props = {
 export default function ProjectListCard({ project }: Props) {
     return (
         <Link
-            href="/project?id=1"
+            href={`/projcet/${project.projectId}`}
             className="block w-full bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden"
         >
             {/* project-card-header */}
