@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
 import type { Project } from "@/types/project";
 
 type Props = {
@@ -6,10 +6,16 @@ type Props = {
 };
 
 export default function ProjectListCard({ project }: Props) {
+    const router = useRouter();
+
+    const handleProjectClick = () => {
+        router.push(`/projects/${project.projectId}`);
+    };
+
     return (
-        <Link
-            href={`/projcet/${project.projectId}`}
-            className="block w-full bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden"
+        <div
+            onClick={handleProjectClick}
+            className="block w-full bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden cursor-pointer"
         >
             {/* project-card-header */}
             <div className="px-10 py-7 border-b border-gray-100">
@@ -98,6 +104,6 @@ export default function ProjectListCard({ project }: Props) {
 
             {/* Hover Effect Indicator */}
             <div className="h-1 bg-gradient-to-r from-blue-600 to-blue-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-        </Link>
+        </div>
     );
 }
