@@ -7,6 +7,8 @@ import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.Project.repository.ProjectRepository;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.service.MemberService;
+import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +36,7 @@ public class ProjectService {
 
     /**
      * @param request : 프로젝트 정보
-     * @param manager : 프로젝스 생성 매니저 객체
+     * @param creator : 프로젝스 생성 매니저 객체
      * @return long : 생성된 프로젝트 PK 번호
      */
     @Transactional
@@ -56,7 +58,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public ProjectDetailResponse searchProjectWithManager(long projectId, String currentUserEmail) {
         ProjectEntity projectWithManager = projectRepository.findProjectWithManager(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_PROJECT));
 
         ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
 
@@ -71,7 +73,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public ProjectDetailResponse searchProjectWithManagerV2(long projectId) {
         ProjectEntity projectWithManager = projectRepository.findById(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_PROJECT));
 
         ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
 
@@ -79,4 +81,7 @@ public class ProjectService {
     }
 
 
+    public ProjectEntity findById(long projectId) {
+        return projectRepository.findById(projectId).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_PROJECT));
+    }
 }

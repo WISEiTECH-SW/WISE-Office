@@ -1,16 +1,34 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
 import type { Project } from "@/types/project";
+import { calculateProjectDuration } from "@/lib/common/util";
 
 type Props = {
     project: Project;
 };
 
+// type ProjectState = string | "진행전" | "진행중" | "종료됨";
+
+// const stateColorMap: Record<ProjectState, { bg: string; text: string }> = {
+//     진행전: { bg: "bg-blue-100", text: "text-cyan-700" },
+//     진행중: { bg: "bg-green-100", text: "text-green-700" },
+//     종료됨: { bg: "bg-gray-200", text: "text-gray-700" },
+// };
+
 export default function ProjectListCard({ project }: Props) {
-    const projectLink = `/project/${project.member_pk}`;
+    const projectLink = `/projects/${project.member_pk}`;
+    const router = useRouter();
+    const { duration, state, stateColor, textColor } = calculateProjectDuration(
+        project.start,
+        project.end
+    );
+
+    const handleProjectClick = () => {
+        router.push(`/projects/${project.projectId}`);
+    };
     return (
-        <Link
-            href={`/projcet/${project.projectId}`}
-            className="block w-full bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden"
+        <div
+            onClick={handleProjectClick}
+            className="block w-full bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden cursor-pointer"
         >
             {/* project-card-header */}
             <div className="px-10 py-7 border-b border-gray-100">
@@ -20,8 +38,10 @@ export default function ProjectListCard({ project }: Props) {
                             {project.projectTitle}
                         </h5>
                     </div>
-                    <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
-                        진행중
+                    <span
+                        className={`${stateColor} ${textColor} px-3 py-1 rounded-full text-xs font-semibold`}
+                    >
+                        {state}
                     </span>
                 </div>
             </div>
@@ -48,11 +68,11 @@ export default function ProjectListCard({ project }: Props) {
 
                         <div className="space-y-1">
                             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                총 기간
+                                현재 차수
                             </span>
-                            <p className="text-sm text-gray-400 font-medium">
-                                -
-                            </p>
+                            <div className="flex items-center gap-2 text-sm text-gray-700 gap-3">
+                                <span className="font-medium">{duration}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -70,26 +90,12 @@ export default function ProjectListCard({ project }: Props) {
                         </div>
 
                         <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    참여 인원
-                                </span>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-5">
-                                {(project.attendant ?? []).map((name, i) => (
-                                    <span
-                                        key={`${name}-${i}`}
-                                        className="text-sm text-gray-700 font-medium"
-                                    >
-                                        {name}
-                                    </span>
-                                ))}
-
-                                {(!project.attendant ||
-                                    project.attendant.length === 0) && (
-                                    <span className="text-sm text-gray-400 font-medium">
-                                        -
-                                    </span>
+                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                참여 인원
+                            </span>
+                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-700 font-medium">
+                                {(project.attendant ?? []).join(
+                                    "\u00A0\u00A0\u00A0"
                                 )}
                             </div>
                         </div>
@@ -99,6 +105,6 @@ export default function ProjectListCard({ project }: Props) {
 
             {/* Hover Effect Indicator */}
             <div className="h-1 bg-gradient-to-r from-blue-600 to-blue-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-        </Link>
+        </div>
     );
 }

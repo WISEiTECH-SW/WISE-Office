@@ -45,7 +45,7 @@ public class ProjectServiceApi {
         ProjectDetailResponse response = projectService.searchProjectWithManager(projectId, currentUserEmail);
         Map<Long, List<String>> attendantsName = attendantService.getAttendantsName(List.of(response.getProjectId()));
 
-        response.setAttendant(attendantsName.getOrDefault(response.getProjectId(), Collections.emptyList()));
+        //response.setAttendant(attendantsName.getOrDefault(response.getProjectId(), Collections.emptyList()));
 
         //이후 Log 및 Comment도 가져오는 로직 추가
 

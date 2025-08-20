@@ -1,4 +1,6 @@
-import ProjectListCard from "../ProjectListCard";
+import Link from "next/link";
+import { Project } from "@/types/project";
+
 export default function ProjectCardsMy(props) {
     const projects = props.projectList;
 
@@ -19,5 +21,100 @@ export default function ProjectCardsMy(props) {
                 )}
             </ul>
         </div>
+    );
+}
+
+type Props = {
+    project: Project;
+};
+
+function ProjectListCard({ project }: Props) {
+    return (
+        <Link
+            href={`/projcet/${project.projectId}`}
+            className="block w-full bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden"
+        >
+            {/* project-card-header */}
+            <div className="px-4 py-2 border-b border-gray-100">
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <h5 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                            {project.projectTitle}
+                        </h5>
+                    </div>
+                    <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-xs font-semibold ">
+                        진행중
+                    </span>
+                </div>
+            </div>
+
+            {/* project-card-content */}
+            <div className="px-5 py-2">
+                <div className="grid grid-cols-5 gap-4">
+                    {/* content-left-column */}
+                    <div className="col-span-2 space-y-2">
+                        <div className="space-y-0.5">
+                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                                프로젝트 기간
+                            </span>
+                            <div className="flex items-center gap-2 text-xs text-gray-700">
+                                <span className="font-medium">{project.start}</span>
+                                <div className="w-[15%] h-px bg-gray-300"></div>
+                                <span className="font-medium">{project.end}</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-0.5">
+                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                                총 기간
+                            </span>
+                            <p className="text-xs text-gray-400 font-medium">-</p>
+                        </div>
+                    </div>
+
+                    {/* content-right-column */}
+                    <div className="col-span-3 space-y-2">
+                        <div className="space-y-0.5">
+                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                                프로젝트 매니저
+                            </span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-700 font-medium">
+                                    {project.managerName}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-1">
+                            <div className="flex justify-between items-center">
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                                    참여 인원
+                                </span>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-3">
+                                {(project.attendant ?? []).map((name, i) => (
+                                    <span
+                                        key={`${name}-${i}`}
+                                        className="text-xs text-gray-700 font-medium"
+                                    >
+                                        {name}
+                                    </span>
+                                ))}
+
+                                {(!project.attendant ||
+                                    project.attendant.length === 0) && (
+                                    <span className="text-xs text-gray-400 font-medium">
+                                        -
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Hover Effect Indicator */}
+            <div className="h-1 bg-gradient-to-r from-blue-600 to-blue-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+        </Link>
     );
 }

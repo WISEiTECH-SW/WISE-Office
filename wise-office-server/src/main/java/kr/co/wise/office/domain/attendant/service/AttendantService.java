@@ -3,10 +3,13 @@ package kr.co.wise.office.domain.attendant.service;
 import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
+import kr.co.wise.office.domain.attendant.dto.AttendantDetail;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantRoleType;
 import kr.co.wise.office.domain.attendant.repository.AttendantRepository;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
+import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,9 +122,9 @@ public class AttendantService {
         List<AttendantEntity> attendants = attendantRepository
                 .findAllWithMemberAndProject(List.of(response.getProjectId())).orElseThrow(IllegalArgumentException::new);
 
-        //참여자 설정
-        response.setAttendant(attendants.stream().map(attendant ->
-                attendant.getMember().getName()).collect(Collectors.toSet()).stream().toList());
+        //참여자 설정 => 중복 제거를 위해 Set으로 변환 후 List 변환
+        response.setAttendant(attendants.stream().map(AttendantEntity::getMember).map(AttendantDetail::of)
+                .collect(Collectors.toSet()).stream().toList());
 
         for (AttendantEntity attendant : attendants) {
             //해당 로그인한 유저의 Role이 PM / CREATOR인지 확인
@@ -149,5 +152,9 @@ public class AttendantService {
 
         getAttendantsNameV2(response);
         return response;
+    }
+
+    public AttendantEntity validateParticipatingProject(MemberEntity loginUser, ProjectEntity project) {
+        return attendantRepository.findByMemberAndProject(loginUser, project).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT));
     }
 }
