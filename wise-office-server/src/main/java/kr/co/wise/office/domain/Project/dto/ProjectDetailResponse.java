@@ -2,6 +2,7 @@ package kr.co.wise.office.domain.Project.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
+import kr.co.wise.office.domain.attendant.dto.AttendantDetail;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +20,7 @@ public class ProjectDetailResponse {
     private LocalDate end;
     private int currentYear;
     private String managerName;
-    private List<String> attendant;
+    private List<AttendantDetail> attendant;
 
     @Schema(description = "상세 조회 프로젝트 수정/삭제 권한 보유 여부 (true: 삭제/수정 가능)")
     private boolean canModify; // 수정 가능한 사람인지 유무
