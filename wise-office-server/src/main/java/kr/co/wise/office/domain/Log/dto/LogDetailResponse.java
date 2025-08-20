@@ -1,32 +1,34 @@
 package kr.co.wise.office.domain.Log.dto;
 
 import kr.co.wise.office.domain.Log.entity.LogEntity;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
-public class LogDetailResponse {
-
-    private long logId;
-    private String writer;
-    private LocalDateTime createdAt;
-    private String content;
-    private String imageUrl;
-    private boolean canModify;
-    private String title;
-
+public record LogDetailResponse(
+        long logId,
+        String writer,
+        LocalDateTime createdAt,
+        String content,
+        String imageUrl,
+        boolean canModify,
+        String title
+) {
 
 
-    public static LogDetailResponse loadLogInfo(LogEntity logEntity) {
-        LogDetailResponse response = new LogDetailResponse();
-        response.setLogId(logEntity.getId());
-        response.setTitle(logEntity.getTitle());
-        response.setWriter(logEntity.getMember().getName());
-        response.setCreatedAt(logEntity.getWrittenAt());
-        response.setImageUrl(logEntity.getMember().getImageUrl());
-        response.setContent(logEntity.getLogDetail());
-        response.setCanModify(false);
-        return response;
+
+    /**
+     * LogEntity와 수정 가능 여부를 받아 DTO를 생성하는 정적 팩토리 메서드
+     */
+    public static LogDetailResponse from(LogEntity logEntity, boolean canModify) {
+        // record의 생성자를 직접 호출하여 불변 객체를 생성
+        return new LogDetailResponse(
+                logEntity.getId(),
+                logEntity.getMember().getName(),
+                logEntity.getWrittenAt(),
+                logEntity.getLogDetail(),
+                logEntity.getMember().getImageUrl(), // 이미지 URL은 작성자(Member)의 것을 사용
+                canModify,
+                logEntity.getTitle()
+        );
     }
 }

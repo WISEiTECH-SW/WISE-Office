@@ -48,4 +48,9 @@ public class LogEntity {
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
 
+
+    public void update(String title, String logDetail) {
+        this.title = title;
+        this.logDetail = logDetail;
+    }
 }

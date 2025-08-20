@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface LogRepository extends JpaRepository<LogEntity, Long> {
 
-    @Query("select l from LogEntity l join fetch l.member left join fetch l.comments where l.project = :project ")
+    @Query("select l from LogEntity l join fetch l.member left join fetch l.comments where l.project = :project order by l.id desc")
     Optional<List<LogEntity>> findByLogWithComments(@Param("project") ProjectEntity project);
 
     @Query("select l from LogEntity l join fetch l.member where l.id = :logId")
