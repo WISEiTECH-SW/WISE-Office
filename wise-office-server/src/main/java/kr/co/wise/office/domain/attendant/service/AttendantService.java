@@ -122,9 +122,9 @@ public class AttendantService {
         List<AttendantEntity> attendants = attendantRepository
                 .findAllWithMemberAndProject(List.of(response.getProjectId())).orElseThrow(IllegalArgumentException::new);
 
-        //참여자 설정
-        response.setAttendant(attendants.stream().map(attendant ->
-                attendant.getMember().getName()).collect(Collectors.toSet()).stream().toList());
+        //참여자 설정 => 중복 제거를 위해 Set으로 변환 후 List 변환
+        response.setAttendant(attendants.stream().map(AttendantEntity::getMember).map(AttendantDetail::of)
+                .collect(Collectors.toSet()).stream().toList());
 
         for (AttendantEntity attendant : attendants) {
             //해당 로그인한 유저의 Role이 PM / CREATOR인지 확인
