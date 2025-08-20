@@ -1,12 +1,25 @@
 import { useRouter } from "next/router";
 import type { Project } from "@/types/project";
+import { calculateProjectDuration } from "@/lib/common/util";
 
 type Props = {
     project: Project;
 };
 
+// type ProjectState = string | "진행전" | "진행중" | "종료됨";
+
+// const stateColorMap: Record<ProjectState, { bg: string; text: string }> = {
+//     진행전: { bg: "bg-blue-100", text: "text-cyan-700" },
+//     진행중: { bg: "bg-green-100", text: "text-green-700" },
+//     종료됨: { bg: "bg-gray-200", text: "text-gray-700" },
+// };
+
 export default function ProjectListCard({ project }: Props) {
     const router = useRouter();
+    const { duration, state, stateColor, textColor } = calculateProjectDuration(
+        project.start,
+        project.end
+    );
 
     const handleProjectClick = () => {
         router.push(`/projects/${project.projectId}`);
@@ -25,8 +38,10 @@ export default function ProjectListCard({ project }: Props) {
                             {project.projectTitle}
                         </h5>
                     </div>
-                    <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
-                        진행중
+                    <span
+                        className={`${stateColor} ${textColor} px-3 py-1 rounded-full text-xs font-semibold`}
+                    >
+                        {state}
                     </span>
                 </div>
             </div>
@@ -56,9 +71,7 @@ export default function ProjectListCard({ project }: Props) {
                                 현재 차수
                             </span>
                             <div className="flex items-center gap-2 text-sm text-gray-700 gap-3">
-                                <span className="font-medium">
-                                    {project.currentYear}차년도
-                                </span>
+                                <span className="font-medium">{duration}</span>
                             </div>
                         </div>
                     </div>
