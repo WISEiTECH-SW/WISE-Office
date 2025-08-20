@@ -1,12 +1,17 @@
+import { useRouter } from "next/router";
 import { useProfileStore } from "@/store/useProfileStore";
-import Link from "next/link";
 
 export default function Profile() {
+    const router = useRouter();
     const { profile } = useProfileStore();
 
+    const handleProfileClick = () => {
+        router.push("/account");
+    };
+
     return (
-        <Link
-            href="/account"
+        <div
+            onClick={handleProfileClick}
             className="rounded-full border border-white bg-white shadow-sm hover:bg-gray-100 cursor-pointer"
         >
             <img
@@ -14,6 +19,6 @@ export default function Profile() {
                 alt={profile?.name ?? "👤"}
                 className="w-9 h-9 rounded-full object-cover"
             />
-        </Link>
+        </div>
     );
 }

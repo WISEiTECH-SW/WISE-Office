@@ -4,25 +4,49 @@
  * @param endDate 프로젝트 종료일 (Date 객체)
  * @returns 문자열
  */
+type ProjectState = {
+    duration: string;
+    state: string;
+    stateColor: string;
+    textColor: string;
+};
+
 export const calculateProjectDuration = (
-    startDate: Date,
-    endDate: Date
-): string => {
+    start: string,
+    end: string
+): ProjectState => {
     const currentDate = new Date();
+    const startDate = new Date(start);
+    const endDate = new Date(end);
 
     if (currentDate > endDate) {
-        return "종료됨";
+        return {
+            duration: "프로젝트 종료",
+            state: "종료됨",
+            stateColor: "bg-gray-200",
+            textColor: "text-gray-700",
+        };
     }
 
     if (currentDate < startDate) {
-        return "시작 예정";
+        return {
+            duration: "진행 예정",
+            state: "진행전",
+            stateColor: "bg-cyan-100",
+            textColor: "text-cyan-700",
+        };
     }
 
     const startYear = startDate.getFullYear();
     const currentYear = currentDate.getFullYear();
     const duration = currentYear - startYear + 1;
 
-    return `${duration}년차`;
+    return {
+        duration: `${duration}차년도`,
+        state: "진행중",
+        stateColor: "bg-emerald-100",
+        textColor: "text-emerald-700",
+    };
 };
 
 /**
