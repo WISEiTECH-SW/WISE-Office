@@ -1,8 +1,17 @@
+import { useRouter } from "next/router";
+import { useProfileStore } from "@/store/useProfileStore";
+import { useAuthStore } from "@/store/useAuthStore";
+
 export default function LogoutButton() {
+    const router = useRouter();
+    const reset = useProfileStore((s) => s.reset);
+    const setHasToken = useAuthStore((s) => s.setHasToken);
+
     const deleteCookie = () => {
         document.cookie = "jwt=; Max-age=0; Path=/";
-
-        location.reload();
+        setHasToken(false);
+        reset();
+        router.push("/");
     };
 
     return (

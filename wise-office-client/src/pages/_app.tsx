@@ -22,7 +22,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 });
                 const { loggedIn } = await res.json();
                 setHasToken(loggedIn);
-                console.log("가져옴");
 
                 // 2. 로그인 상태면 프로필 가져와서 store에 저장
                 if (loggedIn) {

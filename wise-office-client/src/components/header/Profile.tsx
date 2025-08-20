@@ -7,7 +7,7 @@ export default function Profile() {
     return (
         <Link
             href="/account"
-            className="rounded-full border border-gray-300 p-1 bg-white shadow-sm hover:bg-gray-100 cursor-pointer"
+            className="rounded-full border border-white bg-white shadow-sm hover:bg-gray-100 cursor-pointer"
         >
             <img
                 src={profile?.imageUrl ?? "/assets/Google.png"}
