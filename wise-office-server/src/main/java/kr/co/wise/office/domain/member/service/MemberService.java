@@ -112,10 +112,10 @@ public class MemberService extends DefaultOAuth2UserService {
     public List<MemberListResponse> searchAllMemberInfo(String currentUserEmail) {
         List<MemberEntity> members = memberRepository.findAll();
 
-        List<MemberEntity> exceptLoginUser = members.stream().filter(m -> !m.getEmail().equals(currentUserEmail))
-                .toList();
+//        List<MemberEntity> exceptLoginUser = members.stream().filter(m -> !m.getEmail().equals(currentUserEmail))
+//                .toList();
 
-        return exceptLoginUser.stream().map(MemberListResponse::loadMemberInfo).toList();
+        return members.stream().map(MemberListResponse::loadMemberInfo).toList();
     }
 
     @Transactional(readOnly = true)
