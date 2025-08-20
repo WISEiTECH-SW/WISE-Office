@@ -1,36 +1,17 @@
 import React, { useEffect, useState } from "react";
 import UserProfile from "../components/account/UserProfile";
 import MyInfo from "@/components/account/MyInfo";
-import axios from 'axios';
 import ProjectCardsMy from "@/components/account/ProjectCardsMy";
+import { getMyProfile } from "@/services/members";
+import { Profile } from "@/types/profile";
 
-
-export const api = axios.create({
-    baseURL: "http://localhost:8080/api",
-    withCredentials: true,
-});
-
-interface Profile{
-    id: string;
-    rank: string;
-    team: string;
-    name: string;
-    imgUrl: string;
-    projectList: Object;
-}
-
-export async function getProfile():Promise<Profile>{
-    const {data} = await api.get<Profile>("/members/me");
-    return data;
-}
 
 export default function Account() {
 
         const [profile, setProfile] = useState<Profile | null>(null);
         useEffect(() => {
             const fetchData = async () => {
-            const profile = await getProfile();
-            console.log("프로필: ", profile);
+            const profile = await getMyProfile();
             setProfile(profile);
             }
             fetchData();
