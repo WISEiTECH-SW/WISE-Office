@@ -7,6 +7,8 @@ import kr.co.wise.office.domain.member.dto.MyAccountResponse;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
+import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -93,7 +95,7 @@ public class MemberService extends DefaultOAuth2UserService {
 
     @Transactional(readOnly = true)
     public MemberEntity findById(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계정입니다."));
+        return memberRepository.findById(memberId).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
     }
 
     @Transactional(readOnly = true)
@@ -119,7 +121,7 @@ public class MemberService extends DefaultOAuth2UserService {
     @Transactional(readOnly = true)
     public MyAccountResponse getMyAccountInfo(String currentUserEmail) {
         MemberEntity account = memberRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new RuntimeException("해당 이메일로 회원을 찾을 수 없습니다." + currentUserEmail));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
         MyAccountResponse response = MyAccountResponse.loadMyAccountInfo(account,
                 attendantService.getProjectsByAttendants(account));
         return response;

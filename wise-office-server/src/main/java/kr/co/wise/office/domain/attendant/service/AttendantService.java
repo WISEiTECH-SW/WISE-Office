@@ -3,10 +3,13 @@ package kr.co.wise.office.domain.attendant.service;
 import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
+import kr.co.wise.office.domain.attendant.dto.AttendantDetail;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantRoleType;
 import kr.co.wise.office.domain.attendant.repository.AttendantRepository;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
+import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +23,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Transactional
 public class AttendantService {
-
-    private static final String NOT_FOUND_ATTENDANT = "존재하지 않는 참여자입니다.";
 
     private final AttendantRepository attendantRepository;
 
@@ -154,6 +155,6 @@ public class AttendantService {
     }
 
     public AttendantEntity validateParticipatingProject(MemberEntity loginUser, ProjectEntity project) {
-        return attendantRepository.findByMemberAndProject(loginUser, project).orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_ATTENDANT));
+        return attendantRepository.findByMemberAndProject(loginUser, project).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT));
     }
 }
