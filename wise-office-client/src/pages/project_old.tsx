@@ -5,14 +5,11 @@ import {
     ProjectLogWriteButton,
     ProjectLog,
     ProjectLogInput,
-    ProjectAttendantList,
-    ProjectData,
     Log,
     LogInputData,
 } from "@/components/project";
 
 import { createLog, deleteLog } from "@/lib/project/log";
-import { editProjectInfo, deleteProject } from "@/lib/project/info";
 import {
     createCommentToLog,
     deleteCommentFromLog,
@@ -20,16 +17,6 @@ import {
 
 const ProjectPage = () => {
     // 예시 데이터 -> 백에서 받는 데이터로 변경 예정
-    //참여자 예시 데이터
-    const data_attendant = [
-        "USER_01",
-        "USER_02",
-        "USER_03",
-        "USER_04",
-        "USER_05",
-        "USER_06",
-    ];
-
     // 로그 & 댓글 예시 데이터
     const [data_logComment, setLogs] = useState<Log[]>([
         {
@@ -246,11 +233,6 @@ const ProjectPage = () => {
                             onDeleteComment={handleDeleteComment}
                             handleEditLog={handleEditLog}
                         />
-                    </div>
-
-                    {/* Attendant List - Right */}
-                    <div className="col-span-3">
-                        <ProjectAttendantList attendants={data_attendant} />
                     </div>
                 </div>
             </div>

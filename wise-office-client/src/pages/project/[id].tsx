@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { ProjectInfo } from "@/types/project";
+import type { ProjectInfo } from "@/types/project";
 import { editProjectInfo, deleteProject } from "@/lib/project/info";
 import { getProjectById } from "@/services/projects";
 
-import { ProjectInfoContainer } from "@/components/project";
+import {
+    ProjectInfoContainer,
+    ProjectAttendantList,
+} from "@/components/project";
 
 export default function projectPageById() {
     const router = useRouter();
@@ -22,7 +25,6 @@ export default function projectPageById() {
         getProjectById(projectId).then(setProjectInfo).catch(console.error);
         // log list
         // comment list
-        // attendant list
     }, [router.isReady, id]);
 
     if (!projectInfo) return <div>!!No Project!!</div>;
@@ -38,10 +40,17 @@ export default function projectPageById() {
                 />
                 <div className="grid grid-cols-12 gap-6">
                     {/* LOG List - Left */}
-
+                    <div className="col-span-3">
+                        <div className="mt-2"></div>
+                    </div>
                     {/* LOG & Comment - Center */}
-
+                    <div className="col-span-6"></div>
                     {/* Attendant List - Right */}
+                    <div className="col-span-3">
+                        <ProjectAttendantList
+                            attendants={projectInfo.attendant}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

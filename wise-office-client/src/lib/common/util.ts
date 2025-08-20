@@ -14,10 +14,11 @@ export function calculationDuration(startDate: Date, endDate: Date) {
     if (currentDate < startDate) {
         return "시작 예정";
     }
-    const startYear = new Date(startDate).getFullYear();
-    const endYear = new Date(endDate).getFullYear();
 
-    return `${endYear - startYear + 1}년차`;
+    const startYear = new Date(startDate).getFullYear();
+    const currentYear = new Date(currentDate).getFullYear();
+
+    return `${currentYear - startYear + 1}년차`;
 }
 
 /**

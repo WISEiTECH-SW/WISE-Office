@@ -24,13 +24,13 @@ export default function ProjectInfoContainer({
                 <div className="flex gap-2">
                     <button
                         onClick={onEdit}
-                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 cursor-pointer"
                     >
                         수정
                     </button>
                     <button
                         onClick={onDelete}
-                        className="px-4 py-2 bg-gray-500 text-white text-sm rounded hover:bg-gray-600"
+                        className="px-4 py-2 bg-gray-500 text-white text-sm rounded hover:bg-gray-600 cursor-pointer"
                     >
                         삭제
                     </button>
