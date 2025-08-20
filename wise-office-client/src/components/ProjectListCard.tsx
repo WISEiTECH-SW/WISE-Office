@@ -53,11 +53,13 @@ export default function ProjectListCard({ project }: Props) {
 
                         <div className="space-y-1">
                             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                총 기간
+                                현재 차수
                             </span>
-                            <p className="text-sm text-gray-400 font-medium">
-                                -
-                            </p>
+                            <div className="flex items-center gap-2 text-sm text-gray-700 gap-3">
+                                <span className="font-medium">
+                                    {project.currentYear}차년도
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -75,26 +77,12 @@ export default function ProjectListCard({ project }: Props) {
                         </div>
 
                         <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                    참여 인원
-                                </span>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-5">
-                                {(project.attendant ?? []).map((name, i) => (
-                                    <span
-                                        key={`${name}-${i}`}
-                                        className="text-sm text-gray-700 font-medium"
-                                    >
-                                        {name}
-                                    </span>
-                                ))}
-
-                                {(!project.attendant ||
-                                    project.attendant.length === 0) && (
-                                    <span className="text-sm text-gray-400 font-medium">
-                                        -
-                                    </span>
+                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                참여 인원
+                            </span>
+                            <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-700 font-medium">
+                                {(project.attendant ?? []).join(
+                                    "\u00A0\u00A0\u00A0"
                                 )}
                             </div>
                         </div>
