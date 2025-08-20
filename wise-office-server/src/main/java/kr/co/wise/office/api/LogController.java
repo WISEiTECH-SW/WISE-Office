@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.wise.office.application.LogServiceApi;
 import kr.co.wise.office.domain.Log.dto.*;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
+import kr.co.wise.office.exception.dto.ErrorResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +38,9 @@ public class LogController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = LogListResponse.class))
                     )),
+            @ApiResponse(responseCode = "400", description = "조회할 로그에 속한 프로젝트에 참여하지 않은 경우",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = kr.co.wise.office.exception.dto.ErrorResponse.class)))
     })
     public ResponseEntity<List<LogListResponse>> listAllLogs(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
@@ -53,6 +57,9 @@ public class LogController {
             @ApiResponse(responseCode = "201", description = "로그 생성 성공, 생성된 log Id 값 반환",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = LogCreateResponse.class))),
+            @ApiResponse(responseCode = "400", description = "조회할 로그에 속한 프로젝트에 참여하지 않은 경우",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
     public ResponseEntity<LogCreateResponse> createLog(@Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
@@ -80,12 +87,18 @@ public class LogController {
     }
 
 
-    @Operation(summary = "로그 수정", description = "로그 수정 API",
+    @Operation(summary = "로그 수정", description = "로그 수정 API로 수정 성공시 수정 요청한 title, content가 반환됩니다.",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그 수정 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = LogUpdateResponse.class))),
+            @ApiResponse(responseCode = "400", description = "수정할 로그 조회 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "수정하려는 로그에 대한 권한이 없는 경우",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PatchMapping("/{logId}")
     public ResponseEntity<LogUpdateResponse> updateLogs(
@@ -100,10 +113,16 @@ public class LogController {
     }
 
 
-    @Operation(summary = "로그 삭제", description = "로그 삭제 API",
+    @Operation(summary = "로그 삭제", description = "로그 삭제 API, 로그 삭제 성공시 204 No Content로 body가 반환되지 않습니다.",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "로그 삭제 성공")
+            @ApiResponse(responseCode = "204", description = "로그 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "삭제할 로그 조회 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "삭제하는 로그에 대한 권한이 없는 경우",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{logId}")
     public ResponseEntity<Void> deleteLog(
