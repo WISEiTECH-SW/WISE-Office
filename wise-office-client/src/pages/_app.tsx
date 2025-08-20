@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import Link from "next/link";
+import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import HeaderAuth from "@/components/header/HeaderAuth";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -7,23 +8,21 @@ import { useProfileStore } from "@/store/useProfileStore";
 import { getMyProfile } from "@/services/members";
 
 import { User } from "lucide-react";
-import { useEffect } from "react";
 const logo = "logo.png";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
     const setHasToken = useAuthStore((s) => s.setHasToken);
 
     useEffect(() => {
-        (async () => {
-            try {
-                // 1. 로그인 여부 확인
-                const res = await fetch("/api/auth/me", {
-                    credentials: "include",
-                });
-                const { loggedIn } = await res.json();
-                setHasToken(loggedIn);
+        const initAuth = async () => {
+            const loggedIn =
+                typeof window !== "undefined"
+                    ? document.cookie.includes("jwt=")
+                    : false;
 
-                // 2. 로그인 상태면 프로필 가져와서 store에 저장
+            setHasToken(loggedIn);
+
+            try {
                 if (loggedIn) {
                     const profile = await getMyProfile();
                     useProfileStore.setState({ profile });
@@ -35,8 +34,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 setHasToken(false);
                 useProfileStore.setState({ profile: null });
             }
-        })();
-    }, []);
+        };
+
+        initAuth();
+    }, [setHasToken]);
 
     return (
         <div className="min-h-screen flex flex-col">
