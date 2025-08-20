@@ -1,5 +1,5 @@
 export default function GoogleLoginButton() {
-    const server = process.env.SERVER_URL ?? "http://localhost:8080";
+    const server = process.env.SERVER_URL!;
     const loginUrl = `${server}/oauth2/authorization/google`;
 
     return (

@@ -39,7 +39,7 @@ export default function Home() {
                     </p>
                 ) : (
                     projects.map((p) => (
-                        <ProjectListCard key={p.member_pk} project={p} />
+                        <ProjectListCard key={p.projectId} project={p} />
                     ))
                 )}
             </div>
