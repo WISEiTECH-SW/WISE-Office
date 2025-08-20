@@ -9,3 +9,15 @@ export interface Project {
     managerName: string;
     attendant: string[];
 }
+
+export interface ProjectInfo {
+    projectId: number;
+    projectTitle: string;
+    detail: string;
+    start: Date;
+    end: Date;
+    currentYear: number;
+    managerName: string;
+    attendant: string[];
+    canModify: boolean;
+}

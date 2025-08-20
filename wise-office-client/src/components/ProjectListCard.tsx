@@ -6,6 +6,7 @@ type Props = {
 };
 
 export default function ProjectListCard({ project }: Props) {
+    const projectLink = `/project/${project.member_pk}`;
     return (
         <Link
             href={`/projcet/${project.projectId}`}
