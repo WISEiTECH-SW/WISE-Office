@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
-import kr.co.wise.office.domain.member.dto.IsManagerResponse;
-import kr.co.wise.office.domain.member.dto.MemberListResponse;
-import kr.co.wise.office.domain.member.dto.MyAccountResponse;
+import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.service.MemberService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -71,4 +65,20 @@ public class MemberController {
         log.info("=== 로그인된 사용자 정보: " + memberService.getMyAccountInfo(loginUser.getName()));
         return ResponseEntity.status(HttpStatus.OK).body(memberService.getMyAccountInfo(loginUser.getName()));
     }
+
+    @Operation(summary = "직급 및 소속 변경 API", description = "직급과 소속을 변경합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "직급 소속 변경 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = MemberPositionUpdateResponse.class))),
+    })
+    @PatchMapping
+    public ResponseEntity<MemberPositionUpdateResponse> updateInfo(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+            @Parameter(description = "업데이트 할 직급 및 소속") MemberPositionUpdateRequest request) {
+
+        memberService.updateMemberPosition(request, loginUser.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(new MemberPositionUpdateResponse(request.team(), request.rank()));
+    }
+
 }

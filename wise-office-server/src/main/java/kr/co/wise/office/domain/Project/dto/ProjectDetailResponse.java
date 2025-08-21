@@ -19,7 +19,7 @@ public class ProjectDetailResponse {
     private LocalDate start;
     private LocalDate end;
     private int currentYear;
-    private String managerName;
+    private AttendantDetail managerName;
     private List<AttendantDetail> attendant;
 
     @Schema(description = "상세 조회 프로젝트 수정/삭제 권한 보유 여부 (true: 삭제/수정 가능)")

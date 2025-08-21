@@ -1,9 +1,7 @@
 package kr.co.wise.office.domain.member.service;
 
 import kr.co.wise.office.domain.attendant.service.AttendantService;
-import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
-import kr.co.wise.office.domain.member.dto.MemberListResponse;
-import kr.co.wise.office.domain.member.dto.MyAccountResponse;
+import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
@@ -127,4 +125,11 @@ public class MemberService extends DefaultOAuth2UserService {
         return response;
     }
 
+    @Transactional
+    public MemberPositionUpdateResponse updateMemberPosition(MemberPositionUpdateRequest request, String userEmail) {
+        MemberEntity loginMember = memberRepository.findByEmail(userEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+        loginMember.updatePosition(request);
+        memberRepository.save(loginMember);
+        return new MemberPositionUpdateResponse(loginMember.getTeam(), loginMember.getRank());
+    }
 }

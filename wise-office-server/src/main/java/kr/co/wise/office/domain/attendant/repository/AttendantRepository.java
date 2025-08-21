@@ -14,10 +14,15 @@ import java.util.Optional;
 @Repository
 public interface AttendantRepository extends JpaRepository<AttendantEntity, Long> {
 
-    @Query("select a from AttendantEntity a join fetch a.member join fetch a.project where a.project.id in :ids")
+    @Query("select a from AttendantEntity a join fetch a.member join fetch a.project where a.leftAt is null and a.project.id in :ids")
     Optional<List<AttendantEntity>> findAllWithMemberAndProject(@Param("ids") List<Long> ids);
 
-    Optional<List<AttendantEntity>> findAllByMemberId(Long id);
+    @Query("select a from AttendantEntity a where a.leftAt is null and a.member.id = :id")
+    Optional<List<AttendantEntity>> findAllByMemberId(@Param("id") Long id);
 
-    Optional<AttendantEntity> findByMemberAndProject(MemberEntity loginUser, ProjectEntity project);
+    @Query("select a from AttendantEntity a where a.leftAt is null and a.member = :member and a.project = :project")
+    List<AttendantEntity> findByMemberAndProject(@Param("member") MemberEntity loginUser, @Param("project")ProjectEntity project);
+
+    @Query("select a from AttendantEntity a join fetch a.member where a.leftAt is null and a.project = :project")
+    List<AttendantEntity> findAttendantsByProjectIdWithMember(@Param("project") ProjectEntity project);
 }

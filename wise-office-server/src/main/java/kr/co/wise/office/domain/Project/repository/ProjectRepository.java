@@ -12,10 +12,10 @@ import java.util.Optional;
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
-    @Query("select p from ProjectEntity p join fetch p.member order by p.id desc")
+    @Query("select p from ProjectEntity p join fetch p.member where p.closed = false order by p.id desc")
     Optional<List<ProjectEntity>> findAllProjectWithManager();
 
-    @Query("select p from ProjectEntity p join fetch p.member where p.id = :projectId")
+    @Query("select p from ProjectEntity p join fetch p.member where p.closed = false and p.id = :projectId")
     Optional<ProjectEntity> findProjectWithManager(@Param("projectId") long projectId);
 
 }
