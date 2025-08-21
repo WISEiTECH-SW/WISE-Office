@@ -6,7 +6,7 @@ import {
 } from "react-toastify";
 
 const DEFAULT: ToastOptions = {
-    autoClose: 2000,
+    autoClose: 500,
     hideProgressBar: true,
     closeOnClick: true,
     pauseOnFocusLoss: false,
