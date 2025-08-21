@@ -1,9 +1,9 @@
 import React from "react";
-import { Log } from "@/components/project/types";
+import { LogDetail } from "@/types/log";
 
 interface ProjectLogDetailProps {
-    log: Log;
-    handleEditLog: (log: Log) => void;
+    log: LogDetail;
+    handleEditLog: (log: LogDetail) => void;
 }
 
 const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
@@ -17,9 +17,9 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
                     {log.title}
                 </h2>
                 <div className="flex items-center text-sm text-gray-500">
-                    <span className="font-medium">{log.user}</span>
+                    <span className="font-medium">{log.writer}</span>
                     <span className="mx-2">•</span>
-                    <span>{log.date}</span>
+                    {/* <span>{log.createdAt}</span> */}
                     <span className="mx-2">•</span>
                     <button
                         className="text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"

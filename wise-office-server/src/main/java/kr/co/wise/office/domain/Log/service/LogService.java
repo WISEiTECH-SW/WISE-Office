@@ -22,9 +22,9 @@ public class LogService {
 
     private final LogRepository logRepository;
 
-    public long createLog(LogCreateRequest request, MemberEntity loginUser, ProjectEntity project) {
+    public LogEntity createLog(LogCreateRequest request, MemberEntity loginUser, ProjectEntity project) {
         LogEntity log = request.toEntity(loginUser, project);
-        return logRepository.save(log).getId();
+        return logRepository.save(log);
     }
 
     public List<LogEntity> searchAllLogs(ProjectEntity project) {

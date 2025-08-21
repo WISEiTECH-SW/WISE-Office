@@ -1,16 +1,16 @@
 import React from "react";
 import ProjectLogListItem from "./ProjectLogListItem";
-import { Log } from "@/components/project/types";
+import { Log, LogDetail } from "@/types/log";
 
 interface ProjectLogListProps {
-    logs: Log[];
-    selectedLog?: Log | null;
-    onSelectLog: (log: Log) => void;
+    logList: Log[];
+    selectedLog?: LogDetail | null;
+    onSelectLog: (logId: number) => void;
     onDeleteLog: (logId: number) => void;
 }
 
 const ProjectLogList: React.FC<ProjectLogListProps> = ({
-    logs,
+    logList,
     selectedLog,
     onSelectLog,
     onDeleteLog,
@@ -22,11 +22,11 @@ const ProjectLogList: React.FC<ProjectLogListProps> = ({
             </div>
 
             <div className="max-h-96 overflow-y-auto">
-                {logs.map((log) => (
+                {logList.map((log) => (
                     <ProjectLogListItem
-                        key={log.id}
+                        key={log.logId}
                         log={log}
-                        isSelected={selectedLog?.id === log.id}
+                        isSelected={selectedLog?.logId === log.logId}
                         onSelect={onSelectLog}
                         onDelete={onDeleteLog}
                     />

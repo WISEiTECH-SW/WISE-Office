@@ -33,16 +33,18 @@ public class LogServiceApi {
     private final CommentService commentService;
 
     @Transactional
-    public long createLog(String loginUserEmail, long projectId, LogCreateRequest request) {
+    public LogDetailResponse createLog(String loginUserEmail, long projectId, LogCreateRequest request) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
+        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+        LogEntity newLog = logService.createLog(request, loginUser, project);
 
         //권한 확인
         if (!isAdmin(loginUser)) {
             attendantService.validateParticipatingProject(loginUser, project);
         }
 
-        return logService.createLog(request, loginUser, project);
+        return LogDetailResponse.from(newLog, hasModifyPermission(loginUser,attendant,newLog));
     }
 
     public List<LogListResponse> getAllLogs(long projectId, String loginUserEmail) {
@@ -81,10 +83,15 @@ public class LogServiceApi {
     }
 
     @Transactional
-    public LogUpdateResponse updateLog(long projectId, long logId, String loginUserEmail, LogUpdateRequest request) {
+    public LogDetailResponse updateLog(long projectId, long logId, String loginUserEmail, LogUpdateRequest request) {
         LogEntity log = getLogIfAuthorized(projectId, logId, loginUserEmail);
         LogEntity updatedLog = logService.updateLog(log, request);
-        return new LogUpdateResponse(updatedLog.getTitle(), updatedLog.getLogDetail());
+
+        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
+        ProjectEntity project = projectService.findById(projectId);
+        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+
+        return LogDetailResponse.from(updatedLog, hasModifyPermission(loginUser, attendant, updatedLog));
     }
 
     @Transactional

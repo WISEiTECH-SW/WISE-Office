@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { X, FileText } from "lucide-react";
-import { LogInputData, Log } from "@/components/project/types";
+import type { LogDetail, LogInput } from "@/types/log";
 
 interface ProjectLogInputProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (logData: LogInputData) => void;
-    editingLog?: Log | null;
+    onSubmit: (logInput: LogInput) => void;
+    editingLog?: LogDetail | null;
 }
 const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
     isOpen,
@@ -33,7 +33,6 @@ const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
         onSubmit({
             title: title.trim(),
             content: content.trim(),
-            timestamp: new Date().toISOString(),
         });
 
         // 폼 초기화

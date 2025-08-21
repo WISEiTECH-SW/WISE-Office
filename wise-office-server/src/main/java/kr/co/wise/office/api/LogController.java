@@ -62,11 +62,11 @@ public class LogController {
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
-    public ResponseEntity<LogCreateResponse> createLog(@Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+    public ResponseEntity<LogDetailResponse> createLog(@Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
                                                        @Parameter(description = "생성할 프로젝트 번호(pk값)")  @PathVariable(value = "projectId") long projectId,
                                                        @RequestBody LogCreateRequest request) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new LogCreateResponse(logServiceApi.createLog(loginUser.getName(), projectId, request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(logServiceApi.createLog(loginUser.getName(), projectId, request));
     }
 
 
@@ -101,13 +101,13 @@ public class LogController {
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PatchMapping("/{logId}")
-    public ResponseEntity<LogUpdateResponse> updateLogs(
+    public ResponseEntity<LogDetailResponse> updateLogs(
             @Parameter(description = "업데이트할 프로젝트 내 로그 번호(프로젝트 pk값)") @PathVariable(value = "projectId") long projectId,
             @Parameter(description = "업데이트할 프로젝트 내 로그 번호(로그 pk값)")  @PathVariable(value = "logId") long logId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "수정되는 로그 폼")@RequestBody LogUpdateRequest request){
 
-        LogUpdateResponse response = logServiceApi.updateLog(projectId, logId, loginUser.getName(), request);
+        LogDetailResponse response = logServiceApi.updateLog(projectId, logId, loginUser.getName(), request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
