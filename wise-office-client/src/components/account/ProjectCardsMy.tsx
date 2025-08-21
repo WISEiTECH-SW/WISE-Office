@@ -17,7 +17,9 @@ export default function ProjectCardsMy(props) {
                         </li>
                     ))
                 ) : (
-                    <li className="text-gray-500">등록된 프로젝트가 없습니다.</li>
+                    <li className="text-gray-500">
+                        등록된 프로젝트가 없습니다.
+                    </li>
                 )}
             </ul>
         </div>
@@ -31,7 +33,7 @@ type Props = {
 function ProjectListCard({ project }: Props) {
     return (
         <Link
-            href={`/projcet/${project.projectId}`}
+            href={`/projects/${project.projectId}`}
             className="block w-full bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden"
         >
             {/* project-card-header */}
@@ -58,9 +60,13 @@ function ProjectListCard({ project }: Props) {
                                 프로젝트 기간
                             </span>
                             <div className="flex items-center gap-2 text-xs text-gray-700">
-                                <span className="font-medium">{project.start}</span>
+                                <span className="font-medium">
+                                    {project.start}
+                                </span>
                                 <div className="w-[15%] h-px bg-gray-300"></div>
-                                <span className="font-medium">{project.end}</span>
+                                <span className="font-medium">
+                                    {project.end}
+                                </span>
                             </div>
                         </div>
 
@@ -68,7 +74,9 @@ function ProjectListCard({ project }: Props) {
                             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                                 총 기간
                             </span>
-                            <p className="text-xs text-gray-400 font-medium">-</p>
+                            <p className="text-xs text-gray-400 font-medium">
+                                -
+                            </p>
                         </div>
                     </div>
 

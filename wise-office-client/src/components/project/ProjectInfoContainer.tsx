@@ -14,7 +14,7 @@ export default function ProjectInfoContainer({
     onEdit,
     onDelete,
 }: ProjectContainerProps) {
-    const duration = calculationDuration(projectInfo.start, projectInfo.end);
+    const duration = calculationDuration(projectInfo.start);
     return (
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="flex justify-between items-center mb-4">
