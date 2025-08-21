@@ -10,16 +10,6 @@ export default async function handler(
     try {
         const r = await fetch(backendUrl, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                ...(req.cookies.jwt
-                    ? { Authorization: `Bearer ${req.cookies.jwt}` }
-                    : {}),
-                ...(req.cookies.jwt
-                    ? { Cookie: `jwt=${req.cookies.jwt}` }
-                    : {}),
-                Accept: "application/json",
-            },
         });
 
         const data = await r.json();

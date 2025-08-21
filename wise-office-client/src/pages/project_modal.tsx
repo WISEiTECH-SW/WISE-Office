@@ -6,6 +6,7 @@ import { Member } from "@/types/member";
 import { getMembers } from "@/services/members";
 import { useRef } from "react";
 import { postProject } from "@/services/projects";
+import { useRouter } from "next/router";
 
 type ProjectCreateModalProps = {
   onClose: () => void;
@@ -19,9 +20,10 @@ export default function ProjectCreateModal({ onClose }:ProjectCreateModalProps) 
   const [searchText, setSearchText] = useState<string>("");
   const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
   const [manager, setManager] = useState<Member|undefined>();
-  const [project, setProject] = useState<CreateProject>();
   const [members, setMembers] = useState<Member[]>([]);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const router= useRouter();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -59,7 +61,6 @@ export default function ProjectCreateModal({ onClose }:ProjectCreateModalProps) 
     const end = endDate + "-01";
     const projectManagerId = manager?.memberId;
     const attendants = selectedMembers.map((member) => member.memberId);
-    console.log("attendant: ", attendants);
     const projectData: CreateProject = {
       projectTitle,
       start,
@@ -76,6 +77,7 @@ export default function ProjectCreateModal({ onClose }:ProjectCreateModalProps) 
     } catch (error) {
       console.error("프로젝트 생성 실패:", error);
     }
+    router.reload();
   };
 
   return (

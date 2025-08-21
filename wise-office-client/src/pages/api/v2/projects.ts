@@ -10,13 +10,6 @@ export default async function handler(
     try {
         const r = await fetch(backendUrl, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                // JWT 쿠키 읽어서 Authorization 헤더 붙이기
-                ...(req.cookies.accessToken
-                    ? { Authorization: `Bearer ${req.cookies.accessToken}` }
-                    : {}),
-            },
             body: JSON.stringify(req.body),
         });
 
