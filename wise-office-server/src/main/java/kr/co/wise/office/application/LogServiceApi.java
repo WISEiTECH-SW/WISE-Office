@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,7 +36,11 @@ public class LogServiceApi {
     public long createLog(String loginUserEmail, long projectId, LogCreateRequest request) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
-        attendantService.validateParticipatingProject(loginUser, project);
+
+        //권한 확인
+        if (!isAdmin(loginUser)) {
+            attendantService.validateParticipatingProject(loginUser, project);
+        }
 
         return logService.createLog(request, loginUser, project);
     }
@@ -43,13 +48,18 @@ public class LogServiceApi {
     public List<LogListResponse> getAllLogs(long projectId, String loginUserEmail) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
-
-        // 프로젝트 내 모든 로그 조회
         List<LogEntity> logEntities = logService.searchAllLogs(project);
 
+        Function<LogEntity, Boolean> modifyChecker;
+        if (isAdmin(loginUser)) {
+            modifyChecker = log -> true;
+        } else {
+            AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+            modifyChecker = log -> hasModifyPermission(loginUser, attendant, log);
+        }
+
         return logEntities.stream()
-                .map(log -> LogListResponse.from(log, hasModifyPermission(loginUser, attendant, log)))
+                .map(log -> LogListResponse.from(log, modifyChecker.apply(log)))
                 .toList();
     }
 
@@ -57,16 +67,22 @@ public class LogServiceApi {
         // 필요한 정보 조회
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
         LogEntity log = logService.searchLog(logId);
 
-        return LogDetailResponse.from(log, hasModifyPermission(loginUser,attendant,log));
+        Function<LogEntity, Boolean> modifyChecker;
+        if (isAdmin(loginUser)) {
+            modifyChecker = logs -> true;
+        } else {
+            AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+            modifyChecker = logs -> hasModifyPermission(loginUser, attendant, log);
+        }
+
+        return LogDetailResponse.from(log, modifyChecker.apply(log));
     }
 
     @Transactional
     public LogUpdateResponse updateLog(long projectId, long logId, String loginUserEmail, LogUpdateRequest request) {
         LogEntity log = getLogIfAuthorized(projectId, logId, loginUserEmail);
-
         LogEntity updatedLog = logService.updateLog(log, request);
         return new LogUpdateResponse(updatedLog.getTitle(), updatedLog.getLogDetail());
     }
@@ -74,7 +90,6 @@ public class LogServiceApi {
     @Transactional
     public void removeLog(long projectId, long logId, String loginUserEmail) {
         LogEntity log = getLogIfAuthorized(projectId, logId, loginUserEmail);
-
         commentService.removeCommentByLog(log);
         logService.removeLog(log);
     }
@@ -90,29 +105,41 @@ public class LogServiceApi {
         // 필요한 정보 조회
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
         LogEntity log = logService.searchLog(logId);
 
+        if (isAdmin(loginUser)) {
+            return log;
+        }
+
+        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
         if (!hasModifyPermission(loginUser, attendant, log)) {
             throw new UnAuthorizationException(ErrorMessage.REJECT_MODIFYING_LOG);
         }
-
         return log;
     }
 
     /**
      * 해당 로그를 수정/삭제할 수 있는 권한이 있는 유저인지 확인하는 메소드
      * 로그 수정/삭제는 해당 프로젝트의 PM/로그 작성자/ADMIN 권한을 가진 계정만 가능
+     *
      * @param loginUser : 현재 로그인한 유저 정보
      * @param attendant : 현재 로그인한 유저의 프로젝트 참여 정보
-     * @param log : 수정/삭제할 로그 
+     * @param log       : 수정/삭제할 로그
      * @return true : 수정/삭제 가능, false : 수정/삭제 불가
      */
     private boolean hasModifyPermission(MemberEntity loginUser, AttendantEntity attendant, LogEntity log) {
-        boolean isAdmin = loginUser.getRoleType().equals(MemberRoleType.MASTER); // ADMIN 권한 확인
+        if (isAdmin(loginUser)) {
+            return true;
+        }
+
         boolean isPM = attendant.getRole().equals(AttendantRoleType.PM); // PM 확인
         boolean isWriter = log.getMember().getId().equals(loginUser.getId()); // 작성자인지 확인
-
-        return isAdmin || isPM || isWriter;
+        return isPM || isWriter;
     }
+
+    private boolean isAdmin(MemberEntity loginUser) {
+        // ADMIN 권한 확인
+        return loginUser.getRoleType().equals(MemberRoleType.MASTER);
+    }
+
 }

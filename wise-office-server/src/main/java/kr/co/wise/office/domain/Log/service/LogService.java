@@ -41,6 +41,6 @@ public class LogService {
     }
 
     public void removeLog(LogEntity log) {
-        logRepository.delete(log);
+        logRepository.deleteLog(log.getId());
     }
 }

@@ -1,27 +1,13 @@
 package kr.co.wise.office.domain.comment.entity;
 
-import java.time.LocalDateTime;
-
+import jakarta.persistence.*;
+import kr.co.wise.office.domain.Log.entity.LogEntity;
+import kr.co.wise.office.domain.member.entity.MemberEntity;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import kr.co.wise.office.domain.Log.entity.LogEntity;
-import kr.co.wise.office.domain.member.entity.MemberEntity;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -50,5 +36,14 @@ public class CommentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_member_comment")
     private MemberEntity member;
+
+    @Column(name = "deleted")
+    @Builder.Default
+    private boolean deleted = false;
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
 
 }
