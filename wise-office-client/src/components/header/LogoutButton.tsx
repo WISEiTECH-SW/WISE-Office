@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { toastMessage } from "@/lib/common/toastMessage";
 
 export default function LogoutButton() {
     const router = useRouter();
@@ -11,6 +12,9 @@ export default function LogoutButton() {
         document.cookie = "jwt=; Max-age=0; Path=/";
         setHasToken(false);
         reset();
+        sessionStorage.removeItem("loginToastShown"); // 다음 로그인 때 토스트 다시 뜨도록
+        sessionStorage.setItem("lastLoggedIn", "false");
+        toastMessage.success("로그아웃되었습니다.");
         router.push("/");
     };
 
