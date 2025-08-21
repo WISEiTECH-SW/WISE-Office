@@ -15,6 +15,7 @@ type Props = {
 // };
 
 export default function ProjectListCard({ project }: Props) {
+    const projectLink = `/projects/${project.member_pk}`;
     const router = useRouter();
     const { duration, state, stateColor, textColor } = calculateProjectDuration(
         project.start,
@@ -24,7 +25,6 @@ export default function ProjectListCard({ project }: Props) {
     const handleProjectClick = () => {
         router.push(`/projects/${project.projectId}`);
     };
-
     return (
         <div
             onClick={handleProjectClick}

@@ -1,16 +1,14 @@
-import React from "react";
-
-interface ProjectInfoItemProps {
+type ProjectInfoItemProps = {
     icon: React.ReactNode;
     label: string;
     value: string;
-}
+};
 
-const ProjectInfoItem: React.FC<ProjectInfoItemProps> = ({
+export default function ProjectInfoItem({
     icon,
     label,
     value,
-}) => {
+}: ProjectInfoItemProps) {
     return (
         <div className="flex items-center space-x-3">
             {icon}
@@ -22,6 +20,4 @@ const ProjectInfoItem: React.FC<ProjectInfoItemProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectInfoItem;
+}

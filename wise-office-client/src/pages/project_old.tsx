@@ -1,48 +1,22 @@
 import React, { useState, useEffect } from "react";
 
 import {
-    ProjectInfo,
     ProjectLogList,
     ProjectLogWriteButton,
     ProjectLog,
     ProjectLogInput,
-    ProjectAttendantList,
-    ProjectData,
     Log,
     LogInputData,
 } from "@/components/project";
 
 import { createLog, deleteLog } from "@/lib/project/log";
-import { editProjectInfo, deleteProject } from "@/lib/project/info";
 import {
     createCommentToLog,
     deleteCommentFromLog,
 } from "@/lib/project/comment";
-import { getAttendantCount } from "@/lib/common/util";
-import { Logs } from "lucide-react";
-import { timeStamp } from "console";
 
 const ProjectPage = () => {
     // 예시 데이터 -> 백에서 받는 데이터로 변경 예정
-    //참여자 예시 데이터
-    const data_attendant = [
-        "USER_01",
-        "USER_02",
-        "USER_03",
-        "USER_04",
-        "USER_05",
-        "USER_06",
-    ];
-
-    // 프로젝트 정보 예시 데이터
-    const data_projectInfo: ProjectData = {
-        title: "Project 1",
-        manager: "User_01",
-        participantsCount: getAttendantCount(data_attendant),
-        start: new Date("2022-01-01"),
-        end: new Date("2026-12-31"),
-    };
-
     // 로그 & 댓글 예시 데이터
     const [data_logComment, setLogs] = useState<Log[]>([
         {
@@ -231,12 +205,6 @@ const ProjectPage = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="p-6">
-                {/* Project Information */}
-                <ProjectInfo
-                    project={data_projectInfo}
-                    onEdit={editProjectInfo}
-                    onDelete={deleteProject}
-                />
                 <div className="grid grid-cols-12 gap-6">
                     {/* LOG List - Left */}
                     <div className="col-span-3">
@@ -265,11 +233,6 @@ const ProjectPage = () => {
                             onDeleteComment={handleDeleteComment}
                             handleEditLog={handleEditLog}
                         />
-                    </div>
-
-                    {/* Attendant List - Right */}
-                    <div className="col-span-3">
-                        <ProjectAttendantList attendants={data_attendant} />
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 // Header
-export { default as ProjectInfo } from "./ProjectInfo";
+export { default as ProjectInfoContainer } from "./ProjectInfoContainer";
 
 // Left-Sidebar
 export { default as ProjectLogList } from "./ProjectLogList";

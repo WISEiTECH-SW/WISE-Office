@@ -1,13 +1,12 @@
-import React from "react";
 import ProjectAttendantItem from "./ProjectAttendantItem";
 
-interface ProjectAttendantListProps {
+type ProjectAttendantListProps = {
     attendants: string[];
-}
+};
 
-const ProjectAttendantList: React.FC<ProjectAttendantListProps> = ({
+export default function ProjectAttendantList({
     attendants,
-}) => {
+}: ProjectAttendantListProps) {
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <div className="bg-gray-100 px-4 py-3 rounded-t-lg">
@@ -22,6 +21,4 @@ const ProjectAttendantList: React.FC<ProjectAttendantListProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectAttendantList;
+}
