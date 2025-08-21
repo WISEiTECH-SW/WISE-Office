@@ -10,6 +10,12 @@ export interface Project {
     attendant: string[];
 }
 
+export interface ProjectAttendant {
+    memberId: number;
+    name: string;
+    imgUrl: string;
+}
+
 export interface ProjectInfo {
     projectId: number;
     projectTitle: string;
@@ -17,7 +23,12 @@ export interface ProjectInfo {
     start: Date;
     end: Date;
     currentYear: number;
-    managerName: string;
-    attendant: string[];
+    managerName: ProjectAttendant;
+    attendant: ProjectAttendant[];
     canModify: boolean;
+}
+
+export interface CreateProject {
+    title: string;
+    content: string;
 }

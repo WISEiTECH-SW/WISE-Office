@@ -1,24 +1,25 @@
 import React from "react";
 import { MessageCircle } from "lucide-react";
-import { Log } from "./types";
+import { LogDetail } from "@/types/log";
+
 import ProjectLogDetail from "./ProjectLogDetail";
 import ProjectCommentList from "./ProjectCommentList";
 
 interface ProjectLogProps {
-    selectedLog: Log | null;
-    newComment: string;
-    onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    onAddComment: () => void;
-    onDeleteComment: (logId: number, commentId: number) => void;
-    handleEditLog: (log: Log) => void;
+    selectedLog: LogDetail | null;
+    // newComment: string;
+    // onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    // onAddComment: () => void;
+    // onDeleteComment: (logId: number, commentId: number) => void;
+    handleEditLog: (log: LogDetail) => void;
 }
 
 const ProjectLog: React.FC<ProjectLogProps> = ({
     selectedLog,
-    newComment,
-    onCommentChange,
-    onAddComment,
-    onDeleteComment,
+    // newComment,
+    // onCommentChange,
+    // onAddComment,
+    // onDeleteComment,
     handleEditLog,
 }) => {
     if (!selectedLog) {
@@ -35,7 +36,7 @@ const ProjectLog: React.FC<ProjectLogProps> = ({
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <ProjectLogDetail log={selectedLog} handleEditLog={handleEditLog} />
-            <ProjectCommentList
+            {/* <ProjectCommentList
                 comments={selectedLog.comments}
                 newComment={newComment}
                 onCommentChange={onCommentChange}
@@ -43,7 +44,7 @@ const ProjectLog: React.FC<ProjectLogProps> = ({
                 onDeleteComment={(commentId) =>
                     onDeleteComment(selectedLog.id, commentId)
                 }
-            />
+            /> */}
         </div>
     );
 };

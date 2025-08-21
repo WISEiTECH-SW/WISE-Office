@@ -50,7 +50,7 @@ export default function ProjectInfoContainer({
                 <ProjectInfoItem
                     icon={<User className="w-7 h-7 text-blue-600" />}
                     label="책임자"
-                    value={projectInfo.managerName}
+                    value={projectInfo.managerName.name}
                 />
                 <ProjectInfoItem
                     icon={<Users className="w-7 h-7 text-blue-600" />}

@@ -1,5 +1,5 @@
 import { api } from "@/lib/clientApi";
-import type { Project } from "@/types/project";
+import type { Project, ProjectInfo, CreateProject } from "@/types/project";
 
 export async function getProjects(): Promise<Project[]> {
     const { data } = await api.get<Project[]>("/projects");
@@ -17,5 +17,5 @@ export async function getProjectById(projectId: number): Promise<ProjectInfo> {
 }
 
 export async function postProject(data: CreateProject) {
-  return await api.post("/v2/projects", data).then(res => res.data);
+    return await api.post("/v2/projects", data).then((res) => res.data);
 }
