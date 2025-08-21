@@ -3,9 +3,11 @@ import ProjectListCard from "@/components/ProjectListCard";
 import AddProjectButton from "@/components/AddProjectButton";
 import { getProjects } from "@/services/projects";
 import { useProjects } from "@/store/useProjects";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Home() {
     const projects = useProjects((s) => s.projects);
+    const { hasToken } = useAuthStore();
 
     useEffect(() => {
         (async () => {
@@ -28,11 +30,13 @@ export default function Home() {
                 프로젝트 진행 현황
             </h2>
 
-            <div className="flex justify-end mb-10">
-                <AddProjectButton />
-            </div>
+            {hasToken && (
+                <div className="flex justify-end">
+                    <AddProjectButton />
+                </div>
+            )}
 
-            <div className="flex flex-col items-center w-full gap-10 text-gray-600">
+            <div className="flex flex-col mt-10 items-center w-full gap-10 text-gray-600">
                 {projects.length === 0 ? (
                     <p className="text-gray-400 py-8">
                         등록된 프로젝트가 없습니다.
