@@ -9,7 +9,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Home() {
     const projects = useProjects((s) => s.projects);
-    const [isModalOpen, setIsModalOpen] = useState(false);    const { hasToken } = useAuthStore();
+    const { hasToken } = useAuthStore();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -33,14 +34,19 @@ export default function Home() {
             </h2>
 
             {hasToken && (
-                <div onClick={() => setIsModalOpen(true)} className="flex justify-end">
-                    <AddProjectButton />
+            <>
+                <div onClick={() => setIsModalOpen(true)} className="flex justify-end mb-10">
+                <AddProjectButton />
                 </div>
-            {isModalOpen && (
-                <ProjectCreateModal onClose={() => setIsModalOpen(false)}/>
-            )}
+                {isModalOpen && (
+                <ProjectCreateModal onClose={() => setIsModalOpen(false)} />
+                )}
+            </>
             )}
 
+
+
+            
             <div className="flex flex-col mt-10 items-center w-full gap-10 text-gray-600">
                 {projects.length === 0 ? (
                     <p className="text-gray-400 py-8">

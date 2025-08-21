@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { Project } from "@/types/project";
-
-export default function ProjectCardsMy(props) {
+import { Profile } from "@/types/profile";
+interface UserProfileProps{
+    props:Profile;
+}
+export default function ProjectCardsMy({props}:UserProfileProps) {
     const projects = props.projectList;
 
     return (

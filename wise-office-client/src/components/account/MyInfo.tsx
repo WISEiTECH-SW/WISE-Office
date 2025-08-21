@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-export default function MyInfo(props) {
+import { Profile } from "@/types/profile";
+interface UserProfileProps{
+    props:Profile;
+}
+export default function MyInfo({props}:UserProfileProps) {
 
     const [team, setTeam] = useState(props.team);
     const [rank, setRank] = useState(props.rank);
