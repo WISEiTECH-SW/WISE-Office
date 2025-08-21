@@ -5,6 +5,7 @@ import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.comment.entity.CommentEntity;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -48,6 +49,9 @@ public class LogEntity {
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
 
+    @Column(name = "deleted")
+    @Builder.Default
+    private boolean deleted = false;
 
     public void update(String title, String logDetail) {
         this.title = title;
