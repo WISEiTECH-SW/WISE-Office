@@ -34,6 +34,11 @@ public class ProjectEntity {
     @Column(name = "end_year")
     private LocalDate endYear;
 
+    @Column(name = "deleted")
+    @Builder.Default
+    private boolean deleted = false;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_member_project")
     private MemberEntity member;

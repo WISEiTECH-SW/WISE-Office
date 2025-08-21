@@ -3,6 +3,7 @@ package kr.co.wise.office.domain.comment.repository;
 import kr.co.wise.office.domain.Log.entity.LogEntity;
 import kr.co.wise.office.domain.comment.entity.CommentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,11 +14,13 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
-    void deleteByLog(LogEntity log);
+    @Modifying
+    @Query("update CommentEntity c set c.deleted = true where c.log = :log")
+    void deleteByLog(@Param("log") LogEntity log);
 
-    @Query("select c from CommentEntity c join fetch c.member where c.log.id = :logId order by c.id desc")
+    @Query("select c from CommentEntity c join fetch c.member where c.deleted = false and c.log.id = :logId order by c.id desc")
     List<CommentEntity> findAllByLogIdWithMemberOrderByWrittenAtAsc(@Param("logId") Long logId);
 
-    @Query("select c from CommentEntity c join fetch c.member where c.id = :commentId")
+    @Query("select c from CommentEntity c join fetch c.member where c.deleted = false and c.id = :commentId")
     Optional<CommentEntity> findByIdWithMember(@Param("commentId") long commentId);
 }

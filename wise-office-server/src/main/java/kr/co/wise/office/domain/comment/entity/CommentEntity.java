@@ -37,6 +37,10 @@ public class CommentEntity {
     @JoinColumn(name = "fk_member_comment")
     private MemberEntity member;
 
+    @Column(name = "deleted")
+    @Builder.Default
+    private boolean deleted = false;
+
     public void updateContent(String content) {
         this.content = content;
     }
