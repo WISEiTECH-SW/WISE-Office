@@ -3,6 +3,7 @@ package kr.co.wise.office.domain.Project.Service;
 import kr.co.wise.office.domain.Project.dto.ProjectCreateRequest;
 import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
+import kr.co.wise.office.domain.Project.dto.ProjectUpdateRequest;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.Project.repository.ProjectRepository;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
@@ -83,5 +84,15 @@ public class ProjectService {
 
     public ProjectEntity findById(long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_PROJECT));
+    }
+
+    public void updateProject(ProjectEntity project, ProjectUpdateRequest request) {
+        project.update(request);
+        projectRepository.save(project);
+    }
+
+    public void closeProject(ProjectEntity project) {
+        project.closeProject();
+        projectRepository.save(project);
     }
 }

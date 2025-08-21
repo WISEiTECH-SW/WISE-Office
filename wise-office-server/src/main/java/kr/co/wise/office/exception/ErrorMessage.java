@@ -13,7 +13,9 @@ public enum ErrorMessage {
     REJECT_MODIFYING_LOG(HttpStatus.UNAUTHORIZED, "로그 수정/삭제 권한이 없습니다."),
 
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "존재하지 않는 댓글입니다."),
-    REJECT_MODIFYING_COMMENT(HttpStatus.UNAUTHORIZED, "댓글 수정/삭제 권한이 없습니다.");
+    REJECT_MODIFYING_COMMENT(HttpStatus.UNAUTHORIZED, "댓글 수정/삭제 권한이 없습니다."),
+
+    INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다.");
 
     private HttpStatus status;
     private String message;

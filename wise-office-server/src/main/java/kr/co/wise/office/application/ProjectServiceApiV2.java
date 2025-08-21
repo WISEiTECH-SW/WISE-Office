@@ -4,10 +4,16 @@ import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.dto.ProjectCreateRequest;
 import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
+import kr.co.wise.office.domain.Project.dto.ProjectUpdateRequest;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
+import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
+import kr.co.wise.office.domain.attendant.entity.AttendantRoleType;
 import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
+import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.service.MemberService;
+import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.UnAuthorizationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +43,9 @@ public class ProjectServiceApiV2 {
 
     // 프로젝트 상세 페이지 접속시 반환되는 페이지
     @Transactional(readOnly = true)
-    public ProjectDetailResponse getDetailProjectV2(long projectId, String currentUserEmail) {
+    public ProjectDetailResponse getDetailProjectV2(long projectId, String userEmail) {
         // 현재 로그인한 유저 정보 조회
-        MemberEntity LoginUser = memberService.findByEmail(currentUserEmail);
+        MemberEntity LoginUser = memberService.findByEmail(userEmail);
 
         // 프로젝트 조회
         ProjectDetailResponse response = projectService.searchProjectWithManagerV2(projectId);
@@ -51,21 +57,70 @@ public class ProjectServiceApiV2 {
         return response;
     }
 
-
     @Transactional
-    public Long createProjectV2(ProjectCreateRequest request, String projectMakerEmail) {
+    public Long createProjectV2(ProjectCreateRequest request, String userEmail) {
         // 프로젝트 생성자 정보 조회
-        MemberEntity creator = memberService.findByEmail(projectMakerEmail);
+        MemberEntity creator = memberService.findByEmail(userEmail);
         // 매니저 정보 조회
-        MemberEntity manager = memberService.findById(request.projectManagerId());
+        MemberEntity pm = memberService.findById(request.projectManagerId());
 
         // 프로젝트 생성
         ProjectEntity project = projectService.makeProject(request, creator);
 
         // 참여자 등록
         List<MemberEntity> workers = memberService.findByIds(request.attendants());
-        attendantService.makeAttendantsV2(creator,manager,workers,project);
+        attendantService.makeAttendantsV2(creator,pm,workers,project);
 
         return project.getId();
     }
+
+    @Transactional
+    public ProjectDetailResponse updateProject(long projectId, String userEmail, ProjectUpdateRequest request) {
+        MemberEntity loginUser = memberService.findByEmail(userEmail);
+        MemberEntity newManager = memberService.findById(request.projectManagerId());
+        ProjectEntity project = projectService.findById(projectId);
+        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+
+        //권한 확인
+        if(!canModifyProject(loginUser, attendant)) {
+            throw new UnAuthorizationException(ErrorMessage.REJECT_MODIFYING_PROJECT);
+        }
+
+        //프로젝트 업데이트
+        projectService.updateProject(project, request);
+        List<MemberEntity> updateAttendantList = memberService.findByIds(request.attendants());
+        // 참여자 업데이트
+        attendantService.updateAttendants(project, newManager, updateAttendantList);
+
+        // 수정된 정보 반환
+        ProjectDetailResponse response = projectService.searchProjectWithManager(projectId, userEmail);
+        attendantService.getDetailAttendants(response, loginUser);
+        return response;
+    }
+
+    @Transactional
+    public void closeProject(long projectId, String userEmail) {
+        MemberEntity loginUser = memberService.findByEmail(userEmail);
+        ProjectEntity project = projectService.findById(projectId);
+        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+
+        //권한 확인
+        if(!canModifyProject(loginUser, attendant)) {
+            throw new UnAuthorizationException(ErrorMessage.REJECT_MODIFYING_PROJECT);
+        }
+
+        //프로젝트 종료
+        projectService.closeProject(project);
+    }
+
+    private static boolean canModifyProject(MemberEntity loginUser, AttendantEntity attendant) {
+        boolean isAdmin = loginUser.getRoleType() == MemberRoleType.MASTER;
+        AttendantRoleType role = attendant.getRole();
+        boolean isCreator = role == AttendantRoleType.CREATOR;
+        boolean isPM = role == AttendantRoleType.PM;
+
+        return isAdmin || isCreator || isPM;
+    }
+
+
 }

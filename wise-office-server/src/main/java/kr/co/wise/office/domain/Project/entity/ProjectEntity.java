@@ -1,6 +1,7 @@
 package kr.co.wise.office.domain.Project.entity;
 
 import jakarta.persistence.*;
+import kr.co.wise.office.domain.Project.dto.ProjectUpdateRequest;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import lombok.*;
@@ -34,10 +35,9 @@ public class ProjectEntity {
     @Column(name = "end_year")
     private LocalDate endYear;
 
-    @Column(name = "deleted")
+    @Column(name = "closed")
     @Builder.Default
-    private boolean deleted = false;
-
+    private boolean closed = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_member_project")
@@ -48,4 +48,14 @@ public class ProjectEntity {
     @Builder.Default
     private List<AttendantEntity> attendant = new ArrayList<>();
 
+    public void update(ProjectUpdateRequest request) {
+        this.title = request.projectTitle();
+        this.detail = request.content();
+        this.startYear = request.start();
+        this.endYear = request.end();
+    }
+
+    public void closeProject() {
+        this.closed = true;
+    }
 }
