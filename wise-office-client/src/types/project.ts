@@ -23,7 +23,12 @@ export interface ProjectInfo {
     start: Date;
     end: Date;
     currentYear: number;
-    managerName: string;
+    managerName: ProjectAttendant;
     attendant: ProjectAttendant[];
     canModify: boolean;
+}
+
+export interface CreateProject {
+    title: string;
+    content: string;
 }
