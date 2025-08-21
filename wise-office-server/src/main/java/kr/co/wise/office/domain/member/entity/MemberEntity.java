@@ -1,25 +1,14 @@
 package kr.co.wise.office.domain.member.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 import kr.co.wise.office.domain.Log.entity.LogEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.comment.entity.CommentEntity;
+import kr.co.wise.office.domain.member.dto.MemberPositionUpdateRequest;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -73,5 +62,10 @@ public class MemberEntity {
     public void updateInfo(String username, String imageUrl) {
         this.name = username;
         this.imageUrl = imageUrl;
+    }
+
+    public void updatePosition(MemberPositionUpdateRequest request) {
+        this.rank = request.rank();
+        this.team = request.team();
     }
 }
