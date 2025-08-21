@@ -8,7 +8,7 @@ import { Profile } from "@/types/profile";
 
 export default function Account() {
 
-        const [profile, setProfile] = useState<Profile | null>(null);
+        const [profile, setProfile] = useState<Profile>();
         useEffect(() => {
             const fetchData = async () => {
             const profile = await getMyProfile();
@@ -23,12 +23,12 @@ export default function Account() {
 
             {/* 프로필 영역 - 가운데 정렬 */}
             <section className="col-span-12 md:col-span-2 rounded-lg p-6 flex flex-col items-center justify-center">
-            <UserProfile {...profile} />
+            {profile && <UserProfile props={profile} />}
             </section>
 
             {/* 부서/직급 및 저장 버튼 영역 */}
             <section className="col-span-12 md:col-span-3 bg-white rounded-lg shadow-md p-6 flex flex-col justify-center space-y-6">
-            <MyInfo {...profile}/>
+            {profile && <MyInfo props={profile} />}
 
             <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded py-2 transition duration-300">
                 저장
@@ -37,7 +37,7 @@ export default function Account() {
 
             {/* 프로젝트 영역 */}
             <section className="col-span-12 md:col-span-7 bg-white rounded-lg shadow-md p-6">
-                <ProjectCardsMy {...profile} />
+            {profile && <ProjectCardsMy props={profile} />}
             </section>
         </div>
         </div>
