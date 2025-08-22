@@ -19,3 +19,11 @@ export async function getProjectById(projectId: number): Promise<ProjectInfo> {
 export async function postProject(data: CreateProject) {
     return await api.post("/v2/projects", data).then((res) => res.data);
 }
+
+export async function updateProject(data: CreateProject, projectId: number) {
+    return await api.patch(`/v2/projects/${projectId}`, data).then((res) => res.data);
+}
+
+export async function deleteProjectApi(projectId: number) {
+    return await api.delete(`/v2/projects/${projectId}`).then((res) => res.data);
+}

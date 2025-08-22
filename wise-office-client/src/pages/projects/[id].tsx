@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 
 import type { ProjectInfo } from "@/types/project";
 import { editProjectInfo, deleteProject } from "@/lib/project/info";
-import { getProjectById } from "@/services/projects";
+import { deleteProjectApi, getProjectById } from "@/services/projects";
+import ProjectUpdateModal from "../project_modal_update";
 
 import type { Log, LogDetail, LogInput } from "@/types/log";
 import {
@@ -37,6 +38,7 @@ export default function projectPageById() {
 
     // Project
     const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
+    const [isEditOpen, setIsEditOpen] = useState(false);
 
     // Log
     const [isLoading, setIsLoading] = useState(true);
@@ -114,6 +116,22 @@ export default function projectPageById() {
 
             setLogList(deleteLogList(logList, logId));
             setSelectedLog(null);
+        }
+    };
+
+    // 프로젝트 삭제
+    const delProject = () => {
+        if(window.confirm("이 프로젝트를 삭제하시겠습니까?")){
+            if(!router.isReady) return;
+            if(typeof id !== "string") return;
+            const projectId = Number(id);
+            if(isNaN(projectId)) return;
+            try{
+                deleteProjectApi(projectId);
+            }catch(error){
+                console.log("프로젝트 삭제 실패: ", error);
+            }
+            
         }
     };
 
@@ -198,9 +216,17 @@ export default function projectPageById() {
                 {/* Project Information */}
                 <ProjectInfoContainer
                     projectInfo={projectInfo}
-                    onEdit={editProjectInfo}
-                    onDelete={deleteProject}
+                    // onEdit={editProjectInfo}
+                    onEdit={()=> {setIsEditOpen(true); editProjectInfo();}}
+                    onDelete={() => {
+                        delProject();
+                        deleteProject();}}
                 />
+                {isEditOpen &&projectInfo.projectId && (
+                    <ProjectUpdateModal
+                    projectId = {projectInfo.projectId}
+                    onClose={() => setIsEditOpen(false)}/>
+                )}
                 <div className="grid grid-cols-12 gap-6">
                     {/* LOG List - Left */}
                     <div className="col-span-3">
