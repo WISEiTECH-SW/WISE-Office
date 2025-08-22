@@ -17,7 +17,6 @@ type ProjectCreateModalProps = {
 export default function ProjectCreateModal({
     onClose,
 }: ProjectCreateModalProps) {
-    const addProject = useProjects((s) => s.addProject);
     const [projectTitle, setProjectTitle] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -27,8 +26,6 @@ export default function ProjectCreateModal({
     const [manager, setManager] = useState<Member | undefined>();
     const [members, setMembers] = useState<Member[]>([]);
     const modalRef = useRef<HTMLDivElement>(null);
-
-    const router = useRouter();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -79,7 +76,8 @@ export default function ProjectCreateModal({
 
         try {
             const newProject = await postProject(projectData);
-            addProject(newProject);
+            useProjects.getState().addProject(newProject);
+            useProjects.getState().fetchProjects();
             toastMessage.success("프로젝트가 등록되었습니다.");
             onClose();
         } catch (error: any) {
