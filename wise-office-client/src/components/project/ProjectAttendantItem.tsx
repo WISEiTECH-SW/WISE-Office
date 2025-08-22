@@ -1,24 +1,23 @@
-import { User } from "lucide-react";
+import Image from "next/image";
 
 type ProjectAttendantItemProps = {
     name: string;
-    imgUrl: string;
+    imageUrl: string;
 };
 
 export default function ProjectAttendantItem({
     name,
-    imgUrl,
+    imageUrl,
 }: ProjectAttendantItemProps) {
-    const profileImg = `${imgUrl}/assets/Google.png`;
     return (
         <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center">
-                <User className="w-5 h-5 text-white" />
-            </div>
-            {/* <img
-                src={profileImg}
+            <Image
+                src={imageUrl}
+                alt="profile image"
+                width={32}
+                height={32}
                 className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center"
-            ></img> */}
+            ></Image>
             <span className="text-sm font-medium text-gray-800">{name}</span>
         </div>
     );

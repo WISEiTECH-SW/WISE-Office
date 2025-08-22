@@ -18,8 +18,8 @@ export default function Profile() {
             <Image
                 src={profile?.imageUrl ?? "/assets/Google.png"}
                 alt={profile?.name ?? "👤"}
-                width={9}
-                height={9}
+                width={36}
+                height={36}
                 className="w-9 h-9 rounded-full object-cover"
             />
         </div>
