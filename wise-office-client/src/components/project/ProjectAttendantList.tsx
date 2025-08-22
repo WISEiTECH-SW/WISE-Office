@@ -19,7 +19,7 @@ export default function ProjectAttendantList({
                         <ProjectAttendantItem
                             key={index}
                             name={participant.name}
-                            imgUrl={participant.imgUrl}
+                            imageUrl={participant.imageUrl}
                         />
                     ))}
                 </div>

@@ -13,7 +13,7 @@ export interface Project {
 export interface ProjectAttendant {
     memberId: number;
     name: string;
-    imgUrl: string;
+    imageUrl: string;
 }
 
 export interface ProjectInfo {
