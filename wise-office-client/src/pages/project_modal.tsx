@@ -82,11 +82,14 @@ export default function ProjectCreateModal({
             addProject(newProject);
             toastMessage.success("프로젝트가 등록되었습니다.");
             onClose();
-        } catch (error) {
-            console.error("프로젝트 생성 실패:", error);
-            toastMessage.success(
-                "프로젝트 등록에 실패했습니다. 다시 시도해주세요."
-            );
+        } catch (error: any) {
+            if (error.response?.status === 400) {
+                toastMessage.error("기간 또는 PM 설정을 확인해주세요.");
+            } else {
+                toastMessage.error(
+                    "프로젝트 등록 중 오류가 발생했습니다. 다시 시도해주세요."
+                );
+            }
         }
     };
 
