@@ -37,7 +37,7 @@ public class AttendantService {
         attendantRepository.saveAll(entities);
     }
 
-    public void makeAttendantsV2(MemberEntity creator, MemberEntity manager, List<MemberEntity> workers, ProjectEntity project) {
+    public List<String> makeAttendantsV2(MemberEntity creator, MemberEntity manager, List<MemberEntity> workers, ProjectEntity project) {
         // CREATOR 저장
         AttendantEntity creatorEntity = AttendantEntity.builder()
                 .member(creator)
@@ -66,6 +66,18 @@ public class AttendantService {
                 .role(AttendantRoleType.WORKER)
                 .build()).toList();
         attendantRepository.saveAll(workerEntities);
+
+        //생성된 참여자 이름 목록 반환
+        List<String> attendantsName = new ArrayList<>();
+        for (AttendantEntity attendant : workerEntities) {
+            attendantsName.add(attendant.getMember().getName());
+        }
+        //PM 이랑 CREATOR가 다른 경우 ==> CREATOR 참여자 이름 목록에 추가
+        if (!manager.getId().equals(creator.getId())) {
+            attendantsName.add(creator.getName());
+        }
+
+        return attendantsName;
     }
 
 

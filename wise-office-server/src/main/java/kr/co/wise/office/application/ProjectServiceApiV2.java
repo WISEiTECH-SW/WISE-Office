@@ -1,10 +1,7 @@
 package kr.co.wise.office.application;
 
 import kr.co.wise.office.domain.Project.Service.ProjectService;
-import kr.co.wise.office.domain.Project.dto.ProjectCreateRequest;
-import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
-import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
-import kr.co.wise.office.domain.Project.dto.ProjectUpdateRequest;
+import kr.co.wise.office.domain.Project.dto.*;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantRoleType;
@@ -58,7 +55,7 @@ public class ProjectServiceApiV2 {
     }
 
     @Transactional
-    public Long createProjectV2(ProjectCreateRequest request, String userEmail) {
+    public ProjectCreateResponse createProjectV2(ProjectCreateRequest request, String userEmail) {
         // 프로젝트 생성자 정보 조회
         MemberEntity creator = memberService.findByEmail(userEmail);
         // 매니저 정보 조회
@@ -69,9 +66,10 @@ public class ProjectServiceApiV2 {
 
         // 참여자 등록
         List<MemberEntity> workers = memberService.findByIds(request.attendants());
-        attendantService.makeAttendantsV2(creator,pm,workers,project);
+        List<String> attendantsName = attendantService.makeAttendantsV2(creator, pm, workers, project);
 
-        return project.getId();
+        ProjectCreateResponse response = ProjectCreateResponse.from(project, attendantsName, pm.getName());
+        return response;
     }
 
     @Transactional

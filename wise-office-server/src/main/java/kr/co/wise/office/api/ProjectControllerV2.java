@@ -58,7 +58,7 @@ public class ProjectControllerV2 {
     public ResponseEntity<ProjectCreateResponse> createProjectV2(@Parameter(description = "생성할 프로젝트의 정보", required = true) @RequestBody ProjectCreateRequest request,
                                                                  @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) throws IllegalAccessException {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ProjectCreateResponse(projectServiceApiV2.createProjectV2(request, loginUser.getName())));
+                .body(projectServiceApiV2.createProjectV2(request, loginUser.getName()));
     }
 
     @Operation(summary = "프로젝트 상세 조회 V2", description = "상세 프로젝트 내역을 조회합니다.")
