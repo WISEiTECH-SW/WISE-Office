@@ -27,11 +27,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+/**
+ * 미사용 컨트롤러입니다. 2025/8/22 - jhryu
+ */
+
+//@RestController
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "프로젝트 생성 API => 8/20일부로 동작하지 않습니다.", description = "프로젝트 생성/조회/수정/삭제를 위한 API입니다.")
-@RequestMapping("/api/projects")
+//@RequestMapping("/api/projects")
 public class ProjectController {
 
     private final ProjectServiceApi projectServiceApi;
@@ -63,7 +67,8 @@ public class ProjectController {
         log.info("현재 로그인한 유져 : " + loginUser.getName());
         log.info(request.toString());
         Long projectId = projectServiceApi.createProject(request, loginUser.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ProjectCreateResponse(projectId)); // 생성된 프로젝트 ID 반환
+        return null;
+        //return ResponseEntity.status(HttpStatus.CREATED).body(new ProjectCreateResponse(projectId)); // 생성된 프로젝트 ID 반환
     }
 
     @Operation(summary = "프로젝트 상세 조회", description = "상세 프로젝트 내역을 조회합니다.")
