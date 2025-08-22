@@ -25,7 +25,7 @@ export default function Home() {
                 useProjects.setState({ projects: [] });
             }
         })();
-    }, []);
+    }, [projects]);
 
     return (
         <section className="mt-20 mb-30 px-12 py-5 px-70">
@@ -34,19 +34,21 @@ export default function Home() {
             </h2>
 
             {hasToken && (
-            <>
-                <div onClick={() => setIsModalOpen(true)} className="flex justify-end mb-10">
-                <AddProjectButton />
-                </div>
-                {isModalOpen && (
-                <ProjectCreateModal onClose={() => setIsModalOpen(false)} />
-                )}
-            </>
+                <>
+                    <div
+                        onClick={() => setIsModalOpen(true)}
+                        className="flex justify-end mb-10"
+                    >
+                        <AddProjectButton />
+                    </div>
+                    {isModalOpen && (
+                        <ProjectCreateModal
+                            onClose={() => setIsModalOpen(false)}
+                        />
+                    )}
+                </>
             )}
 
-
-
-            
             <div className="flex flex-col mt-10 items-center w-full gap-10 text-gray-600">
                 {projects.length === 0 ? (
                     <p className="text-gray-400 py-8">
