@@ -30,6 +30,7 @@ export default function Account() {
             rank,
         };
         try{
+            console.log("수정될 값: ", req);
             const newProfileInfo = await updateProfileInfo(req);
             console.log(newProfileInfo);
         } catch(error){
