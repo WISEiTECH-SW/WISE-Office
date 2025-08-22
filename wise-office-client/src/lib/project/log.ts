@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Log, LogDetail } from "@/types/log";
 
 export const deleteLogList = (logs: Log[], logId: number): Log[] => {

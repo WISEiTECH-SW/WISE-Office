@@ -1,6 +1,7 @@
 import React from "react";
 import { User, XCircle } from "lucide-react";
-import { Comment } from "@/components/project/types";
+import { Comment } from "@/types/comment";
+import { formatDateTime } from "@/lib/common/util";
 
 interface ProjectCommentListItemProps {
     comment: Comment;
@@ -20,11 +21,11 @@ const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
                 <div className="bg-gray-50 rounded-lg p-3">
                     <div className="flex items-center justify-between mb-1">
                         <span className="font-medium text-sm text-gray-800">
-                            {comment.user}
+                            {comment.authorName}
                         </span>
                         <div className="flex items-center">
                             <span className="text-xs text-gray-500 mr-2">
-                                {comment.date}
+                                {formatDateTime(comment.writtenAt)}
                             </span>
                             <button
                                 className="text-gray-400 hover:text-red-500"

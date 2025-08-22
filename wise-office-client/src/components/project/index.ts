@@ -13,5 +13,3 @@ export { default as ProjectAttendantList } from "./ProjectAttendantList";
 
 // Modal
 export { default as ProjectLogInput } from "./ProjectLogInput";
-
-export * from "./types";
