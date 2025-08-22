@@ -8,6 +8,7 @@ import { useRef } from "react";
 import { postProject } from "@/services/projects";
 import { useRouter } from "next/router";
 import { toastMessage } from "@/lib/common/toastMessage";
+import { useProjects } from "@/store/useProjects";
 
 type ProjectCreateModalProps = {
     onClose: () => void;
@@ -16,6 +17,7 @@ type ProjectCreateModalProps = {
 export default function ProjectCreateModal({
     onClose,
 }: ProjectCreateModalProps) {
+    const addProject = useProjects((s) => s.addProject);
     const [projectTitle, setProjectTitle] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -76,7 +78,8 @@ export default function ProjectCreateModal({
         };
 
         try {
-            await postProject(projectData);
+            const newProject = await postProject(projectData);
+            addProject(newProject);
             toastMessage.success("프로젝트가 등록되었습니다.");
             onClose();
         } catch (error) {
@@ -85,7 +88,6 @@ export default function ProjectCreateModal({
                 "프로젝트 등록에 실패했습니다. 다시 시도해주세요."
             );
         }
-        router.reload();
     };
 
     return (
