@@ -15,6 +15,13 @@ import {
 } from "@/services/logs";
 import { convertToLog, deleteLogList } from "@/lib/project/log";
 
+import { Comment, CommentInput } from "@/types/comment";
+import {
+    getCommentList,
+    createComment,
+    deleteComment,
+} from "@/services/coments";
+
 import {
     ProjectInfoContainer,
     ProjectLogList,
@@ -32,11 +39,16 @@ export default function projectPageById() {
     const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
 
     // Log
+    const [isLoading, setIsLoading] = useState(true);
     const [logList, setLogList] = useState<Log[]>([]);
     const [selectedLogId, setSelectedLogId] = useState<number | null>(null);
     const [selectedLog, setSelectedLog] = useState<LogDetail | null>(null);
     const [isLogModalOpen, setIsLogModalOpen] = useState(false);
     const [editingLog, setEditingLog] = useState<LogDetail | null>(null);
+
+    // Comment
+    const [commentList, setCommentList] = useState<Comment[]>([]);
+    const [newComment, setNewComment] = useState("");
 
     // 로그 선택
     const selectLog = (logId: number) => {
@@ -105,6 +117,63 @@ export default function projectPageById() {
         }
     };
 
+    const fetchLogComment = async () => {
+        if (!router.isReady || !selectedLogId) return;
+        if (typeof id !== "string") return;
+        const projectId = Number(id);
+        if (isNaN(projectId)) return;
+
+        try {
+            setIsLoading(true);
+            const logDetail = await getLogDetail(projectId, selectedLogId);
+            const comments = await getCommentList(projectId, logDetail.logId);
+            const updatedLogList = await getLogList(projectId);
+
+            setSelectedLog(logDetail);
+            setCommentList(comments);
+            setLogList(updatedLogList);
+        } catch (err) {
+            console.error("데이터를 불러오는 데 실패했습니다:", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // 댓글 생성
+    const handleAddComment = async () => {
+        if (!selectedLog || newComment.trim() === "") {
+            return;
+        }
+        const projectId = Number(id);
+        if (isNaN(projectId)) return;
+
+        const commentInput: CommentInput = { content: newComment };
+        const createdComment = await createComment(
+            projectId,
+            selectedLog.logId,
+            commentInput
+        );
+
+        fetchLogComment();
+        setNewComment("");
+    };
+
+    // 댓글 삭제
+    const handleDeleteComment = async (commentId: number) => {
+        if (!selectedLog) return;
+        if (typeof id !== "string") return;
+        const projectId = Number(id);
+        if (isNaN(projectId)) return;
+
+        try {
+            await deleteComment(projectId, selectedLog.logId, commentId);
+        } catch (err) {
+            console.error(err);
+        }
+        fetchLogComment();
+        setNewComment("");
+    };
+
     // 처음 데이터 로드
     useEffect(() => {
         if (!router.isReady) return;
@@ -114,19 +183,12 @@ export default function projectPageById() {
 
         getProjectById(projectId).then(setProjectInfo).catch(console.error);
         getLogList(projectId).then(setLogList).catch(console.error);
-        // comment list
     }, [router.isReady, id]);
 
     // 로그 선택시
     useEffect(() => {
-        if (!router.isReady || !selectedLogId) return;
-        if (typeof id !== "string") return;
-        const projectId = Number(id);
-        if (isNaN(projectId)) return;
-
-        getLogDetail(projectId, selectedLogId)
-            .then(setSelectedLog)
-            .catch(console.error);
+        fetchLogComment();
+        setNewComment("");
     }, [router.isReady, id, selectedLogId]);
 
     if (!projectInfo) return <div>!!No Project!!</div>;
@@ -158,13 +220,14 @@ export default function projectPageById() {
                     <div className="col-span-6">
                         <ProjectLog
                             selectedLog={selectedLog}
-                            // newComment={newComment}
-                            // onCommentChange={(e) =>
-                            //     setNewComment(e.target.value)
-                            // }
-                            // onAddComment={handleAddComment}
-                            // onDeleteComment={handleDeleteComment}
                             handleEditLog={handleEditLog}
+                            commentList={commentList}
+                            newComment={newComment}
+                            onCommentChange={(e) =>
+                                setNewComment(e.target.value)
+                            }
+                            onAddComment={handleAddComment}
+                            onDeleteComment={handleDeleteComment}
                         />
                     </div>
                     {/* Attendant List - Right */}

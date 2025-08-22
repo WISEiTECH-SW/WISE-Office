@@ -1,5 +1,5 @@
 import React from "react";
-import { Comment } from "@/components/project/types";
+import { Comment } from "@/types/comment";
 import ProjectCommentListItem from "./ProjectCommentListItem";
 import ProjectCommentInput from "./ProjectCommentInput";
 
@@ -33,7 +33,7 @@ const ProjectCommentList: React.FC<ProjectCommentListProps> = ({
                     <ProjectCommentListItem
                         key={comment.id}
                         comment={comment}
-                        onDelete={() => onDeleteComment(comment.id)}
+                        onDelete={onDeleteComment}
                     />
                 ))}
             </div>

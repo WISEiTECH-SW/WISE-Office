@@ -22,14 +22,14 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public Long createComment(LogEntity log, MemberEntity loginUser, CommentCreateRequest request) {
+    public CommentEntity createComment(LogEntity log, MemberEntity loginUser, CommentCreateRequest request) {
         CommentEntity comment = CommentEntity.builder()
                 .content(request.content())
                 .member(loginUser)
                 .log(log)
                 .build();
 
-        return commentRepository.save(comment).getId();
+        return commentRepository.save(comment);
     }
 
     public CommentEntity findCommentById(Long commentId) {

@@ -42,13 +42,13 @@ public class CommentController {
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
-    public ResponseEntity<Long> createComment(
+    public ResponseEntity<CommentResponse> createComment(
             @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
             @Parameter(description = "로그 ID") @PathVariable Long logId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "생성할 댓글 내용") @RequestBody @Valid CommentCreateRequest request) {
 
-        Long commentId = commentService.createComment(projectId, logId, loginUser.getName(), request);
+        CommentResponse commentId = commentService.createComment(projectId, logId, loginUser.getName(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(commentId);
     }
 

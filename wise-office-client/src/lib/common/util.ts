@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 type ProjectState = {
     duration: string;
     state: string;
@@ -56,13 +58,10 @@ export function calculationDuration(startDate: Date) {
 }
 
 /**
- * 참여자 배열의 길이를 계산하여 총 인원 수를 반환하는 함수
- * @param attendants 참여자 배열
- * @returns 참여자 수(number)
+ * string 형태의 time 형태를 YYYY-MM-DD HH:MM:Ss 형태의 string으로 반환해주는 함수
+ * @param dateStr time stamp 형태의 string 시간 데이터
+ * @returns 변경된 형태의 string
  */
-export const getAttendantCount = (attendants: string[]): number => {
-    if (!attendants) {
-        return 0;
-    }
-    return attendants.length;
+export const formatDateTime = (dateStr: string) => {
+    return dayjs(dateStr).format("YYYY-MM-DD HH:mm:ss");
 };

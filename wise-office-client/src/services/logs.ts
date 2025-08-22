@@ -42,7 +42,7 @@ export async function createLog(
 /**
  * 특정 project의 특정 log를 삭제하는 함수
  * @param projectId 프로젝트의 ID
- * @param logInput 삭제할 로그 ID
+ * @param logId 삭제할 로그 ID
  */
 export async function deleteLog(projectId: number, logId: number) {
     await api.delete(`v1/${projectId}/logs/${logId}`);

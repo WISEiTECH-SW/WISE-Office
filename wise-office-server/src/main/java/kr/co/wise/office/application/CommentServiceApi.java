@@ -37,7 +37,7 @@ public class CommentServiceApi {
     private final ProjectService projectService;
 
     @Transactional
-    public Long createComment(long projectId, long logId, String loginEmail, CommentCreateRequest request) {
+    public CommentResponse createComment(long projectId, long logId, String loginEmail, CommentCreateRequest request) {
         MemberEntity loginUser = memberService.findByEmail(loginEmail);
 
         //권한 확인
@@ -47,7 +47,9 @@ public class CommentServiceApi {
         }
 
         LogEntity log = logService.searchLog(logId);
-        return commentService.createComment(log, loginUser, request);
+        CommentEntity newComment = commentService.createComment(log, loginUser, request);
+
+        return CommentResponse.from(newComment, true);
     }
 
     public List<CommentResponse> getCommentsForLog(long projectId, long logId, String userEmail) {

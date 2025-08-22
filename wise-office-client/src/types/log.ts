@@ -2,7 +2,7 @@ export interface Log {
     logId: number;
     title: string;
     writer: string;
-    createdAt: Date;
+    createdAt: string;
     commentCnt: number;
     canmodify: boolean;
 }
@@ -10,7 +10,7 @@ export interface Log {
 export interface LogDetail {
     logId: number;
     writer: string;
-    createdAt: Date;
+    createdAt: string;
     content: string;
     imageUrl: string;
     canModify: boolean;

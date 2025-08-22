@@ -1,5 +1,6 @@
 import React from "react";
 import { LogDetail } from "@/types/log";
+import { formatDateTime } from "@/lib/common/util";
 
 interface ProjectLogDetailProps {
     log: LogDetail;
@@ -19,7 +20,7 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
                 <div className="flex items-center text-sm text-gray-500">
                     <span className="font-medium">{log.writer}</span>
                     <span className="mx-2">•</span>
-                    {/* <span>{log.createdAt}</span> */}
+                    <span>{formatDateTime(log.createdAt)}</span>
                     <span className="mx-2">•</span>
                     <button
                         className="text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
