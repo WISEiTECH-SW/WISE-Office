@@ -18,12 +18,12 @@ export default function SelectProjectMembers({members, searchText, selectedMembe
     const filteredMembers = members.filter(
         (m) =>
         m.name.includes(searchText) ||
-        m.rank.toLowerCase().includes(searchText.toLowerCase())
+        (typeof m.rank === "string" && m.rank.toLowerCase().includes(searchText.toLowerCase()))
     );
         const toggleMember = (member:Member) => {
-        if (selectedMembers.find((m) => m.name === member.name)) {
-        setSelectedMembers(selectedMembers.filter((m) => m.name !== member.name));
-        if (manager?.name === member.name) {
+        if (selectedMembers.find((m) => m.memberId === member.memberId)) {
+        setSelectedMembers(selectedMembers.filter((m) => m.memberId !== member.memberId));
+        if (manager?.memberId === member.memberId) {
             setManager(undefined);
         }
         } else {
@@ -51,7 +51,7 @@ export default function SelectProjectMembers({members, searchText, selectedMembe
                     <p className="text-center text-sm text-gray-500 py-3">검색 결과 없음</p>
                     ) : (
                     filteredMembers.map((member, i) => {
-                        const isSelected = selectedMembers.find((m) => m.name === member.name);
+                        const isSelected = selectedMembers.find((m) => m.memberId === member.memberId);
                         return (
                         <div
                             key={i}
@@ -75,7 +75,7 @@ export default function SelectProjectMembers({members, searchText, selectedMembe
                     >
                     {selectedMembers.map((member) => (
                         <div
-                        key={member.name}
+                        key={member.memberId}
                         className="flex items-center gap-2 bg-blue-100 px-3 py-1 rounded text-sm whitespace-nowrap flex-shrink-0"
                         style={{ minWidth: "100px" }}
                         >
@@ -104,13 +104,13 @@ export default function SelectProjectMembers({members, searchText, selectedMembe
                     <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-3 shadow-inner">
                         {selectedMembers.map((member) => (
                         <label
-                            key={member.name}
+                            key={member.memberId}
                             className="flex items-center gap-3 mb-2 cursor-pointer text-gray-800"
                         >
                             <input
                             type="radio"
                             name="manager"
-                            checked={manager?.name === member.name}
+                            checked={manager?.memberId === member.memberId}
                             onChange={() => handleManagerChange(member)}
                             className="cursor-pointer"
                             />

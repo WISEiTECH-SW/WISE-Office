@@ -29,6 +29,10 @@ export interface ProjectInfo {
 }
 
 export interface CreateProject {
-    title: string;
+    projectTitle: string;
+    start: string;
+    end: string;
     content: string;
+    projectManagerId: number | undefined;
+    attendants: number[];
 }
