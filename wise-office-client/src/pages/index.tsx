@@ -9,6 +9,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Home() {
     const projects = useProjects((s) => s.projects);
+    const fetchProjects = useProjects((s) => s.fetchProjects);
     const { hasToken } = useAuthStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,7 +26,7 @@ export default function Home() {
                 useProjects.setState({ projects: [] });
             }
         })();
-    }, [projects]);
+    }, [fetchProjects]);
 
     return (
         <section className="mt-20 mb-30 px-12 py-5 px-70">
