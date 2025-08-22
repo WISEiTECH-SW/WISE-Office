@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.wise.office.application.LogServiceApi;
 import kr.co.wise.office.domain.Log.dto.*;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
@@ -56,15 +57,15 @@ public class LogController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "로그 생성 성공, 생성된 log Id 값 반환",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = LogCreateResponse.class))),
+                            schema = @Schema(implementation = LogDetailResponse.class))),
             @ApiResponse(responseCode = "400", description = "조회할 로그에 속한 프로젝트에 참여하지 않은 경우",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
     public ResponseEntity<LogDetailResponse> createLog(@Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-                                                       @Parameter(description = "생성할 프로젝트 번호(pk값)")  @PathVariable(value = "projectId") long projectId,
-                                                       @RequestBody LogCreateRequest request) {
+                                                       @Parameter(description = "생성할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId,
+                                                       @Parameter(description = "생성할 로그 제목 및 내용") @Valid @RequestBody LogCreateRequest request) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(logServiceApi.createLog(loginUser.getName(), projectId, request));
     }
@@ -105,7 +106,7 @@ public class LogController {
             @Parameter(description = "업데이트할 프로젝트 내 로그 번호(프로젝트 pk값)") @PathVariable(value = "projectId") long projectId,
             @Parameter(description = "업데이트할 프로젝트 내 로그 번호(로그 pk값)")  @PathVariable(value = "logId") long logId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "수정되는 로그 폼")@RequestBody LogUpdateRequest request){
+            @Parameter(description = "수정되는 로그 폼") @Valid @RequestBody LogUpdateRequest request){
 
         LogDetailResponse response = logServiceApi.updateLog(projectId, logId, loginUser.getName(), request);
 

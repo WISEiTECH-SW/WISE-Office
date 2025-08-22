@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.wise.office.application.ProjectServiceApiV2;
 import kr.co.wise.office.domain.Project.dto.*;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
@@ -55,7 +56,7 @@ public class ProjectControllerV2 {
             @ApiResponse(responseCode = "403", description = "접근 권한 없음 (MANAGER 역할 아님)", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<ProjectCreateResponse> createProjectV2(@Parameter(description = "생성할 프로젝트의 정보", required = true) @RequestBody ProjectCreateRequest request,
+    public ResponseEntity<ProjectCreateResponse> createProjectV2(@Parameter(description = "생성할 프로젝트의 정보", required = true) @Valid @RequestBody ProjectCreateRequest request,
                                                                  @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) throws IllegalAccessException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(projectServiceApiV2.createProjectV2(request, loginUser.getName()));
@@ -82,7 +83,7 @@ public class ProjectControllerV2 {
     @PatchMapping("/{projectId}")
     public ResponseEntity<ProjectDetailResponse> updateProject(@Parameter(description = "업데이트할 프로젝트 번호", required = true) @PathVariable("projectId") long projectId,
                                                                @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-                                                               @Parameter(description = "업데이트할 프로젝트 정보") @RequestBody ProjectUpdateRequest request) {
+                                                               @Parameter(description = "업데이트할 프로젝트 정보") @Valid @RequestBody ProjectUpdateRequest request) {
         projectServiceApiV2.updateProject(projectId, loginUser.getName(), request);
         return null;
     }

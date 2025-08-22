@@ -42,6 +42,9 @@ public class ProjectService {
      */
     @Transactional
     public ProjectEntity makeProject(ProjectCreateRequest request, MemberEntity creator) {
+
+
+
         ProjectEntity projectEntity = ProjectEntity.builder()
                 .title(request.projectTitle())
                 .detail(request.content()) // content를 detail로 매핑

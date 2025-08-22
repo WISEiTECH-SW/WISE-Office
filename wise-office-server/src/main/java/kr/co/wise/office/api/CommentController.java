@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.wise.office.application.CommentServiceApi;
 import kr.co.wise.office.domain.comment.dto.CommentCreateRequest;
 import kr.co.wise.office.domain.comment.dto.CommentResponse;
@@ -45,7 +46,7 @@ public class CommentController {
             @Parameter(description = "프로젝트 ID") @PathVariable Long projectId,
             @Parameter(description = "로그 ID") @PathVariable Long logId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @RequestBody CommentCreateRequest request) {
+            @Parameter(description = "생성할 댓글 내용") @RequestBody @Valid CommentCreateRequest request) {
 
         Long commentId = commentService.createComment(projectId, logId, loginUser.getName(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(commentId);
@@ -85,7 +86,7 @@ public class CommentController {
             @Parameter(description = "로그 ID") @PathVariable Long logId,
             @Parameter(description = "댓글 ID") @PathVariable Long commentId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @RequestBody CommentUpdateRequest request) {
+            @Parameter(description = "수정할 댓글 내용") @RequestBody @Valid CommentUpdateRequest request) {
 
         CommentUpdateResponse commentUpdateResponse = commentService.updateComment(projectId, commentId, loginUser.getName(), request);
         return ResponseEntity.status(HttpStatus.OK).body(commentUpdateResponse);

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.service.MemberService;
 import lombok.AllArgsConstructor;
@@ -75,7 +76,7 @@ public class MemberController {
     @PatchMapping
     public ResponseEntity<MemberPositionUpdateResponse> updateInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "업데이트 할 직급 및 소속") MemberPositionUpdateRequest request) {
+            @Parameter(description = "업데이트 할 직급 및 소속") @Valid MemberPositionUpdateRequest request) {
 
         memberService.updateMemberPosition(request, loginUser.getName());
         return ResponseEntity.status(HttpStatus.OK).body(new MemberPositionUpdateResponse(request.team(), request.rank()));

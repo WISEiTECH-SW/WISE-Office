@@ -1,4 +1,6 @@
 package kr.co.wise.office.domain.comment.dto;
 
-public record CommentUpdateRequest(String content) {
+import jakarta.validation.constraints.NotBlank;
+
+public record CommentUpdateRequest(@NotBlank(message = "댓글의 내용은 빈칸일 수 없습니다.") String content) {
 }
