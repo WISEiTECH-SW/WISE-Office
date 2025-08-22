@@ -2,7 +2,7 @@ import { api } from "@/lib/clientApi";
 import type { Project, ProjectInfo, CreateProject } from "@/types/project";
 
 export async function getProjects(): Promise<Project[]> {
-    const { data } = await api.get<Project[]>("v2/projects");
+    const { data } = await api.get<Project[]>("/projects");
     return data;
 }
 
