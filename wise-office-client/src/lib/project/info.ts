@@ -1,8 +1,10 @@
+import { toastMessage } from "../common/toastMessage";
+
 export const editProjectInfo = () => {
-    alert("수정 버튼 클릭");
+    toastMessage.success("프로젝트 정보가 수정되었습니다.");
 };
 
 // common 으로 이동 필요
 export const deleteProject = () => {
-    alert("삭제 버튼 클릭");
+    toastMessage.success("프로젝트가 삭제되었습니다.");
 };
