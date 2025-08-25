@@ -315,4 +315,8 @@ public class AttendantService {
 //            attendantRepository.saveAll(attendantsToSave);
 //        }
 //    }
+    public void leaveAll(ProjectEntity project) {
+        List<AttendantEntity> attendantsByProjectIdWithMember = attendantRepository.findAttendantsByProjectIdWithMember(project);
+        attendantsByProjectIdWithMember.forEach(AttendantEntity::leaveProject);
+    }
 }
