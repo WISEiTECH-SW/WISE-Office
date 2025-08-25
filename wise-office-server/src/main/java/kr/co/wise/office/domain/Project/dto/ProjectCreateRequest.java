@@ -2,6 +2,7 @@ package kr.co.wise.office.domain.Project.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import kr.co.wise.office.api.validation.annotation.ValidDateRange;
 
 import java.time.LocalDate;
@@ -17,10 +18,11 @@ import java.util.List;
  * @param attendants 참여 인력 데이터베이스 PK 값
  */
 @ValidDateRange
-public record ProjectCreateRequest(@NotBlank(message = "프로젝트 제목은 빈칸일 수 없습니다.") String projectTitle,
-                               @NotNull(message = "시작일이 있어야 합니다.") LocalDate start,
-                               @NotNull(message = "종료일이 있어야 합니다.") LocalDate end,
-                               @NotBlank(message = "프로젝트 내용은 빈칸일 수 없습니다.") String content,
-                               @NotNull(message = "프로젝트 PM은 반드시 지정되어야 합니다.") Long projectManagerId,
-                               List<Long> attendants) {
+public record ProjectCreateRequest(
+        @NotBlank(message = "프로젝트 제목은 빈칸일 수 없습니다.") @Size(max = 100, message = "프로젝트 제목은 최대 100자까지만 작성가능합니다.") String projectTitle,
+        @NotNull(message = "시작일이 있어야 합니다.") LocalDate start,
+        @NotNull(message = "종료일이 있어야 합니다.") LocalDate end,
+        @NotBlank(message = "프로젝트 내용은 빈칸일 수 없습니다.") @Size(max = 500, message = "프로젝트 내용은 최대 500자까지만 작성가능합니다.") String content,
+        @NotNull(message = "프로젝트 PM은 반드시 지정되어야 합니다.") Long projectManagerId,
+        List<Long> attendants) {
 }
