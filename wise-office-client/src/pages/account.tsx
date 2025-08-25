@@ -2,16 +2,20 @@ import React, { useEffect, useState } from "react";
 import UserProfile from "../components/account/UserProfile";
 import MyInfo from "@/components/account/MyInfo";
 import ProjectCardsMy from "@/components/account/ProjectCardsMy";
-import { getMyProfile } from "@/services/members";
-import { Profile } from "@/types/profile";
+import { getMyProfile, updateProfileInfo } from "@/services/members";
+import { Profile, ProfileRequest } from "@/types/profile";
 import { toastMessage } from "@/lib/common/toastMessage";
 
 export default function Account() {
     const [profile, setProfile] = useState<Profile>();
+    const [team, setTeam] = useState<string>("");
+    const [rank, setRank] = useState<string>("");
     useEffect(() => {
         const fetchData = async () => {
             const profile = await getMyProfile();
             setProfile(profile);
+            setTeam(profile.team);
+            setRank(profile.rank);
         };
         fetchData();
     }, []);
@@ -20,6 +24,18 @@ export default function Account() {
         toastMessage.success("정보가 저장되었습니다.");
     };
 
+    const updateProfile = async () => {
+        const req: ProfileRequest = {
+            team,
+            rank,
+        };
+        try{
+            const newProfileInfo = await updateProfileInfo(req);
+            console.log(newProfileInfo);
+        } catch(error){
+            console.log(error);
+        }
+    };
     return (
         <div className="min-h-screen bg-gray-100 flex justify-center items-start py-10 px-4">
             <div className="max-w-6xl w-full grid grid-cols-12 gap-10">
@@ -30,10 +46,15 @@ export default function Account() {
 
                 {/* 부서/직급 및 저장 버튼 영역 */}
                 <section className="col-span-12 md:col-span-3 bg-white rounded-lg shadow-md p-6 flex flex-col justify-center space-y-6">
-                    {profile && <MyInfo props={profile} />}
+                    {profile && <MyInfo 
+                        team = {team}
+                        rank = {rank}
+                        setTeam = {setTeam}
+                        setRank = {setRank}
+                        />}
 
                     <button
-                        onClick={onSave}
+                        onClick={()=>{updateProfile();onSave();}}
                         className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded py-2 transition duration-300"
                     >
                         저장

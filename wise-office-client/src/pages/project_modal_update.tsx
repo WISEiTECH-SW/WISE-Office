@@ -129,7 +129,7 @@ export default function ProjectUpdateModal({
 
                 {/* 제목 */}
                 <h2 className="text-center text-2xl font-extrabold mb-6 text-gray-900 col-span-full">
-                    프로젝트 생성
+                    프로젝트 수정
                 </h2>
 
                 {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}

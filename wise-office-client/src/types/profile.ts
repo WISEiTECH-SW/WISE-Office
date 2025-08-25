@@ -7,3 +7,8 @@ export interface Profile {
     imageUrl: string;
     projectList: Project[];
 }
+
+export interface ProfileRequest{
+    team: string;
+    rank: string;
+}
