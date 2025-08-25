@@ -36,15 +36,14 @@ public class LogServiceApi {
     public LogDetailResponse createLog(String loginUserEmail, long projectId, LogCreateRequest request) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
-        LogEntity newLog = logService.createLog(request, loginUser, project);
 
         //권한 확인
         if (!isAdmin(loginUser)) {
             attendantService.validateParticipatingProject(loginUser, project);
         }
 
-        return LogDetailResponse.from(newLog, hasModifyPermission(loginUser,attendant,newLog));
+        LogEntity newLog = logService.createLog(request, loginUser, project);
+        return LogDetailResponse.from(newLog, true);
     }
 
     public List<LogListResponse> getAllLogs(long projectId, String loginUserEmail) {
