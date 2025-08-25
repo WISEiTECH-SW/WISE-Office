@@ -61,7 +61,8 @@ public class LogServiceApi {
         }
 
         return logEntities.stream()
-                .map(log -> LogListResponse.from(log, modifyChecker.apply(log)))
+                .map(log -> LogListResponse.from(log, modifyChecker.apply(log),
+                        (int) log.getComments().stream().filter(c -> !c.isDeleted()).count()))
                 .toList();
     }
 

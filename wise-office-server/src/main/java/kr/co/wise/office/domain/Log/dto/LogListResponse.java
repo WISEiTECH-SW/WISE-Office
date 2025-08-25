@@ -15,13 +15,13 @@ public record LogListResponse(
         boolean canModify
 ) {
 
-    public static LogListResponse from(LogEntity logEntity, boolean canModify) {
+    public static LogListResponse from(LogEntity logEntity, boolean canModify, int count) {
         return new LogListResponse(
                 logEntity.getId(),
                 logEntity.getTitle(),
                 logEntity.getMember().getName(),
                 logEntity.getWrittenAt(),
-                logEntity.getComments().size(),
+                count,
                 // logEntity.getMember().getImageUrl(),
                 canModify // 파라미터로 받은 canModify 값을 그대로 사용
         );
