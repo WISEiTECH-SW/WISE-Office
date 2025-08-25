@@ -45,5 +45,9 @@ public class CommentEntity {
         this.content = content;
     }
 
+    public void deleteComment(){
+        this.deleted = true;
+    }
+
 
 }

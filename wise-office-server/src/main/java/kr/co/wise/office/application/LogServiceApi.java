@@ -56,7 +56,7 @@ public class LogServiceApi {
         if (isAdmin(loginUser)) {
             modifyChecker = log -> true;
         } else {
-            AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+            AttendantEntity attendant = attendantService.validateParticipatingProjectForViewing(loginUser, project);
             modifyChecker = log -> hasModifyPermission(loginUser, attendant, log);
         }
 
@@ -75,7 +75,7 @@ public class LogServiceApi {
         if (isAdmin(loginUser)) {
             modifyChecker = logs -> true;
         } else {
-            AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+            AttendantEntity attendant = attendantService.validateParticipatingProjectForViewing(loginUser, project);
             modifyChecker = logs -> hasModifyPermission(loginUser, attendant, log);
         }
 

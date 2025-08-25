@@ -49,7 +49,8 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(CommentEntity comment) {
-        commentRepository.delete(comment);
+        comment.deleteComment();
+        commentRepository.save(comment);
     }
 
     @Transactional
