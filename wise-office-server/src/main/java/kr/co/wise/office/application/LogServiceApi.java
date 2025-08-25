@@ -87,11 +87,7 @@ public class LogServiceApi {
         LogEntity log = getLogIfAuthorized(projectId, logId, loginUserEmail);
         LogEntity updatedLog = logService.updateLog(log, request);
 
-        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
-        ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
-
-        return LogDetailResponse.from(updatedLog, hasModifyPermission(loginUser, attendant, updatedLog));
+        return LogDetailResponse.from(updatedLog, true);
     }
 
     @Transactional
