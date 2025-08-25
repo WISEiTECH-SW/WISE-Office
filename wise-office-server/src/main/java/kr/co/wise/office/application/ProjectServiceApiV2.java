@@ -77,12 +77,9 @@ public class ProjectServiceApiV2 {
         MemberEntity loginUser = memberService.findByEmail(userEmail);
         MemberEntity newManager = memberService.findById(request.projectManagerId());
         ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
 
         //권한 확인
-        if(!canModifyProject(loginUser, attendant)) {
-            throw new UnAuthorizationException(ErrorMessage.REJECT_MODIFYING_PROJECT);
-        }
+        checkModifyPermission(loginUser, project);
 
         //프로젝트 업데이트
         projectService.updateProject(project, request);
@@ -100,25 +97,25 @@ public class ProjectServiceApiV2 {
     public void closeProject(long projectId, String userEmail) {
         MemberEntity loginUser = memberService.findByEmail(userEmail);
         ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
 
-        //권한 확인
-        if(!canModifyProject(loginUser, attendant)) {
-            throw new UnAuthorizationException(ErrorMessage.REJECT_MODIFYING_PROJECT);
-        }
+        checkModifyPermission(loginUser, project);
 
         //프로젝트 종료
+        attendantService.leaveAll(project);
         projectService.closeProject(project);
     }
 
-    private static boolean canModifyProject(MemberEntity loginUser, AttendantEntity attendant) {
+    private void checkModifyPermission(MemberEntity loginUser, ProjectEntity project) {
         boolean isAdmin = loginUser.getRoleType() == MemberRoleType.MASTER;
-        AttendantRoleType role = attendant.getRole();
-        boolean isCreator = role == AttendantRoleType.CREATOR;
-        boolean isPM = role == AttendantRoleType.PM;
 
-        return isAdmin || isCreator || isPM;
+        if(isAdmin) {
+            return;
+        }
+
+        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+        boolean isWorker = attendant.getRole() == AttendantRoleType.WORKER;
+        if (isWorker) {
+            throw new UnAuthorizationException(ErrorMessage.REJECT_MODIFYING_PROJECT);
+        }
     }
-
-
 }
