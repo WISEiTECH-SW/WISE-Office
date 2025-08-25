@@ -31,55 +31,55 @@ import java.util.List;
 @Slf4j
 public class MemberController {
 
-    private final MemberService memberService;
+        private final MemberService memberService;
 
-    @Operation(summary = "전체 멤버 정보 조회", description = "모든 회원의 직급, 계급, 이름, PK 값을 반환합니다, 현재 로그인 중인 사람은 반환되지 않습니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "멤버 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = MemberListResponse.class))))
-    })
-    @GetMapping
-    public ResponseEntity<List<MemberListResponse>> viewAllMemberInfo(
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.searchAllMemberInfo(loginUser.getName()));
-    }
+        @Operation(summary = "전체 멤버 정보 조회", description = "모든 회원의 직급, 계급, 이름, PK 값을 반환합니다, 현재 로그인 중인 사람은 반환되지 않습니다.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "멤버 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = MemberListResponse.class))))
+        })
+        @GetMapping
+        public ResponseEntity<List<MemberListResponse>> viewAllMemberInfo(
+                        @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
+                return ResponseEntity.status(HttpStatus.OK)
+                                .body(memberService.searchAllMemberInfo(loginUser.getName()));
+        }
 
-    @Operation(summary = "매니저 권한 확인", description = "현재 로그인한 사용자가 매니저 권한(ROLE_MANAGER)을 가지고 있는지 여부를 반환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "body의 isManager 값이 true면 Manager, false면 WORKER", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = IsManagerResponse.class))),
-    })
-    @GetMapping("/is-manager")
-    public ResponseEntity<IsManagerResponse> checkIsManager() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        GrantedAuthority grantedAuthority = authentication.getAuthorities().stream().toList().get(0);
-        boolean isManager = grantedAuthority.getAuthority().equals("ROLE_MANAGER");
-        return ResponseEntity.status(HttpStatus.OK).body(new IsManagerResponse(isManager));
-    }
+        @Operation(summary = "매니저 권한 확인", description = "현재 로그인한 사용자가 매니저 권한(ROLE_MANAGER)을 가지고 있는지 여부를 반환합니다.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "body의 isManager 값이 true면 Manager, false면 WORKER", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = IsManagerResponse.class))),
+        })
+        @GetMapping("/is-manager")
+        public ResponseEntity<IsManagerResponse> checkIsManager() {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                GrantedAuthority grantedAuthority = authentication.getAuthorities().stream().toList().get(0);
+                boolean isManager = grantedAuthority.getAuthority().equals("ROLE_MANAGER");
+                return ResponseEntity.status(HttpStatus.OK).body(new IsManagerResponse(isManager));
+        }
 
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-    @Operation(summary = "마이페이지 정보 조회", description = "현재 로그인한 사용자의 세부 정보를 반환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "마이페이지 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = MyAccountResponse.class))),
-    })
-    @GetMapping("/me")
-    public ResponseEntity<MyAccountResponse> viewMyAccount(
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
-        log.info("=== 로그인된 사용자 정보: " + memberService.getMyAccountInfo(loginUser.getName()));
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.getMyAccountInfo(loginUser.getName()));
-    }
+        @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+        @Operation(summary = "마이페이지 정보 조회", description = "현재 로그인한 사용자의 세부 정보를 반환합니다.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "마이페이지 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = MyAccountResponse.class))),
+        })
+        @GetMapping("/me")
+        public ResponseEntity<MyAccountResponse> viewMyAccount(
+                        @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
+                log.info("=== 로그인된 사용자 정보: " + memberService.getMyAccountInfo(loginUser.getName()));
+                return ResponseEntity.status(HttpStatus.OK).body(memberService.getMyAccountInfo(loginUser.getName()));
+        }
 
-    @Operation(summary = "직급 및 소속 변경 API", description = "직급과 소속을 변경합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "직급 소속 변경 성공",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = MemberPositionUpdateResponse.class))),
-    })
-    @PatchMapping
-    public ResponseEntity<MemberPositionUpdateResponse> updateInfo(
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "업데이트 할 직급 및 소속") @Valid MemberPositionUpdateRequest request) {
+        @Operation(summary = "직급 및 소속 변경 API", description = "직급과 소속을 변경합니다.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "200", description = "직급 소속 변경 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = MemberPositionUpdateResponse.class))),
+        })
+        @PatchMapping
+        public ResponseEntity<MemberPositionUpdateResponse> updateInfo(
+                        @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+                        @Parameter(description = "업데이트 할 직급 및 소속") @Valid @RequestBody MemberPositionUpdateRequest request) {
 
-        memberService.updateMemberPosition(request, loginUser.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(new MemberPositionUpdateResponse(request.team(), request.rank()));
-    }
+                memberService.updateMemberPosition(request, loginUser.getName());
+                return ResponseEntity.status(HttpStatus.OK)
+                                .body(new MemberPositionUpdateResponse(request.team(), request.rank()));
+        }
 
 }
