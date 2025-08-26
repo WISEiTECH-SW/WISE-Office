@@ -7,9 +7,9 @@ import kr.co.wise.office.domain.Project.dto.ProjectUpdateRequest;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.Project.repository.ProjectRepository;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
-import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
+import kr.co.wise.office.exception.custom.UnAuthorizationException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,6 @@ import java.util.List;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final MemberService memberService;
 
     /**
      * 모든 프로젝트와 매니저를 정보를 페이징없이 반환
@@ -42,9 +41,6 @@ public class ProjectService {
      */
     @Transactional
     public ProjectEntity makeProject(ProjectCreateRequest request, MemberEntity creator) {
-
-
-
         ProjectEntity projectEntity = ProjectEntity.builder()
                 .title(request.projectTitle())
                 .detail(request.content()) // content를 detail로 매핑
@@ -66,9 +62,8 @@ public class ProjectService {
 
         ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
 
-        if (!currentUserEmail.equals("anonymousUser")) {
-            MemberEntity loginUser = memberService.findByEmail(currentUserEmail);
-            //response.setCanModify(projectWithManager.getMember().getId().equals(loginUser.getId()));
+        if (currentUserEmail.equals("anonymousUser")) {
+            throw new UnAuthorizationException(ErrorMessage.NOT_FOUND_MEMBER);
         }
 
         return response;
