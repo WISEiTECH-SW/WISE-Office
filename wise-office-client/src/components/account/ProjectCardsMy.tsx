@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Project } from "@/types/project";
 import { Profile } from "@/types/profile";
+import { calculateProjectDuration } from "@/lib/common/util";
 interface UserProfileProps{
     props:Profile;
 }
@@ -34,6 +35,10 @@ type Props = {
 };
 
 function ProjectListCard({ project }: Props) {
+    const { duration, state, stateColor, textColor } = calculateProjectDuration(
+            project.start,
+            project.end
+        );
     return (
         <Link
             href={`/projects/${project.projectId}`}
@@ -47,8 +52,10 @@ function ProjectListCard({ project }: Props) {
                             {project.projectTitle}
                         </h5>
                     </div>
-                    <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-xs font-semibold ">
-                        진행중
+                    <span
+                        className={`${stateColor} ${textColor} px-2 py-0.5 rounded-full text-xs font-semibold`}
+                    >
+                        {state}
                     </span>
                 </div>
             </div>
@@ -73,13 +80,13 @@ function ProjectListCard({ project }: Props) {
                             </div>
                         </div>
 
-                        <div className="space-y-0.5">
-                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
-                                총 기간
+                        <div className="space-y-1">
+                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                현재 차수
                             </span>
-                            <p className="text-xs text-gray-400 font-medium">
-                                -
-                            </p>
+                            <div className="flex items-center gap-2 text-xs text-gray-700">
+                                <span className="font-medium">{duration}</span>
+                            </div>
                         </div>
                     </div>
 
