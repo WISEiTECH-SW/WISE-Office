@@ -21,7 +21,8 @@ export async function postProject(data: CreateProject) {
 }
 
 export async function updateProject(data: CreateProject, projectId: number) {
-    return await api.patch(`/v2/projects/${projectId}`, data).then((res) => res.data);
+    const res = await api.patch(`/v2/projects/${projectId}`, data);
+    return res.data;
 }
 
 export async function deleteProjectApi(projectId: number) {
