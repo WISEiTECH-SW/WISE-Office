@@ -26,7 +26,7 @@ public class ProjectEntity {
     @Column(name = "title")
     private String title;
     
-    @Column(name ="detail")
+    @Column(name ="detail", length = 500)
     private String detail;
 
     @Column(name = "start_year")

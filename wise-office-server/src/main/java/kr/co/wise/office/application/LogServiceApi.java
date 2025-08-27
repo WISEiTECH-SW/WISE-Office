@@ -36,15 +36,14 @@ public class LogServiceApi {
     public LogDetailResponse createLog(String loginUserEmail, long projectId, LogCreateRequest request) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
-        LogEntity newLog = logService.createLog(request, loginUser, project);
 
         //권한 확인
         if (!isAdmin(loginUser)) {
             attendantService.validateParticipatingProject(loginUser, project);
         }
 
-        return LogDetailResponse.from(newLog, hasModifyPermission(loginUser,attendant,newLog));
+        LogEntity newLog = logService.createLog(request, loginUser, project);
+        return LogDetailResponse.from(newLog, true);
     }
 
     public List<LogListResponse> getAllLogs(long projectId, String loginUserEmail) {
@@ -56,12 +55,13 @@ public class LogServiceApi {
         if (isAdmin(loginUser)) {
             modifyChecker = log -> true;
         } else {
-            AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+            AttendantEntity attendant = attendantService.validateParticipatingProjectForViewing(loginUser, project);
             modifyChecker = log -> hasModifyPermission(loginUser, attendant, log);
         }
 
         return logEntities.stream()
-                .map(log -> LogListResponse.from(log, modifyChecker.apply(log)))
+                .map(log -> LogListResponse.from(log, modifyChecker.apply(log),
+                        (int) log.getComments().stream().filter(c -> !c.isDeleted()).count()))
                 .toList();
     }
 
@@ -75,7 +75,7 @@ public class LogServiceApi {
         if (isAdmin(loginUser)) {
             modifyChecker = logs -> true;
         } else {
-            AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+            AttendantEntity attendant = attendantService.validateParticipatingProjectForViewing(loginUser, project);
             modifyChecker = logs -> hasModifyPermission(loginUser, attendant, log);
         }
 
@@ -87,11 +87,7 @@ public class LogServiceApi {
         LogEntity log = getLogIfAuthorized(projectId, logId, loginUserEmail);
         LogEntity updatedLog = logService.updateLog(log, request);
 
-        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
-        ProjectEntity project = projectService.findById(projectId);
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
-
-        return LogDetailResponse.from(updatedLog, hasModifyPermission(loginUser, attendant, updatedLog));
+        return LogDetailResponse.from(updatedLog, true);
     }
 
     @Transactional

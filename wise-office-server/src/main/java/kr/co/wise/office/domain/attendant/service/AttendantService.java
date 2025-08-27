@@ -197,9 +197,28 @@ public class AttendantService {
         return response;
     }
 
+    public AttendantEntity validateParticipatingProjectForViewing(MemberEntity loginUser, ProjectEntity project) {
+        // PM/CREATOR 둘 다 있는 경우 방지
+        List<AttendantEntity> attendants = attendantRepository.findByMemberAndProject(loginUser, project);
+        // 프로젝트에 참여하지 않은 경우
+        if (attendants.isEmpty()) {
+            return AttendantEntity.builder()
+                    .role(AttendantRoleType.WORKER)
+                    .build();
+        }
+        if (attendants.size() == 1) {
+            return attendants.get(0);
+        }
+
+        // PM / CREATOR 둘 다 가지고 있는 경우 PM 권한이 있는 걸로 반환
+        AttendantEntity first = attendants.get(0);
+        return first.getRole() == AttendantRoleType.PM ? first : attendants.get(1);
+    }
+
     public AttendantEntity validateParticipatingProject(MemberEntity loginUser, ProjectEntity project) {
         // PM/CREATOR 둘 다 있는 경우 방지
         List<AttendantEntity> attendants = attendantRepository.findByMemberAndProject(loginUser, project);
+        // 프로젝트에 참여하지 않은 경우
         if (attendants.isEmpty()) {
             throw new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT);
         }

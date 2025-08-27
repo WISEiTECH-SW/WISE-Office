@@ -62,8 +62,8 @@ public class CommentServiceApi {
         if(isAdmin(loginUser)){
             modifyChecker = comment -> true;
         } else {
-            attendantService.validateParticipatingProject(loginUser, project);
-            modifyChecker = comment -> canModifyComment(loginUser, project, comment);
+            AttendantEntity attendant = attendantService.validateParticipatingProjectForViewing(loginUser, project);
+            modifyChecker = comment -> canModifyComment(loginUser, attendant, comment);
         }
 
         return commentsForLog.stream()
@@ -89,19 +89,19 @@ public class CommentServiceApi {
         ProjectEntity project = projectService.findById(projectId);
         CommentEntity comment = commentService.findCommentById(commentId);
 
-        if (!canModifyComment(loginUser, project, comment)) {
+        if (isAdmin(loginUser)) {
+            return comment;
+        }
+
+        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+        if (!canModifyComment(loginUser, attendant, comment)) {
             throw new UnAuthorizationException(ErrorMessage.REJECT_MODIFYING_COMMENT);
         }
 
         return comment;
     }
 
-    private boolean canModifyComment(MemberEntity loginUser, ProjectEntity project, CommentEntity comment) {
-        if (isAdmin(loginUser)) {
-            return true;
-        }
-
-        AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
+    private boolean canModifyComment(MemberEntity loginUser, AttendantEntity attendant, CommentEntity comment) {
         boolean isPM = attendant.getRole().equals(AttendantRoleType.PM); // PM 확인
         boolean isWriter = comment.getMember().getId().equals(loginUser.getId()); // 작성자인지 확인
 
