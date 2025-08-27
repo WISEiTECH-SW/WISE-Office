@@ -1,6 +1,6 @@
 services:
     database:
-        container_name: postgres_container
+        container_name: only_postgres_container
         image: postgres:15
         ports:
             - "5432:5432"
@@ -19,20 +19,3 @@ services:
             interval: 10s
             timeout: 5s
             retries: 5
-    application:
-      container_name: backoffice_app
-      build:
-        context: ../wise-office-server
-        dockerfile: Dockerfile
-      image: backoffice_server:latest
-      depends_on:
-        database:
-            condition: service_healthy #healthcheck가 정상이 될 때까지 대기
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-        interval: 10s
-        timeout: 5s
-        retries: 5
-        start_period: 20s
-      ports:
-        - "8080:8080"
