@@ -4,6 +4,8 @@ import kr.co.wise.office.domain.Log.dto.LogCreateRequest;
 import kr.co.wise.office.domain.Log.dto.LogDetailResponse;
 import kr.co.wise.office.domain.Log.dto.LogListResponse;
 import kr.co.wise.office.domain.Log.dto.LogUpdateRequest;
+import kr.co.wise.office.domain.comment.dto.CommentCreateRequest;
+import kr.co.wise.office.domain.comment.dto.CommentResponse;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.exception.ErrorMessage;
@@ -22,10 +24,15 @@ public class LogServiceApiTest extends BaseTestEntity {
 
     @Autowired
     private LogServiceApi logServiceApi;
+    @Autowired
+    private CommentServiceApi commentServiceApi;
 
     private final String defaultLogTitle = "log title";
     private final String defaultLogContent = "log content";
     private final LogCreateRequest defaultLogRequest = new LogCreateRequest(defaultLogTitle, defaultLogContent);
+
+    private final String defaultComment = "comment";
+    private final CommentCreateRequest defaultCommentRequest = new CommentCreateRequest(defaultComment);
 
     private LogDetailResponse createLog(String email) {
         return logServiceApi.createLog(email, projectId, defaultLogRequest);
@@ -201,7 +208,34 @@ public class LogServiceApiTest extends BaseTestEntity {
                 .isEqualTo(ErrorMessage.REJECT_MODIFYING_LOG);
     }
 
-    
+    @DisplayName("로그 리스트 조회시 삭제된 댓글은 계산에 포함되면 안된다.")
+    @Test
+    void notContain_deleteComment_calculatingSum() {
+        //given
+        LogDetailResponse log = createLog(workerInfo1.email);
+        LogDetailResponse log2 = createLog(workerInfo2.email);
+        commentServiceApi.createComment(projectId, log.logId(), adminInfo.email, defaultCommentRequest);
+        CommentResponse removeComment1 = commentServiceApi.createComment(projectId, log.logId(), workerInfo1.email, defaultCommentRequest);
+        CommentResponse removeComment2 = commentServiceApi.createComment(projectId, log.logId(), workerInfo2.email, defaultCommentRequest);
+        commentServiceApi.createComment(projectId, log.logId(), pmInfo.email, defaultCommentRequest);
+        CommentResponse removeComment3 = commentServiceApi.createComment(projectId, log.logId(), workerInfo2.email, defaultCommentRequest);
+        commentServiceApi.removeComment(projectId, removeComment1.id(), pmInfo.email);
+        commentServiceApi.removeComment(projectId, removeComment2.id(), adminInfo.email);
+        commentServiceApi.removeComment(projectId, removeComment3.id(), workerInfo2.email);
 
+        commentServiceApi.createComment(projectId, log2.logId(), adminInfo.email, defaultCommentRequest);
+        commentServiceApi.createComment(projectId, log2.logId(), adminInfo.email, defaultCommentRequest);
+        commentServiceApi.createComment(projectId, log2.logId(), adminInfo.email, defaultCommentRequest);
 
+        em.flush();
+        em.clear();;
+
+        //when
+        List<LogListResponse> responses = logServiceApi.getAllLogs(projectId, workerInfo1.email);
+
+        //then
+        assertThat(responses.size()).as("로그는 두개가 조회되어야 함").isEqualTo(2);
+        assertThat(responses).as("첫 번째 로그에는 2개, 두 번째 로그에는 댓글 개수 3개가 조회되어야 함")
+                .extracting("commentCnt").containsExactlyInAnyOrder(2, 3);
+    }
 }
