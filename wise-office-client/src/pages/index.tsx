@@ -4,7 +4,7 @@ import ProjectListCard from "@/components/ProjectListCard";
 import AddProjectButton from "@/components/AddProjectButton";
 import { getProjects } from "@/services/projects";
 import { useProjects } from "@/store/useProjects";
-import ProjectCreateModal from "./project_modal";
+import ProjectCreateModal from "../components/project/project_modal";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Home() {

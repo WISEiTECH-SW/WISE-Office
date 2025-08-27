@@ -73,8 +73,7 @@ export default function SelectProjectMembers({
                                 }`}
                                 onClick={() => toggleMember(member)}
                             >
-                                <span>{member.rank}</span>
-                                <span>{member.name}</span>
+                                <span>{member.name} {member.rank}</span>
                             </div>
                         );
                     })

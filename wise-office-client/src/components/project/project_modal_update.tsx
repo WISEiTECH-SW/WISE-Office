@@ -5,18 +5,25 @@ import { CreateProject } from "@/types/createProject";
 import { Member } from "@/types/member";
 import { getMembers } from "@/services/members";
 import { useRef } from "react";
-import { postProject } from "@/services/projects";
+import { getProjectById, updateProject } from "@/services/projects";
 import { useRouter } from "next/router";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useProjects } from "@/store/useProjects";
+import { editProjectInfo } from "@/lib/project/info";
+import { ProjectInfo } from "@/types/project";
 
-type ProjectCreateModalProps = {
+type ProjectUpdateModalProps = {
+    projectId:number;
+    setProjectInfo: React.Dispatch<React.SetStateAction<ProjectInfo | null>>
     onClose: () => void;
 };
 
-export default function ProjectCreateModal({
+export default function ProjectUpdateModal({
+    projectId,
+    setProjectInfo,
     onClose,
-}: ProjectCreateModalProps) {
+}: ProjectUpdateModalProps) {
+    const addProject = useProjects((s) => s.addProject);
     const [projectTitle, setProjectTitle] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -26,6 +33,8 @@ export default function ProjectCreateModal({
     const [manager, setManager] = useState<Member | undefined>();
     const [members, setMembers] = useState<Member[]>([]);
     const modalRef = useRef<HTMLDivElement>(null);
+
+    const router = useRouter();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -44,11 +53,24 @@ export default function ProjectCreateModal({
 
     useEffect(() => {
         const fetchData = async () => {
+            if(!router.isReady) return;
+            if (typeof projectId !== "number" || isNaN(projectId)) return;
+
             const members = await getMembers();
+            const project_old = await getProjectById(projectId); 
             setMembers(members);
+            setProjectTitle(project_old.projectTitle);
+            setContent(project_old.detail);
+            setStartDate(String(project_old.start).slice(0, 7));
+            setEndDate(String(project_old.end).slice(0, 7));
+            setManager(members.find(member => member.memberId === project_old.managerName.memberId));
+            const selected = members.filter(member =>
+                project_old.attendant.some(att => att.memberId === member.memberId)
+                );
+            setSelectedMembers(selected);
         };
         fetchData();
-    }, []);
+    }, [projectId]);
 
     const isFormValid =
         projectTitle.trim() !== "" &&
@@ -75,19 +97,17 @@ export default function ProjectCreateModal({
         };
 
         try {
-            const newProject = await postProject(projectData);
-            useProjects.getState().addProject(newProject);
-            useProjects.getState().fetchProjects();
-            toastMessage.success("프로젝트가 등록되었습니다.");
+            const newProject = await updateProject(projectData, projectId);
+            console.log("???", newProject);
+            addProject(newProject);
+            editProjectInfo();
+            setProjectInfo(newProject);
             onClose();
-        } catch (error: any) {
-            if (error.response?.status === 400) {
-                toastMessage.error("기간 또는 PM 설정을 확인해주세요.");
-            } else {
-                toastMessage.error(
-                    "프로젝트 등록 중 오류가 발생했습니다. 다시 시도해주세요."
-                );
-            }
+        } catch (error) {
+            console.error("프로젝트 수정 실패:", error);
+            toastMessage.success(
+                "프로젝트 수정에 실패했습니다. 다시 시도해주세요."
+            );
         }
     };
 
@@ -109,7 +129,7 @@ export default function ProjectCreateModal({
 
                 {/* 제목 */}
                 <h2 className="text-center text-2xl font-extrabold mb-6 text-gray-900 col-span-full">
-                    프로젝트 생성
+                    프로젝트 수정
                 </h2>
 
                 {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}
@@ -149,7 +169,7 @@ export default function ProjectCreateModal({
                     disabled={!isFormValid}
                     type="button"
                 >
-                    생성 완료
+                    완료
                 </button>
             </div>
         </div>

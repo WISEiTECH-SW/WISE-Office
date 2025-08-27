@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import type { ProjectInfo } from "@/types/project";
 import { editProjectInfo, deleteProject } from "@/lib/project/info";
 import { deleteProjectApi, getProjectById } from "@/services/projects";
-import ProjectUpdateModal from "../project_modal_update";
+import ProjectUpdateModal from "../../components/project/project_modal_update";
 
 import type { Log, LogDetail, LogInput } from "@/types/log";
 import {
@@ -128,6 +128,8 @@ export default function projectPageById() {
             if(isNaN(projectId)) return;
             try{
                 deleteProjectApi(projectId);
+                deleteProject();
+                router.push("/")
             }catch(error){
                 console.log("프로젝트 삭제 실패: ", error);
             }
@@ -216,15 +218,16 @@ export default function projectPageById() {
                 {/* Project Information */}
                 <ProjectInfoContainer
                     projectInfo={projectInfo}
-                    // onEdit={editProjectInfo}
-                    onEdit={()=> {setIsEditOpen(true); editProjectInfo();}}
+                    onEdit={()=> {setIsEditOpen(true);
+                    }}
                     onDelete={() => {
                         delProject();
-                        deleteProject();}}
+                    }}
                 />
                 {isEditOpen &&projectInfo.projectId && (
                     <ProjectUpdateModal
                     projectId = {projectInfo.projectId}
+                    setProjectInfo = {setProjectInfo}
                     onClose={() => setIsEditOpen(false)}/>
                 )}
                 <div className="grid grid-cols-12 gap-6">
