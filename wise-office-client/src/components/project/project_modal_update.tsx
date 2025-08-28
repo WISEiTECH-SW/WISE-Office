@@ -38,9 +38,12 @@ export default function ProjectUpdateModal({
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
+            const modal = modalRef.current;
+            const flatpickrCalendars = document.querySelectorAll(".flatpickr-calendar");
             if (
-                modalRef.current &&
-                !modalRef.current.contains(event.target as Node)
+                modal &&
+                !modal.contains(event.target as Node) &&
+                !Array.from(flatpickrCalendars).some(cal => cal.contains(event.target as Node))
             ) {
                 onClose();
             }
@@ -98,13 +101,11 @@ export default function ProjectUpdateModal({
 
         try {
             const newProject = await updateProject(projectData, projectId);
-            console.log("???", newProject);
             addProject(newProject);
             editProjectInfo();
             setProjectInfo(newProject);
             onClose();
         } catch (error) {
-            console.error("프로젝트 수정 실패:", error);
             toastMessage.success(
                 "프로젝트 수정에 실패했습니다. 다시 시도해주세요."
             );
@@ -133,7 +134,7 @@ export default function ProjectUpdateModal({
                 </h2>
 
                 {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}
-                <div className="flex flex-row gap-8 flex-grow overflow-hidden">
+                <div className="flex flex-row gap-2 flex-grow overflow-hidden">
                     {/* 왼쪽 영역 */}
                     <ProjectNameWithPeriod
                         projectTitle={projectTitle}

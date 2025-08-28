@@ -6,7 +6,6 @@ import { Member } from "@/types/member";
 import { getMembers } from "@/services/members";
 import { useRef } from "react";
 import { postProject } from "@/services/projects";
-import { useRouter } from "next/router";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useProjects } from "@/store/useProjects";
 
@@ -26,12 +25,15 @@ export default function ProjectCreateModal({
     const [manager, setManager] = useState<Member | undefined>();
     const [members, setMembers] = useState<Member[]>([]);
     const modalRef = useRef<HTMLDivElement>(null);
-
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
+            const modal = modalRef.current;
+            const flatpickrCalendars = document.querySelectorAll(".flatpickr-calendar");
+
             if (
-                modalRef.current &&
-                !modalRef.current.contains(event.target as Node)
+                modal &&
+                !modal.contains(event.target as Node) &&
+                !Array.from(flatpickrCalendars).some(cal => cal.contains(event.target as Node))
             ) {
                 onClose();
             }
@@ -113,7 +115,7 @@ export default function ProjectCreateModal({
                 </h2>
 
                 {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}
-                <div className="flex flex-row gap-8 flex-grow overflow-hidden">
+                <div className="flex flex-row gap-2 flex-grow overflow-hidden">
                     {/* 왼쪽 영역 */}
                     <ProjectNameWithPeriod
                         projectTitle={projectTitle}
@@ -136,6 +138,7 @@ export default function ProjectCreateModal({
                         setSelectedMembers={setSelectedMembers}
                         setManager={setManager}
                     />
+
                 </div>
 
                 {/* 생성 완료 버튼 */}
