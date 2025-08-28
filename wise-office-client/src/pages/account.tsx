@@ -31,7 +31,6 @@ export default function Account() {
         };
         try{
             const newProfileInfo = await updateProfileInfo(req);
-            console.log(newProfileInfo);
         } catch(error){
             console.log(error);
         }

@@ -13,9 +13,5 @@ export async function getMembers(): Promise<Member[]> {
 }
 
 export async function updateProfileInfo(req: ProfileRequest): Promise<ProfileRequest[]> {
-    // const { team, rank } = req;
-    // const query = `?team=${encodeURIComponent(team)}&rank=${encodeURIComponent(rank)}`;
-    // return await api.patch(`/members${query}`).then((res) => res.data);
-
     return await api.patch("/members", req).then((res) => res.data);
 }
