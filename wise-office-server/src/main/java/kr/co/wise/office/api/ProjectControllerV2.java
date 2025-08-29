@@ -79,7 +79,6 @@ public class ProjectControllerV2 {
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "업데이트할 프로젝트 정보") @Valid @RequestBody ProjectUpdateRequest request) {
         projectServiceApiV2.updateProject(projectId, loginUser.getName(), request);
-        // return null;
         return ResponseEntity.status(HttpStatus.OK)
                 .body(projectServiceApiV2.getDetailProjectV2(projectId, loginUser.getName()));
     }
