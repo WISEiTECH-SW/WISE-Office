@@ -87,7 +87,13 @@ export default function ProjectUpdateModal({
         if (!isFormValid) return;
 
         const start = startDate + "-01";
-        const end = endDate + "-01";
+        const [year, month] = endDate.split("-").map(Number);
+
+        // 다음 달의 0일 = 현재 달의 마지막 날
+        const lastDay = new Date(year, month, 0).getDate();
+
+        const end = `${endDate}-${lastDay.toString().padStart(2, "0")}`;
+        //
         const projectManagerId = manager?.memberId;
         const attendants = selectedMembers.map((member) => member.memberId);
         const projectData: CreateProject = {
