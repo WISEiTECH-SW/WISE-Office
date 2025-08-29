@@ -1,5 +1,4 @@
 import Flatpickr from 'react-flatpickr';
-import { format } from 'date-fns'; // 날짜 포맷팅용
 import 'flatpickr/dist/themes/material_blue.css';
 import 'flatpickr/dist/plugins/monthSelect/style.css';
 import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect';

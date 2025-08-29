@@ -30,7 +30,7 @@ export default function Account() {
             rank,
         };
         try{
-            const newProfileInfo = await updateProfileInfo(req);
+            await updateProfileInfo(req);
         } catch(error){
             console.log(error);
         }

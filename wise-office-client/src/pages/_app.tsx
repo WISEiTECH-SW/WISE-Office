@@ -9,6 +9,7 @@ import HeaderAuth from "@/components/header/HeaderAuth";
 import { useInitAuth } from "@/hooks/useInitAuth";
 import { useAuthLoginToast } from "@/hooks/useLoginToast";
 import { useRouteGuard } from "@/hooks/useRouteGuard";
+import Image from "next/image";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
     useInitAuth();
@@ -50,10 +51,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
                 >
                     <Link href="/" className="text-lg font-bold">
-                        <img
+                        <Image
                             src="/logo.png"
                             alt="Wise Office Logo"
                             className="h-12 w-auto"
+                            width={120}
+                            height={48}
                         />
                     </Link>
                     <HeaderAuth />

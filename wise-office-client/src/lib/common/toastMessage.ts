@@ -1,8 +1,6 @@
 import {
     toast,
     type ToastOptions,
-    type Id,
-    UpdateOptions,
 } from "react-toastify";
 
 const DEFAULT: ToastOptions = {

@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { Profile } from "@/types/profile";
 interface UserProfileProps{
     team: string;
     rank: string;
@@ -7,8 +5,6 @@ interface UserProfileProps{
     setRank:React.Dispatch<React.SetStateAction<string>>;
 }
 export default function MyInfo({team, rank, setTeam, setRank}: UserProfileProps) {
-
-
     return (
         <div>
             <div>

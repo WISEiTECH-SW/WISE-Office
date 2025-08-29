@@ -71,7 +71,7 @@ export default function ProjectUpdateModal({
             setSelectedMembers(selected);
         };
         fetchData();
-    }, [projectId]);
+    }, [router.isReady, projectId]);
 
     const isFormValid =
         projectTitle.trim() !== "" &&
@@ -105,8 +105,8 @@ export default function ProjectUpdateModal({
             editProjectInfo();
             setProjectInfo(newProject);
             onClose();
-        } catch (error) {
-            toastMessage.success(
+        } catch {
+            toastMessage.error(
                 "프로젝트 수정에 실패했습니다. 다시 시도해주세요."
             );
         }

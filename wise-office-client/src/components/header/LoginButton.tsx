@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function GoogleLoginButton() {
     const server = process.env.NEXT_PUBLIC_SERVER_URL!;
     const loginUrl = `${server}/oauth2/authorization/google`;
@@ -8,10 +10,12 @@ export default function GoogleLoginButton() {
             className="inline-flex items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-blue-700 shadow-sm hover:bg-gray-100"
             style={{ width: "fit-content" }}
         >
-            <img
+            <Image
                 src="/assets/Google.png"
                 alt="Google Logo"
                 className="h-5 w-5"
+                width={24}
+                height={24}
             />
             <span className="text-blue-700">Sign in with Google</span>
         </a>
