@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import LoginButton from "@/components/header/LoginButton";
 import LogoutButton from "@/components/header/LogoutButton";
 import Profile from "./Profile";

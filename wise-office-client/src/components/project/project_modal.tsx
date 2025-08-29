@@ -8,6 +8,7 @@ import { useRef } from "react";
 import { postProject } from "@/services/projects";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useProjects } from "@/store/useProjects";
+import { AxiosError } from "axios";
 
 type ProjectCreateModalProps = {
     onClose: () => void;
@@ -85,8 +86,9 @@ export default function ProjectCreateModal({
             useProjects.getState().fetchProjects();
             toastMessage.success("프로젝트가 등록되었습니다.");
             onClose();
-        } catch (error: any) {
-            if (error.response?.status === 400) {
+        } catch (error: unknown) {
+            const err = error as AxiosError;
+            if (err.response?.status === 400) {
                 toastMessage.error("기간 또는 PM 설정을 확인해주세요.");
             } else {
                 toastMessage.error(
