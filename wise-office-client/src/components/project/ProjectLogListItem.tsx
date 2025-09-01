@@ -1,28 +1,20 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
+import React from "react";
 import { Trash2, MessageCircle } from "lucide-react";
 import { Log } from "@/types/log";
-import { useLogStore } from "@/store/useLogStore";
-import ConfirmModal from "../ConfirmModal";
 
 interface ProjectLogListItemProps {
     log: Log;
     isSelected: boolean;
     onSelect: (logId: number) => void;
-    // onDelete: (logId: number) => void;
+    onDelete: (logId: number) => void;
 }
 
 const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
     log,
     isSelected,
     onSelect,
-    // onDelete,
+    onDelete,
 }) => {
-    const router = useRouter();
-    const { id } = router.query;
-    const projectId = Number(id);
-    const { setSelectedLogId } = useLogStore();
-    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const handleDeleteClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // 부모의 onClick 이벤트 방지
         console.log(log.canModify);
@@ -55,13 +47,6 @@ const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
                 <MessageCircle className="w-3 h-3 mr-1" />
                 {log.commentCnt}
             </div>
-            {isConfirmOpen && (
-                <ConfirmModal
-                    deleteTarget={"log"}
-                    projectId={projectId}
-                    onClose={() => setIsConfirmOpen(false)}
-                />
-            )}
         </div>
     );
 };

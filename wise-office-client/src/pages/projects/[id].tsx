@@ -107,16 +107,17 @@ export default function projectPageById() {
     };
 
     // 로그 삭제
-    const handleDeleteLog = () => {
-        if (!router.isReady) return;
-        if (isNaN(projectId)) return;
+    const handleDeleteLog = (logId: number) => {
+        if (window.confirm("이 로그를 삭제하시겠습니까?")) {
+            if (!router.isReady) return;
+            if (typeof id !== "string") return;
+            const projectId = Number(id);
+            if (isNaN(projectId)) return;
 
-        try {
-            deleteLog(projectId, selectedLogId);
-            toastMessage.success("로그가 삭제되었습니다.");
-            router.push(`/projects/${projectId}`);
-        } catch (error) {
-            console.log("로그 삭제 실패: ", error);
+            deleteLog(projectId, logId);
+
+            setLogList(deleteLogList(logList, logId));
+            setSelectedLog(null);
         }
     };
 
@@ -230,6 +231,7 @@ export default function projectPageById() {
                             logList={logList}
                             selectedLog={selectedLog}
                             onSelectLog={selectLog}
+                            onDeleteLog={handleDeleteLog}
                         />
                         <div className="mt-2">
                             <ProjectLogWriteButton
