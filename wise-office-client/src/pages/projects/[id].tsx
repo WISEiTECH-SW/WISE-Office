@@ -31,6 +31,8 @@ import {
     ProjectAttendantList,
     ProjectLogInput,
 } from "@/components/project";
+import { toastMessage } from "@/lib/common/toastMessage";
+import ConfirmModal from "@/components/ConfirmModal";
 
 export default function projectPageById() {
     const router = useRouter();
@@ -39,6 +41,7 @@ export default function projectPageById() {
     // Project
     const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     // Log
     const [isLoading, setIsLoading] = useState(true);
@@ -220,7 +223,7 @@ export default function projectPageById() {
                         setIsEditOpen(true);
                     }}
                     onDelete={() => {
-                        delProject();
+                        setIsConfirmOpen(true);
                     }}
                 />
                 {isEditOpen && projectInfo.projectId && (
@@ -228,6 +231,12 @@ export default function projectPageById() {
                         projectId={projectInfo.projectId}
                         setProjectInfo={setProjectInfo}
                         onClose={() => setIsEditOpen(false)}
+                    />
+                )}
+                {isConfirmOpen && projectInfo.projectId && (
+                    <ConfirmModal
+                        projectId={projectInfo.projectId}
+                        onClose={() => setIsConfirmOpen(false)}
                     />
                 )}
                 <div className="grid grid-cols-12 gap-6">
