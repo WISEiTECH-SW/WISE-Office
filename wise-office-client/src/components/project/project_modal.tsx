@@ -26,6 +26,21 @@ export default function ProjectCreateModal({
     const [manager, setManager] = useState<Member | undefined>();
     const [members, setMembers] = useState<Member[]>([]);
     const modalRef = useRef<HTMLDivElement>(null);
+        const handleProjectTitleChange = (value: string) => {
+            if (value.length > 100) {
+                toastMessage.error("프로젝트 제목은 100자까지 입력 가능합니다.");
+                return;
+            }
+            setProjectTitle(value);
+        };
+    
+        const handleContentChange = (value: string) => {
+            if (value.length > 500) {
+                toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
+                return;
+            }
+            setContent(value);
+        };
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const modal = modalRef.current;
@@ -53,16 +68,39 @@ export default function ProjectCreateModal({
         fetchData();
     }, []);
 
-    const isFormValid =
-        projectTitle.trim() !== "" &&
-        startDate !== "" &&
-        endDate !== "" &&
-        content.trim() !== "" &&
-        selectedMembers.length > 0 &&
-        manager !== null && manager !== undefined;
-
     const handleSubmit = async () => {
-        if (!isFormValid) return;
+            if (projectTitle.trim() === "") {
+                toastMessage.error("프로젝트명을 입력해주세요.");
+                return;
+            }
+            if (projectTitle.length > 100) {
+                toastMessage.error("프로젝트 제목은 100자까지 입력 가능합니다.");
+                return;
+            }
+            if (startDate === "") {
+                toastMessage.error("시작 날짜를 선택해주세요.");
+                return;
+            }
+            if (endDate === "") {
+                toastMessage.error("종료 날짜를 선택해주세요.");
+                return;
+            }
+            if (content.trim() === "") {
+                toastMessage.error("프로젝트 설명을 입력해주세요.");
+                return;
+            }
+            if (content.length > 500) {
+                toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
+                return;
+            }
+            if (selectedMembers.length === 0) {
+                toastMessage.error("프로젝트 참여 인원을 선택해주세요.");
+                return;
+            }
+            if (!manager) {
+                toastMessage.error("프로젝트 관리자를 선택해주세요.");
+                return;
+            }
 
         const start = startDate + "-01";
         const [year, month] = endDate.split("-").map(Number);
@@ -127,11 +165,11 @@ export default function ProjectCreateModal({
                         startDate={startDate}
                         endDate={endDate}
                         content={content}
-                        setProjectTitle={setProjectTitle}
+                        setProjectTitle={handleProjectTitleChange}
                         setStartDate={setStartDate}
                         setEndDate={setEndDate}
-                        setContent={setContent}
-                    />
+                        setContent={handleContentChange}
+                        />
 
                     {/* 오른쪽 영역 */}
                     <SelectProjectMembers
@@ -148,13 +186,8 @@ export default function ProjectCreateModal({
 
                 {/* 생성 완료 버튼 */}
                 <button
-                    className={`mt-4 mx-auto px-8 py-3 rounded-full text-white text-lg font-semibold transition ${
-                        isFormValid
-                            ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-                            : "bg-gray-400 cursor-not-allowed"
-                    }`}
+                    className={`mt-4 mx-auto px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer`}
                     onClick={handleSubmit}
-                    disabled={!isFormValid}
                     type="button"
                 >
                     생성 완료
