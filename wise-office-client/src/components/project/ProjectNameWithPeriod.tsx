@@ -8,10 +8,10 @@ interface ProjectNameWithPeriodProps {
     startDate: string;
     endDate: string;
     content: string;
-    setProjectTitle: React.Dispatch<React.SetStateAction<string>>;
+    setProjectTitle: (value: string) => void;
     setStartDate: React.Dispatch<React.SetStateAction<string>>;
     setEndDate: React.Dispatch<React.SetStateAction<string>>;
-    setContent: React.Dispatch<React.SetStateAction<string>>;
+    setContent: (value: string) => void;
 }
 
 export default function ProjectNameWithPeriod({projectTitle, startDate, endDate, content, setProjectTitle, setStartDate, setEndDate, setContent}:ProjectNameWithPeriodProps) {
