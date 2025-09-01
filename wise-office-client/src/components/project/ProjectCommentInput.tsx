@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Send } from "lucide-react";
+import { Send } from "lucide-react";
 
 interface ProjectCommentInputProps {
     value: string;
@@ -20,9 +20,6 @@ const ProjectCommentInput: React.FC<ProjectCommentInputProps> = ({
     };
     return (
         <div className="flex gap-3 mb-6">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <User className="w-4 h-4 text-white" />
-            </div>
             <div className="flex-1">
                 <textarea
                     value={value}

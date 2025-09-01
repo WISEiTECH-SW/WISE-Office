@@ -7,6 +7,6 @@ export interface Comment {
     content: string;
     authorName: string;
     writtenAt: string;
-    imgUrl: string;
+    imageUrl: string;
     canModify: boolean;
 }

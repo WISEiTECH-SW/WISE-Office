@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import type { ProjectAttendant, ProjectInfo } from "@/types/project";
-import { editProjectInfo, deleteProject } from "@/lib/project/info";
+import type { ProjectInfo } from "@/types/project";
+import { deleteProject } from "@/lib/project/info";
 import { deleteProjectApi, getProjectById } from "@/services/projects";
 import ProjectUpdateModal from "../../components/project/project_modal_update";
 
@@ -85,7 +85,6 @@ export default function projectPageById() {
                     : log
             );
             setLogList(updateLogList);
-            // selectLog(updateLog.logId);
             setSelectedLog(updateLog);
             setEditingLog(null);
         } else {
