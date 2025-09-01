@@ -3,9 +3,9 @@ services:
         container_name: only_postgres_container
         image: postgres:15
         ports:
-            - "5432:5432"
+            - "5433:5432"
         expose:
-            - "5432"
+            - "5433"
         volumes:
             - ${POSTGRES_VOLUME}
         environment:
@@ -15,7 +15,11 @@ services:
             TZ: Asia/Seoul
             PGTZ: Asia/Seoul
         healthcheck: # 컨테이너가 DB 연결을 받을 준비가 되었는지 확인
-            test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+            test:
+                [
+                    "CMD-SHELL",
+                    "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
+                ]
             interval: 10s
             timeout: 5s
             retries: 5

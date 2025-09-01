@@ -3,9 +3,9 @@ services:
         container_name: postgres_container
         image: postgres:15
         ports:
-            - "5432:5432"
+            - "5433:5432"
         expose:
-            - "5432"
+            - "5433"
         volumes:
             - ${POSTGRES_VOLUME}
         environment:
@@ -15,24 +15,28 @@ services:
             TZ: Asia/Seoul
             PGTZ: Asia/Seoul
         healthcheck: # 컨테이너가 DB 연결을 받을 준비가 되었는지 확인
-            test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+            test:
+                [
+                    "CMD-SHELL",
+                    "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
+                ]
             interval: 10s
             timeout: 5s
             retries: 5
     application:
-      container_name: backoffice_app
-      build:
-        context: ../wise-office-server
-        dockerfile: Dockerfile
-      image: backoffice_server:latest
-      depends_on:
-        database:
-            condition: service_healthy #healthcheck가 정상이 될 때까지 대기
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-        interval: 10s
-        timeout: 5s
-        retries: 5
-        start_period: 20s
-      ports:
-        - "8080:8080"
+        container_name: backoffice_app
+        build:
+            context: ../wise-office-server
+            dockerfile: Dockerfile
+        image: backoffice_server:latest
+        depends_on:
+            database:
+                condition: service_healthy #healthcheck가 정상이 될 때까지 대기
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 20s
+        ports:
+            - "8080:8080"

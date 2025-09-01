@@ -55,7 +55,7 @@ export default function ProjectInfoContainer({
                 <ProjectInfoItem
                     icon={<Users className="w-7 h-7 text-blue-600" />}
                     label="참여인원"
-                    value={`${projectInfo.attendant.length}명`}
+                    value={`${projectInfo.attendant.length + 1}명`}
                 />
             </div>
         </div>

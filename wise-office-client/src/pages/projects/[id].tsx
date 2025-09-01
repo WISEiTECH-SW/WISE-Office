@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import type { ProjectInfo } from "@/types/project";
+import type { ProjectAttendant, ProjectInfo } from "@/types/project";
 import { editProjectInfo, deleteProject } from "@/lib/project/info";
 import { deleteProjectApi, getProjectById } from "@/services/projects";
 import ProjectUpdateModal from "../../components/project/project_modal_update";
@@ -121,19 +121,18 @@ export default function projectPageById() {
 
     // 프로젝트 삭제
     const delProject = () => {
-        if(window.confirm("이 프로젝트를 삭제하시겠습니까?")){
-            if(!router.isReady) return;
-            if(typeof id !== "string") return;
+        if (window.confirm("이 프로젝트를 삭제하시겠습니까?")) {
+            if (!router.isReady) return;
+            if (typeof id !== "string") return;
             const projectId = Number(id);
-            if(isNaN(projectId)) return;
-            try{
+            if (isNaN(projectId)) return;
+            try {
                 deleteProjectApi(projectId);
                 deleteProject();
-                router.push("/")
-            }catch(error){
+                router.push("/");
+            } catch (error) {
                 console.log("프로젝트 삭제 실패: ", error);
             }
-            
         }
     };
 
@@ -218,17 +217,19 @@ export default function projectPageById() {
                 {/* Project Information */}
                 <ProjectInfoContainer
                     projectInfo={projectInfo}
-                    onEdit={()=> {setIsEditOpen(true);
+                    onEdit={() => {
+                        setIsEditOpen(true);
                     }}
                     onDelete={() => {
                         delProject();
                     }}
                 />
-                {isEditOpen &&projectInfo.projectId && (
+                {isEditOpen && projectInfo.projectId && (
                     <ProjectUpdateModal
-                    projectId = {projectInfo.projectId}
-                    setProjectInfo = {setProjectInfo}
-                    onClose={() => setIsEditOpen(false)}/>
+                        projectId={projectInfo.projectId}
+                        setProjectInfo={setProjectInfo}
+                        onClose={() => setIsEditOpen(false)}
+                    />
                 )}
                 <div className="grid grid-cols-12 gap-6">
                     {/* LOG List - Left */}
@@ -262,7 +263,10 @@ export default function projectPageById() {
                     {/* Attendant List - Right */}
                     <div className="col-span-3">
                         <ProjectAttendantList
-                            attendants={projectInfo.attendant}
+                            attendants={[
+                                projectInfo.managerName,
+                                ...projectInfo.attendant,
+                            ]}
                         />
                     </div>
                 </div>
