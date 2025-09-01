@@ -6,14 +6,13 @@ interface ProjectLogListProps {
     logList: Log[];
     selectedLog?: LogDetail | null;
     onSelectLog: (logId: number) => void;
-    onDeleteLog: (logId: number) => void;
+    // onDeleteLog: (logId: number) => void;
 }
 
 const ProjectLogList: React.FC<ProjectLogListProps> = ({
     logList,
     selectedLog,
     onSelectLog,
-    onDeleteLog,
 }) => {
     return (
         <div className="bg-white rounded-lg shadow-sm">
@@ -28,7 +27,6 @@ const ProjectLogList: React.FC<ProjectLogListProps> = ({
                         log={log}
                         isSelected={selectedLog?.logId === log.logId}
                         onSelect={onSelectLog}
-                        onDelete={onDeleteLog}
                     />
                 ))}
             </div>
