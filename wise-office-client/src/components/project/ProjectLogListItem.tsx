@@ -17,6 +17,7 @@ const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
 }) => {
     const handleDeleteClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // 부모의 onClick 이벤트 방지
+        console.log(log.canModify);
         onDelete(log.logId);
     };
 
@@ -31,12 +32,14 @@ const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
                 <h3 className="font-medium text-sm text-gray-800 line-clamp-2">
                     {log.title}
                 </h3>
-                <button
-                    onClick={handleDeleteClick}
-                    className="text-gray-400 hover:text-red-500 ml-2"
-                >
-                    <Trash2 className="w-4 h-4" />
-                </button>
+                {log.canModify && (
+                    <button
+                        onClick={handleDeleteClick}
+                        className="text-gray-400 hover:text-red-500 ml-2"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </button>
+                )}
             </div>
             <div className="text-xs text-gray-500 mb-1">{log.writer}</div>
             {/* <div className="text-xs text-gray-400">{log.createdAt}</div> */}

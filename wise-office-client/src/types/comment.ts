@@ -8,5 +8,5 @@ export interface Comment {
     authorName: string;
     writtenAt: string;
     imgUrl: string;
-    canmodify: boolean;
+    canModify: boolean;
 }

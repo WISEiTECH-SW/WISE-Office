@@ -64,7 +64,7 @@ const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
                     </div>
                     <button
                         onClick={handleCancel}
-                        className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                        className="p-1 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                     >
                         <X className="w-5 h-5 text-gray-500" />
                     </button>
@@ -104,7 +104,7 @@ const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
                     <button
                         type="button"
                         onClick={handleCancel}
-                        className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                         취소
                     </button>
@@ -112,7 +112,7 @@ const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
                         type="button"
                         onClick={handleSubmit}
                         disabled={!title.trim() || !content.trim()}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
+                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2 cursor-pointer"
                     >
                         <FileText className="w-4 h-4" />
                         <span>{editingLog ? "로그 수정" : "로그 작성"}</span>

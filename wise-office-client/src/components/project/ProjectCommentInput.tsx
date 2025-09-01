@@ -34,7 +34,7 @@ const ProjectCommentInput: React.FC<ProjectCommentInputProps> = ({
                 <div className="flex justify-end mt-2">
                     <button
                         onClick={onSubmit}
-                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center gap-1"
+                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center gap-1 cursor-pointer"
                     >
                         <Send className="w-4 h-4" />
                         댓글 작성

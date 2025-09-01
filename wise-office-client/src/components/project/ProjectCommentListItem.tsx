@@ -27,12 +27,14 @@ const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
                             <span className="text-xs text-gray-500 mr-2">
                                 {formatDateTime(comment.writtenAt)}
                             </span>
-                            <button
-                                className="text-gray-400 hover:text-red-500"
-                                onClick={() => onDelete(comment.id)}
-                            >
-                                <XCircle className="w-4 h-4" />
-                            </button>
+                            {comment.canModify && (
+                                <button
+                                    className="text-gray-400 hover:text-red-500"
+                                    onClick={() => onDelete(comment.id)}
+                                >
+                                    <XCircle className="w-4 h-4" />
+                                </button>
+                            )}
                         </div>
                     </div>
                     <p className="text-sm text-gray-700">{comment.content}</p>
