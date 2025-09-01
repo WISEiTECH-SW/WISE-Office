@@ -35,7 +35,7 @@ const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
                 {log.canModify && (
                     <button
                         onClick={handleDeleteClick}
-                        className="text-gray-400 hover:text-red-500 ml-2"
+                        className="text-gray-400 hover:text-red-500 ml-2 cursor-pointer"
                     >
                         <Trash2 className="w-4 h-4" />
                     </button>
