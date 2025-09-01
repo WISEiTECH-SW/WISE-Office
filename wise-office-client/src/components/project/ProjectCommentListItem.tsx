@@ -38,7 +38,7 @@ const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
                             </span>
                             {comment.canModify && (
                                 <button
-                                    className="text-gray-400 hover:text-red-500"
+                                    className="text-gray-400 hover:text-red-500 cursor-pointer"
                                     onClick={() => onDelete(comment.id)}
                                 >
                                     <XCircle className="w-4 h-4" />
