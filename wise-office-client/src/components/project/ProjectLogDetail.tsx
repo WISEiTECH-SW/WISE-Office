@@ -17,17 +17,20 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
                 <h2 className="text-xl font-bold text-gray-800 mb-2">
                     {log.title}
                 </h2>
-                <div className="flex items-center text-sm text-gray-500">
-                    <span className="font-medium">{log.writer}</span>
-                    <span className="mx-2">•</span>
-                    <span>{formatDateTime(log.createdAt)}</span>
-                    <span className="mx-2">•</span>
-                    <button
-                        className="text-gray-400 hover:text-blue-600 transition-colors cursor-pointer"
-                        onClick={() => handleEditLog(log)}
-                    >
-                        수정
-                    </button>
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center text-sm text-gray-500">
+                        <span className="font-medium">{log.writer}</span>
+                        <span className="mx-2">•</span>
+                        <span>{formatDateTime(log.createdAt)}</span>
+                    </div>
+                    {log.canModify && (
+                        <button
+                            className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center justify-center cursor-pointer"
+                            onClick={() => handleEditLog(log)}
+                        >
+                            수정
+                        </button>
+                    )}
                 </div>
             </div>
             <div className="p-6 border-b">

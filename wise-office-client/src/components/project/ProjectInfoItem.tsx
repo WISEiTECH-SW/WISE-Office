@@ -13,10 +13,10 @@ export default function ProjectInfoItem({
         <div className="flex items-center space-x-3">
             {icon}
             <div>
-                <div className="text-sm font-medium text-gray-600">{label}</div>
-                <div className="text-base font-semibold text-gray-800">
-                    {value}
+                <div className="text-sm font-semibold text-gray-600">
+                    {label}
                 </div>
+                <div className="font-medium text-gray-800">{value}</div>
             </div>
         </div>
     );

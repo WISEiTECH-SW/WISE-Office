@@ -4,7 +4,7 @@ export interface Log {
     writer: string;
     createdAt: string;
     commentCnt: number;
-    canmodify: boolean;
+    canModify: boolean;
 }
 
 export interface LogDetail {
