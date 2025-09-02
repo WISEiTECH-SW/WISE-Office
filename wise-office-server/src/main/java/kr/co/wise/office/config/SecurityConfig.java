@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,7 +31,9 @@ public class SecurityConfig {
     private final AuthenticationFailureHandler oauth2FailureHandler;
     private final AccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfig(AuthenticationSuccessHandler oauth2SuccessHandler, AuthenticationFailureHandler oauth2FailureHandler, AccessDeniedHandler customAccessDeniedHandler) {
+    public SecurityConfig(AuthenticationSuccessHandler oauth2SuccessHandler,
+                          AuthenticationFailureHandler oauth2FailureHandler,
+                          AccessDeniedHandler customAccessDeniedHandler) {
         this.oauth2SuccessHandler = oauth2SuccessHandler;
         this.oauth2FailureHandler = oauth2FailureHandler;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
@@ -68,7 +70,9 @@ public class SecurityConfig {
 
         http.exceptionHandling(exceptionConfig ->
                 exceptionConfig.accessDeniedHandler(customAccessDeniedHandler));
-        http.addFilterBefore(new JWTFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        //http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(), LogoutFilter.class);
 
         return http.build();
     }

@@ -36,11 +36,10 @@ public class MemberService extends DefaultOAuth2UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void signUp(SingUpRequest request) {
+    public void signUp(SignupRequest request) {
         if (memberRepository.findByEmail(request.email()).isPresent()) {
             throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
         }
-
 
         MemberEntity newMember = MemberEntity.builder()
                 .name(request.name())
@@ -54,16 +53,23 @@ public class MemberService extends DefaultOAuth2UserService {
         memberRepository.save(newMember);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
+    public String login(LoginRequest loginRequest) {
+        MemberEntity member = memberRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.INVALID_USER));
+        if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
+            throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
+        }
 
-
-
+        String token = JWTUtil.createJWT(member.getName(), "ROLE_" + member.getRoleType().name());
+        return token;
+    }
 
     /**
      * Google-login 시도시 수행되는 로직
      * 1. 아직 회원가입 하지 않았으면 회원가입 진행
      * 2. DB 조회 후 있다면 해당 정보 반환
      */
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -157,16 +163,5 @@ public class MemberService extends DefaultOAuth2UserService {
         loginMember.updatePosition(request);
         memberRepository.save(loginMember);
         return new MemberPositionUpdateResponse(loginMember.getTeam(), loginMember.getRank());
-    }
-
-    @Transactional(readOnly = true)
-    public String login(LoginRequest loginRequest) {
-        MemberEntity member = memberRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
-        if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
-            throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
-        }
-
-        String token = JWTUtil.createJWT(member.getName(), "ROLE_" + member.getRoleType().name());
-        return token;
     }
 }
