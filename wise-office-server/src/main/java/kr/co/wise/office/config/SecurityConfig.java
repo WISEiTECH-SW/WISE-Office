@@ -4,10 +4,14 @@ import kr.co.wise.office.security.filter.JWTFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -32,6 +36,17 @@ public class SecurityConfig {
         this.oauth2FailureHandler = oauth2FailureHandler;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable);
@@ -40,12 +55,17 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfiguration()));
 
         http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+//        http.authorizeHttpRequests(auth -> auth
+//                .requestMatchers("/api/auth/**", "/login/oauth2/code/google", "/oauth2/**", "/health", "/swagger-ui/**",
+//                        "/v3/api-docs/**", "/api/members/signup", "api/members/login", "api/v2/projects", "api/members/me").permitAll()
+//                .anyRequest().authenticated());
+
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+
         http.oauth2Login(
                 oauth2 -> oauth2.successHandler(oauth2SuccessHandler).failureHandler(oauth2FailureHandler)
                         .permitAll());
 
-        //auth.requestMatchers(new String[]{"/projects", "/oauth**", "/health", "/swagger-ui.html.", "/"}
         http.exceptionHandling(exceptionConfig ->
                 exceptionConfig.accessDeniedHandler(customAccessDeniedHandler));
         http.addFilterBefore(new JWTFilter(), UsernamePasswordAuthenticationFilter.class);

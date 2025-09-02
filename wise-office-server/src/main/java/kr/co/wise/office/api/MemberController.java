@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.service.MemberService;
@@ -22,6 +24,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "member", description = "회원 조회 관련 API 입니다.")
@@ -80,6 +83,33 @@ public class MemberController {
                 memberService.updateMemberPosition(request, loginUser.getName());
                 return ResponseEntity.status(HttpStatus.OK)
                                 .body(new MemberPositionUpdateResponse(request.team(), request.rank()));
+        }
+
+        @PostMapping("/signup")
+        @Operation(summary = "자체 회원가입", description = "이메일, 비밀번호, 이름으로 회원가입합니다.")
+        public ResponseEntity<Void> signup(@RequestBody SingUpRequest signUpRequest) {
+            log.info(signUpRequest.toString());
+            memberService.signUp(signUpRequest);
+            return ResponseEntity.ok().build();
+        }
+
+        @PostMapping("/login")
+        @Operation(summary = "자체 로그인", description = "이메일, 비밀번호로 로그인하고 JWT를 발급받습니다.")
+        public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws IOException {
+            String token = memberService.login(loginRequest);
+
+            log.info("생성된 token = {}", token);
+
+            // 응답
+            Cookie cookie = new Cookie("jwt", token);
+            //cookie.setHttpOnly(true);
+            cookie.setSecure(false);
+            cookie.setPath("/");
+            cookie.setMaxAge(600);
+
+            response.addCookie(cookie);
+            response.sendRedirect("http://localhost:3000/");
+            return ResponseEntity.ok().build();
         }
 
 }

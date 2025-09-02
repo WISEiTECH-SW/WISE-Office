@@ -7,9 +7,13 @@ import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
+import kr.co.wise.office.exception.custom.UnAuthorizationException;
+import kr.co.wise.office.util.JWTUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -24,14 +28,36 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class MemberService extends DefaultOAuth2UserService {
+
     private final MemberRepository memberRepository;
     private final AttendantService attendantService;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository memberRepository, AttendantService attendantService) {
-        this.memberRepository = memberRepository;
-        this.attendantService = attendantService;
+    @Transactional
+    public void signUp(SingUpRequest request) {
+        if (memberRepository.findByEmail(request.email()).isPresent()) {
+            throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
+        }
+
+
+        MemberEntity newMember = MemberEntity.builder()
+                .name(request.name())
+                .email(request.email())
+                .team(request.team())
+                .rank(request.rank())
+                .password(passwordEncoder.encode(request.password()))
+                .roleType(MemberRoleType.WORKER)
+                .build();
+
+        memberRepository.save(newMember);
     }
+
+    @Transactional
+
+
+
 
     /**
      * Google-login 시도시 수행되는 로직
@@ -131,5 +157,16 @@ public class MemberService extends DefaultOAuth2UserService {
         loginMember.updatePosition(request);
         memberRepository.save(loginMember);
         return new MemberPositionUpdateResponse(loginMember.getTeam(), loginMember.getRank());
+    }
+
+    @Transactional(readOnly = true)
+    public String login(LoginRequest loginRequest) {
+        MemberEntity member = memberRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+        if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
+            throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
+        }
+
+        String token = JWTUtil.createJWT(member.getName(), "ROLE_" + member.getRoleType().name());
+        return token;
     }
 }
