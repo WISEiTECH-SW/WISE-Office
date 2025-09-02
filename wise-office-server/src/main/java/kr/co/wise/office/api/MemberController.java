@@ -17,8 +17,8 @@ import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "member", description = "회원 조회 관련 API 입니다.")
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/members")
 @Slf4j
@@ -40,6 +39,14 @@ public class MemberController {
 
     private final MemberService memberService;
     private final EmailService emailService;
+    private final String allowDomain;
+
+    public MemberController(MemberService memberService, EmailService emailService,
+                            @Value("${domain.email}") String allowDomain) {
+        this.memberService = memberService;
+        this.emailService = emailService;
+        this.allowDomain = allowDomain;
+    }
 
     @Operation(summary = "전체 멤버 정보 조회", description = "모든 회원의 직급, 계급, 이름, PK 값을 반환합니다, 현재 로그인 중인 사람은 반환되지 않습니다.")
     @ApiResponses(value = {
@@ -92,7 +99,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "자체 회원가입", description = "이메일, 비밀번호, 이름으로 회원가입합니다.")
-    public ResponseEntity<Void> signup(@RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest signUpRequest) {
         log.info(signUpRequest.toString());
         memberService.signUp(signUpRequest);
         return ResponseEntity.ok().build();
@@ -142,8 +149,8 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(emailVerificationResult);
     }
 
-    private static void validateEmail(String email) {
-        if (!email.endsWith("@wise.co.kr")) {
+    private void validateEmail(String email) {
+        if (!email.endsWith(allowDomain)) {
             throw new ApplicationRuntimeException(ErrorMessage.FORBIDDEN_SIGNUP);
         }
     }

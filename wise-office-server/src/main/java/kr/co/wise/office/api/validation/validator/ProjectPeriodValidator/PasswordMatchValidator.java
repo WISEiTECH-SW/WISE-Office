@@ -17,7 +17,7 @@ public class PasswordMatchValidator implements ConstraintValidator<ValidPassword
         if (!equalsPassword) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("비밀번호와 비밀번호확인이 일치하지 않습니다.")
-                    .addPropertyNode("password") // start field에 바인딩
+                    .addPropertyNode("password")
                     .addConstraintViolation();
             return false;
         }
