@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import type { ProjectInfo } from "@/types/project";
-import { deleteProject } from "@/lib/project/info";
-import { deleteProjectApi, getProjectById } from "@/services/projects";
-import ProjectUpdateModal from "../../components/project/project_modal_update";
-
+import { getProjectById } from "@/services/projects";
+import ProjectUpdateModal from "@/components/project/project_modal_update";
 import type { Log, LogDetail, LogInput } from "@/types/log";
 import {
     getLogList,
@@ -15,6 +13,7 @@ import {
     patchLog,
 } from "@/services/logs";
 import { convertToLog, deleteLogList } from "@/lib/project/log";
+import { useLogStore } from "@/store/useLogStore";
 
 import { Comment, CommentInput } from "@/types/comment";
 import {
@@ -31,22 +30,27 @@ import {
     ProjectAttendantList,
     ProjectLogInput,
 } from "@/components/project";
+import ConfirmModal from "@/components/ConfirmModal";
+import { toastMessage } from "@/lib/common/toastMessage";
 
 export default function projectPageById() {
     const router = useRouter();
     const { id } = router.query;
+    const projectId = Number(id);
 
     // Project
     const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     // Log
     const [isLoading, setIsLoading] = useState(true);
     const [logList, setLogList] = useState<Log[]>([]);
-    const [selectedLogId, setSelectedLogId] = useState<number | null>(null);
+    // const [selectedLogId, setSelectedLogId] = useState<number | null>(null);
     const [selectedLog, setSelectedLog] = useState<LogDetail | null>(null);
     const [isLogModalOpen, setIsLogModalOpen] = useState(false);
     const [editingLog, setEditingLog] = useState<LogDetail | null>(null);
+    const { selectedLogId, setSelectedLogId } = useLogStore();
 
     // Comment
     const [commentList, setCommentList] = useState<Comment[]>([]);
@@ -66,7 +70,6 @@ export default function projectPageById() {
     // 로그 생성
     const handleLogSubmit = async (logInput: LogInput) => {
         if (typeof id !== "string") return;
-        const projectId = Number(id);
         if (isNaN(projectId)) return;
 
         // 로그 수정
@@ -115,23 +118,6 @@ export default function projectPageById() {
 
             setLogList(deleteLogList(logList, logId));
             setSelectedLog(null);
-        }
-    };
-
-    // 프로젝트 삭제
-    const delProject = () => {
-        if (window.confirm("이 프로젝트를 삭제하시겠습니까?")) {
-            if (!router.isReady) return;
-            if (typeof id !== "string") return;
-            const projectId = Number(id);
-            if (isNaN(projectId)) return;
-            try {
-                deleteProjectApi(projectId);
-                deleteProject();
-                router.push("/");
-            } catch (error) {
-                console.log("프로젝트 삭제 실패: ", error);
-            }
         }
     };
 
@@ -220,7 +206,7 @@ export default function projectPageById() {
                         setIsEditOpen(true);
                     }}
                     onDelete={() => {
-                        delProject();
+                        setIsConfirmOpen(true);
                     }}
                 />
                 {isEditOpen && projectInfo.projectId && (
@@ -230,6 +216,14 @@ export default function projectPageById() {
                         onClose={() => setIsEditOpen(false)}
                     />
                 )}
+                {isConfirmOpen && projectInfo.projectId && (
+                    <ConfirmModal
+                        deleteTarget={"project"}
+                        projectId={projectInfo.projectId}
+                        onClose={() => setIsConfirmOpen(false)}
+                    />
+                )}
+
                 <div className="grid grid-cols-12 gap-6">
                     {/* LOG List - Left */}
                     <div className="col-span-3">

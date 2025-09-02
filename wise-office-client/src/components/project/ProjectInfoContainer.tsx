@@ -18,11 +18,13 @@ export default function ProjectInfoContainer({
     return (
         <div className="bg-white rounded-lg shadow-sm p-6 my-6">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-gray-800">
-                    {projectInfo.projectTitle}
-                </h1>
+                <div className="flex-grow min-w-0">
+                    <p className="text-2xl font-bold text-gray-800 break-words whitespace-normal">
+                        {projectInfo.projectTitle}
+                    </p>
+                </div>
                 {projectInfo.canModify && (
-                    <div className="flex gap-2">
+                    <div className="flex ml-4 gap-2 flex-shrink-0">
                         <button
                             onClick={onEdit}
                             className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 cursor-pointer"
@@ -40,28 +42,29 @@ export default function ProjectInfoContainer({
             </div>
             <div className="grid grid-cols-4 gap-6 mb-6">
                 <ProjectInfoItem
-                    icon={<Calendar className="w-7 h-7 text-blue-600" />}
+                    icon={<Calendar />}
                     label="프로젝트 기간"
                     value={`${projectInfo.start} ~ ${projectInfo.end}`}
                 />
                 <ProjectInfoItem
-                    icon={<TrendingUp className="w-7 h-7 text-blue-600" />}
+                    icon={<TrendingUp />}
                     label="진행 상태"
                     value={duration}
                 />
                 <ProjectInfoItem
-                    icon={<User className="w-7 h-7 text-blue-600" />}
+                    icon={<User />}
                     label="책임자"
                     value={projectInfo.managerName.name}
                 />
                 <ProjectInfoItem
-                    icon={<Users className="w-7 h-7 text-blue-600" />}
+                    icon={<Users />}
                     label="참여인원"
                     value={`${projectInfo.attendant.length + 1}명`}
                 />
             </div>
+
             <ProjectInfoItem
-                icon={<NotepadText className="w-7 h-7 text-blue-600" />}
+                icon={<NotepadText />}
                 label="프로젝트 설명"
                 value={projectInfo.detail}
             />
