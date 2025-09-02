@@ -12,9 +12,9 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
     handleEditLog,
 }) => {
     return (
-        <>
+        <div>
             <div className="border-b p-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-2">
+                <h2 className="text-xl font-bold text-gray-800 mb-2 break-words whitespace-normal">
                     {log.title}
                 </h2>
                 <div className="flex justify-between items-center">
@@ -34,9 +34,11 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
                 </div>
             </div>
             <div className="p-6 border-b">
-                <p className="text-gray-700 leading-relaxed">{log.content}</p>
+                <p className="text-gray-700 leading-relaxed break-words whitespace-normal">
+                    {log.content}
+                </p>
             </div>
-        </>
+        </div>
     );
 };
 

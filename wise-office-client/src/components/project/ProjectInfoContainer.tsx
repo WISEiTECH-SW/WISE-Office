@@ -18,11 +18,13 @@ export default function ProjectInfoContainer({
     return (
         <div className="bg-white rounded-lg shadow-sm p-6 my-6">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-gray-800">
-                    {projectInfo.projectTitle}
-                </h1>
+                <div className="flex-grow min-w-0">
+                    <p className="text-2xl font-bold text-gray-800 break-words whitespace-normal">
+                        {projectInfo.projectTitle}
+                    </p>
+                </div>
                 {projectInfo.canModify && (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-shrink-0">
                         <button
                             onClick={onEdit}
                             className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 cursor-pointer"
@@ -60,6 +62,7 @@ export default function ProjectInfoContainer({
                     value={`${projectInfo.attendant.length + 1}명`}
                 />
             </div>
+
             <ProjectInfoItem
                 icon={<NotepadText />}
                 label="프로젝트 설명"

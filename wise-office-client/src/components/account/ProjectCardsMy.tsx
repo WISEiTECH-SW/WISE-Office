@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Project } from "@/types/project";
 import { Profile } from "@/types/profile";
 import { calculateProjectDuration } from "@/lib/common/util";
-interface UserProfileProps{
-    props:Profile;
+
+interface UserProfileProps {
+    props: Profile;
 }
-export default function ProjectCardsMy({props}:UserProfileProps) {
+export default function ProjectCardsMy({ props }: UserProfileProps) {
     const projects = props.projectList;
 
     return (
@@ -36,9 +37,9 @@ type Props = {
 
 function ProjectListCard({ project }: Props) {
     const { duration, state, stateColor, textColor } = calculateProjectDuration(
-            project.start,
-            project.end
-        );
+        project.start,
+        project.end
+    );
     return (
         <Link
             href={`/projects/${project.projectId}`}
@@ -47,13 +48,13 @@ function ProjectListCard({ project }: Props) {
             {/* project-card-header */}
             <div className="px-4 py-2 border-b border-gray-100">
                 <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                        <h5 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <div className="flex flex-grow items-center gap-2">
+                        <h5 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors whitespace-normal break-all">
                             {project.projectTitle}
                         </h5>
                     </div>
                     <span
-                        className={`${stateColor} ${textColor} px-2 py-0.5 rounded-full text-xs font-semibold`}
+                        className={`${stateColor} ${textColor} px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0`}
                     >
                         {state}
                     </span>
