@@ -78,7 +78,7 @@ const LoginPage = () => {
                 <div className="text-sm text-center">
                     <p className="text-gray-600">
                         계정이 없으신가요?{" "}
-                        <Link href="/signup">
+                        <Link href="/auth/signup">
                             <span className="font-medium text-indigo-600 cursor-pointer hover:text-indigo-500">
                                 회원가입
                             </span>
