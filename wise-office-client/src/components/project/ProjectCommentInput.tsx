@@ -26,7 +26,7 @@ const ProjectCommentInput: React.FC<ProjectCommentInputProps> = ({
                     onChange={onChange}
                     onKeyDown={handleKeyDown}
                     placeholder="댓글을 입력하세요..."
-                    className="w-full p-3 border border-gray-300 rounded-lg resize-none h-20 text-sm"
+                    className="w-full p-3 border border-gray-300 rounded-lg resize-none h-20 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors"
                 />
                 <div className="flex justify-end mt-2">
                     <button
