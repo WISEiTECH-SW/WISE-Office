@@ -36,11 +36,10 @@ export default function Home() {
 
             {hasToken && (
                 <>
-                    <div
-                        onClick={() => setIsModalOpen(true)}
-                        className="flex justify-end mb-10"
-                    >
-                        <AddProjectButton />
+                    <div className="flex justify-end mb-10">
+                        <AddProjectButton
+                            modalOpen={() => setIsModalOpen(true)}
+                        />
                     </div>
                     {isModalOpen && (
                         <ProjectCreateModal

@@ -19,7 +19,7 @@ const ProjectCommentList: React.FC<ProjectCommentListProps> = ({
     onDeleteComment,
 }) => {
     return (
-        <div className="p-6">
+        <div className="p-6 w-full">
             <h3 className="font-semibold text-gray-800 mb-4">
                 댓글 ({comments.length})
             </h3>
@@ -28,7 +28,7 @@ const ProjectCommentList: React.FC<ProjectCommentListProps> = ({
                 onChange={onCommentChange}
                 onSubmit={onAddComment}
             />
-            <div className="space-y-4">
+            <div className="space-y-4 flex-col w-full">
                 {comments.map((comment) => (
                     <ProjectCommentListItem
                         key={comment.id}
