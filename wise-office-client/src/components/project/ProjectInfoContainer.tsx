@@ -40,28 +40,28 @@ export default function ProjectInfoContainer({
             </div>
             <div className="grid grid-cols-4 gap-6 mb-6">
                 <ProjectInfoItem
-                    icon={<Calendar className="w-7 h-7 text-blue-600" />}
+                    icon={<Calendar />}
                     label="프로젝트 기간"
                     value={`${projectInfo.start} ~ ${projectInfo.end}`}
                 />
                 <ProjectInfoItem
-                    icon={<TrendingUp className="w-7 h-7 text-blue-600" />}
+                    icon={<TrendingUp />}
                     label="진행 상태"
                     value={duration}
                 />
                 <ProjectInfoItem
-                    icon={<User className="w-7 h-7 text-blue-600" />}
+                    icon={<User />}
                     label="책임자"
                     value={projectInfo.managerName.name}
                 />
                 <ProjectInfoItem
-                    icon={<Users className="w-7 h-7 text-blue-600" />}
+                    icon={<Users />}
                     label="참여인원"
                     value={`${projectInfo.attendant.length + 1}명`}
                 />
             </div>
             <ProjectInfoItem
-                icon={<NotepadText className="w-7 h-7 text-blue-600" />}
+                icon={<NotepadText />}
                 label="프로젝트 설명"
                 value={projectInfo.detail}
             />

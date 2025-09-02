@@ -11,8 +11,9 @@ export default function ProjectInfoItem({
 }: ProjectInfoItemProps) {
     return (
         <div className="flex items-center space-x-3">
-            {icon}
-            <div>
+            <div className="text-blue-600">{icon}</div>
+
+            <div className="">
                 <div className="text-sm font-semibold text-gray-600">
                     {label}
                 </div>
