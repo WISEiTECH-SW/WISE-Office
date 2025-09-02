@@ -14,6 +14,8 @@ FROM eclipse-temurin:17-jre
 
 WORKDIR /backoffice
 
+RUN mkdir images
+
 COPY --from=builder /backoffice/build/libs/*.jar app.jar
 
 ENV SPRING_PROFILES_ACTIVE=docker

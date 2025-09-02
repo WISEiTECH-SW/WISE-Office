@@ -36,7 +36,7 @@ public class MemberService extends DefaultOAuth2UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void signUp(SignupRequest request) {
+    public void signUp(SignupRequest request, String imagePath) {
         if (memberRepository.findByEmail(request.email()).isPresent()) {
             throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
         }
@@ -48,6 +48,7 @@ public class MemberService extends DefaultOAuth2UserService {
                 .rank(request.rank())
                 .password(passwordEncoder.encode(request.password()))
                 .roleType(MemberRoleType.WORKER)
+                .imageUrl(imagePath)
                 .build();
 
         memberRepository.save(newMember);

@@ -11,6 +11,7 @@ public enum ErrorMessage {
 
     REJECT_MODIFYING_PROJECT(HttpStatus.UNAUTHORIZED, "프로젝트 수정/삭제 권한이 없습니다."),
     REJECT_MODIFYING_LOG(HttpStatus.UNAUTHORIZED, "로그 수정/삭제 권한이 없습니다."),
+    REJECT_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "불가능한 프로필 이미지 형식입니다."),
 
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "존재하지 않는 댓글입니다."),
     REJECT_MODIFYING_COMMENT(HttpStatus.UNAUTHORIZED, "댓글 수정/삭제 권한이 없습니다."),
