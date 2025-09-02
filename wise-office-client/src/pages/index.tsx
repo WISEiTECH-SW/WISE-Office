@@ -29,18 +29,17 @@ export default function Home() {
     }, [fetchProjects]);
 
     return (
-        <section className="mt-20 mb-30 px-12 py-5 px-70">
+        <section className="max-w-screen-lg mx-auto my-20 px-5">
             <h2 className="text-3xl font-bold mb-2 text-left">
                 프로젝트 진행 현황
             </h2>
 
             {hasToken && (
                 <>
-                    <div
-                        onClick={() => setIsModalOpen(true)}
-                        className="flex justify-end mb-10"
-                    >
-                        <AddProjectButton />
+                    <div className="flex justify-end mb-10">
+                        <AddProjectButton
+                            modalOpen={() => setIsModalOpen(true)}
+                        />
                     </div>
                     {isModalOpen && (
                         <ProjectCreateModal

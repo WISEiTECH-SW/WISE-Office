@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import kr.co.wise.office.application.EmailService;
+import kr.co.wise.office.application.ImageService;
 import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.exception.ErrorMessage;
@@ -27,6 +28,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,12 +42,14 @@ public class MemberController {
     private final MemberService memberService;
     private final EmailService emailService;
     private final String allowDomain;
+    private final ImageService imageService;
 
     public MemberController(MemberService memberService, EmailService emailService,
-                            @Value("${domain.email}") String allowDomain) {
+                            @Value("${domain.email}") String allowDomain, ImageService imageService) {
         this.memberService = memberService;
         this.emailService = emailService;
         this.allowDomain = allowDomain;
+        this.imageService = imageService;
     }
 
     @Operation(summary = "전체 멤버 정보 조회", description = "모든 회원의 직급, 계급, 이름, PK 값을 반환합니다, 현재 로그인 중인 사람은 반환되지 않습니다.")
@@ -99,9 +103,11 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "자체 회원가입", description = "이메일, 비밀번호, 이름으로 회원가입합니다.")
-    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<Void> signup(@Valid @RequestPart("request") SignupRequest signUpRequest,
+                                       @RequestPart(value = "profile", required = false)MultipartFile profileImage) {
         log.info(signUpRequest.toString());
-        memberService.signUp(signUpRequest);
+        String imagePath = imageService.saveImage(profileImage);
+        memberService.signUp(signUpRequest, imagePath);
         return ResponseEntity.ok().build();
     }
 
@@ -123,7 +129,6 @@ public class MemberController {
         response.sendRedirect("http://localhost:3000/");
         return ResponseEntity.ok().build();
     }
-
 
     @PostMapping("/emails/verification")
     @Operation(summary = "이메일 코드 전송", description = "인증번호를 발급받을 이메일을 입력합니다.")
