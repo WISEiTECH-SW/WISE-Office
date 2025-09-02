@@ -24,7 +24,7 @@ export default function ProjectInfoContainer({
                     </p>
                 </div>
                 {projectInfo.canModify && (
-                    <div className="flex gap-2 flex-shrink-0">
+                    <div className="flex ml-4 gap-2 flex-shrink-0">
                         <button
                             onClick={onEdit}
                             className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 cursor-pointer"

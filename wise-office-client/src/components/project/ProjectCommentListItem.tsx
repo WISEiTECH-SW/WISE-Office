@@ -23,7 +23,7 @@ const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
                 className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center"
             />
 
-            <div className="flex flex-col bg-gray-50 rounded-lg p-3">
+            <div className="flex flex-col flex-grow bg-gray-50 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-1">
                     <span className="font-medium text-sm text-gray-800">
                         {comment.authorName}

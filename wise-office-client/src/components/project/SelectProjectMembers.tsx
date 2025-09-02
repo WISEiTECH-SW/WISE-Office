@@ -44,11 +44,11 @@ export default function SelectProjectMembers({
     };
 
     return (
-        <div className="grid grid-cols-2 gap-10 basis-4/5 overflow-hidden pl-4">
+        <div className="grid grid-cols-2 gap-5 basis-4/5 overflow-hidden pl-2">
             {/* 왼쪽 열 */}
             <div className="flex flex-col overflow-y-auto">
                 {/* 검색창 */}
-                <label className="block mb-2 font-semibold text-gray-700 text-sm">
+                <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
                     검색
                 </label>
                 <input
@@ -56,12 +56,12 @@ export default function SelectProjectMembers({
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     placeholder="검색..."
-                    className="border border-gray-300 rounded-md px-3 py-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
 
                 {/* 선택된 멤버 카드 */}
                 {selectedMembers.length > 0 && (
-                    <div className="flex flex-wrap gap-2 border border-gray-300 rounded-md p-3 max-h-[120px] overflow-y-auto shadow-inner mb-6">
+                    <div className="flex flex-wrap gap-2 border border-gray-300 rounded-md ml-1 p-3 max-h-[120px] overflow-y-auto shadow-inner mb-6">
                         {selectedMembers.map((member) => (
                             <div
                                 key={member.memberId}
@@ -84,7 +84,7 @@ export default function SelectProjectMembers({
 
                 {/* 책임자 선택 */}
                 <div>
-                    <label className="block mb-2 font-semibold text-gray-700 text-sm">
+                    <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
                         책임자 선택
                     </label>
                     {selectedMembers.length === 0 ? (
@@ -92,7 +92,7 @@ export default function SelectProjectMembers({
                             참여 인력을 먼저 선택해주세요.
                         </p>
                     ) : (
-                        <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-3 shadow-inner">
+                        <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md ml-1 p-3 shadow-inner">
                             {selectedMembers.map((member) => (
                                 <label
                                     key={member.memberId}
@@ -101,8 +101,13 @@ export default function SelectProjectMembers({
                                     <input
                                         type="radio"
                                         name="manager"
-                                        checked={manager?.memberId === member.memberId}
-                                        onChange={() => handleManagerChange(member)}
+                                        checked={
+                                            manager?.memberId ===
+                                            member.memberId
+                                        }
+                                        onChange={() =>
+                                            handleManagerChange(member)
+                                        }
                                         className="cursor-pointer"
                                     />
                                     <span>
@@ -117,10 +122,10 @@ export default function SelectProjectMembers({
 
             {/* 오른쪽 열: 참여 인력 목록 */}
             <div className="flex flex-col overflow-y-auto">
-                <label className="block mb-2 font-semibold text-gray-700 text-sm">
+                <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                     참여 인력
                 </label>
-                <div className="border border-gray-300 rounded-md max-h-[70vh] overflow-y-auto shadow-sm">
+                <div className="border border-gray-300 mx-1 rounded-md max-h-[70vh] overflow-y-auto shadow-sm">
                     {filteredMembers.length === 0 ? (
                         <p className="text-center text-sm text-gray-500 py-3">
                             검색 결과 없음
@@ -134,7 +139,9 @@ export default function SelectProjectMembers({
                                 <div
                                     key={member.memberId}
                                     className={`flex justify-between px-4 py-2 cursor-pointer hover:bg-blue-50 ${
-                                        isSelected ? "bg-blue-100 font-semibold" : ""
+                                        isSelected
+                                            ? "bg-blue-100 font-semibold"
+                                            : ""
                                     }`}
                                     onClick={() => toggleMember(member)}
                                 >
