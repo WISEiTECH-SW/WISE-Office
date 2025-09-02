@@ -31,14 +31,14 @@ export default function ProjectListCard({ project }: Props) {
         >
             {/* project-card-header */}
             <div className="px-10 py-7 border-b border-gray-100">
-                <div className="flex justify-between items-start">
-                    <div className="flex items-center gap-3">
-                        <h5 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                <div className="flex justify-between items-start gap-2">
+                    <div className="flex flex-grow items-center gap-3">
+                        <h5 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors whitespace-normal break-all">
                             {project.projectTitle}
                         </h5>
                     </div>
                     <span
-                        className={`${stateColor} ${textColor} px-3 py-1 rounded-full text-xs font-semibold`}
+                        className={`${stateColor} ${textColor} px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0`}
                     >
                         {state}
                     </span>
