@@ -41,7 +41,7 @@ public class EmailService {
                     email, savedCode, code);
             return EmailVerificationResult.of(false);
         }
-        verificationRepository.remove(savedCode);
+        verificationRepository.remove(email);
         return EmailVerificationResult.of(true);
     }
 
