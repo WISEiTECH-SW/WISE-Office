@@ -75,7 +75,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(new IsManagerResponse(isManager));
     }
 
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @Operation(summary = "마이페이지 정보 조회", description = "현재 로그인한 사용자의 세부 정보를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "마이페이지 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = MyAccountResponse.class))),
@@ -115,9 +114,7 @@ public class MemberController {
     @Operation(summary = "자체 로그인", description = "이메일, 비밀번호로 로그인하고 JWT를 발급받습니다.")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws IOException {
         String token = memberService.login(loginRequest);
-
         log.info("생성된 token = {}", token);
-
         // 응답
         Cookie cookie = new Cookie("jwt", token);
         //cookie.setHttpOnly(true);
@@ -152,6 +149,16 @@ public class MemberController {
         validateEmail(email);
         EmailVerificationResult emailVerificationResult = emailService.verificationCode(email, code);
         return ResponseEntity.status(HttpStatus.OK).body(emailVerificationResult);
+    }
+
+    @PatchMapping("/images")
+    @Operation(summary = "프로필 사진 수정", description = "프로필 사진을 수정합니다.")
+    public ResponseEntity<MemberUpdateResponse> updateProfile(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+            @Parameter(description = "업데이트할 이미지 이름, key = profile로 전달") @RequestPart("profile") MultipartFile image) {
+        String savedImageName = imageService.saveImage(image);
+        memberService.updateMemberProfile(savedImageName, loginUser.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(new MemberUpdateResponse(savedImageName));
     }
 
     private void validateEmail(String email) {
