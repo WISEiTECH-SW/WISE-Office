@@ -9,6 +9,7 @@ import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.security.WithMockCustomUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -131,8 +133,27 @@ public class MemberControllerTest {
     class SignupTests {
 
         @Test
-        @DisplayName("성공: 회원가입")
+        @DisplayName("성공: 회원가입 - 이미지 포함")
         void signup_Success() throws Exception {
+            // given
+            SignupRequest signupRequest = new SignupRequest(username, password, password, "팀", "직급", email, "empty");
+            MockMultipartFile jsonRequest = new MockMultipartFile("request", "", "application/json", objectMapper.writeValueAsBytes(signupRequest));
+            MockMultipartFile uploadImage = new MockMultipartFile("profile", "test.img", MediaType.IMAGE_JPEG_VALUE, "test image content".getBytes());
+
+            // when
+            mockMvc.perform(multipart("/api/members/signup").file(jsonRequest).file(uploadImage))
+                    .andExpect(status().isOk())
+                    .andDo(print());
+
+            // then
+            MemberEntity savedMember = memberRepository.findByEmail(email).get();
+            assertThat(savedMember.getName()).isEqualTo("testUser");
+            assertThat(savedMember.getImageUrl()).doesNotContain("DEFAULT_IMAGE");
+        }
+
+        @Test
+        @DisplayName("성공: 회원가입 - 이미지 미포함")
+        void signup_notContainImage_Success() throws Exception {
             // given
             SignupRequest signupRequest = new SignupRequest(username, password, password, "팀", "직급", email, "empty");
             MockMultipartFile jsonRequest = new MockMultipartFile("request", "", "application/json", objectMapper.writeValueAsBytes(signupRequest));
@@ -145,7 +166,9 @@ public class MemberControllerTest {
             // then
             MemberEntity savedMember = memberRepository.findByEmail(email).get();
             assertThat(savedMember.getName()).isEqualTo("testUser");
+            assertThat(savedMember.getImageUrl()).contains("DEFAULT_IMAGE");
         }
+
 
         @Test
         @DisplayName("실패: 비밀번호 불일치")
@@ -242,4 +265,58 @@ public class MemberControllerTest {
                     .andDo(print());
         }
     }
+
+    @Nested
+    @DisplayName("프로필 이미지 업로드 테스트")
+    class ImageUpdateTest {
+
+        @BeforeEach
+        void setUp() { //미리 회원가입 시켜둠
+            MemberEntity member = MemberEntity.builder()
+                    .email(email)
+                    .password(passwordEncoder.encode(password))
+                    .name(username)
+                    .roleType(MemberRoleType.WORKER)
+                    .imageUrl("test")
+                    .build();
+            memberRepository.save(member);
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("성공: 이미지 업데이트")
+        void update_image_success() throws Exception {
+            //given
+            MockMultipartFile mockImage = new MockMultipartFile("profile", "update.jpg", MediaType.IMAGE_JPEG_VALUE, "update content".getBytes());
+
+            //when
+            ResultActions result = mockMvc.perform(multipart(HttpMethod.PATCH, "/api/members/images").file(mockImage));
+
+            //then
+            result.andExpect(status().isOk())
+                  .andDo(print());
+
+            MemberEntity updateMember = memberRepository.findByEmail(email).get();
+            assertThat(updateMember.getImageUrl()).doesNotContain("test");
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("실패: 이미지 형식이 아닌 파일로 업데이트 실패")
+        void update_image_fail_overSize() throws Exception {
+            String notSupportMediaType = MediaType.APPLICATION_PDF_VALUE;
+            MockMultipartFile mockImage = new MockMultipartFile("profile", "update.jpg", notSupportMediaType, "test".getBytes());
+            System.out.println("생성된 파일 크기: " + mockImage.getSize() + " bytes");
+
+            //when
+            ResultActions result = mockMvc.perform(multipart(HttpMethod.PATCH, "/api/members/images").file(mockImage));
+
+            //then
+            result.andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value(ErrorMessage.REJECT_IMAGE_FORMAT.getMessage()))
+                    .andDo(print());
+        }
+    }
+
+
 }
