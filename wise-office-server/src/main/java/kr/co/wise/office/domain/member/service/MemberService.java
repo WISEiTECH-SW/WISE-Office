@@ -61,7 +61,7 @@ public class MemberService extends DefaultOAuth2UserService {
             throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
         }
 
-        String token = JWTUtil.createJWT(member.getName(), "ROLE_" + member.getRoleType().name());
+        String token = JWTUtil.createJWT(member.getEmail(), "ROLE_" + member.getRoleType().name());
         return token;
     }
 
@@ -164,5 +164,11 @@ public class MemberService extends DefaultOAuth2UserService {
         loginMember.updatePosition(request);
         memberRepository.save(loginMember);
         return new MemberPositionUpdateResponse(loginMember.getTeam(), loginMember.getRank());
+    }
+
+    @Transactional
+    public void updateMemberProfile(String savedImageName, String userEmail) {
+        MemberEntity member = memberRepository.findByEmail(userEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+        member.updateInfo(member.getName(), savedImageName);
     }
 }

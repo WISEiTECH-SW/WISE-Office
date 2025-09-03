@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,6 +56,15 @@ public class GlobalExceptionHandler {
         bindingResult.getGlobalErrors().forEach(error ->
                 errors.put(error.getObjectName(), error.getDefaultMessage()));
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), "DTO Error", errors));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeErrorResponse("DTO Error", errors));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxSizeException(MaxUploadSizeExceededException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeErrorResponse("5MB 이하의 이미지를 업로드해 주세요.", Collections.EMPTY_MAP));
+    }
+
+    private ErrorResponse makeErrorResponse(String message, Map<String, String> errors) {
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), message, errors);
     }
 }
