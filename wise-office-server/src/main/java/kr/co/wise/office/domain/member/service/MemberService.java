@@ -38,7 +38,7 @@ public class MemberService extends DefaultOAuth2UserService {
     @Transactional
     public void signUp(SignupRequest request, String imagePath) {
         if (memberRepository.findByEmail(request.email()).isPresent()) {
-            throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
+            throw new UnAuthorizationException(ErrorMessage.AlREADY_SIGNUP_EMAIL);
         }
 
         MemberEntity newMember = MemberEntity.builder()
