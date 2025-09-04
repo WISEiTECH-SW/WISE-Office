@@ -62,7 +62,7 @@ public class SecurityConfig {
 //                        "/v3/api-docs/**", "/api/members/signup", "api/members/login", "api/v2/projects", "api/members/me").permitAll()
 //                .anyRequest().authenticated());
 
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.oauth2Login(
                 oauth2 -> oauth2.successHandler(oauth2SuccessHandler).failureHandler(oauth2FailureHandler)
