@@ -1,6 +1,7 @@
 package kr.co.wise.office.config;
 
 import kr.co.wise.office.security.filter.JWTFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,18 +26,22 @@ import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
+@Slf4j
 public class SecurityConfig {
 
     private final AuthenticationSuccessHandler oauth2SuccessHandler;
     private final AuthenticationFailureHandler oauth2FailureHandler;
     private final AccessDeniedHandler customAccessDeniedHandler;
+    private final FrontServerConfigProp frontConfig;
 
     public SecurityConfig(AuthenticationSuccessHandler oauth2SuccessHandler,
                           AuthenticationFailureHandler oauth2FailureHandler,
-                          AccessDeniedHandler customAccessDeniedHandler) {
+                          AccessDeniedHandler customAccessDeniedHandler,
+                          FrontServerConfigProp frontConfig) {
         this.oauth2SuccessHandler = oauth2SuccessHandler;
         this.oauth2FailureHandler = oauth2FailureHandler;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.frontConfig = frontConfig;
     }
 
     @Bean
@@ -56,11 +61,11 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.cors(cors -> cors.configurationSource(corsConfiguration()));
 
-        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-//        http.authorizeHttpRequests(auth -> auth
-//                .requestMatchers("/api/auth/**", "/login/oauth2/code/google", "/oauth2/**", "/health", "/swagger-ui/**",
-//                        "/v3/api-docs/**", "/api/members/signup", "api/members/login", "api/v2/projects", "api/members/me").permitAll()
-//                .anyRequest().authenticated());
+//        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**", "/login/oauth2/code/google", "/oauth2/**", "/health", "/swagger-ui/**",
+                        "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v2/projects", "/api/members/me").permitAll()
+                .anyRequest().authenticated());
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -81,13 +86,15 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfiguration(){
         CorsConfiguration corsConfig = new CorsConfiguration();
+        final String frontUrl = frontConfig.getFrontUrl();
+        log.info("front url = {}", frontUrl);
 
         corsConfig.setAllowedMethods(
                 List.of(HttpMethod.GET.name(), HttpMethod.POST.name(),
                         HttpMethod.DELETE.name(), HttpMethod.PATCH.name(),
                         HttpMethod.PUT.name(), HttpMethod.OPTIONS.name()));
         corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        corsConfig.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+        corsConfig.setAllowedOriginPatterns(List.of(frontUrl));
         corsConfig.setAllowCredentials(true); // 쿠키
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
