@@ -124,7 +124,6 @@ public class MemberController {
         cookie.setMaxAge(600);
 
         response.addCookie(cookie);
-//        response.sendRedirect("http://localhost:3000/");
         return ResponseEntity.ok().build();
     }
 

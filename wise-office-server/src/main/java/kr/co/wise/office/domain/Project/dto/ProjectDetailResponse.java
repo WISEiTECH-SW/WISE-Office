@@ -24,6 +24,8 @@ public class ProjectDetailResponse {
 
     @Schema(description = "상세 조회 프로젝트 수정/삭제 권한 보유 여부 (true: 삭제/수정 가능)")
     private boolean canModify; // 수정 가능한 사람인지 유무
+    @Schema(description = "현재 프로젝트에 참여중인 사람인지 (true : 참여, false : 미참여)")
+    private boolean isAttending;
 
     public static ProjectDetailResponse loadProjectInfo(ProjectEntity projectEntity) {
         ProjectDetailResponse response = new ProjectDetailResponse();
