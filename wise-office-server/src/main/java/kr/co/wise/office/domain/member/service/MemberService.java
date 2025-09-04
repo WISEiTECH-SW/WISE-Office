@@ -56,9 +56,9 @@ public class MemberService extends DefaultOAuth2UserService {
 
     @Transactional(readOnly = true)
     public String login(LoginRequest loginRequest) {
-        MemberEntity member = memberRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.INVALID_USER));
+        MemberEntity member = memberRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
         if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
-            throw new UnAuthorizationException(ErrorMessage.INVALID_USER);
+            throw new UnAuthorizationException(ErrorMessage.INVALID_MEMBER);
         }
 
         String token = JWTUtil.createJWT(member.getEmail(), "ROLE_" + member.getRoleType().name());
