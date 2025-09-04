@@ -148,7 +148,7 @@ public class MemberControllerTest {
             // then
             MemberEntity savedMember = memberRepository.findByEmail(email).get();
             assertThat(savedMember.getName()).isEqualTo("testUser");
-            assertThat(savedMember.getImageUrl()).doesNotContain("DEFAULT_IMAGE");
+            assertThat(savedMember.getImageUrl()).isNull();
         }
 
         @Test
@@ -166,7 +166,7 @@ public class MemberControllerTest {
             // then
             MemberEntity savedMember = memberRepository.findByEmail(email).get();
             assertThat(savedMember.getName()).isEqualTo("testUser");
-            assertThat(savedMember.getImageUrl()).contains("DEFAULT_IMAGE");
+            assertThat(savedMember.getImageUrl()).isNull();
         }
 
 
@@ -229,8 +229,7 @@ public class MemberControllerTest {
             ResultActions result = mockMvc.perform(post("/api/members/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("http://localhost:3000/"))
+                    .andExpect(status().isOk())
                     .andExpect(cookie().exists("jwt"))
                     .andDo(print());
         }
@@ -245,8 +244,8 @@ public class MemberControllerTest {
             mockMvc.perform(post("/api/members/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(loginRequest)))
-                    .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.message").value(ErrorMessage.INVALID_USER.getMessage()))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value(ErrorMessage.NOT_FOUND_MEMBER.getMessage()))
                     .andDo(print());
         }
 
@@ -261,7 +260,7 @@ public class MemberControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(loginRequest)))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.message").value(ErrorMessage.INVALID_USER.getMessage()))
+                    .andExpect(jsonPath("$.message").value(ErrorMessage.INVALID_MEMBER.getMessage()))
                     .andDo(print());
         }
     }

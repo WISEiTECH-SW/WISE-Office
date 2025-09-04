@@ -16,10 +16,12 @@ public enum ErrorMessage {
     REJECT_MODIFYING_COMMENT(HttpStatus.UNAUTHORIZED, "댓글 수정/삭제 권한이 없습니다."),
 
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다."),
-    INVALID_USER(HttpStatus.UNAUTHORIZED, "아이디 혹은 비밀번호를 잘못 입력했습니다."),
+    INVALID_MEMBER(HttpStatus.UNAUTHORIZED, "아이디 혹은 비밀번호를 잘못 입력했습니다."),
 
     FORBIDDEN_SIGNUP(HttpStatus.BAD_REQUEST, "불가능한 이메일입니다. 회사 도메인의 이메일을 사용해주세요."),
-    AlREADY_SIGNUP_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다. 다른 이메일을 이용하세요.");
+    AlREADY_SIGNUP_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다. 다른 이메일을 이용하세요."),
+
+    REPEATED_CALL(HttpStatus.BAD_REQUEST, "잠시 뒤에 다시 요청해 주세요.");
 
     private HttpStatus status;
     private String message;

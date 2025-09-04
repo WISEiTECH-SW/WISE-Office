@@ -1,6 +1,8 @@
 package kr.co.wise.office.application;
 
 import kr.co.wise.office.domain.member.dto.EmailVerificationResult;
+import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +13,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -101,5 +112,64 @@ class EmailServiceTest {
 
         // then
         assertThat(result.verification()).isFalse();
+    }
+
+    @Test
+    @DisplayName("이메일 인증 실패 - 5초이내 재요청 차단")
+    void block_repeat_request_during_5second() {
+        emailService.sendCode("test@example.com");
+
+        assertThatThrownBy(() -> emailService.sendCode("test@example.com"))
+                .isInstanceOf(ApplicationRuntimeException.class)
+                .extracting("errorMessage")
+                .extracting("message")
+                .isEqualTo(ErrorMessage.REPEATED_CALL.getMessage());
+    }
+
+    @Test
+    @DisplayName("이메일 인증 성공 - 5초 이후의 요청은 정상동작")
+    void accept_request_after_5second() throws InterruptedException {
+        emailService.sendCode("test@example.com");
+
+        Thread.sleep((5 + 1) * 1000L);
+
+        assertThatCode(() -> emailService.sendCode("test@example.com"))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("이메일 인증 성공 - 동시 요청시 하나만 허용")
+    void accept_request_ony_one() throws InterruptedException {
+        int threadCount = 10;
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        List<Future<Boolean>> results = new ArrayList<>();
+
+        for (int i = 0; i < threadCount; i++) {
+            results.add(executor.submit(() -> {
+                try {
+                    emailService.sendCode("test@example.com");
+                    return true; // 성공
+                } catch (ApplicationRuntimeException e) {
+                    return false; // 차단
+                } finally {
+                    latch.countDown();
+                }
+            }));
+        }
+
+        latch.await();
+
+        long successCount = results.stream()
+                .map(f -> {
+                    try { return f.get(); }
+                    catch (Exception e) { return false; }
+                })
+                .filter(r -> r)
+                .count();
+
+        executor.shutdown();
+        assertThat(successCount).isEqualTo(1);
     }
 }
