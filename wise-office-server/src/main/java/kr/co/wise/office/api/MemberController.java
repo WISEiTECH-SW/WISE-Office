@@ -106,7 +106,8 @@ public class MemberController {
                                        @RequestPart(value = "profile", required = false)MultipartFile profileImage) {
         log.info(signUpRequest.toString());
         String imagePath = imageService.saveImage(profileImage);
-        memberService.signUp(signUpRequest, imagePath);
+        // null로 저장하면 프론트에서 default 이미지 보여줌
+        memberService.signUp(signUpRequest, null);
         return ResponseEntity.ok().build();
     }
 
