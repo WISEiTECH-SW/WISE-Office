@@ -64,7 +64,8 @@ public class SecurityConfig {
 //        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/login/oauth2/code/google", "/oauth2/**", "/health", "/swagger-ui/**",
-                        "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v2/projects", "/api/members/me").permitAll()
+                        "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v2/projects", "/api/members/me",
+                        "/api/members/emails/verification").permitAll()
                 .anyRequest().authenticated());
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
