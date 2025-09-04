@@ -2,13 +2,9 @@ import { toastMessage } from "@/lib/common/toastMessage";
 import { signup, requestCode, verifyCode } from "@/services/members";
 import { signupForm } from "@/types/member";
 
-export async function handleRequestCode(
-    email: string,
-    setIsCodeSent: React.Dispatch<React.SetStateAction<boolean>>
-) {
+export async function handleRequestCode(email: string) {
     try {
         await requestCode(email);
-        setIsCodeSent(true);
     } catch (err) {
         console.log("이메일 인증 요청 실패: ", err);
     }

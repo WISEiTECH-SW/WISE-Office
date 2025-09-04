@@ -209,12 +209,13 @@ const SignupPage = () => {
                             </div>
                             <button
                                 type="button"
-                                onClick={() =>
-                                    handleRequestCode(
-                                        formData.email,
-                                        setIsCodeSent
-                                    )
-                                }
+                                onClick={() => {
+                                    handleRequestCode(formData.email);
+                                    setIsCodeSent(true);
+                                    setTimeout(() => {
+                                        setIsCodeSent(false);
+                                    }, 60 * 1000); // 60초 후 재요청 가능
+                                }}
                                 className="h-10.5 px-4 text-sm font-medium text-white bg-gray-600 rounded-md whitespace-nowrap cursor-pointer disabled:bg-gray-300 disabled:cursor-default"
                                 disabled={isCodeSent}
                             >
@@ -293,7 +294,7 @@ const SignupPage = () => {
                     <div>
                         <button
                             type="submit"
-                            className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+                            className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 cursor-pointer"
                         >
                             회원가입
                         </button>

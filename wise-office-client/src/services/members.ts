@@ -7,6 +7,11 @@ type verificationForm = {
     verificationCode: string;
 };
 
+type loginForm = {
+    email: string;
+    password: string;
+};
+
 export async function getMyProfile(): Promise<Profile> {
     const { data } = await api.get<Profile>("/members/me");
     return data;
@@ -25,8 +30,15 @@ export async function updateProfileInfo(
 
 export async function signup(req: signupForm): Promise<signupForm> {
     const formData = new FormData();
-    formData.append('request', new Blob([JSON.stringify(req)], { type: "application/json" }));
+    formData.append(
+        "request",
+        new Blob([JSON.stringify(req)], { type: "application/json" })
+    );
     return await api.post("/members/signup", formData).then((res) => res.data);
+}
+
+export async function login(req: loginForm): Promise<loginForm> {
+    return await api.post("/members/login", req).then((res) => res.data);
 }
 
 export async function requestCode(req: string): Promise<string> {

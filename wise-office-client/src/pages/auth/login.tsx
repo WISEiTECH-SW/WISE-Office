@@ -1,4 +1,4 @@
-import axios from "axios";
+import { login } from "@/services/members";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -8,17 +8,10 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const router = useRouter();
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        // TODO: Implement actual login logic
-        console.log("Login attempt with:", { email, password });
-
+    const handleLogin = async () => {
         try {
-            await axios.post("http://localhost:8080/api/members/login", {
-                email,
-                password,
-            }, { withCredentials: true });
-            router.push('/')
+            await login({ email, password });
+            router.replace("/");
         } catch (error) {
             console.log(error);
         }
@@ -30,7 +23,7 @@ const LoginPage = () => {
                 <h1 className="text-2xl font-bold text-center text-gray-900">
                     로그인
                 </h1>
-                <form onSubmit={handleLogin} className="space-y-6">
+                <form className="space-y-6">
                     <div>
                         <label
                             htmlFor="email"
@@ -67,15 +60,13 @@ const LoginPage = () => {
                             className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                     </div>
-                    <div>
-                        <button
-                            type="submit"
-                            className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            로그인
-                        </button>
-                    </div>
                 </form>
+                <button
+                    onClick={handleLogin}
+                    className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
+                >
+                    로그인
+                </button>
                 <div className="text-sm text-center">
                     <p className="text-gray-600">
                         계정이 없으신가요?{" "}
