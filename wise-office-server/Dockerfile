@@ -21,4 +21,4 @@ COPY --from=builder /backoffice/build/libs/*.jar app.jar
 ENV SPRING_PROFILES_ACTIVE=docker
 
 # 컨테이너가 시작될 때 실행할 명령어
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-Duser.timezone=Asia/Seoul", "app.jar"]

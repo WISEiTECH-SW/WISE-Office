@@ -112,7 +112,8 @@ public class MemberController {
 
     @PostMapping("/login")
     @Operation(summary = "자체 로그인", description = "이메일, 비밀번호로 로그인하고 JWT를 발급받습니다.")
-    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) throws IOException {
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest,
+                                      HttpServletResponse response) throws IOException {
         String token = memberService.login(loginRequest);
         log.info("생성된 token = {}", token);
         // 응답
@@ -123,7 +124,7 @@ public class MemberController {
         cookie.setMaxAge(600);
 
         response.addCookie(cookie);
-        response.sendRedirect("http://localhost:3000/");
+//        response.sendRedirect("http://localhost:3000/");
         return ResponseEntity.ok().build();
     }
 

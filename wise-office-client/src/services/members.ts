@@ -24,7 +24,9 @@ export async function updateProfileInfo(
 }
 
 export async function signup(req: signupForm): Promise<signupForm> {
-    return await api.post("/members/signup", req).then((res) => res.data);
+    const formData = new FormData();
+    formData.append('request', new Blob([JSON.stringify(req)], { type: "application/json" }));
+    return await api.post("/members/signup", formData).then((res) => res.data);
 }
 
 export async function requestCode(req: string): Promise<string> {

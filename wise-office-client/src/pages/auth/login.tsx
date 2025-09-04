@@ -17,7 +17,8 @@ const LoginPage = () => {
             await axios.post("http://localhost:8080/api/members/login", {
                 email,
                 password,
-            });
+            }, { withCredentials: true });
+            router.push('/')
         } catch (error) {
             console.log(error);
         }
