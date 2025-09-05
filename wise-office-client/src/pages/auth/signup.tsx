@@ -50,6 +50,12 @@ const SignupPage = () => {
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // 비밀번호 일치 확인 및 토스트 메시지 처리
+        if (formData.password !== formData.passwordMatch) {
+            return;
+        }
+
         try {
             await handleSignup(formData);
             router.push("/auth/login");
@@ -71,6 +77,16 @@ const SignupPage = () => {
         return () =>
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+    // 필수 입력 필드와 이메일 인증 여부를 검사하는 변수
+    const isFormValid =
+        formData.name.trim() !== "" &&
+        formData.email.trim() !== "" &&
+        formData.password.trim() !== "" &&
+        formData.passwordMatch.trim() !== "" &&
+        formData.password === formData.passwordMatch &&
+        isValid &&
+        isVerified;
 
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -166,12 +182,10 @@ const SignupPage = () => {
                                         const value = e.target.value;
                                         handleChange("email", value);
 
-                                        // 사용자가 입력한 값 + @DOMAIN
                                         const suggestion = `${
                                             value.split("@")[0]
                                         }@${DOMAIN}`;
 
-                                        // 드롭다운 표시 조건
                                         const shouldShow =
                                             value.length > 0 &&
                                             suggestion.startsWith(value);
@@ -181,7 +195,6 @@ const SignupPage = () => {
                                     className="w-full px-3 py-2 border border-gray-400 rounded-md outline-none disabled:cursor-default"
                                     disabled={isCodeSent}
                                 />
-                                {/* @도메인 추천 드롭다운 */}
                                 {showDropdown && (
                                     <ul className="absolute inset-x-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10 max-h-56 overflow-auto">
                                         <li
@@ -192,7 +205,6 @@ const SignupPage = () => {
                                         </li>
                                     </ul>
                                 )}
-                                {/* 이메일 검증 메시지 */}
                                 {formData.email &&
                                     !showDropdown &&
                                     !isValid && (
@@ -216,7 +228,7 @@ const SignupPage = () => {
                                     )
                                 }
                                 className="h-10.5 px-4 text-sm font-medium text-white bg-gray-600 rounded-md whitespace-nowrap cursor-pointer disabled:bg-gray-300 disabled:cursor-default"
-                                disabled={isCodeSent}
+                                disabled={isCodeSent || !isValid}
                             >
                                 인증요청
                             </button>
@@ -289,11 +301,25 @@ const SignupPage = () => {
                             }
                             className="w-full px-3 py-2 mt-1 border border-gray-400 rounded-md outline-none"
                         />
+                        {formData.passwordMatch.length > 0 && (
+                            <p
+                                className={`mt-1 text-sm ${
+                                    formData.password === formData.passwordMatch
+                                        ? "text-green-500"
+                                        : "text-red-500"
+                                }`}
+                            >
+                                {formData.password === formData.passwordMatch
+                                    ? "비밀번호가 일치합니다."
+                                    : "비밀번호가 일치하지 않습니다."}
+                            </p>
+                        )}
                     </div>
                     <div>
                         <button
                             type="submit"
                             className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 cursor-pointer"
+                            disabled={!isFormValid}
                         >
                             회원가입
                         </button>
