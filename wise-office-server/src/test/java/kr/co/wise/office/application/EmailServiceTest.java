@@ -115,7 +115,7 @@ class EmailServiceTest {
     }
 
     @Test
-    @DisplayName("이메일 인증 실패 - 5초이내 재요청 차단")
+    @DisplayName("이메일 인증 실패 - 1분이내 재요청 차단")
     void block_repeat_request_during_5second() {
         emailService.sendCode("test@example.com");
 
@@ -127,11 +127,11 @@ class EmailServiceTest {
     }
 
     @Test
-    @DisplayName("이메일 인증 성공 - 5초 이후의 요청은 정상동작")
+    @DisplayName("이메일 인증 성공 - 1분 이후의 요청은 정상동작")
     void accept_request_after_5second() throws InterruptedException {
         emailService.sendCode("test@example.com");
 
-        Thread.sleep((5 + 1) * 1000L);
+        Thread.sleep( 60001L);
 
         assertThatCode(() -> emailService.sendCode("test@example.com"))
                 .doesNotThrowAnyException();
