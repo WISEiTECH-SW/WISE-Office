@@ -14,11 +14,15 @@ const LoginPage = () => {
         console.log("Login attempt with:", { email, password });
 
         try {
-            await axios.post("http://localhost:8080/api/members/login", {
-                email,
-                password,
-            }, { withCredentials: true });
-            router.push('/')
+            await axios.post(
+                "http://localhost:8080/api/members/login",
+                {
+                    email,
+                    password,
+                },
+                { withCredentials: true }
+            );
+            router.push("/");
         } catch (error) {
             console.log(error);
         }
@@ -70,7 +74,7 @@ const LoginPage = () => {
                     <div>
                         <button
                             type="submit"
-                            className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
                         >
                             로그인
                         </button>

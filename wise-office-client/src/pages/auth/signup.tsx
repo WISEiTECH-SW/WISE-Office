@@ -293,7 +293,7 @@ const SignupPage = () => {
                     <div>
                         <button
                             type="submit"
-                            className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+                            className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 cursor-pointer"
                         >
                             회원가입
                         </button>
