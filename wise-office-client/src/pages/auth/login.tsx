@@ -4,12 +4,15 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 // hook으로 이동 후 삭제 필요
 import { toastMessage } from "@/lib/common/toastMessage";
+import { isAxiosError } from "axios";
+//  ---------- 이동 필요 ---------
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
 
+    // hook으로 이동 후 삭제 필요
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         // TODO: Implement actual login logic
@@ -26,11 +29,17 @@ const LoginPage = () => {
             );
             toastMessage.success("로그인 되었습니다");
             router.push("/");
-        } catch (error) {
-            console.log(error);
-            toastMessage.error(error.response.data.message);
+        } catch (err) {
+            if (isAxiosError(err)) {
+                const message =
+                    err.response?.data.message || "알수 없는 오류 발생";
+                toastMessage.error(message);
+            } else {
+                console.error("일반적인 에러:", err);
+            }
         }
     };
+    //  ---------- 이동 필요 ---------
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
