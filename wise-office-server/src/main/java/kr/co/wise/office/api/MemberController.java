@@ -119,7 +119,7 @@ public class MemberController {
         log.info("생성된 token = {}", token);
         // 응답
         Cookie cookie = new Cookie("jwt", token);
-        //cookie.setHttpOnly(true);
+        cookie.setHttpOnly(true);
         cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(600);
@@ -133,6 +133,7 @@ public class MemberController {
     public ResponseEntity<Void> sendMessage(
             @Parameter(description = "사용할 이메일") @RequestBody VerificationCodeCreationRequest request) {
         validateEmail(request.email());
+        memberService.checkAlreadySignUp(request.email());
         emailService.sendCode(request.email());
         return ResponseEntity.ok().build();
     }

@@ -6,6 +6,7 @@ import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
 import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import kr.co.wise.office.exception.custom.UnAuthorizationException;
 import kr.co.wise.office.util.JWTUtil;
@@ -170,5 +171,12 @@ public class MemberService extends DefaultOAuth2UserService {
     public void updateMemberProfile(String savedImageName, String userEmail) {
         MemberEntity member = memberRepository.findByEmail(userEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
         member.updateInfo(member.getName(), savedImageName);
+    }
+
+    @Transactional(readOnly = true)
+    public void checkAlreadySignUp(String email) {
+        memberRepository.findByEmail(email).ifPresent(member -> {
+            throw new ApplicationRuntimeException(ErrorMessage.AlREADY_SIGNUP_EMAIL);
+        });
     }
 }
