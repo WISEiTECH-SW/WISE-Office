@@ -2,6 +2,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+// hook으로 이동 후 삭제 필요
+import { toastMessage } from "@/lib/common/toastMessage";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -22,9 +24,11 @@ const LoginPage = () => {
                 },
                 { withCredentials: true }
             );
+            toastMessage.success("로그인 되었습니다");
             router.push("/");
         } catch (error) {
             console.log(error);
+            toastMessage.error("로그인에 실패했습니다.");
         }
     };
 

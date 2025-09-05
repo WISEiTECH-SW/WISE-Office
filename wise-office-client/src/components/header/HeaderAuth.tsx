@@ -12,9 +12,9 @@ export default function HeaderAuth() {
     if (!hasToken) {
         return (
             <div className="flex items-center gap-3">
-                <LoginButton />
+                {/* <LoginButton /> */}
                 <Link href="/auth/login">
-                    <span className="px-4 py-2 text-sm font-medium text-white bg-gray-700 rounded-md cursor-pointer hover:bg-gray-800">
+                    <span className="px-4 py-2 text-sm font-medium text-white bg-gray-600 rounded-md cursor-pointer hover:bg-gray-700">
                         로그인
                     </span>
                 </Link>
