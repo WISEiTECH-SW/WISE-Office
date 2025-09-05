@@ -149,6 +149,7 @@ public class MemberController {
             @NotBlank(message = "이메일은 빈값일 수 없습니다.") @Parameter(description = "인증 요청한 email") @RequestParam("email") String email,
             @NotBlank(message = "코드 번호는 빈 값일 수 없습니다.") @Parameter(description = "전달받은 code 6자리") @RequestParam("code") String code) {
         validateEmail(email);
+        memberService.checkAlreadySignUp(email);
         EmailVerificationResult emailVerificationResult = emailService.verificationCode(email, code);
         return ResponseEntity.status(HttpStatus.OK).body(emailVerificationResult);
     }
