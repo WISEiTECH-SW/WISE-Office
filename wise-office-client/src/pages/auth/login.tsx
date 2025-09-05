@@ -28,7 +28,7 @@ const LoginPage = () => {
             router.push("/");
         } catch (error) {
             console.log(error);
-            toastMessage.error("로그인에 실패했습니다.");
+            toastMessage.error(error.response.data.message);
         }
     };
 
