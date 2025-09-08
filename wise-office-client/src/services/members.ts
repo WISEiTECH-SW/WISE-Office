@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { api } from "@/lib/clientApi";
 import { Member, signupForm } from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
@@ -37,7 +38,7 @@ export async function signup(req: signupForm): Promise<signupForm> {
     return await api.post("/members/signup", formData).then((res) => res.data);
 }
 
-export async function login(req: loginForm): Promise<loginForm> {
+export async function login(req: loginForm): Promise<AxiosResponse> {
     return await api.post("/members/login", req).then((res) => res.data);
 }
 

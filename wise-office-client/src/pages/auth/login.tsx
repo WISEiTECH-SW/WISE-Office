@@ -1,7 +1,4 @@
-import { readLoggedIn } from "@/lib/common/readLoggedIn";
-import { getMyProfile, login } from "@/services/members";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useProfileStore } from "@/store/useProfileStore";
+import { handleLogin } from "@/hooks/handleLogin";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -9,28 +6,16 @@ import { useState } from "react";
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loginError, setLoginError] = useState<string | undefined>(undefined);
     const router = useRouter();
 
-    const handleLogin = async () => {
-        try {
-            await login({ email, password });
+    const clickLoginButton = async () => {
+        const res = await handleLogin({ email, password });
 
-            // 로그인 상태 확인 후 hastoken 상태 변경
-            const loggedIn = await readLoggedIn();
-            useAuthStore.setState({ hasToken: loggedIn });
-            if (loggedIn) {
-                try {
-                    const profile = await getMyProfile();
-                    useProfileStore.setState({ profile });
-                } catch {
-                    useProfileStore.setState({ profile: null });
-                }
-            } else {
-                useProfileStore.setState({ profile: null });
-            }
+        if (res.ok === 200) {
             router.replace("/");
-        } catch (error) {
-            console.log(error);
+        } else if (res.status === 400 || res.status === 401) {
+            setLoginError(res.message);
         }
     };
 
@@ -40,7 +25,10 @@ const LoginPage = () => {
                 <h1 className="text-2xl font-bold text-center text-gray-900">
                     로그인
                 </h1>
-                <form className="space-y-6">
+                <form
+                    className="space-y-6"
+                    onSubmit={(e) => e.preventDefault()}
+                >
                     <div>
                         <label
                             htmlFor="email"
@@ -77,10 +65,20 @@ const LoginPage = () => {
                             className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                     </div>
+                    {loginError && (
+                        <p className="mt-1 text-sm text-red-600">
+                            {loginError}
+                        </p>
+                    )}
                 </form>
                 <button
-                    onClick={handleLogin}
-                    className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
+                    onClick={clickLoginButton}
+                    className={`w-full px-4 py-2 font-medium text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 
+                        ${
+                            !email || !password
+                                ? "bg-gray-400 cursor-not-allowed"
+                                : "bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 cursor-pointer"
+                        }`}
                 >
                     로그인
                 </button>
