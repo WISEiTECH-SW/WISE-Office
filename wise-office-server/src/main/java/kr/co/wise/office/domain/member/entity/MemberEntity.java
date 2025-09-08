@@ -35,6 +35,9 @@ public class MemberEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "provider_id")
     private String providerId;
 
@@ -44,6 +47,7 @@ public class MemberEntity {
 
     @Column(name = "image_url")
     private String imageUrl;
+
 
     @OneToMany(mappedBy = "member")
     @Builder.Default

@@ -4,8 +4,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.wise.office.config.FrontServerConfigProp;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import kr.co.wise.office.util.JWTUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -15,7 +17,10 @@ import java.io.IOException;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+
+    private final FrontServerConfigProp frontConfig;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -42,11 +47,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.addCookie(cookie);
 
         if(customOAuthUser.checkExistingMember()){
-            response.sendRedirect("http://localhost:3000/"); // 로그인 한경우
+            response.sendRedirect(frontConfig.getFrontUrl() + "/"); // 로그인 한경우
         }
         else {
-            // 안한경우 
-            response.sendRedirect("http://localhost:3000/account"); // 로그인을 하지 않은 경우
+            // 안한경우
+            response.sendRedirect(frontConfig.getFrontUrl() + "/account"); // 로그인을 하지 않은 경우
         }
     }
 }

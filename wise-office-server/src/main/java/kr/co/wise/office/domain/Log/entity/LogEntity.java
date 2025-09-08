@@ -5,7 +5,6 @@ import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.comment.entity.CommentEntity;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -30,7 +29,7 @@ public class LogEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "log_detail")
+    @Column(name = "log_detail", length = 500)
     private String logDetail;
 
     @CreatedDate

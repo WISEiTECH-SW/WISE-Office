@@ -146,6 +146,10 @@ public class AttendantService {
 
         AttendantEntity manager = attendants.stream().filter(att -> att.getRole() == AttendantRoleType.PM).findFirst().get();
 
+        //현재 로그인한 유저가 프로젝트에 참여중인지 확인
+        boolean isAttending = attendants.stream().anyMatch(att -> att.getMember().getId().equals(loginUser.getId()));
+        response.setAttending(isAttending);
+
         //참여자 설정 => 중복 제거를 위해 Set으로 변환 후 List 변환
         response.setAttendant(attendants.stream()
                         .filter(att ->{

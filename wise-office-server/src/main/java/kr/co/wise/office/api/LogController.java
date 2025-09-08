@@ -93,7 +93,7 @@ public class LogController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그 수정 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = LogUpdateResponse.class))),
+                            schema = @Schema(implementation = LogDetailResponse.class))),
             @ApiResponse(responseCode = "400", description = "수정할 로그 조회 실패",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ErrorResponse.class))),
