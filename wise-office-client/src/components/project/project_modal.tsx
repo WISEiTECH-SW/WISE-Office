@@ -68,39 +68,70 @@ export default function ProjectCreateModal({
         fetchData();
     }, []);
 
-    const handleSubmit = async () => {
+
+        const [errors, setErrors] = useState({
+                    projectTitle: "",
+                    startDate:"",
+                    endDate:"",
+                    content: "",
+                    selectedMembers:"",
+                    manager:""
+                });
+
+        const validateForm = () => {
+            let valid = true;
+            const newErrors = {
+                projectTitle: "",
+                startDate: "",
+                endDate: "",
+                content: "",
+                selectedMembers: "",
+                manager: "",
+            };
+
             if (projectTitle.trim() === "") {
-                toastMessage.error("프로젝트명을 입력해주세요.");
-                return;
+                newErrors.projectTitle = "프로젝트명을 입력해주세요.";
+                valid = false;
+            } else if (projectTitle.length > 100) {
+                newErrors.projectTitle = "프로젝트 제목은 100자까지 입력 가능합니다.";
+                valid = false;
             }
-            if (projectTitle.length > 100) {
-                toastMessage.error("프로젝트 제목은 100자까지 입력 가능합니다.");
-                return;
-            }
+
             if (startDate === "") {
-                toastMessage.error("시작 날짜를 선택해주세요.");
-                return;
+                newErrors.startDate = "시작 날짜를 선택해주세요.";
+                valid = false;
             }
+
             if (endDate === "") {
-                toastMessage.error("종료 날짜를 선택해주세요.");
-                return;
+                newErrors.endDate = "종료 날짜를 선택해주세요.";
+                valid = false;
             }
+
             if (content.trim() === "") {
-                toastMessage.error("프로젝트 설명을 입력해주세요.");
-                return;
+                newErrors.content = "프로젝트 설명을 입력해주세요.";
+                valid = false;
+            } else if (content.length > 500) {
+                newErrors.content = "프로젝트 설명은 500자까지 입력 가능합니다.";
+                valid = false;
             }
-            if (content.length > 500) {
-                toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
-                return;
-            }
+
             if (selectedMembers.length === 0) {
-                toastMessage.error("프로젝트 참여 인원을 선택해주세요.");
-                return;
+                newErrors.selectedMembers = "프로젝트 참여 인원을 선택해주세요.";
+                valid = false;
             }
+
             if (!manager) {
-                toastMessage.error("프로젝트 관리자를 선택해주세요.");
-                return;
+                newErrors.manager = "프로젝트 관리자를 선택해주세요.";
+                valid = false;
             }
+
+            setErrors(newErrors);
+            return valid;
+        };
+
+    const handleSubmit = async () => {
+            if (!validateForm()) return;
+        
 
         const start = startDate + "-01";
         const [year, month] = endDate.split("-").map(Number);
@@ -169,6 +200,7 @@ export default function ProjectCreateModal({
                         setStartDate={setStartDate}
                         setEndDate={setEndDate}
                         setContent={handleContentChange}
+                        errors={errors}
                         />
 
                     {/* 오른쪽 영역 */}
@@ -180,6 +212,7 @@ export default function ProjectCreateModal({
                         setSearchText={setSearchText}
                         setSelectedMembers={setSelectedMembers}
                         setManager={setManager}
+                        errors={errors}
                     />
 
                 </div>
