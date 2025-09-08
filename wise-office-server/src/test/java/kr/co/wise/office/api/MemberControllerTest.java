@@ -126,6 +126,29 @@ public class MemberControllerTest {
                     .andExpect(jsonPath("$.verification").value(false))
                     .andDo(print());
         }
+
+
+        @Test
+        @DisplayName("실패: 이미 가입한 이메일로 인증 시도")
+        void emailVerification_Fail_useAlreadySignupEmail() throws Exception {
+            // given
+            MemberEntity member = MemberEntity
+                    .builder().name(username).email(email).password("1234").imageUrl(null).roleType(MemberRoleType.WORKER).build();
+            memberRepository.save(member);
+
+            VerificationCodeCreationRequest verificationRequest = new VerificationCodeCreationRequest(email);
+            mockMvc.perform(post("/api/members/emails/verification")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(verificationRequest)));
+
+            // when & then
+            mockMvc.perform(post("/api/members/emails/verification")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(verificationRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.message").value(ErrorMessage.AlREADY_SIGNUP_EMAIL.getMessage()))
+                    .andDo(print());
+        }
     }
 
     @Nested

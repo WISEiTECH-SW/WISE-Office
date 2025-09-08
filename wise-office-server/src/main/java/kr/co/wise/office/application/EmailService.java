@@ -24,7 +24,7 @@ public class EmailService {
     private final String title = "WISE-Backoffice 이메일 인증 번호";
     private final String NOT_FOUND = "NOTFOUND";
 
-    private static final int BLOCK_DURATION_SECOND = 5; // 중복 요청수
+    private static final int BLOCK_DURATION_SECOND = 60; // 중복 요청수
 
     public void sendCode(String email) {
         String title = "WISE-Backoffice 이메일 인증 번호";
