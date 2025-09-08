@@ -8,6 +8,14 @@ interface SelectProjectMembersProps {
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
     setSelectedMembers: React.Dispatch<React.SetStateAction<Member[]>>;
     setManager: React.Dispatch<React.SetStateAction<Member | undefined>>;
+    errors: {
+        projectTitle: string;
+        startDate: string;
+        endDate: string;
+        content: string;
+        selectedMembers: string;
+        manager: string;
+    };
 }
 
 export default function SelectProjectMembers({
@@ -18,6 +26,7 @@ export default function SelectProjectMembers({
     setSearchText,
     setSelectedMembers,
     setManager,
+    errors,
 }: SelectProjectMembersProps) {
     const filteredMembers = members.filter(
         (m) =>
@@ -61,7 +70,7 @@ export default function SelectProjectMembers({
 
                 {/* 선택된 멤버 카드 */}
                 {selectedMembers.length > 0 && (
-                    <div className="flex flex-wrap gap-2 border border-gray-300 rounded-md ml-1 p-3 max-h-[120px] overflow-y-auto shadow-inner mb-6">
+                    <div className="flex flex-wrap gap-2 border border-gray-300 rounded-md ml-1 p-3 max-h-[120px] overflow-y-auto shadow-inner mb-2">
                         {selectedMembers.map((member) => (
                             <div
                                 key={member.memberId}
@@ -82,8 +91,15 @@ export default function SelectProjectMembers({
                     </div>
                 )}
 
+                {/* 에러 메시지: 참여 인력 */}
+                {errors.selectedMembers && (
+                    <p className="text-red-500 text-xs ml-1 mt-1">
+                        {errors.selectedMembers}
+                    </p>
+                )}
+
                 {/* 책임자 선택 */}
-                <div>
+                <div className="mt-5">
                     <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
                         책임자 선택
                     </label>
@@ -102,8 +118,7 @@ export default function SelectProjectMembers({
                                         type="radio"
                                         name="manager"
                                         checked={
-                                            manager?.memberId ===
-                                            member.memberId
+                                            manager?.memberId === member.memberId
                                         }
                                         onChange={() =>
                                             handleManagerChange(member)
@@ -116,6 +131,12 @@ export default function SelectProjectMembers({
                                 </label>
                             ))}
                         </div>
+                    )}
+                    {/* 에러 메시지: 관리자 */}
+                    {errors.manager && (
+                        <p className="text-red-500 text-xs ml-1 mt-1">
+                            {errors.manager}
+                        </p>
                     )}
                 </div>
             </div>

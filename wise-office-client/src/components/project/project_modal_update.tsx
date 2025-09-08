@@ -88,39 +88,68 @@ export default function ProjectUpdateModal({
     }, [router.isReady, projectId]);
 
 
+        const [errors, setErrors] = useState({
+                    projectTitle: "",
+                    startDate:"",
+                    endDate:"",
+                    content: "",
+                    selectedMembers:"",
+                    manager:""
+                });
+const validateForm = () => {
+            let valid = true;
+            const newErrors = {
+                projectTitle: "",
+                startDate: "",
+                endDate: "",
+                content: "",
+                selectedMembers: "",
+                manager: "",
+            };
+
+            if (projectTitle.trim() === "") {
+                newErrors.projectTitle = "프로젝트명을 입력해주세요.";
+                valid = false;
+            } else if (projectTitle.length > 100) {
+                newErrors.projectTitle = "프로젝트 제목은 100자까지 입력 가능합니다.";
+                valid = false;
+            }
+
+            if (startDate === "") {
+                newErrors.startDate = "시작 날짜를 선택해주세요.";
+                valid = false;
+            }
+
+            if (endDate === "") {
+                newErrors.endDate = "종료 날짜를 선택해주세요.";
+                valid = false;
+            }
+
+            if (content.trim() === "") {
+                newErrors.content = "프로젝트 설명을 입력해주세요.";
+                valid = false;
+            } else if (content.length > 500) {
+                newErrors.content = "프로젝트 설명은 500자까지 입력 가능합니다.";
+                valid = false;
+            }
+
+            if (selectedMembers.length === 0) {
+                newErrors.selectedMembers = "프로젝트 참여 인원을 선택해주세요.";
+                valid = false;
+            }
+
+            if (!manager) {
+                newErrors.manager = "프로젝트 관리자를 선택해주세요.";
+                valid = false;
+            }
+
+            setErrors(newErrors);
+            return valid;
+        };
+
+
     const handleSubmit = async () => {
-        if (projectTitle.trim() === "") {
-            toastMessage.error("프로젝트명을 입력해주세요.");
-            return;
-        }
-        if (projectTitle.length > 100) {
-            toastMessage.error("프로젝트 제목은 100자까지 입력 가능합니다.");
-            return;
-        }
-        if (startDate === "") {
-            toastMessage.error("시작 날짜를 선택해주세요.");
-            return;
-        }
-        if (endDate === "") {
-            toastMessage.error("종료 날짜를 선택해주세요.");
-            return;
-        }
-        if (content.trim() === "") {
-            toastMessage.error("프로젝트 설명을 입력해주세요.");
-            return;
-        }
-        if (content.length > 500) {
-            toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
-            return;
-        }
-        if (selectedMembers.length === 0) {
-            toastMessage.error("프로젝트 참여 인원을 선택해주세요.");
-            return;
-        }
-        if (!manager) {
-            toastMessage.error("프로젝트 관리자를 선택해주세요.");
-            return;
-        }
+        if (!validateForm()) return;
 
         const start = startDate + "-01";
         const [year, month] = endDate.split("-").map(Number);
@@ -183,6 +212,7 @@ export default function ProjectUpdateModal({
                         setStartDate={setStartDate}
                         setEndDate={setEndDate}
                         setContent={handleContentChange}
+                        errors={errors}
                     />
 
                     {/* 오른쪽 영역 */}
@@ -194,6 +224,7 @@ export default function ProjectUpdateModal({
                         setSearchText={setSearchText}
                         setSelectedMembers={setSelectedMembers}
                         setManager={setManager}
+                        errors={errors}
                     />
                 </div>
 

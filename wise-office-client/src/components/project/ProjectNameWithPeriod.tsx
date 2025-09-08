@@ -12,6 +12,12 @@ interface ProjectNameWithPeriodProps {
     setStartDate: React.Dispatch<React.SetStateAction<string>>;
     setEndDate: React.Dispatch<React.SetStateAction<string>>;
     setContent: (value: string) => void;
+    errors: {
+        projectTitle: string;
+        startDate: string;
+        endDate: string;
+        content: string;
+    };
 }
 
 export default function ProjectNameWithPeriod({
@@ -23,6 +29,7 @@ export default function ProjectNameWithPeriod({
     setStartDate,
     setEndDate,
     setContent,
+    errors,
 }: ProjectNameWithPeriodProps) {
     return (
         <div>
@@ -39,6 +46,9 @@ export default function ProjectNameWithPeriod({
                         className="border border-gray-300 rounded-md m-1 px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
                         placeholder="프로젝트 명을 입력하세요"
                     />
+                    {errors.projectTitle && (
+                        <p className="text-red-500 text-xs ml-1 mt-1">{errors.projectTitle}</p>
+                    )}
                 </div>
 
                 {/* 프로젝트 기간 */}
@@ -48,66 +58,73 @@ export default function ProjectNameWithPeriod({
                     </label>
                     <div className="flex gap-3 ml-1">
                         {/* 시작 월 */}
-                        <Flatpickr
-                            options={{
-                                plugins: [
-                                    monthSelectPlugin({
-                                        shorthand: true,
-                                        dateFormat: "Y-m",
-                                        altFormat: "Y년 m월",
-                                        theme: "material_blue",
-                                    }),
-                                ],
-                                // defaultDate: startDate || null,
-                            }}
-                            value={startDate}
-                            onChange={(dates) => {
-                                if (dates.length > 0) {
-                                    const date = dates[0];
-                                    setStartDate(
-                                        `${date.getFullYear()}-${String(
-                                            date.getMonth() + 1
-                                        ).padStart(2, "0")}`
-                                    );
-                                }
-                            }}
-                            className="border border-gray-300 rounded-md px-3 py-2 w-1/2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            placeholder="시작 월 선택"
-                        />
+                        <div className="w-1/2">
+                            <Flatpickr
+                                options={{
+                                    plugins: [
+                                        monthSelectPlugin({
+                                            shorthand: true,
+                                            dateFormat: "Y-m",
+                                            altFormat: "Y년 m월",
+                                            theme: "material_blue",
+                                        }),
+                                    ],
+                                }}
+                                value={startDate}
+                                onChange={(dates) => {
+                                    if (dates.length > 0) {
+                                        const date = dates[0];
+                                        setStartDate(
+                                            `${date.getFullYear()}-${String(
+                                                date.getMonth() + 1
+                                            ).padStart(2, "0")}`
+                                        );
+                                    }
+                                }}
+                                className="border border-gray-300 rounded-md px-3 py-2 w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                placeholder="시작 월 선택"
+                            />
+                            {errors.startDate && (
+                                <p className="text-red-500 text-xs mt-1">{errors.startDate}</p>
+                            )}
+                        </div>
 
-                        <span className="self-center text-lg font-semibold text-gray-600">
-                            →
-                        </span>
+                        <span className="self-center text-lg font-semibold text-gray-600">→</span>
 
                         {/* 종료 월 */}
-                        <Flatpickr
-                            options={{
-                                plugins: [
-                                    monthSelectPlugin({
-                                        shorthand: true,
-                                        dateFormat: "Y-m",
-                                        altFormat: "Y년 m월",
-                                        theme: "material_blue",
-                                    }),
-                                ],
-                                // defaultDate: endDate || null,
-                            }}
-                            value={endDate}
-                            onChange={(dates) => {
-                                if (dates.length > 0) {
-                                    const date = dates[0];
-                                    setEndDate(
-                                        `${date.getFullYear()}-${String(
-                                            date.getMonth() + 1
-                                        ).padStart(2, "0")}`
-                                    );
-                                }
-                            }}
-                            className="border border-gray-300 rounded-md px-3 py-2 w-1/2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            placeholder="종료 월 선택"
-                        />
+                        <div className="w-1/2">
+                            <Flatpickr
+                                options={{
+                                    plugins: [
+                                        monthSelectPlugin({
+                                            shorthand: true,
+                                            dateFormat: "Y-m",
+                                            altFormat: "Y년 m월",
+                                            theme: "material_blue",
+                                        }),
+                                    ],
+                                }}
+                                value={endDate}
+                                onChange={(dates) => {
+                                    if (dates.length > 0) {
+                                        const date = dates[0];
+                                        setEndDate(
+                                            `${date.getFullYear()}-${String(
+                                                date.getMonth() + 1
+                                            ).padStart(2, "0")}`
+                                        );
+                                    }
+                                }}
+                                className="border border-gray-300 rounded-md px-3 py-2 w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                placeholder="종료 월 선택"
+                            />
+                            {errors.endDate && (
+                                <p className="text-red-500 text-xs mt-1">{errors.endDate}</p>
+                            )}
+                        </div>
                     </div>
                 </div>
+
                 {/* 내용/설명 입력 */}
                 <div className="mb-5 flex-shrink-0">
                     <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
@@ -119,6 +136,9 @@ export default function ProjectNameWithPeriod({
                         className="border border-gray-300 rounded-md ml-1 px-3 py-2 w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                         placeholder="프로젝트에 대한 설명을 입력하세요"
                     />
+                    {errors.content && (
+                        <p className="text-red-500 text-xs ml-1 mt-1">{errors.content}</p>
+                    )}
                 </div>
             </div>
         </div>
