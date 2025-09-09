@@ -1,16 +1,25 @@
 import { handleLogin } from "@/hooks/handleLogin";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loginError, setLoginError] = useState<string | undefined>(undefined);
+    const [save, setSave] = useState(false);
     const router = useRouter();
 
+    useEffect(() => {
+        const savedEmail = localStorage.getItem("email");
+        if (savedEmail) {
+            setEmail(savedEmail);
+            setSave(true);
+        }
+    }, []);
+
     const clickLoginButton = async () => {
-        const res = await handleLogin({ email, password });
+        const res = await handleLogin({ email, password, save });
 
         if (res.ok === 200) {
             router.replace("/");
@@ -71,6 +80,24 @@ const LoginPage = () => {
                         </p>
                     )}
                 </form>
+
+                <div className="flex items-center">
+                    <input
+                        id="remember"
+                        name="remember"
+                        type="checkbox"
+                        checked={save}
+                        onChange={(e) => setSave(e.target.checked)}
+                        className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    />
+                    <label
+                        htmlFor="remember"
+                        className="ml-2 block text-sm text-gray-700"
+                    >
+                        이메일 저장
+                    </label>
+                </div>
+
                 <button
                     onClick={clickLoginButton}
                     className={`w-full px-4 py-2 font-medium text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 
