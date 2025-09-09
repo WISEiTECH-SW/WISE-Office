@@ -1,6 +1,7 @@
 package kr.co.wise.office.config;
 
 import kr.co.wise.office.security.filter.JWTFilter;
+import kr.co.wise.office.security.handler.CustomAuthenticationEntryPoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,15 +34,17 @@ public class SecurityConfig {
     private final AuthenticationFailureHandler oauth2FailureHandler;
     private final AccessDeniedHandler customAccessDeniedHandler;
     private final FrontServerConfigProp frontConfig;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     public SecurityConfig(AuthenticationSuccessHandler oauth2SuccessHandler,
                           AuthenticationFailureHandler oauth2FailureHandler,
                           AccessDeniedHandler customAccessDeniedHandler,
-                          FrontServerConfigProp frontConfig) {
+                          FrontServerConfigProp frontConfig, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.oauth2SuccessHandler = oauth2SuccessHandler;
         this.oauth2FailureHandler = oauth2FailureHandler;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
         this.frontConfig = frontConfig;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     @Bean
@@ -64,19 +67,22 @@ public class SecurityConfig {
 //        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/login/oauth2/code/google", "/oauth2/**", "/health", "/swagger-ui/**",
-                        "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v2/projects", "/api/members/me",
-                        "/api/members/emails/verification",
+                        "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v2/projects",
+                        "/api/members/emails/verification", "/swagger-ui.html",
                         "/images/**").permitAll()
                 .anyRequest().authenticated());
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.oauth2Login(
-                oauth2 -> oauth2.successHandler(oauth2SuccessHandler).failureHandler(oauth2FailureHandler)
-                        .permitAll());
+//        http.oauth2Login(
+//                oauth2 -> oauth2
+//                        .successHandler(oauth2SuccessHandler)
+//                        .failureHandler(oauth2FailureHandler)
+//                        .permitAll());
 
-        http.exceptionHandling(exceptionConfig ->
-                exceptionConfig.accessDeniedHandler(customAccessDeniedHandler));
+        http.exceptionHandling(exceptionConfig -> exceptionConfig
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                        .authenticationEntryPoint(customAuthenticationEntryPoint));
 
         //http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JWTFilter(), LogoutFilter.class);
