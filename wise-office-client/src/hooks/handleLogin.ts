@@ -32,10 +32,8 @@ export const handleLogin = async ({
 
         if (save) {
             localStorage.setItem("email", email);
-            localStorage.setItem("password", password);
         } else {
             localStorage.removeItem("email");
-            localStorage.removeItem("password");
         }
 
         return { ok: 200 };

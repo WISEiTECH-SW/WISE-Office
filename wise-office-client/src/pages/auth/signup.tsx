@@ -316,15 +316,13 @@ const SignupPage = () => {
                             </p>
                         )}
                     </div>
-                    <div>
-                        <button
-                            type="submit"
-                            className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 cursor-pointer"
-                            disabled={!isFormValid}
-                        >
-                            회원가입
-                        </button>
-                    </div>
+                    <button
+                        type="submit"
+                        className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 cursor-pointer"
+                        disabled={!isFormValid}
+                    >
+                        회원가입
+                    </button>
                 </form>
                 <div className="flex gap-3 text-sm text-center">
                     <p className="text-gray-600">이미 계정이 있으신가요?</p>
