@@ -6,9 +6,11 @@ import { useProfileStore } from "@/store/useProfileStore";
 export const handleLogin = async ({
     email,
     password,
+    save,
 }: {
     email: string;
     password: string;
+    save: boolean;
 }) => {
     try {
         const res = await login({ email, password });
@@ -27,6 +29,9 @@ export const handleLogin = async ({
         } else {
             useProfileStore.setState({ profile: null });
         }
+
+        if (save) localStorage.setItem("email", email);
+        else localStorage.removeItem("email");
 
         return { ok: 200 };
     } catch (error: any) {

@@ -1,16 +1,25 @@
 import { handleLogin } from "@/hooks/handleLogin";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loginError, setLoginError] = useState<string | undefined>(undefined);
+    const [save, setSave] = useState(false);
     const router = useRouter();
 
+    useEffect(() => {
+        const savedEmail = localStorage.getItem("email");
+        if (savedEmail) {
+            setEmail(savedEmail);
+            setSave(true);
+        }
+    }, []);
+
     const clickLoginButton = async () => {
-        const res = await handleLogin({ email, password });
+        const res = await handleLogin({ email, password, save });
 
         if (res.ok === 200) {
             router.replace("/");
@@ -30,36 +39,24 @@ const LoginPage = () => {
                     onSubmit={(e) => e.preventDefault()}
                 >
                     <div>
-                        <label
-                            htmlFor="email"
-                            className="text-sm font-medium text-gray-700"
-                        >
-                            이메일
-                        </label>
                         <input
                             id="email"
                             name="email"
                             type="email"
                             autoComplete="email"
-                            required
+                            placeholder="이메일"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                     </div>
                     <div>
-                        <label
-                            htmlFor="password"
-                            className="text-sm font-medium text-gray-700"
-                        >
-                            비밀번호
-                        </label>
                         <input
                             id="password"
                             name="password"
                             type="password"
                             autoComplete="current-password"
-                            required
+                            placeholder="비밀번호"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -71,6 +68,24 @@ const LoginPage = () => {
                         </p>
                     )}
                 </form>
+
+                <div className="flex items-center">
+                    <input
+                        id="remember"
+                        name="remember"
+                        type="checkbox"
+                        checked={save}
+                        onChange={(e) => setSave(e.target.checked)}
+                        className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    />
+                    <label
+                        htmlFor="remember"
+                        className="ml-2 block text-sm text-gray-700"
+                    >
+                        이메일 저장
+                    </label>
+                </div>
+
                 <button
                     onClick={clickLoginButton}
                     className={`w-full px-4 py-2 font-medium text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 
