@@ -30,11 +30,8 @@ export const handleLogin = async ({
             useProfileStore.setState({ profile: null });
         }
 
-        if (save) {
-            localStorage.setItem("email", email);
-        } else {
-            localStorage.removeItem("email");
-        }
+        if (save) localStorage.setItem("email", email);
+        else localStorage.removeItem("email");
 
         return { ok: 200 };
     } catch (error: any) {
