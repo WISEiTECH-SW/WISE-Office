@@ -2,15 +2,9 @@ import { useState } from "react";
 import Image from "next/image";
 import { useProfileStore } from "@/store/useProfileStore";
 
-type ProfileImageProps = {
-    type: string;
-};
-
-export default function ProfileImage({ type }: ProfileImageProps) {
+export default function ProfileImage() {
     const { profile } = useProfileStore();
     const [imageError, setImageError] = useState(false);
-
-    const image_size = type === "header" ? 36 : 96;
 
     return (
         <Image
@@ -19,10 +13,9 @@ export default function ProfileImage({ type }: ProfileImageProps) {
                     ? "/assets/default_profile.jpg"
                     : profile.imageUrl
             }
-            alt=""
-            width={image_size}
-            height={image_size}
-            className="w-full h-full object-cover rounded-full"
+            alt="profile-image"
+            fill
+            className="object-cover rounded-full"
             onError={() => setImageError(true)}
         />
     );

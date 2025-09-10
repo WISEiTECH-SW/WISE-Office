@@ -30,9 +30,9 @@ export default function HeaderAuth() {
         <div className="flex gap-5">
             <div
                 onClick={handleProfileClick}
-                className="w-12 h-12 rounded-full border border-white cursor-pointer object-cover"
+                className="relative w-12 h-12 flex-none rounded-full overflow-hidden hover:border-gray-300 transition-colors cursor-pointer"
             >
-                <ProfileImage type="header" />
+                <ProfileImage />
             </div>
             <LogoutButton />
         </div>
