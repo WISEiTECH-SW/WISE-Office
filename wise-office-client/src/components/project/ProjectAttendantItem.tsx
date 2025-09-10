@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useState } from "react";
 
 type ProjectAttendantItemProps = {
     name: string;
@@ -9,15 +10,23 @@ export default function ProjectAttendantItem({
     name,
     imageUrl,
 }: ProjectAttendantItemProps) {
+    const [imageError, setImageError] = useState(false);
+
     return (
         <div className="flex items-center space-x-3">
-            <Image
-                src={imageUrl}
-                alt="profile image"
-                width={32}
-                height={32}
-                className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center"
-            ></Image>
+            <div className="relative w-10 h-10 rounded-full">
+                <Image
+                    src={
+                        imageError || !imageUrl
+                            ? "/assets/default_profile.jpg"
+                            : imageUrl
+                    }
+                    alt="profile-image"
+                    fill
+                    className="object-cover rounded-full"
+                    onError={() => setImageError(true)}
+                />
+            </div>
             <span className="text-sm font-medium text-gray-800">{name}</span>
         </div>
     );
