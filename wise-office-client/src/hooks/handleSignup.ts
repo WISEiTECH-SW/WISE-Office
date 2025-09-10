@@ -1,6 +1,11 @@
 import { toastMessage } from "@/lib/common/toastMessage";
-import { signup, requestCode, verifyCode } from "@/services/members";
-import { signupForm } from "@/types/member";
+import {
+    signup,
+    requestCode,
+    verifyCode,
+    verifyCodeTest,
+} from "@/services/members";
+import { SignupForm, signupForm } from "@/types/member";
 import { isAxiosError } from "axios";
 
 export async function handleRequestCode(email: string) {
@@ -39,5 +44,46 @@ export async function handleSignup(formData: signupForm) {
         console.log("회원가입 실패: ", err);
         toastMessage.error("회원가입에 실패했습니다.");
         throw err;
+    }
+}
+
+// testsignup
+export async function handleEmailVerify(email: string) {
+    if (!email) return;
+
+    try {
+        await requestCode(email);
+        return true;
+    } catch (err) {
+        if (isAxiosError(err)) {
+            const message = err.response?.data.message || "알수 없는 오류 발생";
+            toastMessage.error(message);
+        } else {
+            console.error("일반적인 에러:", err);
+        }
+        return false;
+    }
+}
+
+export async function handleCodeVerify(
+    email: string,
+    verificationCode: string
+) {
+    try {
+        return await verifyCodeTest(email, verificationCode);
+    } catch (err) {
+        console.log("이메일 인증 실패: ", err);
+        return false;
+    }
+}
+
+export async function handleSummitSignUpForm(formData: SignupForm) {
+    try {
+        await signup(formData);
+        toastMessage.success("회원가입되었습니다.");
+        return true;
+    } catch (err) {
+        toastMessage.error("회원가입에 실패했습니다.");
+        return false;
     }
 }

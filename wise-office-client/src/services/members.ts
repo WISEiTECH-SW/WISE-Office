@@ -67,3 +67,18 @@ export async function verifyCode(
     });
     return data;
 }
+
+// testsignup
+
+export async function verifyCodeTest(
+    inputEmail: string,
+    inputCode: string
+): Promise<boolean> {
+    const res = await api.get("/members/emails/verification", {
+        params: {
+            email: inputEmail,
+            code: inputCode,
+        },
+    });
+    return res.data["verification"];
+}
