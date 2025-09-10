@@ -29,6 +29,14 @@ export async function updateProfileInfo(
     return await api.patch("/members", req).then((res) => res.data);
 }
 
+export async function updateProfileImage(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("profile", file);
+
+    const res = await api.patch("/members/images", formData);
+    return res.data.imageUrl;
+}
+
 export async function signup(req: signupForm): Promise<signupForm> {
     const formData = new FormData();
     formData.append(

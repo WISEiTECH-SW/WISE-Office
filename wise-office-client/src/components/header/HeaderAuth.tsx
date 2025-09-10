@@ -1,13 +1,17 @@
 import LoginButton from "@/components/header/LoginButton";
 import LogoutButton from "@/components/header/LogoutButton";
 import { useAuthStore } from "@/store/useAuthStore";
-import Profile from "./Profile";
+import ProfileImage from "./ProfileImage";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 export default function HeaderAuth() {
     const hasToken = useAuthStore((s) => s.hasToken);
     const router = useRouter();
+
+    const handleProfileClick = () => {
+        router.push("/account");
+    };
 
     if (!hasToken) {
         return (
@@ -24,7 +28,12 @@ export default function HeaderAuth() {
 
     return (
         <div className="flex gap-5">
-            <Profile />
+            <div
+                onClick={handleProfileClick}
+                className="w-12 h-12 rounded-full border border-white cursor-pointer object-cover"
+            >
+                <ProfileImage type="header" />
+            </div>
             <LogoutButton />
         </div>
     );
