@@ -139,7 +139,7 @@ export default function Signup() {
         password === passwordMatch;
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center my-20">
             <form
                 onSubmit={handleSummit}
                 autoComplete="off"
@@ -293,7 +293,7 @@ export default function Signup() {
                 <div className="w-full px-4">
                     <button
                         type="submit"
-                        className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 cursor-pointer  disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        className="w-full px-3 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 cursor-pointer disabled:cursor-default"
                         disabled={!isFormValid}
                     >
                         회원가입

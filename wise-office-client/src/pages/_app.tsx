@@ -62,7 +62,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                     <HeaderAuth />
                 </header>
 
-                <main className="flex-grow p-4 mt-10">
+                <main className="min-h-screen flex-grow p-4 mt-10">
                     <Component {...pageProps} />
                     <ToastContainer className="mt-20" limit={3} />
                 </main>
