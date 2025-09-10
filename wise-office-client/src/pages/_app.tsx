@@ -62,15 +62,15 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                     <HeaderAuth />
                 </header>
 
-                <main className="min-h-screen flex-grow p-4 mt-10">
+                <main className="min-h-screen flex-grow p-4 mt-20">
                     <Component {...pageProps} />
                     <ToastContainer className="mt-20" limit={3} />
                 </main>
-
-                <footer className="bg-gray-800 text-white p-4 text-center text-sm">
-                    © 2025 Wise Office. All rights reserved.
-                </footer>
             </div>
+
+            <footer className="bg-gray-800 text-white p-4 text-center text-sm">
+                © 2025 Wise Office. All rights reserved.
+            </footer>
         </>
     );
 }

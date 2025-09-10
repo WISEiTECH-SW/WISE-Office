@@ -29,14 +29,14 @@ export default function Home() {
     }, [fetchProjects]);
 
     return (
-        <section className="max-w-screen-lg mx-auto my-20 px-5">
-            <h2 className="text-3xl font-bold mb-2 text-left">
+        <section className="max-w-screen-lg mx-auto my-10 md:my-20 px-2">
+            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-left">
                 프로젝트 진행 현황
             </h2>
 
             {hasToken && (
                 <>
-                    <div className="flex justify-end mb-10">
+                    <div className="flex justify-end">
                         <AddProjectButton
                             modalOpen={() => setIsModalOpen(true)}
                         />
@@ -49,7 +49,7 @@ export default function Home() {
                 </>
             )}
 
-            <div className="flex flex-col mt-10 items-center w-full gap-10 text-gray-600">
+            <div className="flex flex-col mt-4 md:mt-10 items-center w-full gap-10 text-gray-600">
                 {projects.length === 0 ? (
                     <p className="text-gray-400 py-8">
                         등록된 프로젝트가 없습니다.
