@@ -16,7 +16,7 @@ export default function AddProjectButton({ modalOpen }: AddProjectButtonProps) {
                     strokeLinecap="round"
                 />
             </svg>
-            프로젝트 생성
+            <p className="hidden md:block">프로젝트 생성</p>
         </button>
     );
 }
