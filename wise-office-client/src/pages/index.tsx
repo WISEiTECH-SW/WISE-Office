@@ -54,10 +54,14 @@ export default function Home() {
                     </h2>
                     <span className="inline-flex items-center gap-2 text-sm text-slate-700">
                         <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span>
-                            <b className="text-slate-900">{totalCount}</b>개
-                            프로젝트 진행중
-                        </span>
+                        {totalCount > 0 && (
+                            <span>
+                                {" "}
+                                현재{" "}
+                                <b className="text-slate-900">{totalCount}</b>개
+                                프로젝트 진행중
+                            </span>
+                        )}
                     </span>
                 </div>
 
