@@ -1,0 +1,38 @@
+name: DPG AutoDeployment # nextjs-spring-postgre를 전체 리빌딩합니다. 
+
+on:
+  # push:
+  #   branches: ["feat/#106-CI-CD"]
+  pull_request:
+    branches: ["dev"]
+    types: [closed]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: connect server via to SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.DPG_HOST}}
+          username: ${{secrets.DPG_USERNAME}}
+          key: ${{secrets.DPG_SSH_KEY}}
+          script: |
+            set -e
+
+            echo "🚚 서버 배포 중...."
+            cd ${{secrets.PROJECT_ROOT_PATH}}
+
+            git pull origin ${{github.ref_name}}
+
+            cd ./wise-office-infra
+
+            ./prod-env-stop.sh
+            echo "5초간 대기중..."
+            sleep(5)
+            ./prod-env.sh
+
+            echo "작업 완료!"
+
+
