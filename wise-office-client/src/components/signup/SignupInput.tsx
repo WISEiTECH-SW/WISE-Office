@@ -15,8 +15,8 @@ export default function SignupInput({
     onChange,
 }: SignupInputProps) {
     return (
-        <div className="w-full space-y-3 px-4">
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">
+        <div className="w-full px-4">
+            <label htmlFor={id} className="text-sm font-medium text-gray-700">
                 {labelName}
             </label>
             <input
