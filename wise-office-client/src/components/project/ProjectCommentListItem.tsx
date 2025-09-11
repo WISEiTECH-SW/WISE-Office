@@ -2,7 +2,6 @@ import Image from "next/image";
 import { XCircle } from "lucide-react";
 import { Comment } from "@/types/comment";
 import { formatDateTime } from "@/lib/common/util";
-import { useState } from "react";
 
 interface ProjectCommentListItemProps {
     comment: Comment;
@@ -13,15 +12,13 @@ export default function ProjectCommentListItem({
     comment,
     onDelete,
 }: ProjectCommentListItemProps) {
-    const [imageError, setImageError] = useState(false);
-
     return (
         <div className="flex gap-3 items-baseline">
             <Image
                 src={
-                    imageError || !comment.imageUrl
-                        ? "/assets/default_profile.jpg"
-                        : comment.imageUrl
+                    comment.imageUrl
+                        ? comment.imageUrl
+                        : "/assets/default_profile.jpg"
                 }
                 alt="profile image"
                 width={32}
