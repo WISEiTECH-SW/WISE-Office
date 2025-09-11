@@ -5,6 +5,7 @@ import {
     createComment,
     deleteComment,
 } from "@/services/coments";
+import { toastMessage } from "@/lib/common/toastMessage";
 
 export function useComments(projectId: number) {
     const [commentList, setCommentList] = useState<Comment[]>([]);
@@ -24,6 +25,7 @@ export function useComments(projectId: number) {
         setCommentList((prev) =>
             prev.filter((comment) => comment.id !== commentId)
         );
+        toastMessage.success("댓글이 삭제되었습니다.");
     };
 
     return { commentList, loadCommentList, addComment, removeComment };

@@ -10,7 +10,7 @@ interface ProjectLogProps {
     modifyModal: (logInput: LogInput) => void;
     commentList: Comment[];
     onSummit: (commentInput: string) => void;
-    onDeleteComment: (commentId: number) => void;
+    onDeleteComment: (target: string, commentId: number) => void;
 }
 
 export default function ProjectLog({

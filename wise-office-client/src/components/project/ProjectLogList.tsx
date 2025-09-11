@@ -6,7 +6,7 @@ interface ProjectLogListProps {
     logList: Log[];
     selectedLog?: LogDetail | null;
     onSelectLog: (logId: number) => void;
-    onDeleteLog: (logId: number) => void;
+    onDeleteLog: (target: string, logId: number) => void;
 }
 
 export default function ProjectLogList({

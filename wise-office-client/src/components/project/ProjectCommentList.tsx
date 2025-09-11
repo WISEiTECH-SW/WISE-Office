@@ -6,7 +6,7 @@ interface ProjectCommentListProps {
     logId: number;
     commentList: Comment[];
     onSummit: (commentInput: string) => void;
-    onDeleteComment: (commentId: number) => void;
+    onDeleteComment: (target: string, commentId: number) => void;
 }
 
 export default function ProjectCommentList({

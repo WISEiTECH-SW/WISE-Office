@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { LogDetail, LogInput } from "@/types/log";
 import { getLogDetail, createLog, deleteLog, patchLog } from "@/services/logs";
 import { convertToLog } from "@/lib/project/log";
+import { toastMessage } from "@/lib/common/toastMessage";
 
 export function useLogs(projectId: number) {
     const [selectedLog, setSelectedLog] = useState<LogDetail | null>(null);
@@ -19,6 +20,7 @@ export function useLogs(projectId: number) {
 
     const removeLog = async (logId: number) => {
         await deleteLog(projectId, logId);
+        toastMessage.success("로그가 삭제되었습니다.");
         setSelectedLog(null);
     };
 

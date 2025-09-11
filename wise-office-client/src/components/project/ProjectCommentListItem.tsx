@@ -5,7 +5,7 @@ import { formatDateTime } from "@/lib/common/util";
 
 interface ProjectCommentListItemProps {
     comment: Comment;
-    onDelete: (commentId: number) => void;
+    onDelete: (target: string, ommentId: number) => void;
 }
 
 export default function ProjectCommentListItem({
@@ -34,7 +34,7 @@ export default function ProjectCommentListItem({
                         {comment.canModify && (
                             <button
                                 className="text-gray-400 hover:text-red-500 cursor-pointer"
-                                onClick={() => onDelete(comment.id)}
+                                onClick={() => onDelete("comment", comment.id)}
                             >
                                 <XCircle className="w-4 h-4" />
                             </button>

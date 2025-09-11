@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useLogs } from "@/hooks/domain/useLogs";
 
@@ -16,8 +16,10 @@ import {
     ProjectAttendantList,
     ProjectLogInput,
 } from "@/components/project";
-import ConfirmModal from "@/components/ConfirmModal";
 import { useComments } from "@/hooks/domain/useComments";
+import { useProjects } from "@/hooks/domain/useProjects";
+
+import ConfirmModal from "@/components/modal/ConfirmModal";
 
 export default function ProjectPageById() {
     const router = useRouter();
@@ -29,16 +31,20 @@ export default function ProjectPageById() {
         useLogs(projectId);
     const { commentList, loadCommentList, addComment, removeComment } =
         useComments(projectId);
+    const { removeProject } = useProjects(projectId);
 
     // Project
     const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
-    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     // Log
     const [logList, setLogList] = useState<Log[]>([]);
     const [isLogModalOpen, setIsLogModalOpen] = useState(false);
     const [editingLog, setEditingLog] = useState<LogInput | null>(null);
+
+    // delete
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [delteTarget, setDeleteTarget] = useState<[string, number]>(["", 0]);
 
     // Modal Handler
     const handleCloseModal = () => {
@@ -49,6 +55,11 @@ export default function ProjectPageById() {
     const handleModifyModal = (logInput: LogInput) => {
         setEditingLog(logInput);
         setIsLogModalOpen(true);
+    };
+
+    const handleConfirmModal = (target: string, id: number) => {
+        setDeleteTarget([target, id]);
+        setIsConfirmOpen(true);
     };
 
     // Log Handler
@@ -65,6 +76,7 @@ export default function ProjectPageById() {
     const handleDeleteLog = async (logId: number) => {
         setLogList((prev) => prev.filter((log) => log.logId !== logId));
         await removeLog(logId);
+        setIsConfirmOpen(false);
     };
 
     const handleModifyLog = async (logInput: LogInput) => {
@@ -104,6 +116,13 @@ export default function ProjectPageById() {
 
         await removeComment(selectedLog.logId, commentId);
         updateCommentCount(selectedLog.logId, false);
+        setIsConfirmOpen(false);
+    };
+
+    const deleteHandlers: Record<string, (id: number) => void> = {
+        project: () => removeProject(),
+        log: (id) => handleDeleteLog(id),
+        comment: (id) => handleDeleteComment(id),
     };
 
     // 처음 데이터 로드
@@ -122,9 +141,7 @@ export default function ProjectPageById() {
                     onEdit={() => {
                         setIsEditOpen(true);
                     }}
-                    onDelete={() => {
-                        setIsConfirmOpen(true);
-                    }}
+                    onDelete={() => handleConfirmModal("project", projectId)}
                 />
                 {isEditOpen && projectInfo.projectId && (
                     <ProjectUpdateModal
@@ -133,10 +150,11 @@ export default function ProjectPageById() {
                         onClose={() => setIsEditOpen(false)}
                     />
                 )}
-                {isConfirmOpen && projectInfo.projectId && (
+
+                {isConfirmOpen && delteTarget[0] != "" && (
                     <ConfirmModal
-                        deleteTarget={"project"}
-                        projectId={projectInfo.projectId}
+                        deleteTarget={delteTarget}
+                        onConfirm={deleteHandlers[delteTarget[0]]}
                         onClose={() => setIsConfirmOpen(false)}
                     />
                 )}
@@ -148,7 +166,7 @@ export default function ProjectPageById() {
                             logList={logList}
                             selectedLog={selectedLog}
                             onSelectLog={handleSelectLog}
-                            onDeleteLog={handleDeleteLog}
+                            onDeleteLog={handleConfirmModal}
                         />
                         <div className="mt-2">
                             <ProjectLogWriteButton
@@ -163,7 +181,7 @@ export default function ProjectPageById() {
                             modifyModal={handleModifyModal}
                             commentList={commentList}
                             onSummit={handleCreateComment}
-                            onDeleteComment={handleDeleteComment}
+                            onDeleteComment={handleConfirmModal}
                         />
                     </div>
                     {/* Attendant List - Right */}

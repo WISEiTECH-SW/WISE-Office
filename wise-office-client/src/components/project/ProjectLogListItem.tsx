@@ -6,7 +6,7 @@ interface ProjectLogListItemProps {
     log: Log;
     isSelected: boolean;
     onSelect: (logId: number) => void;
-    onDelete: (logId: number) => void;
+    onDelete: (target: string, logId: number) => void;
 }
 
 export default function ProjectLogListItem({
@@ -17,7 +17,7 @@ export default function ProjectLogListItem({
 }: ProjectLogListItemProps) {
     const handleDeleteClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // 부모의 onClick 이벤트 방지
-        onDelete(log.logId);
+        onDelete("log", log.logId);
     };
 
     return (
