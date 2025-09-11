@@ -289,6 +289,25 @@ public class MemberControllerTest {
     }
 
     @Nested
+    @DisplayName("로그아웃 테스트")
+    class LogoutTest{
+
+        @Test
+        @DisplayName("성공 : jwt 쿠키를 만료시키고 200 OK를 반환한다")
+        @WithMockCustomUser
+        void logoutTest() throws Exception {
+            // when & then
+            mockMvc.perform(get("/api/members/logout"))
+                    .andExpect(status().isOk())
+                    .andExpect(cookie().exists("jwt"))
+                    .andExpect(cookie().value("jwt", ""))
+                    .andExpect(cookie().maxAge("jwt", 0))
+                    .andExpect(cookie().path("jwt", "/"))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
     @DisplayName("프로필 이미지 업로드 테스트")
     class ImageUpdateTest {
 
