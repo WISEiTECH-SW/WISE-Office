@@ -29,8 +29,13 @@ export default function ProjectPageById() {
     // hooks
     const { selectedLog, selectLog, addLog, updateLog, removeLog } =
         useLogs(projectId);
-    const { commentList, loadCommentList, addComment, removeComment } =
-        useComments(projectId);
+    const {
+        commentList,
+        setCommentList,
+        loadCommentList,
+        addComment,
+        removeComment,
+    } = useComments(projectId);
     const { removeProject } = useProjects(projectId);
 
     // Project
@@ -71,6 +76,7 @@ export default function ProjectPageById() {
     const handleCreateLog = async (logInput: LogInput) => {
         const newLog = await addLog(logInput);
         setLogList((prev) => [newLog, ...prev]);
+        setCommentList([]);
     };
 
     const handleDeleteLog = async (logId: number) => {
@@ -168,11 +174,13 @@ export default function ProjectPageById() {
                             onSelectLog={handleSelectLog}
                             onDeleteLog={handleConfirmModal}
                         />
-                        <div className="mt-2">
-                            <ProjectLogWriteButton
-                                onClick={() => setIsLogModalOpen(true)}
-                            />
-                        </div>
+                        {projectInfo.attending && (
+                            <div className="mt-2">
+                                <ProjectLogWriteButton
+                                    onClick={() => setIsLogModalOpen(true)}
+                                />
+                            </div>
+                        )}
                     </div>
                     {/* LOG & Comment - Center */}
                     <div className="col-span-6">
@@ -180,6 +188,7 @@ export default function ProjectPageById() {
                             selectedLog={selectedLog}
                             modifyModal={handleModifyModal}
                             commentList={commentList}
+                            isAttending={projectInfo.attending}
                             onSummit={handleCreateComment}
                             onDeleteComment={handleConfirmModal}
                         />

@@ -4,6 +4,7 @@ import ProjectCommentInput from "./ProjectCommentInput";
 
 interface ProjectCommentListProps {
     logId: number;
+    isAttending: boolean;
     commentList: Comment[];
     onSummit: (commentInput: string) => void;
     onDeleteComment: (target: string, commentId: number) => void;
@@ -11,6 +12,7 @@ interface ProjectCommentListProps {
 
 export default function ProjectCommentList({
     logId,
+    isAttending,
     commentList,
     onSummit,
     onDeleteComment,
@@ -20,7 +22,9 @@ export default function ProjectCommentList({
             <h3 className="font-semibold text-gray-800 mb-4">
                 댓글 ({commentList.length})
             </h3>
-            <ProjectCommentInput key={logId} onSubmit={onSummit} />
+            {isAttending && (
+                <ProjectCommentInput key={logId} onSubmit={onSummit} />
+            )}
             <div className="space-y-4 flex-col w-full">
                 {commentList.map((comment) => (
                     <ProjectCommentListItem

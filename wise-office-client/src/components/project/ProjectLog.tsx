@@ -9,6 +9,7 @@ interface ProjectLogProps {
     selectedLog: LogDetail | null;
     modifyModal: (logInput: LogInput) => void;
     commentList: Comment[];
+    isAttending: boolean;
     onSummit: (commentInput: string) => void;
     onDeleteComment: (target: string, commentId: number) => void;
 }
@@ -17,6 +18,7 @@ export default function ProjectLog({
     selectedLog,
     modifyModal,
     commentList,
+    isAttending,
     onSummit,
     onDeleteComment,
 }: ProjectLogProps) {
@@ -36,6 +38,7 @@ export default function ProjectLog({
             <ProjectLogDetail log={selectedLog} modifyModal={modifyModal} />
             <ProjectCommentList
                 logId={selectedLog.logId}
+                isAttending={isAttending}
                 commentList={commentList}
                 onSummit={onSummit}
                 onDeleteComment={onDeleteComment}

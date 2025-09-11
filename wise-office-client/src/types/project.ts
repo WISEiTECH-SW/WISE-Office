@@ -26,6 +26,7 @@ export interface ProjectInfo {
     managerName: ProjectAttendant;
     attendant: ProjectAttendant[];
     canModify: boolean;
+    attending: boolean;
 }
 
 export interface CreateProject {

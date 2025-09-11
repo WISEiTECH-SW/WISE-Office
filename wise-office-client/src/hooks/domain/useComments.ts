@@ -28,5 +28,11 @@ export function useComments(projectId: number) {
         toastMessage.success("댓글이 삭제되었습니다.");
     };
 
-    return { commentList, loadCommentList, addComment, removeComment };
+    return {
+        commentList,
+        setCommentList,
+        loadCommentList,
+        addComment,
+        removeComment,
+    };
 }
