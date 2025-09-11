@@ -30,7 +30,7 @@ jobs:
 
             ./prod-env-stop.sh
             echo "5초간 대기중..."
-            sleep(5)
+            sleep 5
             ./prod-env.sh
 
             echo "작업 완료!"
