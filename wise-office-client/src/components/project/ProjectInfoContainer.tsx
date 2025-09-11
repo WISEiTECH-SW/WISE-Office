@@ -6,7 +6,7 @@ import { Calendar, TrendingUp, User, Users, NotepadText } from "lucide-react";
 type ProjectContainerProps = {
     projectInfo: ProjectInfo;
     onEdit?: () => void;
-    onDelete?: () => void;
+    onDelete: () => void;
 };
 
 export default function ProjectInfoContainer({
@@ -33,7 +33,7 @@ export default function ProjectInfoContainer({
                         </button>
                         <button
                             onClick={onDelete}
-                            className="px-4 py-2 bg-gray-500 text-white text-sm rounded hover:bg-gray-600 cursor-pointer"
+                            className="px-4 py-2 bg-gray-400 text-white text-sm rounded hover:bg-gray-500 cursor-pointer"
                         >
                             삭제
                         </button>

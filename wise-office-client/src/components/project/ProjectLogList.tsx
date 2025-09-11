@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import ProjectLogListItem from "./ProjectLogListItem";
 import { Log, LogDetail } from "@/types/log";
 
@@ -6,15 +6,15 @@ interface ProjectLogListProps {
     logList: Log[];
     selectedLog?: LogDetail | null;
     onSelectLog: (logId: number) => void;
-    onDeleteLog: (logId: number) => void;
+    onDeleteLog: (target: string, logId: number) => void;
 }
 
-const ProjectLogList: React.FC<ProjectLogListProps> = ({
+export default function ProjectLogList({
     logList,
     selectedLog,
     onSelectLog,
     onDeleteLog,
-}) => {
+}: ProjectLogListProps) {
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <div className="bg-gray-100 px-4 py-3 rounded-t-lg flex justify-between items-center">
@@ -34,6 +34,4 @@ const ProjectLogList: React.FC<ProjectLogListProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectLogList;
+}

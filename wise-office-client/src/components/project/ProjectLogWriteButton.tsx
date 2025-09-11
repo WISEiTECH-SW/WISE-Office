@@ -1,13 +1,12 @@
-import React from "react";
 import { Pen } from "lucide-react";
 
 interface ProjectLogWriteButtonProps {
     onClick: () => void;
 }
 
-const ProjectLogWriteButton: React.FC<ProjectLogWriteButtonProps> = ({
+export default function ProjectLogWriteButton({
     onClick,
-}) => {
+}: ProjectLogWriteButtonProps) {
     return (
         <button
             onClick={onClick}
@@ -17,6 +16,4 @@ const ProjectLogWriteButton: React.FC<ProjectLogWriteButtonProps> = ({
             로그 작성
         </button>
     );
-};
-
-export default ProjectLogWriteButton;
+}

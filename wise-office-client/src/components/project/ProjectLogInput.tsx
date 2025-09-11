@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { X, FileText } from "lucide-react";
-import type { LogDetail, LogInput } from "@/types/log";
+import type { LogInput } from "@/types/log";
 
 interface ProjectLogInputProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (logInput: LogInput) => void;
-    editingLog?: LogDetail | null;
+    editingLog?: LogInput | null;
 }
-const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
+export default function ProjectLogInput({
     isOpen,
     onClose,
     onSubmit,
     editingLog,
-}) => {
+}: ProjectLogInputProps) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
@@ -121,6 +121,4 @@ const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectLogInput;
+}

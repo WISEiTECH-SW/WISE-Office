@@ -1,22 +1,28 @@
-import React from "react";
 import Image from "next/image";
 import { XCircle } from "lucide-react";
 import { Comment } from "@/types/comment";
 import { formatDateTime } from "@/lib/common/util";
+import { useState } from "react";
 
 interface ProjectCommentListItemProps {
     comment: Comment;
-    onDelete: (commentId: number) => void;
+    onDelete: (target: string, ommentId: number) => void;
 }
 
-const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
+export default function ProjectCommentListItem({
     comment,
     onDelete,
-}) => {
+}: ProjectCommentListItemProps) {
+    const [imageError, setImageError] = useState(false);
+
     return (
         <div className="flex gap-3 items-baseline">
             <Image
-                src={comment.imageUrl}
+                src={
+                    imageError || !comment.imageUrl
+                        ? "/assets/default_profile.jpg"
+                        : comment.imageUrl
+                }
                 alt="profile image"
                 width={32}
                 height={32}
@@ -35,7 +41,7 @@ const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
                         {comment.canModify && (
                             <button
                                 className="text-gray-400 hover:text-red-500 cursor-pointer"
-                                onClick={() => onDelete(comment.id)}
+                                onClick={() => onDelete("comment", comment.id)}
                             >
                                 <XCircle className="w-4 h-4" />
                             </button>
@@ -48,6 +54,4 @@ const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectCommentListItem;
+}
