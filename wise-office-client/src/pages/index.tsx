@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import ProjectListCard from "@/components/ProjectListCard";
 import AddProjectButton from "@/components/AddProjectButton";
-import { getProjects } from "@/services/projects";
+import { getCurrentPageProjects } from "@/services/projects";
 import { useProjects } from "@/store/useProjects";
 import ProjectCreateModal from "../components/project/project_modal";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -13,38 +13,33 @@ export default function Home() {
     const { hasToken } = useAuthStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const PAGE_SIZE = 8;
+    const [totalCount, setTotalCount] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const offset = 6;
 
     useEffect(() => {
         (async () => {
             try {
-                const data = await getProjects();
-                // Zustand store에 저장
-                useProjects.setState({
-                    projects: Array.isArray(data) ? data : [],
+                const data = await getCurrentPageProjects({
+                    currentPage,
+                    offset,
                 });
+
+                useProjects.setState({
+                    projects: Array.isArray(data.projectListResponses)
+                        ? data.projectListResponses
+                        : [],
+                });
+
+                setCurrentPage(data.pageNationInfo.currentPage);
+                setTotalPages(data.pageNationInfo.totalPages);
+                setTotalCount(data.pageNationInfo.totalCount);
             } catch (err) {
                 console.error("프로젝트 조회 실패:", err);
-                useProjects.setState({ projects: [] });
             }
         })();
-    }, [fetchProjects]);
+    }, [currentPage, fetchProjects]);
 
-    // 프로젝트 목록이 바뀌면 페이지 범위 보정
-    useEffect(() => {
-        const totalPages = Math.max(1, Math.ceil(projects.length / PAGE_SIZE));
-        if (currentPage > totalPages) setCurrentPage(totalPages);
-    }, [projects, currentPage]);
-
-    // 현재 페이지에서 보여줄 목록
-    const currentPageProjects = useMemo(() => {
-        const start = (currentPage - 1) * PAGE_SIZE;
-        return projects.slice(start, start + PAGE_SIZE);
-    }, [projects, currentPage]);
-
-    const totalPages = Math.max(1, Math.ceil(projects.length / PAGE_SIZE));
-
-    // 페이지 이동
     const movePage = (page: number) => {
         if (page < 1 || page > totalPages) return;
         setCurrentPage(page);
@@ -53,9 +48,19 @@ export default function Home() {
     return (
         <section className="flex flex-col items-center  gap-4 md:gap-10 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
             <div className="flex flex-col w-full">
-                <h2 className="text-2xl md:text-3xl font-bold mb-2 text-left">
-                    프로젝트 진행 현황
-                </h2>
+                <div>
+                    <h2 className="text-2xl md:text-3xl font-bold mb-2 text-left">
+                        프로젝트 진행 현황
+                    </h2>
+                    <span className="inline-flex items-center gap-2 text-sm text-slate-700">
+                        <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span>
+                            <b className="text-slate-900">{totalCount}</b>개
+                            프로젝트 진행중
+                        </span>
+                    </span>
+                </div>
+
                 {hasToken && (
                     <>
                         <div className="flex justify-end">
@@ -66,6 +71,13 @@ export default function Home() {
                         {isModalOpen && (
                             <ProjectCreateModal
                                 onClose={() => setIsModalOpen(false)}
+                                onCreated={async () => {
+                                    await fetchProjects({
+                                        currentPage,
+                                        offset,
+                                    });
+                                    setCurrentPage(1);
+                                }}
                             />
                         )}
                     </>
@@ -77,7 +89,8 @@ export default function Home() {
                         등록된 프로젝트가 없습니다.
                     </p>
                 ) : (
-                    currentPageProjects.map((p) => (
+                    // currentPageProjects.map((p) => (
+                    projects.map((p) => (
                         <ProjectListCard key={p.projectId} project={p} />
                     ))
                 )}

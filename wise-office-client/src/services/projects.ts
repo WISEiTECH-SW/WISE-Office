@@ -1,9 +1,33 @@
 import { api } from "@/lib/clientApi";
-import type { Project, ProjectInfo, CreateProject } from "@/types/project";
+import type {
+    Project,
+    PageInfo,
+    ProjectInfo,
+    CreateProject,
+    PageParams,
+} from "@/types/project";
+
+interface currentPageProjects {
+    pageNationInfo: PageInfo;
+    projectListResponses: Project[];
+}
 
 export async function getProjects(): Promise<Project[]> {
     const { data } = await api.get<Project[]>("v2/projects");
     return data;
+}
+
+export async function getCurrentPageProjects({
+    currentPage,
+    offset,
+}: PageParams): Promise<currentPageProjects> {
+    const res = await api.get<currentPageProjects>(`v3/projects`, {
+        params: {
+            page: currentPage,
+            offset,
+        },
+    });
+    return res.data;
 }
 
 /**

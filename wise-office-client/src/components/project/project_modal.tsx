@@ -12,10 +12,12 @@ import { AxiosError } from "axios";
 
 type ProjectCreateModalProps = {
     onClose: () => void;
+    onCreated?: () => Promise<void> | void;
 };
 
 export default function ProjectCreateModal({
     onClose,
+    onCreated,
 }: ProjectCreateModalProps) {
     const [projectTitle, setProjectTitle] = useState("");
     const [startDate, setStartDate] = useState("");
@@ -26,30 +28,34 @@ export default function ProjectCreateModal({
     const [manager, setManager] = useState<Member | undefined>();
     const [members, setMembers] = useState<Member[]>([]);
     const modalRef = useRef<HTMLDivElement>(null);
-        const handleProjectTitleChange = (value: string) => {
-            if (value.length > 100) {
-                toastMessage.error("프로젝트 제목은 100자까지 입력 가능합니다.");
-                return;
-            }
-            setProjectTitle(value);
-        };
-    
-        const handleContentChange = (value: string) => {
-            if (value.length > 500) {
-                toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
-                return;
-            }
-            setContent(value);
-        };
+    const handleProjectTitleChange = (value: string) => {
+        if (value.length > 100) {
+            toastMessage.error("프로젝트 제목은 100자까지 입력 가능합니다.");
+            return;
+        }
+        setProjectTitle(value);
+    };
+
+    const handleContentChange = (value: string) => {
+        if (value.length > 500) {
+            toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
+            return;
+        }
+        setContent(value);
+    };
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const modal = modalRef.current;
-            const flatpickrCalendars = document.querySelectorAll(".flatpickr-calendar");
+            const flatpickrCalendars = document.querySelectorAll(
+                ".flatpickr-calendar"
+            );
 
             if (
                 modal &&
                 !modal.contains(event.target as Node) &&
-                !Array.from(flatpickrCalendars).some(cal => cal.contains(event.target as Node))
+                !Array.from(flatpickrCalendars).some((cal) =>
+                    cal.contains(event.target as Node)
+                )
             ) {
                 onClose();
             }
@@ -68,70 +74,69 @@ export default function ProjectCreateModal({
         fetchData();
     }, []);
 
+    const [errors, setErrors] = useState({
+        projectTitle: "",
+        startDate: "",
+        endDate: "",
+        content: "",
+        selectedMembers: "",
+        manager: "",
+    });
 
-        const [errors, setErrors] = useState({
-                    projectTitle: "",
-                    startDate:"",
-                    endDate:"",
-                    content: "",
-                    selectedMembers:"",
-                    manager:""
-                });
-
-        const validateForm = () => {
-            let valid = true;
-            const newErrors = {
-                projectTitle: "",
-                startDate: "",
-                endDate: "",
-                content: "",
-                selectedMembers: "",
-                manager: "",
-            };
-
-            if (projectTitle.trim() === "") {
-                newErrors.projectTitle = "프로젝트명을 입력해주세요.";
-                valid = false;
-            } else if (projectTitle.length > 100) {
-                newErrors.projectTitle = "프로젝트 제목은 100자까지 입력 가능합니다.";
-                valid = false;
-            }
-
-            if (startDate === "") {
-                newErrors.startDate = "시작 날짜를 선택해주세요.";
-                valid = false;
-            }
-
-            if (endDate === "") {
-                newErrors.endDate = "종료 날짜를 선택해주세요.";
-                valid = false;
-            }
-
-            if (content.trim() === "") {
-                newErrors.content = "프로젝트 설명을 입력해주세요.";
-                valid = false;
-            } else if (content.length > 500) {
-                newErrors.content = "프로젝트 설명은 500자까지 입력 가능합니다.";
-                valid = false;
-            }
-
-            if (selectedMembers.length === 0) {
-                newErrors.selectedMembers = "프로젝트 참여 인원을 선택해주세요.";
-                valid = false;
-            }
-
-            if (!manager) {
-                newErrors.manager = "프로젝트 관리자를 선택해주세요.";
-                valid = false;
-            }
-
-            setErrors(newErrors);
-            return valid;
+    const validateForm = () => {
+        let valid = true;
+        const newErrors = {
+            projectTitle: "",
+            startDate: "",
+            endDate: "",
+            content: "",
+            selectedMembers: "",
+            manager: "",
         };
 
+        if (projectTitle.trim() === "") {
+            newErrors.projectTitle = "프로젝트명을 입력해주세요.";
+            valid = false;
+        } else if (projectTitle.length > 100) {
+            newErrors.projectTitle =
+                "프로젝트 제목은 100자까지 입력 가능합니다.";
+            valid = false;
+        }
+
+        if (startDate === "") {
+            newErrors.startDate = "시작 날짜를 선택해주세요.";
+            valid = false;
+        }
+
+        if (endDate === "") {
+            newErrors.endDate = "종료 날짜를 선택해주세요.";
+            valid = false;
+        }
+
+        if (content.trim() === "") {
+            newErrors.content = "프로젝트 설명을 입력해주세요.";
+            valid = false;
+        } else if (content.length > 500) {
+            newErrors.content = "프로젝트 설명은 500자까지 입력 가능합니다.";
+            valid = false;
+        }
+
+        if (selectedMembers.length === 0) {
+            newErrors.selectedMembers = "프로젝트 참여 인원을 선택해주세요.";
+            valid = false;
+        }
+
+        if (!manager) {
+            newErrors.manager = "프로젝트 관리자를 선택해주세요.";
+            valid = false;
+        }
+
+        setErrors(newErrors);
+        return valid;
+    };
+
     const handleSubmit = async () => {
-            if (!validateForm()) return;
-        
+        if (!validateForm()) return;
 
         const start = startDate + "-01";
         const [year, month] = endDate.split("-").map(Number);
@@ -152,7 +157,7 @@ export default function ProjectCreateModal({
         try {
             const newProject = await postProject(projectData);
             useProjects.getState().addProject(newProject);
-            useProjects.getState().fetchProjects();
+            if (onCreated) await onCreated();
             toastMessage.success("프로젝트가 등록되었습니다.");
             onClose();
         } catch (error: unknown) {
@@ -201,7 +206,7 @@ export default function ProjectCreateModal({
                         setEndDate={setEndDate}
                         setContent={handleContentChange}
                         errors={errors}
-                        />
+                    />
 
                     {/* 오른쪽 영역 */}
                     <SelectProjectMembers
@@ -214,7 +219,6 @@ export default function ProjectCreateModal({
                         setManager={setManager}
                         errors={errors}
                     />
-
                 </div>
 
                 {/* 생성 완료 버튼 */}
