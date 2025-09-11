@@ -4,7 +4,6 @@ type SignupInputProps = {
     type: string;
     value: string;
     onChange: (value: string) => void;
-    // placeholder: string;
 };
 
 export default function SignupInput({

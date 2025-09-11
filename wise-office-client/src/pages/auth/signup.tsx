@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toastMessage } from "@/lib/common/toastMessage";
-
 import { SignupForm } from "@/types/member";
 import {
     SignupSelect,
@@ -10,7 +9,7 @@ import {
     EmailVerifyButton,
 } from "@/components/signup";
 
-import { validateEmailForm, validateEmailLen } from "@/lib/auth/sinup";
+import { validateEmailForm, validateEmailLen } from "@/lib/auth/signup";
 import {
     handleEmailVerify,
     handleCodeVerify,
@@ -23,7 +22,7 @@ const TEAM = ["소속을 선택해 주세요", "연구기획 1팀", "연구기�
 export default function Signup() {
     const router = useRouter();
 
-    // Name, rank, team
+    // name, rank, team
     const [name, setName] = useState("");
     const [rank, setRank] = useState("");
     const [team, setTeam] = useState("");
@@ -45,6 +44,16 @@ export default function Signup() {
     // PassWord
     const [password, setPassword] = useState("");
     const [passwordMatch, setPasswordMatch] = useState("");
+
+    // form summit chek
+    const isFormValid =
+        name.trim() !== "" &&
+        rank.trim() !== "" &&
+        team.trim() !== "" &&
+        emailValid &&
+        password.trim() !== "" &&
+        passwordMatch.trim() !== "" &&
+        password === passwordMatch;
 
     // Email Valid Check
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,15 +139,6 @@ export default function Signup() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
-    const isFormValid =
-        name.trim() !== "" &&
-        rank.trim() !== "" &&
-        team.trim() !== "" &&
-        emailValid &&
-        password.trim() !== "" &&
-        passwordMatch.trim() !== "" &&
-        password === passwordMatch;
 
     return (
         <div className="flex items-center justify-center my-4">

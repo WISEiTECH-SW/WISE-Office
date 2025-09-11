@@ -1,12 +1,7 @@
 import { AxiosResponse } from "axios";
 import { api } from "@/lib/clientApi";
-import { Member, signupForm } from "@/types/member";
+import { Member, SignupForm } from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
-
-type verificationForm = {
-    email: string;
-    verificationCode: string;
-};
 
 type loginForm = {
     email: string;
@@ -37,7 +32,8 @@ export async function updateProfileImage(file: File): Promise<string> {
     return res.data.imageUrl;
 }
 
-export async function signup(req: signupForm): Promise<signupForm> {
+// 회원가입 진행
+export async function signup(req: SignupForm): Promise<SignupForm> {
     const formData = new FormData();
     formData.append(
         "request",
@@ -50,27 +46,15 @@ export async function login(req: loginForm): Promise<AxiosResponse> {
     return await api.post("/members/login", req).then((res) => res.data);
 }
 
+// 이메일 인증 코드 발송
 export async function requestCode(req: string): Promise<string> {
     return await api
         .post("/members/emails/verification", { email: req })
         .then((res) => res.data);
 }
 
+// 이메일 검증 인증 코드 검사
 export async function verifyCode(
-    req: verificationForm
-): Promise<verificationForm> {
-    const { data } = await api.get("/members/emails/verification", {
-        params: {
-            email: req.email,
-            code: req.verificationCode,
-        },
-    });
-    return data;
-}
-
-// testsignup
-
-export async function verifyCodeTest(
     inputEmail: string,
     inputCode: string
 ): Promise<boolean> {
