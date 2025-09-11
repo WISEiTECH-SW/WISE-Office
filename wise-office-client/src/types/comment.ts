@@ -1,7 +1,3 @@
-export interface CommentInput {
-    content: string;
-}
-
 export interface Comment {
     id: number;
     content: string;

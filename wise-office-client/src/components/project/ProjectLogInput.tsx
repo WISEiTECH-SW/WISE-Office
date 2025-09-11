@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { X, FileText } from "lucide-react";
-import type { LogDetail, LogInput } from "@/types/log";
+import type { LogInput } from "@/types/log";
 
 interface ProjectLogInputProps {
     isOpen: boolean;

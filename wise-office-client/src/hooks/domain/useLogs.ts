@@ -15,7 +15,6 @@ export function useLogs(projectId: number) {
         const newLog = await createLog(projectId, logInput);
         setSelectedLog(newLog);
         return convertToLog(newLog);
-        // logList에 새 로그 추가 필요
     };
 
     const removeLog = async (logId: number) => {

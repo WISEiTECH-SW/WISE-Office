@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Comment, CommentInput } from "@/types/comment";
+import type { Comment } from "@/types/comment";
 import {
     getCommentList,
     createComment,
@@ -21,6 +21,9 @@ export function useComments(projectId: number) {
 
     const removeComment = async (logId: number, commentId: number) => {
         await deleteComment(projectId, logId, commentId);
+        setCommentList((prev) =>
+            prev.filter((comment) => comment.id !== commentId)
+        );
     };
 
     return { commentList, loadCommentList, addComment, removeComment };

@@ -10,20 +10,16 @@ interface ProjectLogProps {
     selectedLog: LogDetail | null;
     modifyModal: (logInput: LogInput) => void;
     commentList: Comment[];
-    // newComment: string;
-    // onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onSummit: (commentInput: string) => void;
-    // onDeleteComment: (commentId: number) => void;
+    onDeleteComment: (commentId: number) => void;
 }
 
 const ProjectLog: React.FC<ProjectLogProps> = ({
     selectedLog,
     modifyModal,
     commentList,
-    // newComment,
-    // onCommentChange,
     onSummit,
-    // onDeleteComment,
+    onDeleteComment,
 }) => {
     if (!selectedLog) {
         return (
@@ -40,11 +36,10 @@ const ProjectLog: React.FC<ProjectLogProps> = ({
         <div className="bg-white rounded-lg shadow-sm">
             <ProjectLogDetail log={selectedLog} modifyModal={modifyModal} />
             <ProjectCommentList
+                logId={selectedLog.logId}
                 commentList={commentList}
-                // newComment={newComment}
-                // onCommentChange={onCommentChange}
                 onSummit={onSummit}
-                // onDeleteComment={onDeleteComment}
+                onDeleteComment={onDeleteComment}
             />
         </div>
     );
