@@ -25,9 +25,13 @@ export default function SignupSelect({
                 onChange={(e) => onChange(e.target.value)}
                 className="w-full max-w-sm px-3 py-2 mt-1 border border-gray-400 rounded-md outline-none cursor-pointer"
             >
-                {options.map((option) => (
-                    <option key={option} value={option}>
-                        {option}
+                <option value="" disabled hidden>
+                    {options[0]}
+                </option>
+
+                {options.slice(1).map((t, idx) => (
+                    <option key={idx} value={t}>
+                        {t}
                     </option>
                 ))}
             </select>

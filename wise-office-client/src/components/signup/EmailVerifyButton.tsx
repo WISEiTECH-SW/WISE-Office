@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { formatTime } from "@/lib/auth/signup";
 
 type EmailVerifyButtonProps = {
     verifyEmail: () => Promise<boolean>;
@@ -29,12 +30,6 @@ export default function EmailVerifyButton({
         if (success) {
             setCooldown(59);
         }
-    };
-
-    const formatTime = (sec: number) => {
-        const minutes = String(Math.floor(sec / 60)).padStart(2, "0");
-        const seconds = String(sec % 60).padStart(2, "0");
-        return ` ${minutes} : ${seconds} `;
     };
 
     if (emailValid) {

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toastMessage } from "@/lib/common/toastMessage";
-
 import { SignupForm } from "@/types/member";
 import {
     SignupSelect,
@@ -10,7 +9,7 @@ import {
     EmailVerifyButton,
 } from "@/components/signup";
 
-import { validateEmailForm, validateEmailLen } from "@/lib/auth/sinup";
+import { validateEmailForm, validateEmailLen } from "@/lib/auth/signup";
 import {
     handleEmailVerify,
     handleCodeVerify,
@@ -23,7 +22,7 @@ const TEAM = ["소속을 선택해 주세요", "연구기획 1팀", "연구기�
 export default function Signup() {
     const router = useRouter();
 
-    // Name, rank, team
+    // name, rank, team
     const [name, setName] = useState("");
     const [rank, setRank] = useState("");
     const [team, setTeam] = useState("");
@@ -45,6 +44,16 @@ export default function Signup() {
     // PassWord
     const [password, setPassword] = useState("");
     const [passwordMatch, setPasswordMatch] = useState("");
+
+    // form summit chek
+    const isFormValid =
+        name.trim() !== "" &&
+        rank.trim() !== "" &&
+        team.trim() !== "" &&
+        emailValid &&
+        password.trim() !== "" &&
+        passwordMatch.trim() !== "" &&
+        password === passwordMatch;
 
     // Email Valid Check
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,19 +140,12 @@ export default function Signup() {
         };
     }, []);
 
-    const isFormValid =
-        name.trim() !== "" &&
-        emailValid &&
-        password.trim() !== "" &&
-        passwordMatch.trim() !== "" &&
-        password === passwordMatch;
-
     return (
-        <div className="flex items-center justify-center my-20">
+        <div className="flex items-center justify-center my-4">
             <form
                 onSubmit={handleSummit}
                 autoComplete="off"
-                className="flex flex-col items-center w-full max-w-md gap-3 p-6 mt-8 space-y-2 bg-white border border-gray-200 rounded-lg shadow-md"
+                className="flex flex-col items-center w-full max-w-md gap-3 p-6 space-y-2 bg-white border border-gray-200 rounded-lg shadow-md"
             >
                 <h1 className="text-2xl font-bold text-center text-gray-900">
                     회원가입
@@ -247,38 +249,24 @@ export default function Signup() {
                 )}
 
                 {/* Password */}
-                <div className="w-full px-4">
-                    <label
-                        htmlFor="password"
-                        className="text-sm font-medium text-gray-700"
-                    >
-                        비밀번호
-                    </label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-3 py-2 mt-1 border border-gray-400 rounded-md outline-none"
-                    />
-                </div>
-                <div className="w-full px-4">
-                    <label
-                        htmlFor="passwordMatch"
-                        className="text-sm font-medium text-gray-700"
-                    >
-                        비밀번호 확인
-                    </label>
-                    <input
+                <SignupInput
+                    labelName="비밀번호"
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={setPassword}
+                />
+                <div className="w-full">
+                    <SignupInput
+                        labelName="비밀번호 확인"
                         id="passwordMatch"
                         type="password"
                         value={passwordMatch}
-                        onChange={(e) => setPasswordMatch(e.target.value)}
-                        className="w-full px-3 py-2 mt-1 border border-gray-400 rounded-md outline-none"
+                        onChange={setPasswordMatch}
                     />
                     {passwordMatch.length > 0 && (
                         <p
-                            className={`mt-1 text-sm ${
+                            className={`mt-1 px-4 text-sm ${
                                 password === passwordMatch
                                     ? "text-green-500"
                                     : "text-red-500"
