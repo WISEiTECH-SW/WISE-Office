@@ -13,7 +13,7 @@ export default function Home() {
     const { hasToken } = useAuthStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const PAGE_SIZE = 3;
+    const PAGE_SIZE = 8;
 
     useEffect(() => {
         (async () => {
@@ -119,26 +119,20 @@ export default function Home() {
                             for (let i = start; i <= end; i++) pages.push(i);
                         }
 
-                        return pages.map((page, idx) =>
-                            page === "..." ? (
-                                <span key={`ellipsis-${idx}`} className="px-2">
-                                    ...
-                                </span>
-                            ) : (
-                                <li key={page}>
-                                    <button
-                                        onClick={() => movePage(page as number)}
-                                        className={`px-3 py-1 text-sm rounded-md border cursor-pointer ${
-                                            currentPage === page
-                                                ? "bg-blue-600 text-white border-blue-600"
-                                                : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
-                                        }`}
-                                    >
-                                        {page}
-                                    </button>
-                                </li>
-                            )
-                        );
+                        return pages.map((page) => (
+                            <li key={page}>
+                                <button
+                                    onClick={() => movePage(page as number)}
+                                    className={`px-3 py-1 text-sm rounded-md border cursor-pointer ${
+                                        currentPage === page
+                                            ? "bg-blue-600 text-white border-blue-600"
+                                            : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
+                                    }`}
+                                >
+                                    {page}
+                                </button>
+                            </li>
+                        ));
                     })()}
                 </ul>
 
