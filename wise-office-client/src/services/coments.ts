@@ -1,5 +1,5 @@
 import { api } from "@/lib/clientApi";
-import type { Comment, CommentInput } from "@/types/comment";
+import type { Comment } from "@/types/comment";
 
 /**
  * 특정 ProjectId, LogId에 해당하는 comment 배열을 가져오는 함수
