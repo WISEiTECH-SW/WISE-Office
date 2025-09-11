@@ -46,6 +46,8 @@ export default function UserProfile({ props }: UserProfileProps) {
                         src="assets/camera.png"
                         alt="Camera"
                         className="w-5 h-5"
+                        width={24}
+                        height={24}
                     />
                 </button>
                 <input
