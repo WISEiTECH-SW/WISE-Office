@@ -54,7 +54,7 @@ export default function Account() {
 
                     <button
                         onClick={()=>{updateProfile();onSave();}}
-                        className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded py-2 transition duration-300"
+                        className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded py-2 transition duration-300 cursor-pointer"
                     >
                         저장
                     </button>
