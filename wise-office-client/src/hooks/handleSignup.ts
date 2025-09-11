@@ -83,6 +83,7 @@ export async function handleSummitSignUpForm(formData: SignupForm) {
         toastMessage.success("회원가입되었습니다.");
         return true;
     } catch (err) {
+        console.log("회원가입 실패: ", err);
         toastMessage.error("회원가입에 실패했습니다.");
         return false;
     }

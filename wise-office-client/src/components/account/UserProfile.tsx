@@ -1,5 +1,6 @@
-import { Profile } from "@/types/profile";
 import { useRef, useState } from "react";
+import Image from "next/image";
+import { Profile } from "@/types/profile";
 import { updateProfileImage } from "@/services/members";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useProfileStore } from "@/store/useProfileStore";
@@ -42,10 +43,11 @@ export default function UserProfile({ props }: UserProfileProps) {
                     onClick={handleButtonClick}
                     className="absolute bottom-0 right-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 hover:bg-gray-300 cursor-pointer shadow"
                 >
-                    <img
-                        src="assets/camera.png"
-                        alt="Camera"
-                        className="w-5 h-5"
+                    <Image
+                        src="/assets/camera.png"
+                        alt="camera-button"
+                        width={5}
+                        height={5}
                     />
                 </button>
                 <input

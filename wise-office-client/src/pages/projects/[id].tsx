@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 
 import type { ProjectInfo } from "@/types/project";
@@ -31,9 +31,8 @@ import {
     ProjectLogInput,
 } from "@/components/project";
 import ConfirmModal from "@/components/ConfirmModal";
-import { toastMessage } from "@/lib/common/toastMessage";
 
-export default function projectPageById() {
+export default function ProjectPageById() {
     const router = useRouter();
     const { id } = router.query;
     const projectId = Number(id);
@@ -44,7 +43,7 @@ export default function projectPageById() {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     // Log
-    const [isLoading, setIsLoading] = useState(true);
+    const [, setIsLoading] = useState(true);
     const [logList, setLogList] = useState<Log[]>([]);
     // const [selectedLogId, setSelectedLogId] = useState<number | null>(null);
     const [selectedLog, setSelectedLog] = useState<LogDetail | null>(null);
@@ -121,7 +120,7 @@ export default function projectPageById() {
         }
     };
 
-    const fetchLogComment = async () => {
+    const fetchLogComment = useCallback(async () => {
         if (!router.isReady || !selectedLogId) return;
         if (typeof id !== "string") return;
         const projectId = Number(id);
@@ -141,7 +140,7 @@ export default function projectPageById() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [router.isReady, id, selectedLogId]);
 
     // 댓글 생성
     const handleAddComment = async () => {
@@ -152,11 +151,7 @@ export default function projectPageById() {
         if (isNaN(projectId)) return;
 
         const commentInput: CommentInput = { content: newComment };
-        const createdComment = await createComment(
-            projectId,
-            selectedLog.logId,
-            commentInput
-        );
+        await createComment(projectId, selectedLog.logId, commentInput);
 
         fetchLogComment();
         setNewComment("");
@@ -193,7 +188,7 @@ export default function projectPageById() {
     useEffect(() => {
         fetchLogComment();
         setNewComment("");
-    }, [router.isReady, id, selectedLogId]);
+    }, [fetchLogComment]);
 
     if (!projectInfo) return <div>!!No Project!!</div>;
     return (

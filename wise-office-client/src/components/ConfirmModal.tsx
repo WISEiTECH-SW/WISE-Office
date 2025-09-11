@@ -18,7 +18,7 @@ export default function ConfirmModal({
 }: ProjectDeleteModalProps) {
     const router = useRouter();
     const modalRef = useRef<HTMLDivElement>(null);
-    const { selectedLogId, setSelectedLogId, setLogList } = useLogStore();
+    const { selectedLogId, setSelectedLogId } = useLogStore();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

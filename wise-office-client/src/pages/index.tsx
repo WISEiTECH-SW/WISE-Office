@@ -114,8 +114,8 @@ export default function Home() {
                                 pages.push(i);
                         } else {
                             // 현재 페이지 기준 2페이지씩
-                            let start = currentPage - sibling;
-                            let end = currentPage + sibling;
+                            const start = currentPage - sibling;
+                            const end = currentPage + sibling;
                             for (let i = start; i <= end; i++) pages.push(i);
                         }
 

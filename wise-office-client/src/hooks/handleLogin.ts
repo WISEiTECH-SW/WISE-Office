@@ -2,6 +2,9 @@ import { readLoggedIn } from "@/lib/common/readLoggedIn";
 import { getMyProfile, login } from "@/services/members";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProfileStore } from "@/store/useProfileStore";
+import axios from "axios";
+
+type ApiErrorBody = { message?: string };
 
 export const handleLogin = async ({
     email,
@@ -13,7 +16,7 @@ export const handleLogin = async ({
     save: boolean;
 }) => {
     try {
-        const res = await login({ email, password });
+        await login({ email, password });
 
         // 로그인 상태 확인 후 hastoken 상태 변경
         const loggedIn = await readLoggedIn();
@@ -34,9 +37,18 @@ export const handleLogin = async ({
         else localStorage.removeItem("email");
 
         return { ok: 200 };
-    } catch (error: any) {
-        const status: number | undefined = error?.response?.status;
-        const message: string | undefined = error?.response?.data?.message;
+    } catch (error: unknown) {
+        let status: number | undefined;
+        let message: string | undefined;
+
+        if (axios.isAxiosError<ApiErrorBody>(error)) {
+            status = error.response?.status;
+            message = error.response?.data?.message;
+        } else if (error instanceof Error) {
+            message = error.message;
+        } else {
+            message = "Unknown error";
+        }
 
         return { status, message };
     }

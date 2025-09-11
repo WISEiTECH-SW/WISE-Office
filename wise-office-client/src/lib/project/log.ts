@@ -11,6 +11,6 @@ export const convertToLog = (logDetail: LogDetail): Log => {
         writer: logDetail.writer,
         createdAt: logDetail.createdAt,
         commentCnt: 0,
-        canmodify: logDetail.canModify,
+        canModify: logDetail.canModify,
     };
 };
