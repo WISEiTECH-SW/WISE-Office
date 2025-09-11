@@ -164,6 +164,17 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(new MemberUpdateResponse(savedImageName));
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt", "");
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setSecure(false);
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
+    }
+
     private void validateEmail(String email) {
         if (!email.endsWith(allowDomain)) {
             throw new ApplicationRuntimeException(ErrorMessage.FORBIDDEN_SIGNUP);

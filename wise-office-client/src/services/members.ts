@@ -46,6 +46,10 @@ export async function login(req: loginForm): Promise<AxiosResponse> {
     return await api.post("/members/login", req).then((res) => res.data);
 }
 
+export async function logout(): Promise<number> {
+    return await api.get("/members/logout").then((res) => res.status);
+}
+
 // 이메일 인증 코드 발송
 export async function requestCode(req: string): Promise<string> {
     return await api
