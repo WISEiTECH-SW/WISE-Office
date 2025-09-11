@@ -44,10 +44,11 @@ export default function UserProfile({ props }: UserProfileProps) {
                     className="absolute bottom-0 right-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 hover:bg-gray-300 cursor-pointer shadow"
                 >
                     <Image
-                        src="/assets/camera.png"
-                        alt="camera-button"
-                        width={5}
-                        height={5}
+                        src="assets/camera.png"
+                        alt="Camera"
+                        width={24}
+                        height={24}
+
                     />
                 </button>
                 <input
