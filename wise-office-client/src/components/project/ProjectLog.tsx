@@ -1,4 +1,3 @@
-import React from "react";
 import { ClipboardList } from "lucide-react";
 import { LogDetail, LogInput } from "@/types/log";
 import { Comment } from "@/types/comment";
@@ -14,13 +13,13 @@ interface ProjectLogProps {
     onDeleteComment: (commentId: number) => void;
 }
 
-const ProjectLog: React.FC<ProjectLogProps> = ({
+export default function ProjectLog({
     selectedLog,
     modifyModal,
     commentList,
     onSummit,
     onDeleteComment,
-}) => {
+}: ProjectLogProps) {
     if (!selectedLog) {
         return (
             <div className="bg-white rounded-lg shadow-sm p-12 text-center">
@@ -43,6 +42,4 @@ const ProjectLog: React.FC<ProjectLogProps> = ({
             />
         </div>
     );
-};
-
-export default ProjectLog;
+}

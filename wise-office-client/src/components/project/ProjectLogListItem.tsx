@@ -9,12 +9,12 @@ interface ProjectLogListItemProps {
     onDelete: (logId: number) => void;
 }
 
-const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
+export default function ProjectLogListItem({
     log,
     isSelected,
     onSelect,
     onDelete,
-}) => {
+}: ProjectLogListItemProps) {
     const handleDeleteClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // 부모의 onClick 이벤트 방지
         onDelete(log.logId);
@@ -41,13 +41,10 @@ const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
                 )}
             </div>
             <div className="text-xs text-gray-500 mb-1">{log.writer}</div>
-            {/* <div className="text-xs text-gray-400">{log.createdAt}</div> */}
             <div className="flex items-center mt-2 text-xs text-gray-500">
                 <MessageCircle className="w-3 h-3 mr-1" />
                 {log.commentCnt}
             </div>
         </div>
     );
-};
-
-export default ProjectLogListItem;
+}

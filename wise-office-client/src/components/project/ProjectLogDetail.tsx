@@ -1,4 +1,3 @@
-import React from "react";
 import { LogDetail, LogInput } from "@/types/log";
 import { formatDateTime } from "@/lib/common/util";
 import { convertToLogInput } from "@/lib/project/log";
@@ -8,10 +7,10 @@ interface ProjectLogDetailProps {
     modifyModal: (logInput: LogInput) => void;
 }
 
-const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
+export default function ProjectLogDetail({
     log,
     modifyModal,
-}) => {
+}: ProjectLogDetailProps) {
     return (
         <div>
             <div className="border-b p-6">
@@ -41,6 +40,4 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectLogDetail;
+}

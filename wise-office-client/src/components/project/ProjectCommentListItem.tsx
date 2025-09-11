@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import { XCircle } from "lucide-react";
 import { Comment } from "@/types/comment";
@@ -9,10 +8,10 @@ interface ProjectCommentListItemProps {
     onDelete: (commentId: number) => void;
 }
 
-const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
+export default function ProjectCommentListItem({
     comment,
     onDelete,
-}) => {
+}: ProjectCommentListItemProps) {
     return (
         <div className="flex gap-3 items-baseline">
             <Image
@@ -48,6 +47,4 @@ const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectCommentListItem;
+}

@@ -1,4 +1,3 @@
-import React from "react";
 import { Comment } from "@/types/comment";
 import ProjectCommentListItem from "./ProjectCommentListItem";
 import ProjectCommentInput from "./ProjectCommentInput";
@@ -10,12 +9,12 @@ interface ProjectCommentListProps {
     onDeleteComment: (commentId: number) => void;
 }
 
-const ProjectCommentList: React.FC<ProjectCommentListProps> = ({
+export default function ProjectCommentList({
     logId,
     commentList,
     onSummit,
     onDeleteComment,
-}) => {
+}: ProjectCommentListProps) {
     return (
         <div className="p-6 w-full">
             <h3 className="font-semibold text-gray-800 mb-4">
@@ -33,6 +32,4 @@ const ProjectCommentList: React.FC<ProjectCommentListProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectCommentList;
+}

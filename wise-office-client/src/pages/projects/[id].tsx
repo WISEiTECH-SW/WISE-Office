@@ -65,7 +65,6 @@ export default function ProjectPageById() {
     const handleDeleteLog = async (logId: number) => {
         setLogList((prev) => prev.filter((log) => log.logId !== logId));
         await removeLog(logId);
-        getLogList(projectId).then(setLogList).catch(console.error);
     };
 
     const handleModifyLog = async (logInput: LogInput) => {

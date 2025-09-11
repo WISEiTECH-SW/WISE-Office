@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Send } from "lucide-react";
 
 interface ProjectCommentInputProps {
     onSubmit: (commentInput: string) => void;
 }
 
-const ProjectCommentInput: React.FC<ProjectCommentInputProps> = ({
+export default function ProjectCommentInput({
     onSubmit,
-}) => {
+}: ProjectCommentInputProps) {
     const [content, setContent] = useState("");
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -48,6 +48,4 @@ const ProjectCommentInput: React.FC<ProjectCommentInputProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectCommentInput;
+}

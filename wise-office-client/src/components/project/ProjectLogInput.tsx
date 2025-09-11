@@ -8,12 +8,12 @@ interface ProjectLogInputProps {
     onSubmit: (logInput: LogInput) => void;
     editingLog?: LogInput | null;
 }
-const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
+export default function ProjectLogInput({
     isOpen,
     onClose,
     onSubmit,
     editingLog,
-}) => {
+}: ProjectLogInputProps) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
@@ -121,6 +121,4 @@ const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
             </div>
         </div>
     );
-};
-
-export default ProjectLogInput;
+}
