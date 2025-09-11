@@ -1,6 +1,6 @@
 import React from "react";
 import { ClipboardList } from "lucide-react";
-import { LogDetail } from "@/types/log";
+import { LogDetail, LogInput } from "@/types/log";
 import { Comment } from "@/types/comment";
 
 import ProjectLogDetail from "./ProjectLogDetail";
@@ -8,22 +8,22 @@ import ProjectCommentList from "./ProjectCommentList";
 
 interface ProjectLogProps {
     selectedLog: LogDetail | null;
-    handleEditLog: (log: LogDetail) => void;
+    modifyModal: (logInput: LogInput) => void;
     commentList: Comment[];
-    newComment: string;
-    onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    onAddComment: () => void;
-    onDeleteComment: (commentId: number) => void;
+    // newComment: string;
+    // onCommentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onSummit: (commentInput: string) => void;
+    // onDeleteComment: (commentId: number) => void;
 }
 
 const ProjectLog: React.FC<ProjectLogProps> = ({
     selectedLog,
-    handleEditLog,
+    modifyModal,
     commentList,
-    newComment,
-    onCommentChange,
-    onAddComment,
-    onDeleteComment,
+    // newComment,
+    // onCommentChange,
+    onSummit,
+    // onDeleteComment,
 }) => {
     if (!selectedLog) {
         return (
@@ -38,13 +38,13 @@ const ProjectLog: React.FC<ProjectLogProps> = ({
 
     return (
         <div className="bg-white rounded-lg shadow-sm">
-            <ProjectLogDetail log={selectedLog} handleEditLog={handleEditLog} />
+            <ProjectLogDetail log={selectedLog} modifyModal={modifyModal} />
             <ProjectCommentList
-                comments={commentList}
-                newComment={newComment}
-                onCommentChange={onCommentChange}
-                onAddComment={onAddComment}
-                onDeleteComment={onDeleteComment}
+                commentList={commentList}
+                // newComment={newComment}
+                // onCommentChange={onCommentChange}
+                onSummit={onSummit}
+                // onDeleteComment={onDeleteComment}
             />
         </div>
     );

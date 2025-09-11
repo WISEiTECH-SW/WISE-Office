@@ -27,11 +27,11 @@ export async function getCommentList(
 export async function createComment(
     projectId: number,
     logId: number,
-    commentInput: CommentInput
+    commentInput: string
 ): Promise<Comment> {
     const res = await api.post<Comment>(
         `/v1/projects/${projectId}/logs/${logId}/comments`,
-        commentInput
+        { content: commentInput }
     );
     return res.data;
 }

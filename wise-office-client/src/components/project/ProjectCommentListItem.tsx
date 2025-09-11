@@ -6,12 +6,12 @@ import { formatDateTime } from "@/lib/common/util";
 
 interface ProjectCommentListItemProps {
     comment: Comment;
-    onDelete: (commentId: number) => void;
+    // onDelete: (commentId: number) => void;
 }
 
 const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
     comment,
-    onDelete,
+    // onDelete,
 }) => {
     return (
         <div className="flex gap-3 items-baseline">
@@ -32,14 +32,14 @@ const ProjectCommentListItem: React.FC<ProjectCommentListItemProps> = ({
                         <span className="text-xs text-gray-500 mr-2">
                             {formatDateTime(comment.writtenAt)}
                         </span>
-                        {comment.canModify && (
+                        {/* {comment.canModify && (
                             <button
                                 className="text-gray-400 hover:text-red-500 cursor-pointer"
                                 onClick={() => onDelete(comment.id)}
                             >
                                 <XCircle className="w-4 h-4" />
                             </button>
-                        )}
+                        )} */}
                     </div>
                 </div>
                 <p className="text-sm text-gray-700 whitespace-normal break-all">

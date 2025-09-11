@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import ProjectLogListItem from "./ProjectLogListItem";
 import { Log, LogDetail } from "@/types/log";

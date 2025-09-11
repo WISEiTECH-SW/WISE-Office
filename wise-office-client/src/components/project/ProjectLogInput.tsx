@@ -6,7 +6,7 @@ interface ProjectLogInputProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (logInput: LogInput) => void;
-    editingLog?: LogDetail | null;
+    editingLog?: LogInput | null;
 }
 const ProjectLogInput: React.FC<ProjectLogInputProps> = ({
     isOpen,

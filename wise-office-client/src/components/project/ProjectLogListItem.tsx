@@ -17,7 +17,6 @@ const ProjectLogListItem: React.FC<ProjectLogListItemProps> = ({
 }) => {
     const handleDeleteClick = (e: React.MouseEvent) => {
         e.stopPropagation(); // 부모의 onClick 이벤트 방지
-        console.log(log.canModify);
         onDelete(log.logId);
     };
 

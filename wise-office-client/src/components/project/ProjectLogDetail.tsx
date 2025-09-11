@@ -1,15 +1,16 @@
 import React from "react";
-import { LogDetail } from "@/types/log";
+import { LogDetail, LogInput } from "@/types/log";
 import { formatDateTime } from "@/lib/common/util";
+import { convertToLogInput } from "@/lib/project/log";
 
 interface ProjectLogDetailProps {
     log: LogDetail;
-    handleEditLog: (log: LogDetail) => void;
+    modifyModal: (logInput: LogInput) => void;
 }
 
 const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
     log,
-    handleEditLog,
+    modifyModal,
 }) => {
     return (
         <div>
@@ -26,7 +27,7 @@ const ProjectLogDetail: React.FC<ProjectLogDetailProps> = ({
                     {log.canModify && (
                         <button
                             className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center justify-center cursor-pointer"
-                            onClick={() => handleEditLog(log)}
+                            onClick={() => modifyModal(convertToLogInput(log))}
                         >
                             수정
                         </button>
