@@ -63,5 +63,5 @@ export function calculationDuration(startDate: Date) {
  * @returns 변경된 형태의 string
  */
 export const formatDateTime = (dateStr: string) => {
-    return dayjs(dateStr).format("YYYY-MM-DD HH:mm:ss");
+    return dayjs(dateStr).format("YYYY-MM-DD • HH:mm");
 };

@@ -20,7 +20,7 @@ export default function ProjectLogDetail({
                 <div className="flex justify-between items-center">
                     <div className="flex items-center text-sm text-gray-500">
                         <span className="font-medium">{log.writer}</span>
-                        <span className="mx-2">•</span>
+                        <span className="mx-1.5">•</span>
                         <span>{formatDateTime(log.createdAt)}</span>
                     </div>
                     {log.canModify && (
