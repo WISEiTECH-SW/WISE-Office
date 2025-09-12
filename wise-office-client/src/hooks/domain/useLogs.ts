@@ -14,6 +14,7 @@ export function useLogs(projectId: number) {
 
     const addLog = async (logInput: LogInput) => {
         const newLog = await createLog(projectId, logInput);
+        toastMessage.success("로그가 작성되었습니다.");
         setSelectedLog(newLog);
         return convertToLog(newLog);
     };
@@ -33,6 +34,7 @@ export function useLogs(projectId: number) {
             logInput
         );
         setSelectedLog(updatedLog);
+        toastMessage.success("로그가 수정되었습니다.");
         return updatedLog;
     };
 
