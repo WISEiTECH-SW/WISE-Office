@@ -23,6 +23,7 @@ export default function SignupInput({
                 name={id}
                 type={type}
                 value={value}
+                maxLength={20}
                 onChange={(e) => onChange(e.target.value)}
                 className="w-full px-3 py-2 mt-1 border border-gray-400 rounded-md outline-none"
             />

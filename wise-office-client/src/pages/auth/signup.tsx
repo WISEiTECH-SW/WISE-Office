@@ -52,6 +52,7 @@ export default function Signup() {
         team.trim() !== "" &&
         emailValid &&
         password.trim() !== "" &&
+        password.length > 7 &&
         passwordMatch.trim() !== "" &&
         password === passwordMatch;
 
@@ -220,7 +221,11 @@ export default function Signup() {
                         </span>
                     )}
                 </div>
-                {loading && <div>인증 코드 전송 중...</div>}
+                {loading && (
+                    <div className="text-sm text-gray-700">
+                        인증 코드 전송 중...
+                    </div>
+                )}
                 {isShowCodeInput && !emailValid && (
                     <div className="w-full px-4 mb-3">
                         <label
@@ -249,13 +254,20 @@ export default function Signup() {
                 )}
 
                 {/* Password */}
-                <SignupInput
-                    labelName="비밀번호"
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={setPassword}
-                />
+                <div className="w-full">
+                    <SignupInput
+                        labelName="비밀번호"
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={setPassword}
+                    />
+                    {password.length > 0 && password.length < 8 && (
+                        <p className="mt-1 px-4 text-sm text-red-500">
+                            8자 이상 입력해 주세요. (최대 20자)
+                        </p>
+                    )}
+                </div>
                 <div className="w-full">
                     <SignupInput
                         labelName="비밀번호 확인"
