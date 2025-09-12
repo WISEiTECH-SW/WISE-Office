@@ -1,11 +1,7 @@
 import { api } from "@/lib/clientApi";
-import type {
-    Project,
-    PageInfo,
-    ProjectInfo,
-    CreateProject,
-    PageParams,
-} from "@/types/project";
+import type { Project, ProjectInfo, CreateProject } from "@/types/project";
+
+import { PageInfo, PageParams } from "@/types/page";
 
 interface currentPageProjects {
     pageNationInfo: PageInfo;
