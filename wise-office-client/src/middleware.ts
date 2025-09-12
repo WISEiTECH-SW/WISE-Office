@@ -17,11 +17,22 @@ export function middleware(req: NextRequest) {
         if (!searchParams.get("toast")) {
             url.searchParams.set("toast", "login_required");
         }
-        return NextResponse.redirect(url);
+
+        const redirectRes = NextResponse.redirect(url);
+
+        // 캐시 방지
+        redirectRes.headers.set("Cache-Control", "no-store");
+        redirectRes.headers.set("Vary", "Cookie");
+
+        return redirectRes;
     }
 
     const res = NextResponse.next();
     res.headers.set("logged-in", token ? "true" : "false");
+
+    res.headers.set("Cache-Control", "no-store");
+    res.headers.set("Vary", "Cookie");
+
     return res;
 }
 

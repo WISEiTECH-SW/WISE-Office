@@ -5,7 +5,8 @@ import { getMyProfile } from "@/services/members";
 import { readLoggedIn } from "@/lib/common/readLoggedIn";
 
 export function useInitAuth() {
-    const { setHasToken, setAuthCheck } = useAuthStore();
+    const { setHasToken } = useAuthStore();
+    const reset = useProfileStore((s) => s.reset);
 
     useEffect(() => {
         (async () => {
@@ -18,15 +19,13 @@ export function useInitAuth() {
                     const profile = await getMyProfile();
                     useProfileStore.setState({ profile });
                 } else {
-                    useProfileStore.setState({ profile: null });
+                    reset();
                 }
             } catch (e) {
                 console.error("auth init 실패:", e);
                 setHasToken(false);
-                useProfileStore.setState({ profile: null });
-            } finally {
-                setAuthCheck(true);
+                reset();
             }
         })();
-    }, [setHasToken, setAuthCheck]);
+    }, [setHasToken]);
 }

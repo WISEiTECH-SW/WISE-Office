@@ -3,20 +3,22 @@ import { logout } from "@/services/members";
 import { useProfileStore } from "@/store/useProfileStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toastMessage } from "@/lib/common/toastMessage";
+import { readLoggedIn } from "@/lib/common/readLoggedIn";
 
 export default function LogoutButton() {
     const router = useRouter();
     const reset = useProfileStore((s) => s.reset);
-    const setHasToken = useAuthStore((s) => s.setHasToken);
 
     const handleLogout = async () => {
         try {
             const res = await logout();
             if (res === 200) {
-                setHasToken(false);
-                reset();
+                const logout = await readLoggedIn();
+                useAuthStore.setState({ hasToken: logout });
+
                 sessionStorage.removeItem("loginToastShown"); // 다음 로그인 때 토스트 다시 뜨도록
                 sessionStorage.setItem("lastLoggedIn", "false");
+                reset();
                 toastMessage.success("로그아웃되었습니다.");
                 router.push("/");
             }
