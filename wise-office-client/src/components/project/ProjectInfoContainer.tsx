@@ -1,6 +1,6 @@
 import ProjectInfoItem from "./ProjectInfoItem";
 import type { ProjectInfo } from "@/types/project";
-import { calculationDuration } from "@/lib/common/util";
+import { calculationDuration, formatYearMonth } from "@/lib/common/util";
 import { Calendar, TrendingUp, User, Users, NotepadText } from "lucide-react";
 
 type ProjectContainerProps = {
@@ -44,7 +44,9 @@ export default function ProjectInfoContainer({
                 <ProjectInfoItem
                     icon={<Calendar />}
                     label="프로젝트 기간"
-                    value={`${projectInfo.start} ~ ${projectInfo.end}`}
+                    value={`${formatYearMonth(
+                        projectInfo.start
+                    )} ~ ${formatYearMonth(projectInfo.end)}`}
                 />
                 <ProjectInfoItem
                     icon={<TrendingUp />}

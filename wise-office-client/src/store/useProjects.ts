@@ -1,5 +1,6 @@
 import { getCurrentPageProjects } from "@/services/projects";
-import type { PageParams, Project } from "@/types/project";
+import type { Project } from "@/types/project";
+import type { PageParams } from "@/types/page";
 import { create } from "zustand";
 
 type ProjectsState = {

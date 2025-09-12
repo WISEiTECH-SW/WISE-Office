@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Project } from "@/types/project";
 import { Profile } from "@/types/profile";
-import { calculateProjectDuration } from "@/lib/common/util";
+import { calculateProjectDuration, formatYearMonth } from "@/lib/common/util";
 
 interface UserProfileProps {
     props: Profile;
@@ -72,11 +72,11 @@ function ProjectListCard({ project }: Props) {
                             </span>
                             <div className="flex items-center gap-2 text-xs text-gray-700">
                                 <span className="font-medium">
-                                    {project.start}
+                                    {formatYearMonth(project.start)}
                                 </span>
                                 <div className="w-[15%] h-px bg-gray-300"></div>
                                 <span className="font-medium">
-                                    {project.end}
+                                    {formatYearMonth(project.end)}
                                 </span>
                             </div>
                         </div>

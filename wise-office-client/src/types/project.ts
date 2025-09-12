@@ -1,25 +1,11 @@
-export type ISODate = `${number}-${number}-${number}`;
-
 export interface Project {
     projectId: number;
     projectTitle: string;
-    start: ISODate;
-    end: ISODate;
+    start: Date;
+    end: Date;
     currentYear: number;
     managerName: string;
     attendant: string[];
-}
-
-export interface PageInfo {
-    currentPage: number;
-    pageSize: number;
-    totalCount: number;
-    totalPages: number;
-}
-
-export interface PageParams {
-    currentPage: number;
-    offset: number;
 }
 
 export interface ProjectAttendant {
