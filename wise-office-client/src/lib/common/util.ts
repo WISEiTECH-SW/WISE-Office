@@ -8,8 +8,8 @@ type ProjectState = {
 };
 
 export const calculateProjectDuration = (
-    start: string,
-    end: string
+    start: Date,
+    end: Date
 ): ProjectState => {
     const currentDate = new Date();
     const startDate = new Date(start);
@@ -58,10 +58,19 @@ export function calculationDuration(startDate: Date) {
 }
 
 /**
- * string 형태의 time 형태를 YYYY-MM-DD HH:MM:Ss 형태의 string으로 반환해주는 함수
+ * string 형태의 time 형태를 YYYY-MM-DD HH:MM 형태의 string으로 반환해주는 함수
  * @param dateStr time stamp 형태의 string 시간 데이터
  * @returns 변경된 형태의 string
  */
 export const formatDateTime = (dateStr: string) => {
     return dayjs(dateStr).format("YYYY-MM-DD • HH:mm");
+};
+
+/**
+ * Date 데이터를 YYYY-MM 형태의 string으로 반환해주는 함수
+ * @param dateStr string 형태의 시간 데이터
+ * @returns YYYY-MM 형태의 string
+ */
+export const formatYearMonth = (dateStr: Date) => {
+    return dayjs(dateStr).format("YYYY-MM");
 };

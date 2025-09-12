@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import type { Project } from "@/types/project";
-import { calculateProjectDuration } from "@/lib/common/util";
+import { calculateProjectDuration, formatYearMonth } from "@/lib/common/util";
 
 type Props = {
     project: Project;
@@ -44,9 +44,13 @@ export default function ProjectListCard({ project }: Props) {
                             프로젝트 기간
                         </span>
                         <div className="flex items-center text-sm text-gray-700 gap-3">
-                            <span className="font-medium">{project.start}</span>
+                            <span className="font-medium">
+                                {formatYearMonth(project.start)}
+                            </span>
                             <div className="w-[30%] md:w-[25%] h-px bg-gray-300"></div>
-                            <span className="font-medium">{project.end}</span>
+                            <span className="font-medium">
+                                {formatYearMonth(project.end)}
+                            </span>
                         </div>
                     </div>
 

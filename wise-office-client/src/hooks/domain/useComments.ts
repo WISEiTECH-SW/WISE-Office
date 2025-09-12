@@ -17,6 +17,7 @@ export function useComments(projectId: number) {
 
     const addComment = async (logId: number, commentInput: string) => {
         const newComment = await createComment(projectId, logId, commentInput);
+        toastMessage.success("댓글이 작성되었습니다.");
         setCommentList((prev) => [newComment, ...prev]);
     };
 

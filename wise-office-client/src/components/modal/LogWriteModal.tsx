@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { X, FileText } from "lucide-react";
 import type { LogInput } from "@/types/log";
 
-interface ProjectLogInputProps {
+interface LogWriteModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (logInput: LogInput) => void;
     editingLog?: LogInput | null;
 }
-export default function ProjectLogInput({
+export default function LogWriteModal({
     isOpen,
     onClose,
     onSubmit,
     editingLog,
-}: ProjectLogInputProps) {
+}: LogWriteModalProps) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
