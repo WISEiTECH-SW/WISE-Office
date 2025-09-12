@@ -1,6 +1,5 @@
 import AddProjectButton from "@/components/AddProjectButton";
 import ProjectListCard from "@/components/ProjectListCard";
-import { getCurrentPageProjects } from "@/services/projects";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProjects } from "@/store/useProjects";
 import { useEffect, useState } from "react";
@@ -9,30 +8,20 @@ import ProjectCreateModal from "../components/project/project_modal";
 export default function Home() {
     const projects = useProjects((s) => s.projects);
     const fetchProjects = useProjects((s) => s.fetchProjects);
+    const totalCount = useProjects((s) => s.totalCount);
     const { hasToken } = useAuthStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalCount, setTotalCount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const offset = 6;
 
     useEffect(() => {
         (async () => {
             try {
-                const data = await getCurrentPageProjects({
+                fetchProjects({
                     currentPage,
                     offset,
                 });
-
-                useProjects.setState({
-                    projects: Array.isArray(data.projectListResponses)
-                        ? data.projectListResponses
-                        : [],
-                });
-
-                setCurrentPage(data.pageNationInfo.currentPage);
-                setTotalPages(data.pageNationInfo.totalPages);
-                setTotalCount(data.pageNationInfo.totalCount);
             } catch (err) {
                 console.error("프로젝트 조회 실패:", err);
             }
@@ -139,10 +128,11 @@ export default function Home() {
                             <li key={page}>
                                 <button
                                     onClick={() => movePage(page as number)}
-                                    className={`px-3 py-1 text-sm rounded-md border cursor-pointer ${currentPage === page
+                                    className={`px-3 py-1 text-sm rounded-md border cursor-pointer ${
+                                        currentPage === page
                                             ? "bg-blue-600 text-white border-blue-600"
                                             : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
-                                        }`}
+                                    }`}
                                 >
                                     {page}
                                 </button>
