@@ -139,8 +139,8 @@ export default function ProjectPageById() {
 
     if (!projectInfo) return <div>!!No Project!!</div>;
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="p-6">
+        <div className="min-h-screen min-w-[650px] bg-gray-50">
+            <div className="px-6 pb-4">
                 {/* Project Information */}
                 <ProjectInfoContainer
                     projectInfo={projectInfo}
