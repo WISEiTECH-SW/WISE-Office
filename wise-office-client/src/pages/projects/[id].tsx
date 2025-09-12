@@ -4,7 +4,6 @@ import { useLogs } from "@/hooks/domain/useLogs";
 
 import type { ProjectInfo } from "@/types/project";
 import { getProjectById } from "@/services/projects";
-import ProjectUpdateModal from "@/components/project/project_modal_update";
 import type { Log, LogInput } from "@/types/log";
 import { getLogList } from "@/services/logs";
 
@@ -14,8 +13,9 @@ import {
     ProjectLogWriteButton,
     ProjectLog,
     ProjectAttendantList,
-    ProjectLogInput,
 } from "@/components/project";
+import { LogWriteModal, ProjectUpdateModal } from "@/components/modal";
+
 import { useComments } from "@/hooks/domain/useComments";
 import { useProjects } from "@/hooks/domain/useProjects";
 
@@ -204,7 +204,7 @@ export default function ProjectPageById() {
                     </div>
                 </div>
             </div>
-            <ProjectLogInput
+            <LogWriteModal
                 isOpen={isLogModalOpen}
                 onClose={handleCloseModal}
                 onSubmit={editingLog ? handleModifyLog : handleCreateLog}

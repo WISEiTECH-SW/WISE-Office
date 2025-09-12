@@ -12,8 +12,8 @@ import { editProjectInfo } from "@/lib/project/info";
 import { ProjectInfo } from "@/types/project";
 
 type ProjectUpdateModalProps = {
-    projectId:number;
-    setProjectInfo: React.Dispatch<React.SetStateAction<ProjectInfo | null>>
+    projectId: number;
+    setProjectInfo: React.Dispatch<React.SetStateAction<ProjectInfo | null>>;
     onClose: () => void;
 };
 
@@ -51,11 +51,15 @@ export default function ProjectUpdateModal({
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const modal = modalRef.current;
-            const flatpickrCalendars = document.querySelectorAll(".flatpickr-calendar");
+            const flatpickrCalendars = document.querySelectorAll(
+                ".flatpickr-calendar"
+            );
             if (
                 modal &&
                 !modal.contains(event.target as Node) &&
-                !Array.from(flatpickrCalendars).some(cal => cal.contains(event.target as Node))
+                !Array.from(flatpickrCalendars).some((cal) =>
+                    cal.contains(event.target as Node)
+                )
             ) {
                 onClose();
             }
@@ -68,85 +72,91 @@ export default function ProjectUpdateModal({
 
     useEffect(() => {
         const fetchData = async () => {
-            if(!router.isReady) return;
+            if (!router.isReady) return;
             if (typeof projectId !== "number" || isNaN(projectId)) return;
 
             const members = await getMembers();
-            const project_old = await getProjectById(projectId); 
+            const project_old = await getProjectById(projectId);
             setMembers(members);
             setProjectTitle(project_old.projectTitle);
             setContent(project_old.detail);
             setStartDate(String(project_old.start).slice(0, 7));
             setEndDate(String(project_old.end).slice(0, 7));
-            setManager(members.find(member => member.memberId === project_old.managerName.memberId));
-            const selected = members.filter(member =>
-                project_old.attendant.some(att => att.memberId === member.memberId)
-                );
+            setManager(
+                members.find(
+                    (member) =>
+                        member.memberId === project_old.managerName.memberId
+                )
+            );
+            const selected = members.filter((member) =>
+                project_old.attendant.some(
+                    (att) => att.memberId === member.memberId
+                )
+            );
             setSelectedMembers(selected);
         };
         fetchData();
     }, [router.isReady, projectId]);
 
-
-        const [errors, setErrors] = useState({
-                    projectTitle: "",
-                    startDate:"",
-                    endDate:"",
-                    content: "",
-                    selectedMembers:"",
-                    manager:""
-                });
-const validateForm = () => {
-            let valid = true;
-            const newErrors = {
-                projectTitle: "",
-                startDate: "",
-                endDate: "",
-                content: "",
-                selectedMembers: "",
-                manager: "",
-            };
-
-            if (projectTitle.trim() === "") {
-                newErrors.projectTitle = "프로젝트명을 입력해주세요.";
-                valid = false;
-            } else if (projectTitle.length > 100) {
-                newErrors.projectTitle = "프로젝트 제목은 100자까지 입력 가능합니다.";
-                valid = false;
-            }
-
-            if (startDate === "") {
-                newErrors.startDate = "시작 날짜를 선택해주세요.";
-                valid = false;
-            }
-
-            if (endDate === "") {
-                newErrors.endDate = "종료 날짜를 선택해주세요.";
-                valid = false;
-            }
-
-            if (content.trim() === "") {
-                newErrors.content = "프로젝트 설명을 입력해주세요.";
-                valid = false;
-            } else if (content.length > 500) {
-                newErrors.content = "프로젝트 설명은 500자까지 입력 가능합니다.";
-                valid = false;
-            }
-
-            if (selectedMembers.length === 0) {
-                newErrors.selectedMembers = "프로젝트 참여 인원을 선택해주세요.";
-                valid = false;
-            }
-
-            if (!manager) {
-                newErrors.manager = "프로젝트 관리자를 선택해주세요.";
-                valid = false;
-            }
-
-            setErrors(newErrors);
-            return valid;
+    const [errors, setErrors] = useState({
+        projectTitle: "",
+        startDate: "",
+        endDate: "",
+        content: "",
+        selectedMembers: "",
+        manager: "",
+    });
+    const validateForm = () => {
+        let valid = true;
+        const newErrors = {
+            projectTitle: "",
+            startDate: "",
+            endDate: "",
+            content: "",
+            selectedMembers: "",
+            manager: "",
         };
 
+        if (projectTitle.trim() === "") {
+            newErrors.projectTitle = "프로젝트명을 입력해주세요.";
+            valid = false;
+        } else if (projectTitle.length > 100) {
+            newErrors.projectTitle =
+                "프로젝트 제목은 100자까지 입력 가능합니다.";
+            valid = false;
+        }
+
+        if (startDate === "") {
+            newErrors.startDate = "시작 날짜를 선택해주세요.";
+            valid = false;
+        }
+
+        if (endDate === "") {
+            newErrors.endDate = "종료 날짜를 선택해주세요.";
+            valid = false;
+        }
+
+        if (content.trim() === "") {
+            newErrors.content = "프로젝트 설명을 입력해주세요.";
+            valid = false;
+        } else if (content.length > 500) {
+            newErrors.content = "프로젝트 설명은 500자까지 입력 가능합니다.";
+            valid = false;
+        }
+
+        if (selectedMembers.length === 0) {
+            newErrors.selectedMembers = "프로젝트 참여 인원을 선택해주세요.";
+            valid = false;
+        }
+
+        if (!manager) {
+            newErrors.manager = "프로젝트 관리자를 선택해주세요.";
+            valid = false;
+        }
+
+        setErrors(newErrors);
+        return valid;
+    };
 
     const handleSubmit = async () => {
         if (!validateForm()) return;
@@ -230,8 +240,7 @@ const validateForm = () => {
 
                 {/* 생성 완료 버튼 */}
                 <button
-                    className={`mt-4 mx-auto px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer`
-                }
+                    className={`mt-4 mx-auto px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer`}
                     onClick={handleSubmit}
                     type="button"
                 >

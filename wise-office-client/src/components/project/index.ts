@@ -10,6 +10,3 @@ export { default as ProjectLog } from "./ProjectLog";
 
 // Right-Sidebar
 export { default as ProjectAttendantList } from "./ProjectAttendantList";
-
-// Modal
-export { default as ProjectLogInput } from "./ProjectLogInput";
