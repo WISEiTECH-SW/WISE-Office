@@ -17,7 +17,7 @@ export default function ProjectAttendantItem({
             <div className="relative w-10 h-10 rounded-full">
                 <Image
                     src={
-                        imageError || imageUrl
+                        imageError || !imageUrl
                             ? "/assets/default_profile.jpg"
                             : imageUrl
                     }
