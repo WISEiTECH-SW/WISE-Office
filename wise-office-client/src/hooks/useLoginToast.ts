@@ -3,10 +3,10 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { toastMessage } from "@/lib/common/toastMessage";
 
 export function useAuthLoginToast() {
-    const { hasToken, authCheck } = useAuthStore();
+    const { hasToken } = useAuthStore();
 
     useEffect(() => {
-        if (!authCheck || typeof window === "undefined") return;
+        if (typeof window === "undefined") return;
 
         const prev = sessionStorage.getItem("lastLoggedIn"); // "true" | "false" | null
         const now = hasToken ? "true" : "false";
@@ -24,5 +24,5 @@ export function useAuthLoginToast() {
         }
 
         sessionStorage.setItem("lastLoggedIn", now);
-    }, [authCheck, hasToken]);
+    }, [hasToken]);
 }
