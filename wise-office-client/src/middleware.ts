@@ -16,6 +16,9 @@ export function middleware(req: NextRequest) {
             url.searchParams.set("toast", "login_required");
 
         const redirectRes = NextResponse.redirect(url);
+
+        // 캐시 방지 (프리패치/미들웨어 캐시 모두 차단)
+        redirectRes.headers.set("x-middleware-cache", "no-cache");
         redirectRes.headers.set("Cache-Control", "no-store");
         redirectRes.headers.set("Vary", "Cookie");
         return redirectRes;
@@ -24,11 +27,14 @@ export function middleware(req: NextRequest) {
     const res = NextResponse.next();
 
     res.headers.set("logged-in", token ? "true" : "false");
+
+    res.headers.set("x-middleware-cache", "no-cache");
     res.headers.set("Cache-Control", "no-store");
     res.headers.set("Vary", "Cookie");
     return res;
 }
 
 export const config = {
-    matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+    // ✅ API 라우트까지 타지 않게 하려면 /api 도 제외 권장
+    matcher: ["/((?!_next/static|_next/image|favicon.ico|api).*)"],
 };
