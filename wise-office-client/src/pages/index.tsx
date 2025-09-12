@@ -9,10 +9,10 @@ export default function Home() {
     const projects = useProjects((s) => s.projects);
     const fetchProjects = useProjects((s) => s.fetchProjects);
     const totalCount = useProjects((s) => s.totalCount);
+    const totalPages = useProjects((s) => s.totalPages);
     const { hasToken } = useAuthStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
     const offset = 6;
 
     useEffect(() => {
