@@ -1,11 +1,10 @@
-import { useEffect, useMemo } from "react";
-import { useState } from "react";
-import ProjectListCard from "@/components/ProjectListCard";
 import AddProjectButton from "@/components/AddProjectButton";
+import ProjectListCard from "@/components/ProjectListCard";
 import { getCurrentPageProjects } from "@/services/projects";
-import { useProjects } from "@/store/useProjects";
-import ProjectCreateModal from "../components/project/project_modal";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useProjects } from "@/store/useProjects";
+import { useEffect, useState } from "react";
+import ProjectCreateModal from "../components/project/project_modal";
 
 export default function Home() {
     const projects = useProjects((s) => s.projects);
@@ -140,11 +139,10 @@ export default function Home() {
                             <li key={page}>
                                 <button
                                     onClick={() => movePage(page as number)}
-                                    className={`px-3 py-1 text-sm rounded-md border cursor-pointer ${
-                                        currentPage === page
+                                    className={`px-3 py-1 text-sm rounded-md border cursor-pointer ${currentPage === page
                                             ? "bg-blue-600 text-white border-blue-600"
                                             : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
-                                    }`}
+                                        }`}
                                 >
                                     {page}
                                 </button>
