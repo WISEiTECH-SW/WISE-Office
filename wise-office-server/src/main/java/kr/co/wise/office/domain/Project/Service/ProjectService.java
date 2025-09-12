@@ -1,9 +1,6 @@
 package kr.co.wise.office.domain.Project.Service;
 
-import kr.co.wise.office.domain.Project.dto.ProjectCreateRequest;
-import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
-import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
-import kr.co.wise.office.domain.Project.dto.ProjectUpdateRequest;
+import kr.co.wise.office.domain.Project.dto.*;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.Project.repository.ProjectRepository;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
@@ -11,6 +8,8 @@ import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import kr.co.wise.office.exception.custom.UnAuthorizationException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,5 +91,10 @@ public class ProjectService {
     public void closeProject(ProjectEntity project) {
         project.closeProject();
         projectRepository.save(project);
+    }
+
+    public Page<ProjectEntity> searchProjectWithManagerWithPaging(PageRequest pageable) {
+        Page<ProjectEntity> projectsWithPaging = projectRepository.findProjectsWithPaging(pageable);
+        return projectsWithPaging;
     }
 }

@@ -10,6 +10,18 @@ export interface Project {
     attendant: string[];
 }
 
+export interface PageInfo {
+    currentPage: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+}
+
+export interface PageParams {
+    currentPage: number;
+    offset: number;
+}
+
 export interface ProjectAttendant {
     memberId: number;
     name: string;
