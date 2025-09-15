@@ -139,7 +139,7 @@ export default function ProjectPageById() {
 
     if (!projectInfo) return <div>!!No Project!!</div>;
     return (
-        <div className="min-h-screen min-w-[650px] bg-gray-50">
+        <div className="min-h-screen min-w-[850px] bg-gray-50">
             <div className="px-6 pb-4">
                 {/* Project Information */}
                 <ProjectInfoContainer
@@ -196,10 +196,12 @@ export default function ProjectPageById() {
                     {/* Attendant List - Right */}
                     <div className="col-span-3">
                         <ProjectAttendantList
-                            attendants={[
-                                projectInfo.managerName,
-                                ...projectInfo.attendant,
-                            ]}
+                            pm={projectInfo.managerName}
+                            attendants={projectInfo.attendant}
+                            // attendants={[
+                            //     projectInfo.managerName,
+                            //     ...projectInfo.attendant,
+                            // ]}
                         />
                     </div>
                 </div>

@@ -2,10 +2,12 @@ import ProjectAttendantItem from "./ProjectAttendantItem";
 import { ProjectAttendant } from "@/types/project";
 
 type ProjectAttendantListProps = {
+    pm: ProjectAttendant;
     attendants: ProjectAttendant[];
 };
 
 export default function ProjectAttendantList({
+    pm,
     attendants,
 }: ProjectAttendantListProps) {
     return (
@@ -15,9 +17,15 @@ export default function ProjectAttendantList({
             </div>
             <div className="p-4">
                 <div className="space-y-3">
+                    <ProjectAttendantItem
+                        isPm={true}
+                        name={pm.name}
+                        imageUrl={pm.imageUrl}
+                    />
                     {attendants.map((participant, index) => (
                         <ProjectAttendantItem
                             key={index}
+                            isPm={false}
                             name={participant.name}
                             imageUrl={participant.imageUrl}
                         />
