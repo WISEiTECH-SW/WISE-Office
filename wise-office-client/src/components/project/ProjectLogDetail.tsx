@@ -34,7 +34,7 @@ export default function ProjectLogDetail({
                 </div>
             </div>
             <div className="p-6 border-b">
-                <p className="text-gray-700 leading-relaxed break-words whitespace-normal">
+                <p className="text-gray-700 leading-relaxed break-words whitespace-pre-line">
                     {log.content}
                 </p>
             </div>
