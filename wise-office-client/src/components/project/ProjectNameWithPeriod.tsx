@@ -47,7 +47,9 @@ export default function ProjectNameWithPeriod({
                         placeholder="프로젝트 명을 입력하세요"
                     />
                     {errors.projectTitle && (
-                        <p className="text-red-500 text-xs ml-1 mt-1">{errors.projectTitle}</p>
+                        <p className="text-red-500 text-xs ml-1 mt-1">
+                            {errors.projectTitle}
+                        </p>
                     )}
                 </div>
 
@@ -61,6 +63,7 @@ export default function ProjectNameWithPeriod({
                         <div className="w-1/2">
                             <Flatpickr
                                 options={{
+                                    disableMobile: true,
                                     plugins: [
                                         monthSelectPlugin({
                                             shorthand: true,
@@ -85,16 +88,21 @@ export default function ProjectNameWithPeriod({
                                 placeholder="시작 월 선택"
                             />
                             {errors.startDate && (
-                                <p className="text-red-500 text-xs mt-1">{errors.startDate}</p>
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.startDate}
+                                </p>
                             )}
                         </div>
 
-                        <span className="self-center text-lg font-semibold text-gray-600">→</span>
+                        <span className="self-center text-lg font-semibold text-gray-600">
+                            →
+                        </span>
 
                         {/* 종료 월 */}
                         <div className="w-1/2">
                             <Flatpickr
                                 options={{
+                                    disableMobile: true,
                                     plugins: [
                                         monthSelectPlugin({
                                             shorthand: true,
@@ -119,7 +127,9 @@ export default function ProjectNameWithPeriod({
                                 placeholder="종료 월 선택"
                             />
                             {errors.endDate && (
-                                <p className="text-red-500 text-xs mt-1">{errors.endDate}</p>
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.endDate}
+                                </p>
                             )}
                         </div>
                     </div>
@@ -137,7 +147,9 @@ export default function ProjectNameWithPeriod({
                         placeholder="프로젝트에 대한 설명을 입력하세요"
                     />
                     {errors.content && (
-                        <p className="text-red-500 text-xs ml-1 mt-1">{errors.content}</p>
+                        <p className="text-red-500 text-xs ml-1 mt-1">
+                            {errors.content}
+                        </p>
                     )}
                 </div>
             </div>

@@ -211,7 +211,7 @@ export default function ProjectUpdateModal({
                 </h2>
 
                 {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}
-                <div className="flex flex-row gap-2 flex-grow overflow-hidden">
+                <div className="flex flex-col md:flex-row gap-2 flex-grow overflow-hidden">
                     {/* 왼쪽 영역 */}
                     <ProjectNameWithPeriod
                         projectTitle={projectTitle}
