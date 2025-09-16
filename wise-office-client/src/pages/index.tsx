@@ -34,7 +34,7 @@ export default function Home() {
     };
 
     return (
-        <section className="flex flex-col items-center  gap-4 md:gap-10 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
+        <section className="flex flex-col items-center gap-6 md:gap-10 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
             <div className="flex flex-col w-full">
                 <div>
                     <h2 className="text-2xl md:text-3xl font-bold mb-2 text-left">
@@ -84,7 +84,7 @@ export default function Home() {
                     </>
                 )}
             </div>
-            <div className="flex flex-col items-center w-full gap-10 text-gray-600">
+            <div className="flex flex-col items-center w-full gap-6 md:gap-10 text-gray-600">
                 {projects.length === 0 ? (
                     <p className="text-gray-400 py-8">
                         등록된 프로젝트가 없습니다.
