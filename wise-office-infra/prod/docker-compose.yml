@@ -1,12 +1,12 @@
 services:
     nginx:
         container_name: nginx
-        build: ./prod/nginx
+        build: ./nginx
         ports:
             - "8081:7777"
         restart: always
         volumes:
-            - ./prod/nginx/conf.d:/etc/nginx/conf.d
+            - ./nginx/conf.d:/etc/nginx/conf.d
             - ${NGINX_IMAGE_VOLUME}
     database:
         container_name: postgres_container
@@ -33,7 +33,7 @@ services:
     application:
         container_name: backoffice_app
         build:
-            context: ../wise-office-server
+            context: ../../wise-office-server
             dockerfile: Dockerfile
         image: backoffice_server:latest
         depends_on:
@@ -50,7 +50,7 @@ services:
     frontend:
         container_name: backoffice_frontend
         build:
-            context: ../wise-office-client
+            context: ../../wise-office-client
             dockerfile: Dockerfile
             args:
                 - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
@@ -64,7 +64,7 @@ services:
     application_blue:
         container_name: backoffice_app_blue
         build:
-            context: ../wise-office-server
+            context: ../../wise-office-server
             dockerfile: Dockerfile
         image: backoffice_server:latest
         depends_on:
@@ -81,7 +81,7 @@ services:
     frontend_blue:
         container_name: backoffice_frontend_blue
         build:
-            context: ../wise-office-client
+            context: ../../wise-office-client
             dockerfile: Dockerfile
             args:
                 - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}

@@ -2,8 +2,8 @@
 #!/bin/bash
 
 COMPOSE_COMMAND="docker compose -f docker-compose.yml -p wise-server --env-file=./.env.prod"
-NGINX_CONF_DIR="./prod/nginx/conf.d"
-NGINX_TEMPLATE_DIR="./prod/nginx/template"
+NGINX_CONF_DIR="./nginx/conf.d"
+NGINX_TEMPLATE_DIR="./nginx/template"
 
 echo "### Rolling back to the previous version... ###"
 
