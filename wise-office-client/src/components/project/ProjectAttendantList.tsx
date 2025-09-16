@@ -12,11 +12,13 @@ export default function ProjectAttendantList({
 }: ProjectAttendantListProps) {
     return (
         <div className="bg-white rounded-lg shadow-sm">
-            <div className="bg-gray-100 px-4 py-3 rounded-t-lg">
-                <h3 className="text-lg font-semibold text-gray-800">참여자</h3>
+            <div className="bg-gray-100 p-2 md:p-4 rounded-t-lg">
+                <h3 className="text-base md:text-lg font-semibold text-gray-800">
+                    참여자
+                </h3>
             </div>
-            <div className="p-4">
-                <div className="space-y-3">
+            <div className="p-4  overflow-x-auto scrollbar-auto-hide">
+                <div className="md:max-h-85 md:min-h-28 flex flex-nowrap gap-4 md:flex-col">
                     <ProjectAttendantItem
                         isPm={true}
                         name={pm.name}

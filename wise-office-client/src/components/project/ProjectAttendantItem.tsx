@@ -16,8 +16,8 @@ export default function ProjectAttendantItem({
 
     if (isPm) {
         return (
-            <div className="flex items-center bg-blue-100 rounded-full space-x-3">
-                <div className="relative w-10 h-10 rounded-full">
+            <div className="min-x-10 flex flex-col md:flex-row rounded-full items-center gap-1 md:gap-3">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden">
                     <Image
                         src={
                             imageError || !imageUrl
@@ -30,19 +30,19 @@ export default function ProjectAttendantItem({
                         onError={() => setImageError(true)}
                     />
                 </div>
-                <span className="text-sm font-medium text-gray-800">
+                <span className="text-xs md:text-sm font-medium text-gray-800 truncate">
                     {name}
                 </span>
-                <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0">
+                {/* <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0">
                     PM
-                </span>
+                </span> */}
             </div>
         );
     }
 
     return (
-        <div className="flex items-center space-x-3">
-            <div className="relative w-10 h-10 rounded-full">
+        <div className="flex flex-col md:flex-row rounded-full items-center justify-center md:justify-start gap-1 md:gap-3">
+            <div className="relative w-10 h-10 rounded-full overflow-hidden">
                 <Image
                     src={
                         imageError || !imageUrl
@@ -55,7 +55,9 @@ export default function ProjectAttendantItem({
                     onError={() => setImageError(true)}
                 />
             </div>
-            <span className="text-sm font-medium text-gray-800">{name}</span>
+            <span className="text-xs md:text-sm font-medium text-gray-800">
+                {name}
+            </span>
         </div>
     );
 }
