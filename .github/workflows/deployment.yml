@@ -26,12 +26,9 @@ jobs:
 
             git pull origin ${{github.ref_name}}
 
-            cd ./wise-office-infra
-
-            ./prod-env-stop.sh
-            echo "5초간 대기중..."
-            sleep 5
-            ./prod-env.sh
+            cd ./wise-office-infra/prod
+            
+            ./blue-green-deploy.sh
 
             echo "작업 완료!"
 
