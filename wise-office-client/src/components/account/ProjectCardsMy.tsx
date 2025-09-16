@@ -14,7 +14,7 @@ export default function ProjectCardsMy({ props }: UserProfileProps) {
             <h2 className="text-blue-700 font-bold text-xl mb-6 border-b border-blue-200 pb-2">
                 수행 중인 프로젝트
             </h2>
-            <ul className="space-y-4 max-h-[350px] overflow-y-auto">
+            <ul className="space-y-4 max-h-120 md:max-h-[350px] overflow-y-auto pt-1">
                 {projects && projects.length > 0 ? (
                     projects.map((project, index) => (
                         <li key={index}>
