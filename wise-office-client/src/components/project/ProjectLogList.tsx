@@ -16,14 +16,14 @@ export default function ProjectLogList({
     onDeleteLog,
 }: ProjectLogListProps) {
     return (
-        <div className="bg-white rounded-lg shadow-sm">
+        <div className="md:min-h-52 bg-white rounded-lg shadow-sm">
             <div className="bg-gray-100 p-2 md:p-4 rounded-t-lg flex justify-between items-center">
                 <h3 className="text-base md:text-lg font-semibold text-gray-800">
                     LOG
                 </h3>
             </div>
 
-            <div className="md:max-h-85 md:min-h-36 flex flex-nowrap pb-1 overflow-x-auto md:flex-col scrollbar-auto-hide">
+            <div className="md:max-h-85 flex flex-nowrap pb-1 overflow-x-auto md:flex-col scrollbar-auto-hide">
                 {logList.length === 0 ? (
                     <div className="flex flex-1 items-center justify-center py-4 md:py-10">
                         <div className="text-center">
