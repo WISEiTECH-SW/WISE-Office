@@ -1,6 +1,8 @@
 name: DPG AutoDeployment # nextjs-spring-postgre를 전체 리빌딩합니다. 
 
 on:
+  push:
+    branch: ["deploy-notification"]
   pull_request:
     branches: ["dev"]
     types: [closed]
@@ -10,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      #배포 스크립트 실행 
       - name: connect server via to SSH
         uses: appleboy/ssh-action@master
         with:
@@ -28,6 +31,61 @@ jobs:
 
             ./blue-green-deploy.sh
 
-            echo "작업 완료!"
+      -  name: send notification
+         run: |
+          curl -v -g -x POST https://api.kakaowork.com/v1/messages.send \
+               -H "Authorization: Bearer ${{ secrets.KAKAO_WORK_API_KEY }}"
+               -H "Content-Type: Application/josn" \
+               -d '{ "conversation_id": ${{ secrets.KAKAO_WORK_CONVERSATION_ID}}, "text": "github actions 수행",
+               "blocks": [
+               { "type": "header",
+            "text": "Github Actions 배포 결과",
+            "style": "white" }, {
+            "type": "text",
+            "text": "브랜치",
+            "inlines": [
+                {
+                    "type": "styled",
+                    "text": "브랜치 : ",
+                    "bold": true
+                },
+                {
+                    "type": "styled",
+                    "text": "${{ github.ref_name }}"
+                }
+            ]},{
+            "type": "text",
+            "text": "작업자",
+            "inlines": [
+                {
+                    "type": "styled",
+                    "text": "작업수행자 : ",
+                    "bold": true
+                },
+                {
+                    "type": "styled",
+                    "text": "{{ github.actor }}"
+                }
+            ]},{
+            "type": "text",
+            "text": "결과",
+            "inlines": [
+                {
+                    "type": "styled",
+                    "text": "수행결과 : ",
+                    "bold": true
+                },
+                {
+                    "type": "styled",
+                    "text": "${{ needs.build.result }}"
+                }
+            ]},{
+            "type": "description",
+            "term": "날짜",
+            "content": {
+                "type": "text",
+                "text": "steps.date.outputs.date"
+            },
+            "accent": true}]}' > /dev/null
 
 
