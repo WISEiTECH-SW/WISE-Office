@@ -1,0 +1,22 @@
+//순서대로 실행 1. 도커 27.3.1.1 버전 설치
+sudo apt-get update
+sudo apt-get install apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+sudo rm /etc/apt/keyrings/docker.gpg
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt-get install docker-ce=5:27.3.1-1~ubuntu.20.04~focal docker-ce-cli=5:27.3.1-1~ubuntu.20.04~focal containerd.io -y
+
+
+//node 설치 ==> 추후 docker 로 함께 빌드할 예정
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+nvm install 18.20.5
+nvm alias default 18.20.5
+
+ 

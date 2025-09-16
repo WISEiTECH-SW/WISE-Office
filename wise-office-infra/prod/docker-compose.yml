@@ -1,0 +1,93 @@
+services:
+    nginx:
+        container_name: nginx
+        build: ./nginx
+        ports:
+            - "8081:7777"
+        restart: always
+        volumes:
+            - ./nginx/conf.d:/etc/nginx/conf.d
+            - ${NGINX_IMAGE_VOLUME}
+    database:
+        container_name: postgres_container
+        image: postgres:15
+        ports:
+            - "5432:5432"
+        expose:
+            - "5432"
+        volumes:
+            - ${POSTGRES_VOLUME}
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            TZ: Asia/Seoul
+            PGTZ: Asia/Seoul
+        healthcheck:
+            # 컨테이너가 DB 연결을 받을 준비가 되었는지 확인
+            test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+    # Green nextjs, springboot
+    application:
+        container_name: backoffice_app
+        build:
+            context: ../../wise-office-server
+            dockerfile: Dockerfile
+        image: backoffice_server:latest
+        depends_on:
+            database:
+                condition: service_healthy #healthcheck가 정상이 될 때까지 대기
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 20s
+        volumes:
+            - ${IMAGE_VOLUME}
+    frontend:
+        container_name: backoffice_frontend
+        build:
+            context: ../../wise-office-client
+            dockerfile: Dockerfile
+            args:
+                - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+        image: backoffice_client:latest
+        depends_on:
+            application:
+                condition: service_healthy
+        environment:
+            - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+    # Blue nextjs, springboot
+    application_blue:
+        container_name: backoffice_app_blue
+        build:
+            context: ../../wise-office-server
+            dockerfile: Dockerfile
+        image: backoffice_server:latest
+        depends_on:
+            database:
+                condition: service_healthy #healthcheck가 정상이 될 때까지 대기
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 20s
+        volumes:
+            - ${IMAGE_VOLUME}
+    frontend_blue:
+        container_name: backoffice_frontend_blue
+        build:
+            context: ../../wise-office-client
+            dockerfile: Dockerfile
+            args:
+                - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+        image: backoffice_client:latest
+        depends_on:
+            application_blue:
+                condition: service_healthy
+        environment:
+            - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
