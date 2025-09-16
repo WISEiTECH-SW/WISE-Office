@@ -23,7 +23,7 @@ export default function ProjectLogListItem({
     return (
         <div
             onClick={() => onSelect(log.logId)}
-            className={`w-60 md:w-full p-4 border-r md:border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
+            className={`w-40 flex-none md:w-full p-4 border-r md:border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
                 isSelected
                     ? "bg-blue-50 border-t-4 md:border-l-4 md:border-t-0 border-t-blue-500 md:border-l-blue-500 "
                     : ""
