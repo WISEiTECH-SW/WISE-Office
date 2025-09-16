@@ -17,20 +17,35 @@ export default function ProjectLogList({
 }: ProjectLogListProps) {
     return (
         <div className="bg-white rounded-lg shadow-sm">
-            <div className="bg-gray-100 px-4 py-3 rounded-t-lg flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-800">LOG</h2>
+            <div className="bg-gray-100 p-2 md:p-4 rounded-t-lg flex justify-between items-center">
+                <h3 className="text-base md:text-lg font-semibold text-gray-800">
+                    LOG
+                </h3>
             </div>
 
-            <div className="max-h-96 overflow-y-auto">
-                {logList.map((log) => (
-                    <ProjectLogListItem
-                        key={log.logId}
-                        log={log}
-                        isSelected={selectedLog?.logId === log.logId}
-                        onSelect={onSelectLog}
-                        onDelete={onDeleteLog}
-                    />
-                ))}
+            <div className="md:max-h-85 md:min-h-36 flex flex-nowrap pb-1 overflow-x-auto md:flex-col scrollbar-auto-hide">
+                {logList.length === 0 ? (
+                    <div className="flex flex-1 items-center justify-center py-4 md:py-10">
+                        <div className="text-center">
+                            <p className="text-gray-400 text-sm md:text-base font-medium">
+                                작성된 로그가 없습니다.
+                            </p>
+                            <p className="text-gray-300 text-xs md:text-sm mt-1">
+                                첫 로그를 작성해보세요 ✍️
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    logList.map((log) => (
+                        <ProjectLogListItem
+                            key={log.logId}
+                            log={log}
+                            isSelected={selectedLog?.logId === log.logId}
+                            onSelect={onSelectLog}
+                            onDelete={onDeleteLog}
+                        />
+                    ))
+                )}
             </div>
         </div>
     );
