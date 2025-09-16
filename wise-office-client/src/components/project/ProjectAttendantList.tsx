@@ -17,7 +17,7 @@ export default function ProjectAttendantList({
                     참여자
                 </h3>
             </div>
-            <div className="p-4  overflow-x-auto scrollbar-auto-hide">
+            <div className="p-4 pt-6 overflow-x-auto scrollbar-auto-hide">
                 <div className="md:max-h-85 md:min-h-28 flex flex-nowrap gap-4 md:flex-col">
                     <ProjectAttendantItem
                         isPm={true}
