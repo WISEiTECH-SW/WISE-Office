@@ -16,8 +16,8 @@ export default function ProjectAttendantItem({
 
     if (isPm) {
         return (
-            <div className="flex items-center bg-blue-100 rounded-full space-x-3">
-                <div className="relative w-10 h-10 rounded-full">
+            <div className="min-x-10 flex flex-col md:flex-row rounded-full items-center gap-2 md:gap-4">
+                <div className="relative w-10 h-10 shrink-0">
                     <Image
                         src={
                             imageError || !imageUrl
@@ -29,20 +29,21 @@ export default function ProjectAttendantItem({
                         className="object-cover rounded-full"
                         onError={() => setImageError(true)}
                     />
+                    <span className="absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-200 text-emerald-800 shadow-md ring-1 ring-white">
+                        PM
+                    </span>
                 </div>
-                <span className="text-sm font-medium text-gray-800">
+
+                <span className="text-xs md:text-sm font-medium text-gray-800 truncate max-w-[10rem] md:max-w-[14rem]">
                     {name}
-                </span>
-                <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0">
-                    PM
                 </span>
             </div>
         );
     }
 
     return (
-        <div className="flex items-center space-x-3">
-            <div className="relative w-10 h-10 rounded-full">
+        <div className="flex flex-col md:flex-row rounded-full items-center justify-center md:justify-start gap-2 md:gap-4">
+            <div className="relative w-10 h-10 rounded-full overflow-hidden">
                 <Image
                     src={
                         imageError || !imageUrl
@@ -55,7 +56,9 @@ export default function ProjectAttendantItem({
                     onError={() => setImageError(true)}
                 />
             </div>
-            <span className="text-sm font-medium text-gray-800">{name}</span>
+            <span className="text-xs md:text-sm font-medium text-gray-800">
+                {name}
+            </span>
         </div>
     );
 }

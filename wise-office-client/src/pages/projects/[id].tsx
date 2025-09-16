@@ -139,71 +139,69 @@ export default function ProjectPageById() {
 
     if (!projectInfo) return <div>!!No Project!!</div>;
     return (
-        <div className="min-h-screen min-w-[850px] bg-gray-50">
-            <div className="px-6 pb-4">
-                {/* Project Information */}
-                <ProjectInfoContainer
-                    projectInfo={projectInfo}
-                    onEdit={() => {
-                        setIsEditOpen(true);
-                    }}
-                    onDelete={() => handleConfirmModal("project", projectId)}
+        <div className="md:px-6">
+            {/* Project Information */}
+            <ProjectInfoContainer
+                projectInfo={projectInfo}
+                onEdit={() => {
+                    setIsEditOpen(true);
+                }}
+                onDelete={() => handleConfirmModal("project", projectId)}
+            />
+            {isEditOpen && projectInfo.projectId && (
+                <ProjectUpdateModal
+                    projectId={projectInfo.projectId}
+                    setProjectInfo={setProjectInfo}
+                    onClose={() => setIsEditOpen(false)}
                 />
-                {isEditOpen && projectInfo.projectId && (
-                    <ProjectUpdateModal
-                        projectId={projectInfo.projectId}
-                        setProjectInfo={setProjectInfo}
-                        onClose={() => setIsEditOpen(false)}
-                    />
-                )}
+            )}
 
-                {isConfirmOpen && delteTarget[0] != "" && (
-                    <ConfirmModal
-                        deleteTarget={delteTarget}
-                        onConfirm={deleteHandlers[delteTarget[0]]}
-                        onClose={() => setIsConfirmOpen(false)}
-                    />
-                )}
+            {isConfirmOpen && delteTarget[0] != "" && (
+                <ConfirmModal
+                    deleteTarget={delteTarget}
+                    onConfirm={deleteHandlers[delteTarget[0]]}
+                    onClose={() => setIsConfirmOpen(false)}
+                />
+            )}
 
-                <div className="grid grid-cols-12 gap-6">
-                    {/* LOG List - Left */}
-                    <div className="col-span-3">
-                        <ProjectLogList
-                            logList={logList}
-                            selectedLog={selectedLog}
-                            onSelectLog={handleSelectLog}
-                            onDeleteLog={handleConfirmModal}
-                        />
-                        {projectInfo.attending && (
-                            <div className="mt-2">
-                                <ProjectLogWriteButton
-                                    onClick={() => setIsLogModalOpen(true)}
-                                />
-                            </div>
-                        )}
-                    </div>
-                    {/* LOG & Comment - Center */}
-                    <div className="col-span-6">
-                        <ProjectLog
-                            selectedLog={selectedLog}
-                            modifyModal={handleModifyModal}
-                            commentList={commentList}
-                            isAttending={projectInfo.attending}
-                            onSummit={handleCreateComment}
-                            onDeleteComment={handleConfirmModal}
-                        />
-                    </div>
-                    {/* Attendant List - Right */}
-                    <div className="col-span-3">
-                        <ProjectAttendantList
-                            pm={projectInfo.managerName}
-                            attendants={projectInfo.attendant}
-                            // attendants={[
-                            //     projectInfo.managerName,
-                            //     ...projectInfo.attendant,
-                            // ]}
-                        />
-                    </div>
+            <div className="flex flex-col md:grid md:grid-cols-12 md:gap-6 mb-10">
+                {/* LOG List - Left */}
+                <div className="order-2 md:order-1 md:col-span-3 mb-6">
+                    <ProjectLogList
+                        logList={logList}
+                        selectedLog={selectedLog}
+                        onSelectLog={handleSelectLog}
+                        onDeleteLog={handleConfirmModal}
+                    />
+                    {projectInfo.attending && (
+                        <div className="mt-2">
+                            <ProjectLogWriteButton
+                                onClick={() => setIsLogModalOpen(true)}
+                            />
+                        </div>
+                    )}
+                </div>
+                {/* LOG & Comment - Center */}
+                <div className="order-3 md:col-span-6 mb-6">
+                    <ProjectLog
+                        selectedLog={selectedLog}
+                        modifyModal={handleModifyModal}
+                        commentList={commentList}
+                        isAttending={projectInfo.attending}
+                        onSummit={handleCreateComment}
+                        onDeleteComment={handleConfirmModal}
+                    />
+                </div>
+                {/* Attendant List - Right */}
+                <div className="order-1 md:order-3 md:col-span-3 mb-6">
+                    <ProjectAttendantList
+                        pm={projectInfo.managerName}
+                        attendants={projectInfo.attendant}
+                        // attendants={[
+                        //     projectInfo.managerName,
+                        //     ...projectInfo.attendant,
+                        // ]}
+                    />
                 </div>
             </div>
             <LogWriteModal

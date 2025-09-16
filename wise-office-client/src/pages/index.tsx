@@ -34,7 +34,7 @@ export default function Home() {
     };
 
     return (
-        <section className="flex flex-col items-center  gap-4 md:gap-10 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
+        <section className="flex flex-col items-center gap-6 md:gap-10 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
             <div className="flex flex-col w-full">
                 <div>
                     <h2 className="text-2xl md:text-3xl font-bold mb-2 text-left">
@@ -84,7 +84,7 @@ export default function Home() {
                     </>
                 )}
             </div>
-            <div className="flex flex-col items-center w-full gap-10 text-gray-600">
+            <div className="flex flex-col items-center w-full gap-6 md:gap-10 text-gray-600">
                 {projects.length === 0 ? (
                     <p className="text-gray-400 py-8">
                         등록된 프로젝트가 없습니다.
@@ -105,9 +105,10 @@ export default function Home() {
                 <button
                     onClick={() => movePage(1)}
                     disabled={currentPage === 1}
-                    className="px-3 py-1 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-md cursor-pointer disabled:opacity-0 disabled:cursor-default"
+                    className="w-13 md:w-20 px-3 py-1 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-md cursor-pointer disabled:opacity-0 disabled:cursor-default"
                 >
-                    첫 페이지
+                    <p className="hidden md:block">첫 페이지</p>
+                    <p className="md:hidden">처음</p>
                 </button>
 
                 {/* 페이지 번호 */}
@@ -153,9 +154,10 @@ export default function Home() {
                 <button
                     onClick={() => movePage(totalPages)}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-md cursor-pointer disabled:opacity-0 disabled:cursor-default"
+                    className="w-13 md:w-20 px-3 py-1 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-md cursor-pointer disabled:opacity-0 disabled:cursor-default"
                 >
-                    끝 페이지
+                    <p className="hidden md:block">끝 페이지</p>
+                    <p className="md:hidden">끝</p>
                 </button>
             </nav>
         </section>

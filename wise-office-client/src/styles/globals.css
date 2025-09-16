@@ -16,3 +16,8 @@ a {
 * {
     box-sizing: border-box;
 }
+
+.scrollbar-auto-hide {
+    -ms-overflow-style: -ms-autohiding-scrollbar; /* IE/Edge 옛 버전 */
+    scrollbar-width: thin; /* Firefox */
+}

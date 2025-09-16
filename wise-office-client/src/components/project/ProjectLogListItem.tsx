@@ -23,12 +23,14 @@ export default function ProjectLogListItem({
     return (
         <div
             onClick={() => onSelect(log.logId)}
-            className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
-                isSelected ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
+            className={`w-60 md:w-full p-4 border-r md:border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
+                isSelected
+                    ? "bg-blue-50 border-t-4 md:border-l-4 md:border-t-0 border-t-blue-500 md:border-l-blue-500 "
+                    : ""
             }`}
         >
             <div className="flex justify-between items-start mb-2">
-                <h3 className="font-medium text-sm text-gray-800 line-clamp-2">
+                <h3 className="font-medium text-sm text-gray-800 truncate">
                     {log.title}
                 </h3>
                 {log.canModify && (
