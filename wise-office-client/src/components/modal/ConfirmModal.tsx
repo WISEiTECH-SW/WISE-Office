@@ -45,7 +45,7 @@ export default function ConfirmModal({
         <div className="Overlay fixed inset-0 bg-[rgba(43,43,43,0.1)] bg-opacity-40 flex justify-center items-center z-50">
             <div
                 ref={modalRef}
-                className="bg-white rounded-xl shadow-xl p-5 w-[30%] max-w-[64rem] max-h-[90vh] flex flex-col gap-5 relative mb-10"
+                className="bg-white rounded-xl shadow-xl p-5 w-[75%] md:w-[30%] max-w-[64rem] max-h-[90vh] flex flex-col gap-5 relative mb-10"
             >
                 <div className="flex flex-col gap-3">
                     <p className="text-lg">
