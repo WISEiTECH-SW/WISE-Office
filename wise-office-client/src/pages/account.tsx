@@ -39,7 +39,7 @@ export default function Account() {
         <div className="flex flex-col md:flex-row justify-center items-start py-10 px-4">
             <div className="md:mt-10 max-w-6xl w-full md:grid md:grid-cols-12 gap-10">
                 {/* 프로필 영역 - 가운데 정렬 */}
-                <section className="col-span-12 md:col-span-2 rounded-lg p-6 flex flex-col items-center justify-center mb-6">
+                <section className="col-span-12 md:col-span-2 rounded-lg p-6 flex flex-col items-center justify-center">
                     {profile && <UserProfile props={profile} />}
                 </section>
 
