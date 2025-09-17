@@ -19,10 +19,10 @@ import java.util.List;
  */
 @ValidDateRange
 public record ProjectCreateRequest(
-        @NotBlank(message = "프로젝트 제목은 빈칸일 수 없습니다.") @Size(max = 100, message = "프로젝트 제목은 최대 100자까지만 작성가능합니다.") String projectTitle,
-        @NotNull(message = "시작일이 있어야 합니다.") LocalDate start,
-        @NotNull(message = "종료일이 있어야 합니다.") LocalDate end,
-        @NotBlank(message = "프로젝트 내용은 빈칸일 수 없습니다.") @Size(max = 500, message = "프로젝트 내용은 최대 500자까지만 작성가능합니다.") String content,
-        @NotNull(message = "프로젝트 PM은 반드시 지정되어야 합니다.") Long projectManagerId,
+        @NotBlank(message = "{project.title}") @Size(max = 100, message = "{project.title.size}") String projectTitle,
+        @NotNull(message = "{project.start}") LocalDate start,
+        @NotNull(message = "{project.end}") LocalDate end,
+        @NotBlank(message = "{project.content}") @Size(max = 500, message = "{project.content.size}") String content,
+        @NotNull(message = "{project.pm}") Long projectManagerId,
         List<Long> attendants) {
 }

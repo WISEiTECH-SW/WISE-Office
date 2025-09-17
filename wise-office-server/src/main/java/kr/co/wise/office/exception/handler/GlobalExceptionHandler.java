@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Collections;
@@ -43,9 +44,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(500).body(errorResponse);
     }
 
-    /**
-     *  Validation 검증이 실패한 경우 실행되는 핸들러
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException validException) {
         Map<String, String> errors = new HashMap<>();
@@ -57,6 +55,22 @@ public class GlobalExceptionHandler {
                 errors.put(error.getObjectName(), error.getDefaultMessage()));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeErrorResponse("DTO Error", errors));
+    }
+
+    /**
+     * RequestParam, PathVariable의 validation 실패시 호출되는 handler
+     */
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(HandlerMethodValidationException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        for (var validationResult : ex.getAllValidationResults()) {
+            String parameterName = validationResult.getMethodParameter().getParameterName();
+            String errorMessage = validationResult.getResolvableErrors().get(0).getDefaultMessage();
+            errors.put(parameterName, errorMessage);
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeErrorResponse("Request Param 에러", errors));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
