@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import kr.co.wise.office.application.EmailService;
 import kr.co.wise.office.application.ImageService;
@@ -23,10 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,18 +61,6 @@ public class MemberController {
                 .body(memberService.searchAllMemberInfo(loginUser.getName()));
     }
 
-    @Operation(summary = "매니저 권한 확인", description = "현재 로그인한 사용자가 매니저 권한(ROLE_MANAGER)을 가지고 있는지 여부를 반환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "body의 isManager 값이 true면 Manager, false면 WORKER", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = IsManagerResponse.class))),
-    })
-    @GetMapping("/is-manager")
-    public ResponseEntity<IsManagerResponse> checkIsManager() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        GrantedAuthority grantedAuthority = authentication.getAuthorities().stream().toList().get(0);
-        boolean isManager = grantedAuthority.getAuthority().equals("ROLE_MANAGER");
-        return ResponseEntity.status(HttpStatus.OK).body(new IsManagerResponse(isManager));
-    }
-
     @Operation(summary = "마이페이지 정보 조회", description = "현재 로그인한 사용자의 세부 정보를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "마이페이지 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = MyAccountResponse.class))),
@@ -94,13 +80,12 @@ public class MemberController {
     public ResponseEntity<MemberPositionUpdateResponse> updateInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "업데이트 할 직급 및 소속") @Valid @RequestBody MemberPositionUpdateRequest request) {
-
         memberService.updateMemberPosition(request, loginUser.getName());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new MemberPositionUpdateResponse(request.team(), request.rank()));
     }
 
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "자체 회원가입", description = "이메일, 비밀번호, 이름으로 회원가입합니다.")
     public ResponseEntity<Void> signup(@Valid @RequestPart("request") SignupRequest signUpRequest,
                                        @RequestPart(value = "profile", required = false)MultipartFile profileImage) {
@@ -115,16 +100,18 @@ public class MemberController {
     @Operation(summary = "자체 로그인", description = "이메일, 비밀번호로 로그인하고 JWT를 발급받습니다.")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest,
                                       HttpServletResponse response) throws IOException {
-        String token = memberService.login(loginRequest);
-        log.info("생성된 token = {}", token);
-        // 응답
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(600);
+//        String token = memberService.login(loginRequest);
+//
+//        final int COOKIE_EXPIRE_SECOND = 1800;
+//        LoginResponse loginResponse = new LoginResponse(LocalDateTime.now().plusSeconds(COOKIE_EXPIRE_SECOND));
+//
+//        Cookie cookie = new Cookie("jwt", token);
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(false);
+//        cookie.setPath("/");
+//        cookie.setMaxAge(COOKIE_EXPIRE_SECOND);
+//        response.addCookie(cookie);
 
-        response.addCookie(cookie);
         return ResponseEntity.ok().build();
     }
 
@@ -146,8 +133,8 @@ public class MemberController {
                             schema = @Schema(implementation = EmailVerificationResult.class))),
     })
     public ResponseEntity<EmailVerificationResult> verificationCode(
-            @NotBlank(message = "이메일은 빈값일 수 없습니다.") @Parameter(description = "인증 요청한 email") @RequestParam("email") String email,
-            @NotBlank(message = "코드 번호는 빈 값일 수 없습니다.") @Parameter(description = "전달받은 code 6자리") @RequestParam("code") String code) {
+            @Parameter(description = "인증 요청한 email") @NotBlank(message = "{email.blank}") @Email(message = "{login.email}") @Valid @RequestParam("email") String email,
+            @Parameter(description = "전달받은 code 6자리") @NotBlank(message = "{notBlank}")  @Valid @RequestParam("code") String code) {
         validateEmail(email);
         memberService.checkAlreadySignUp(email);
         EmailVerificationResult emailVerificationResult = emailService.verificationCode(email, code);

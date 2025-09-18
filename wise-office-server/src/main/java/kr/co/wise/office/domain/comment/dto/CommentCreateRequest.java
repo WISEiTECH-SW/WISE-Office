@@ -1,6 +1,6 @@
 package kr.co.wise.office.domain.comment.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import kr.co.wise.office.api.validation.annotation.SubjectNotBlank;
 
-public record CommentCreateRequest(@NotBlank(message = "댓글의 내용은 빈칸일 수 없습니다.") String content) {
+public record CommentCreateRequest(@SubjectNotBlank(subject = "댓글") String content) {
 }

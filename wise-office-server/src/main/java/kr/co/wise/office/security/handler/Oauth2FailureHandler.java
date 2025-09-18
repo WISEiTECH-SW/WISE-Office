@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -14,9 +15,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 /**
- *  OAuth2 로그인 중 실패 및 취소시 실행되는 로직
+ * OAuth2 로그인 중 실패 및 취소시 실행되는 로직
  */
 @Component
+@Qualifier("oauth2FailureHandler")
 public class Oauth2FailureHandler implements AuthenticationFailureHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();

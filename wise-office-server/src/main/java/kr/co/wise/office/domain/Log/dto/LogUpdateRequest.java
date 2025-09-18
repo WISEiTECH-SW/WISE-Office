@@ -1,10 +1,8 @@
 package kr.co.wise.office.domain.Log.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import kr.co.wise.office.api.validation.annotation.SubjectNotBlank;
 
 
-public record LogUpdateRequest(@NotBlank(message = "수정할 로그의 제목은 빈칸일 수 없습니다.") String title,
-                               @NotBlank(message = "수정할 로그의 내용은 빈칸일 수 없습니다.") String content) {
-
-
+public record LogUpdateRequest(@SubjectNotBlank(subject = "업데이트할 로그의 제목") String title,
+                               @SubjectNotBlank(subject = "업데이트할 로그의 본문") String content) {
 }
