@@ -25,12 +25,10 @@ export default function ProjectInfoContainer({
     const duration = calculationDuration(projectInfo.start);
     return (
         <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-6 md:mt-6">
-            <div className="flex justify-between items-center mb-4">
-                {/* <div className="flex-grow min-w-0"> */}
-                <p className="text-lg md:text-2xl font-bold text-gray-800 truncate">
+            <div className="flex justify-between items-start mb-4">
+                <p className="text-lg md:text-2xl font-bold text-gray-800 break-words whitespace-normal">
                     {projectInfo.projectTitle}
                 </p>
-                {/* </div> */}
                 {projectInfo.canModify && (
                     <div className="flex ml-4 gap-2 flex-shrink-0">
                         <button
