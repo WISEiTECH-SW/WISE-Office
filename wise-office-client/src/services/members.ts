@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { api } from "@/lib/clientApi";
 import { Member, SignupForm } from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
