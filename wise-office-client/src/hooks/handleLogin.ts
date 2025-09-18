@@ -16,8 +16,8 @@ export const handleLogin = async ({
     save: boolean;
 }) => {
     try {
-        await login({ email, password });
-
+        const res = await login({ email, password });
+        localStorage.setItem("expiredAt", res);
         // 로그인 상태 확인 후 hastoken 상태 변경
         const loggedIn = await readLoggedIn();
         useAuthStore.setState({ hasToken: loggedIn });
@@ -27,10 +27,10 @@ export const handleLogin = async ({
                 const profile = await getMyProfile();
                 useProfileStore.setState({ profile });
             } catch {
-                useProfileStore.setState({ profile: null });
+                useProfileStore.getState().reset();
             }
         } else {
-            useProfileStore.setState({ profile: null });
+            useProfileStore.getState().reset();
         }
 
         if (save) localStorage.setItem("email", email);

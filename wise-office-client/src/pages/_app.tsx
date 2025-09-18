@@ -1,6 +1,7 @@
 import Head from "next/head";
 import "@/styles/globals.css";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
@@ -10,8 +11,12 @@ import { useInitAuth } from "@/hooks/useInitAuth";
 import { useAuthLoginToast } from "@/hooks/useLoginToast";
 import { useRouteGuard } from "@/hooks/useRouteGuard";
 import Image from "next/image";
+import { useAuthStore } from "@/store/useAuthStore";
+import { handleLogout } from "@/hooks/handleLogout";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+    const router = useRouter();
+    const { hasToken } = useAuthStore();
     useInitAuth();
     useAuthLoginToast();
     useRouteGuard();
@@ -35,6 +40,50 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, [lastScrollY]);
+
+    useEffect(() => {
+        const expiredAt = localStorage.getItem("expiredAt");
+
+        if (!hasToken || !expiredAt) return;
+
+        const expiredAtMs = new Date(expiredAt).getTime();
+
+        const EARLY = 5000;
+        const deadline = expiredAtMs - EARLY;
+        let timer: ReturnType<typeof setTimeout> | undefined;
+
+        const schedule = () => {
+            if (timer) clearTimeout(timer);
+            const remaining = deadline - Date.now();
+
+            if (remaining <= 0) {
+                handleLogout("timeover");
+                router.replace("/");
+                return;
+            }
+
+            timer = setTimeout(() => {
+                if (Date.now() >= deadline) {
+                    handleLogout("timeover");
+                    router.replace("/");
+                } else {
+                    schedule();
+                }
+            }, remaining);
+        };
+
+        schedule();
+
+        const onVisibility = () => {
+            if (!document.hidden) schedule();
+        };
+        document.addEventListener("visibilitychange", onVisibility);
+
+        return () => {
+            if (timer) clearTimeout(timer);
+            document.removeEventListener("visibilitychange", onVisibility);
+        };
+    }, [hasToken, router]);
 
     return (
         <>
@@ -64,7 +113,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
                 <main className="flex-grow p-4 mt-20">
                     <Component {...pageProps} />
-                    <ToastContainer className="mt-20" limit={3} />
+                    <ToastContainer className="mt-20" limit={1} />
                 </main>
             </div>
 

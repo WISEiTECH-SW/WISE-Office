@@ -42,8 +42,10 @@ export async function signup(req: SignupForm): Promise<SignupForm> {
     return await api.post("/members/signup", formData).then((res) => res.data);
 }
 
-export async function login(req: loginForm): Promise<AxiosResponse> {
-    return await api.post("/members/login", req).then((res) => res.data);
+export async function login(req: loginForm): Promise<string> {
+    return await api
+        .post("/members/login", req)
+        .then((res) => res.data.expiredAt);
 }
 
 export async function logout(): Promise<number> {
