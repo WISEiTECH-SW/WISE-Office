@@ -100,16 +100,18 @@ public class MemberController {
     @Operation(summary = "자체 로그인", description = "이메일, 비밀번호로 로그인하고 JWT를 발급받습니다.")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest,
                                       HttpServletResponse response) throws IOException {
-        String token = memberService.login(loginRequest);
-        log.info("생성된 token = {}", token);
-        // 응답
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(600);
+//        String token = memberService.login(loginRequest);
+//
+//        final int COOKIE_EXPIRE_SECOND = 1800;
+//        LoginResponse loginResponse = new LoginResponse(LocalDateTime.now().plusSeconds(COOKIE_EXPIRE_SECOND));
+//
+//        Cookie cookie = new Cookie("jwt", token);
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(false);
+//        cookie.setPath("/");
+//        cookie.setMaxAge(COOKIE_EXPIRE_SECOND);
+//        response.addCookie(cookie);
 
-        response.addCookie(cookie);
         return ResponseEntity.ok().build();
     }
 

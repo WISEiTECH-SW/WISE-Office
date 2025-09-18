@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeErrorResponse("5MB 이하의 이미지를 업로드해 주세요.", Collections.EMPTY_MAP));
     }
 
-    private ErrorResponse makeErrorResponse(String message, Map<String, String> errors) {
+    public ErrorResponse makeErrorResponse(String message, Map<String, String> errors) {
         return ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), message, errors);
     }
 }

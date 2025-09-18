@@ -14,6 +14,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -30,7 +34,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class MemberService extends DefaultOAuth2UserService {
+public class MemberService extends DefaultOAuth2UserService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final AttendantService attendantService;
@@ -178,5 +182,15 @@ public class MemberService extends DefaultOAuth2UserService {
         memberRepository.findByEmail(email).ifPresent(member -> {
             throw new ApplicationRuntimeException(ErrorMessage.AlREADY_SIGNUP_EMAIL);
         });
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        MemberEntity member = memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(ErrorMessage.NOT_FOUND_MEMBER.getMessage()));
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRoleType().name())
+                .build();
     }
 }
