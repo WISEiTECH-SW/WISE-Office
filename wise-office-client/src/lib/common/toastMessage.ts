@@ -1,10 +1,7 @@
-import {
-    toast,
-    type ToastOptions,
-} from "react-toastify";
+import { toast, type ToastOptions } from "react-toastify";
 
 const DEFAULT: ToastOptions = {
-    autoClose: 500,
+    autoClose: 1000,
     hideProgressBar: true,
     closeOnClick: true,
     pauseOnFocusLoss: false,
