@@ -8,7 +8,7 @@ import {
     Users,
     NotepadText,
     Edit,
-    Trash,
+    Trash2,
 } from "lucide-react";
 
 type ProjectContainerProps = {
@@ -42,7 +42,7 @@ export default function ProjectInfoContainer({
                             onClick={onDelete}
                             className="p-2 md:px-4 bg-gray-400 text-white text-sm rounded hover:bg-gray-500 cursor-pointer"
                         >
-                            <Trash className="h-4 w-4 md:hidden" />
+                            <Trash2 className="h-4 w-4 md:hidden" />
                             <p className="hidden md:block">삭제</p>
                         </button>
                     </div>

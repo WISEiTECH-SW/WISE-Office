@@ -1,17 +1,19 @@
 import { useState } from "react";
 import Image from "next/image";
-import { useProfileStore } from "@/store/useProfileStore";
 
-export default function ProfileImage() {
-    const { profile } = useProfileStore();
+type ProfileImageProps = {
+    imageUrl?: string;
+};
+
+export default function ProfileImage({ imageUrl }: ProfileImageProps) {
     const [imageError, setImageError] = useState(false);
 
     return (
         <Image
             src={
-                imageError || !profile?.imageUrl
+                imageError || !imageUrl
                     ? "/assets/default_profile.jpg"
-                    : profile.imageUrl
+                    : imageUrl
             }
             alt="profile-image"
             fill
