@@ -136,6 +136,11 @@ export default function ProjectUpdateModal({
             valid = false;
         }
 
+        if (startDate && endDate && startDate > endDate) {
+            newErrors.endDate = "시작일 이후로 선택해주세요.";
+            valid = false;
+        }
+
         if (content.trim() === "") {
             newErrors.content = "프로젝트 설명을 입력해주세요.";
             valid = false;

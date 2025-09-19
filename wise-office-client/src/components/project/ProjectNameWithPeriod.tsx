@@ -64,6 +64,7 @@ export default function ProjectNameWithPeriod({
                             <Flatpickr
                                 options={{
                                     disableMobile: true,
+                                    locale: "ko",
                                     plugins: [
                                         monthSelectPlugin({
                                             shorthand: true,
@@ -103,6 +104,7 @@ export default function ProjectNameWithPeriod({
                             <Flatpickr
                                 options={{
                                     disableMobile: true,
+                                    locale: "ko",
                                     plugins: [
                                         monthSelectPlugin({
                                             shorthand: true,
