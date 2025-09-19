@@ -20,7 +20,7 @@ export default function ProjectLogDetail({
         onDelete("log", log.logId);
     };
     return (
-        <div className="flex flex-col pt-6 md:pt-8">
+        <div className="flex flex-col pt-6 md:pt-6">
             <div className="px-6 md:px-8 flex justify-between items-center mb-2">
                 <div className="flex gap-4 items-center text-gray-500">
                     <div className="relative w-12 h-12 rounded-full border-2 border-white">
@@ -56,7 +56,7 @@ export default function ProjectLogDetail({
                 )}
             </div>
 
-            <h2 className="p-6 md:p-8 text-xl md:text-2xl font-bold text-gray-800 break-words whitespace-normal border-b border-gray-200">
+            <h2 className="p-6 md:py-4 md:px-8 text-xl md:text-2xl font-bold text-gray-800 break-words whitespace-normal border-b border-gray-200">
                 {log.title}
             </h2>
 
