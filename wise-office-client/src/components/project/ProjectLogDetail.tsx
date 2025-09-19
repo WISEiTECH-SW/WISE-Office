@@ -20,8 +20,8 @@ export default function ProjectLogDetail({
         onDelete("log", log.logId);
     };
     return (
-        <div className="flex flex-col p-4 md:p-8 border-b border-gray-200">
-            <div className="flex justify-between items-center mb-4 ">
+        <div className="flex flex-col pt-6 md:pt-8">
+            <div className="px-6 md:px-8 flex justify-between items-center mb-2">
                 <div className="flex gap-4 items-center text-gray-500">
                     <div className="relative w-12 h-12 rounded-full border-2 border-white">
                         <ProfileImage imageUrl={log.imageUrl} />
@@ -56,11 +56,11 @@ export default function ProjectLogDetail({
                 )}
             </div>
 
-            <h2 className="p-1 text-lg md:text-xl font-bold text-gray-800 break-words whitespace-normal mb-2 md:mb-4">
+            <h2 className="p-6 md:p-8 text-xl md:text-2xl font-bold text-gray-800 break-words whitespace-normal border-b border-gray-200">
                 {log.title}
             </h2>
 
-            <p className="p-1 text-gray-700 leading-relaxed break-words whitespace-pre-line">
+            <p className="p-6 md:p-8 text-gray-700 leading-relaxed break-words whitespace-pre-line border-b border-gray-200">
                 {log.content}
             </p>
         </div>
