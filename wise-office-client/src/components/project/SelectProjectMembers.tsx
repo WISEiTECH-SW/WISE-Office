@@ -53,11 +53,11 @@ export default function SelectProjectMembers({
     };
 
     return (
-        <div className="grid grid-cols-2 gap-5 basis-4/5 overflow-hidden pl-2">
+        <div className="grid grid-cols-2 gap-8 basis-4/5 overflow-hidden">
             {/* 왼쪽 열 */}
             <div className="flex flex-col overflow-y-auto">
                 {/* 검색창 */}
-                <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
+                <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                     검색
                 </label>
                 <input
@@ -65,12 +65,12 @@ export default function SelectProjectMembers({
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     placeholder="검색..."
-                    className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
 
                 {/* 선택된 멤버 카드 */}
                 {selectedMembers.length > 0 && (
-                    <div className="flex flex-wrap gap-2 border border-gray-300 rounded-md ml-1 p-3 max-h-[120px] overflow-y-auto shadow-inner mb-2">
+                    <div className="flex flex-wrap gap-2 mx-1 mt-2 border border-gray-300 rounded-md p-3 max-h-[120px] overflow-y-auto shadow-inner">
                         {selectedMembers.map((member) => (
                             <div
                                 key={member.memberId}
@@ -92,23 +92,21 @@ export default function SelectProjectMembers({
                 )}
 
                 {/* 에러 메시지: 참여 인력 */}
-                {errors.selectedMembers && (
-                    <p className="text-red-500 text-xs ml-1 mt-1">
-                        {errors.selectedMembers}
-                    </p>
-                )}
+                <p className="h-2 ml-1 text-red-500 text-xs mt-1">
+                    {errors.selectedMembers}
+                </p>
 
                 {/* 책임자 선택 */}
                 <div className="mt-5">
-                    <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
+                    <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                         책임자 선택
                     </label>
                     {selectedMembers.length === 0 ? (
-                        <p className="text-sm text-gray-500 italic">
+                        <p className="text-sm font-light text-gray-500 italic">
                             참여 인력을 먼저 선택해주세요.
                         </p>
                     ) : (
-                        <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md ml-1 p-3 shadow-inner">
+                        <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-3 mx-1 shadow-inner">
                             {selectedMembers.map((member) => (
                                 <label
                                     key={member.memberId}
@@ -118,7 +116,8 @@ export default function SelectProjectMembers({
                                         type="radio"
                                         name="manager"
                                         checked={
-                                            manager?.memberId === member.memberId
+                                            manager?.memberId ===
+                                            member.memberId
                                         }
                                         onChange={() =>
                                             handleManagerChange(member)
@@ -133,11 +132,9 @@ export default function SelectProjectMembers({
                         </div>
                     )}
                     {/* 에러 메시지: 관리자 */}
-                    {errors.manager && (
-                        <p className="text-red-500 text-xs ml-1 mt-1">
-                            {errors.manager}
-                        </p>
-                    )}
+                    <p className="h-2 ml-1 text-red-500 text-xs mt-1">
+                        {errors.manager}
+                    </p>
                 </div>
             </div>
 
@@ -146,7 +143,7 @@ export default function SelectProjectMembers({
                 <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                     참여 인력
                 </label>
-                <div className="border border-gray-300 mx-1 rounded-md max-h-[70vh] overflow-y-auto shadow-sm">
+                <div className="border border-gray-300 rounded-md max-h-[56vh] mx-1 overflow-y-auto shadow-sm">
                     {filteredMembers.length === 0 ? (
                         <p className="text-center text-sm text-gray-500 py-3">
                             검색 결과 없음
