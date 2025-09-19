@@ -187,10 +187,11 @@ export default function ProjectUpdateModal({
             editProjectInfo();
             setProjectInfo(newProject);
             onClose();
-        } catch {
+        } catch (err) {
             toastMessage.error(
                 "프로젝트 수정에 실패했습니다. 다시 시도해주세요."
             );
+            console.log("프로젝트 수정 오류: ", err);
         }
     };
 

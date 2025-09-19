@@ -8,7 +8,6 @@ import { useRef } from "react";
 import { postProject } from "@/services/projects";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useProjects } from "@/store/useProjects";
-import { AxiosError } from "axios";
 
 type ProjectCreateModalProps = {
     onClose: () => void;
@@ -169,6 +168,7 @@ export default function ProjectCreateModal({
             toastMessage.error(
                 "프로젝트 등록에 실패했습니다. 다시 시도해주세요."
             );
+            console.log("프로젝트 등록 오류: ", err);
         }
     };
 
