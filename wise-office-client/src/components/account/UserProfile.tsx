@@ -36,7 +36,7 @@ export default function UserProfile({ props }: UserProfileProps) {
         <div className="flex flex-col items-center gap-5">
             <div className="relative">
                 <div className="w-36 h-36 rounded-full border-2 border-white">
-                    <ProfileImage />
+                    <ProfileImage imageUrl={profile?.imageUrl} />
                 </div>
                 <button
                     type="button"

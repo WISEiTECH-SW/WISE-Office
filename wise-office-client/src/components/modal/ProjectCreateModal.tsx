@@ -8,7 +8,6 @@ import { useRef } from "react";
 import { postProject } from "@/services/projects";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useProjects } from "@/store/useProjects";
-import { AxiosError } from "axios";
 
 type ProjectCreateModalProps = {
     onClose: () => void;
@@ -113,6 +112,11 @@ export default function ProjectCreateModal({
             valid = false;
         }
 
+        if (startDate && endDate && startDate > endDate) {
+            newErrors.endDate = "시작일 이후로 선택해주세요.";
+            valid = false;
+        }
+
         if (content.trim() === "") {
             newErrors.content = "프로젝트 설명을 입력해주세요.";
             valid = false;
@@ -160,15 +164,11 @@ export default function ProjectCreateModal({
             if (onCreated) await onCreated();
             toastMessage.success("프로젝트가 등록되었습니다.");
             onClose();
-        } catch (error: unknown) {
-            const err = error as AxiosError;
-            if (err.response?.status === 400) {
-                toastMessage.error("기간 또는 PM 설정을 확인해주세요.");
-            } else {
-                toastMessage.error(
-                    "프로젝트 등록 중 오류가 발생했습니다. 다시 시도해주세요."
-                );
-            }
+        } catch (err) {
+            toastMessage.error(
+                "프로젝트 등록에 실패했습니다. 다시 시도해주세요."
+            );
+            console.log("프로젝트 등록 오류: ", err);
         }
     };
 

@@ -6,14 +6,12 @@ interface ProjectLogListProps {
     logList: Log[];
     selectedLog?: LogDetail | null;
     onSelectLog: (logId: number) => void;
-    onDeleteLog: (target: string, logId: number) => void;
 }
 
 export default function ProjectLogList({
     logList,
     selectedLog,
     onSelectLog,
-    onDeleteLog,
 }: ProjectLogListProps) {
     return (
         <div className="md:min-h-52 bg-white rounded-lg shadow-sm">
@@ -42,7 +40,6 @@ export default function ProjectLogList({
                             log={log}
                             isSelected={selectedLog?.logId === log.logId}
                             onSelect={onSelectLog}
-                            onDelete={onDeleteLog}
                         />
                     ))
                 )}

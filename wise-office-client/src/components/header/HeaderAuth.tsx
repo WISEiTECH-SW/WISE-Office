@@ -4,10 +4,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 import ProfileImage from "./ProfileImage";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useProfileStore } from "@/store/useProfileStore";
 
 export default function HeaderAuth() {
-    const hasToken = useAuthStore((s) => s.hasToken);
     const router = useRouter();
+    const hasToken = useAuthStore((s) => s.hasToken);
+    const { profile } = useProfileStore();
 
     const handleProfileClick = () => {
         router.push("/account");
@@ -32,7 +34,7 @@ export default function HeaderAuth() {
                 onClick={handleProfileClick}
                 className="relative w-12 h-12 flex-none rounded-full overflow-hidden hover:border-gray-300 transition-colors cursor-pointer"
             >
-                <ProfileImage />
+                <ProfileImage imageUrl={profile?.imageUrl} />
             </div>
             <LogoutButton />
         </div>

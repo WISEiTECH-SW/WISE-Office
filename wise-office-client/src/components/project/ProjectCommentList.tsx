@@ -18,7 +18,7 @@ export default function ProjectCommentList({
     onDeleteComment,
 }: ProjectCommentListProps) {
     return (
-        <div className="p-6 w-full">
+        <div className="p-6 md:p-8 w-full">
             <h3 className="font-semibold text-gray-800 mb-4">
                 댓글 ({commentList.length})
             </h3>

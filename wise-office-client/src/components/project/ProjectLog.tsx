@@ -12,6 +12,7 @@ interface ProjectLogProps {
     isAttending: boolean;
     onSummit: (commentInput: string) => void;
     onDeleteComment: (target: string, commentId: number) => void;
+    onDeleteLog: (target: string, logId: number) => void;
 }
 
 export default function ProjectLog({
@@ -21,6 +22,7 @@ export default function ProjectLog({
     isAttending,
     onSummit,
     onDeleteComment,
+    onDeleteLog,
 }: ProjectLogProps) {
     if (!selectedLog) {
         return (
@@ -37,7 +39,11 @@ export default function ProjectLog({
 
     return (
         <div className="bg-white rounded-lg shadow-sm">
-            <ProjectLogDetail log={selectedLog} modifyModal={modifyModal} />
+            <ProjectLogDetail
+                log={selectedLog}
+                modifyModal={modifyModal}
+                onDelete={onDeleteLog}
+            />
             <ProjectCommentList
                 logId={selectedLog.logId}
                 isAttending={isAttending}

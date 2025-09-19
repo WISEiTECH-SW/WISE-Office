@@ -25,6 +25,7 @@ export default function ProjectListCard({ project }: Props) {
             <div className="px-6 py-3 md:px-10 md:py-7 border-b border-gray-100">
                 <div className="flex justify-between items-start gap-6">
                     <p className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                        {state === "진행중" && `(${duration}) `}
                         {project.projectTitle}
                     </p>
                     <span
@@ -56,7 +57,7 @@ export default function ProjectListCard({ project }: Props) {
 
                     <div className="col-start-1 col-span-2 row-start-2">
                         <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                            현재 차수
+                            진행 상태
                         </span>
                         <div className="flex items-center text-sm text-gray-700 gap-3">
                             <span className="font-medium">{duration}</span>
@@ -66,7 +67,7 @@ export default function ProjectListCard({ project }: Props) {
                     {/* content-right-column */}
                     <div className="col-start-3 col-span-3 row-start-1 space-y-1">
                         <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                            프로젝트 매니저
+                            책임자
                         </span>
                         <div className="flex items-center gap-2">
                             <span className="text-sm text-gray-700 font-medium">

@@ -1,6 +1,6 @@
 import ProjectInfoItem from "./ProjectInfoItem";
 import type { ProjectInfo } from "@/types/project";
-import { calculationDuration, formatYearMonth } from "@/lib/common/util";
+import { calculateProjectDuration, formatYearMonth } from "@/lib/common/util";
 import {
     Calendar,
     TrendingUp,
@@ -8,7 +8,7 @@ import {
     Users,
     NotepadText,
     Edit,
-    Trash,
+    Trash2,
 } from "lucide-react";
 
 type ProjectContainerProps = {
@@ -22,11 +22,15 @@ export default function ProjectInfoContainer({
     onEdit,
     onDelete,
 }: ProjectContainerProps) {
-    const duration = calculationDuration(projectInfo.start);
+    const duration = calculateProjectDuration(
+        projectInfo.start,
+        projectInfo.end
+    );
     return (
         <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-6 md:mt-6">
             <div className="flex justify-between items-start mb-4">
                 <p className="text-lg md:text-2xl font-bold text-gray-800 break-words whitespace-normal">
+                    {duration.state === "진행중" && `(${duration.duration}) `}
                     {projectInfo.projectTitle}
                 </p>
                 {projectInfo.canModify && (
@@ -42,7 +46,7 @@ export default function ProjectInfoContainer({
                             onClick={onDelete}
                             className="p-2 md:px-4 bg-gray-400 text-white text-sm rounded hover:bg-gray-500 cursor-pointer"
                         >
-                            <Trash className="h-4 w-4 md:hidden" />
+                            <Trash2 className="h-4 w-4 md:hidden" />
                             <p className="hidden md:block">삭제</p>
                         </button>
                     </div>
@@ -59,7 +63,7 @@ export default function ProjectInfoContainer({
                 <ProjectInfoItem
                     icon={<TrendingUp className="w-5 h-5 md:w-6 md:h-6" />}
                     label="진행 상태"
-                    value={duration}
+                    value={duration.state}
                 />
                 <ProjectInfoItem
                     icon={<User className="w-5 h-5 md:w-6 md:h-6" />}
@@ -68,7 +72,7 @@ export default function ProjectInfoContainer({
                 />
                 <ProjectInfoItem
                     icon={<Users className="w-5 h-5 md:w-6 md:h-6" />}
-                    label="참여인원"
+                    label="참여 인원"
                     value={`${projectInfo.attendant.length + 1}명`}
                 />
             </div>

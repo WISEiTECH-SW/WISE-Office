@@ -171,7 +171,6 @@ export default function ProjectPageById() {
                         logList={logList}
                         selectedLog={selectedLog}
                         onSelectLog={handleSelectLog}
-                        onDeleteLog={handleConfirmModal}
                     />
                     {projectInfo.attending && (
                         <div className="mt-2">
@@ -190,6 +189,7 @@ export default function ProjectPageById() {
                         isAttending={projectInfo.attending}
                         onSummit={handleCreateComment}
                         onDeleteComment={handleConfirmModal}
+                        onDeleteLog={handleConfirmModal}
                     />
                 </div>
                 {/* Attendant List - Right */}
