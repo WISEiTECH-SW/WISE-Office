@@ -199,7 +199,7 @@ export default function ProjectUpdateModal({
         <div className="Overlay fixed inset-0 bg-opacity-40 flex justify-center items-center z-50 p-6">
             <div
                 ref={modalRef}
-                className="bg-white rounded-xl shadow-xl p-8 w-full max-w-[64rem] max-h-[90vh] flex flex-col relative"
+                className="bg-white rounded-xl shadow-xl p-8 w-full max-w-[64rem] max-h-[76vh] flex flex-col relative"
             >
                 {/* 닫기 버튼 */}
                 <button
@@ -217,7 +217,7 @@ export default function ProjectUpdateModal({
                 </h2>
 
                 {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}
-                <div className="flex flex-col md:flex-row gap-2 flex-grow overflow-hidden">
+                <div className="flex flex-col md:flex-row gap-8 flex-grow overflow-hidden">
                     {/* 왼쪽 영역 */}
                     <ProjectNameWithPeriod
                         projectTitle={projectTitle}
@@ -246,7 +246,7 @@ export default function ProjectUpdateModal({
 
                 {/* 생성 완료 버튼 */}
                 <button
-                    className={`mt-4 mx-auto px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer`}
+                    className={`mt-2 mx-auto px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer`}
                     onClick={handleSubmit}
                     type="button"
                 >

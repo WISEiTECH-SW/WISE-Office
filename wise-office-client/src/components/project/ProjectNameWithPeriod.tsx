@@ -2,6 +2,7 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_blue.css";
 import "flatpickr/dist/plugins/monthSelect/style.css";
 import monthSelectPlugin from "flatpickr/dist/plugins/monthSelect";
+import { Korean } from "flatpickr/dist/l10n/ko";
 
 interface ProjectNameWithPeriodProps {
     projectTitle: string;
@@ -33,38 +34,36 @@ export default function ProjectNameWithPeriod({
 }: ProjectNameWithPeriodProps) {
     return (
         <div>
-            <div className="flex flex-col basis-1/5 overflow-y-auto pr-4">
+            <div className="flex flex-col basis-1/5 overflow-y-auto pr-2">
                 {/* 프로젝트 명 */}
                 <div className="mb-5 flex-shrink-0">
-                    <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
+                    <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                         프로젝트 명
                     </label>
                     <input
                         type="text"
                         value={projectTitle}
                         onChange={(e) => setProjectTitle(e.target.value)}
-                        className="border border-gray-300 rounded-md m-1 px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="프로젝트 명을 입력하세요"
+                        className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        placeholder="프로젝트명을 입력하세요"
                     />
-                    {errors.projectTitle && (
-                        <p className="text-red-500 text-xs ml-1 mt-1">
-                            {errors.projectTitle}
-                        </p>
-                    )}
+                    <p className="h-2 ml-1 px-1 text-red-500 text-xs mt-1">
+                        {errors.projectTitle}
+                    </p>
                 </div>
 
                 {/* 프로젝트 기간 */}
                 <div className="mb-5 flex-shrink-0">
-                    <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
+                    <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                         프로젝트 기간
                     </label>
-                    <div className="flex gap-3 ml-1">
+                    <div className="flex gap-3">
                         {/* 시작 월 */}
                         <div className="w-1/2">
                             <Flatpickr
                                 options={{
                                     disableMobile: true,
-                                    locale: "ko",
+                                    locale: Korean,
                                     plugins: [
                                         monthSelectPlugin({
                                             shorthand: true,
@@ -85,17 +84,15 @@ export default function ProjectNameWithPeriod({
                                         );
                                     }
                                 }}
-                                className="border border-gray-300 rounded-md px-3 py-2 w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 placeholder="시작 월 선택"
                             />
-                            {errors.startDate && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.startDate}
-                                </p>
-                            )}
+                            <p className="h-2 ml-1 px-1 text-red-500 text-xs mt-1">
+                                {errors.startDate}
+                            </p>
                         </div>
 
-                        <span className="self-center text-lg font-semibold text-gray-600">
+                        <span className="self-start mt-2 text-lg font-semibold text-gray-600">
                             →
                         </span>
 
@@ -104,7 +101,7 @@ export default function ProjectNameWithPeriod({
                             <Flatpickr
                                 options={{
                                     disableMobile: true,
-                                    locale: "ko",
+                                    locale: Korean,
                                     plugins: [
                                         monthSelectPlugin({
                                             shorthand: true,
@@ -125,34 +122,30 @@ export default function ProjectNameWithPeriod({
                                         );
                                     }
                                 }}
-                                className="border border-gray-300 rounded-md px-3 py-2 w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 placeholder="종료 월 선택"
                             />
-                            {errors.endDate && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.endDate}
-                                </p>
-                            )}
+                            <p className="h-2 ml-1 px-1 text-red-500 text-xs mt-1">
+                                {errors.endDate}
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 {/* 내용/설명 입력 */}
                 <div className="mb-5 flex-shrink-0">
-                    <label className="block ml-1 mb-2 font-semibold text-gray-700 text-sm">
+                    <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                         프로젝트 설명
                     </label>
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        className="border border-gray-300 rounded-md ml-1 px-3 py-2 w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                         placeholder="프로젝트에 대한 설명을 입력하세요"
                     />
-                    {errors.content && (
-                        <p className="text-red-500 text-xs ml-1 mt-1">
-                            {errors.content}
-                        </p>
-                    )}
+                    <p className="h-2 ml-1 px-1 text-red-500 text-xs">
+                        {errors.content}
+                    </p>
                 </div>
             </div>
         </div>

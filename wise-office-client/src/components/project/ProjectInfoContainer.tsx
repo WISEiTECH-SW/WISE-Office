@@ -63,7 +63,7 @@ export default function ProjectInfoContainer({
                 <ProjectInfoItem
                     icon={<TrendingUp className="w-5 h-5 md:w-6 md:h-6" />}
                     label="진행 상태"
-                    value={duration.state}
+                    value={duration.duration}
                 />
                 <ProjectInfoItem
                     icon={<User className="w-5 h-5 md:w-6 md:h-6" />}
