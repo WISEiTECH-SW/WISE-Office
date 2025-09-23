@@ -28,6 +28,12 @@ export default function SelectProjectMembers({
     setManager,
     errors,
 }: SelectProjectMembersProps) {
+    if (manager) {
+        setSelectedMembers((prev) => {
+            const exists = prev.some((m) => m.memberId === manager.memberId);
+            return exists ? prev : [...prev, manager];
+        });
+    }
     const filteredMembers = members.filter(
         (m) =>
             m.name.includes(searchText) ||
