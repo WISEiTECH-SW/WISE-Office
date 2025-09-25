@@ -8,11 +8,11 @@ export default function SummaryField() {
     const [showMore, setShowMore] = useState(false);
 
     return (
-        <div className="mt-4">
-            <label className="font-bold text-gray-800 shrink-0">요약</label>
+        <div className="mt-6 px-2">
+            {/* <label className="font-bold text-gray-800 shrink-0">요약</label> */}
 
             {/* 상단 3개 */}
-            <div className="grid grid-cols-3 gap-4 mt-2">
+            <div className="grid grid-cols-3 gap-3">
                 <SummaryCard
                     title="사용가능한 연차"
                     count="0.000"
@@ -29,7 +29,7 @@ export default function SummaryField() {
             <div className="flex justify-center mt-2">
                 <button
                     onClick={() => setShowMore((prev) => !prev)}
-                    className="flex items-center text-sm text-gray-600 hover:text-gray-800"
+                    className="flex items-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
                 >
                     {!showMore && (
                         <>
@@ -42,7 +42,7 @@ export default function SummaryField() {
 
             {showMore && (
                 <>
-                    <div className="grid grid-cols-3 gap-4 mt-2">
+                    <div className="grid grid-cols-3 gap-3 mt-1">
                         <SummaryCard
                             title="사용한 대체휴가"
                             count="0.000"
@@ -62,7 +62,7 @@ export default function SummaryField() {
                     <div className="flex justify-center mt-2">
                         <button
                             onClick={() => setShowMore((prev) => !prev)}
-                            className="flex items-center text-sm text-gray-600 hover:text-gray-800"
+                            className="flex items-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
                         >
                             {showMore && (
                                 <>

@@ -4,13 +4,36 @@ import OutputSection from "@/components/leave-tracker/OutputSection";
 import LeaveTableSection from "@/components/leave-tracker/LeaveTableSection";
 
 export default function LeaveTracker() {
+    const [text, setText] = useState("");
+    const [appliedText, setAppliedText] = useState("");
+
+    const onApply = () => {
+        setAppliedText(text);
+        setText("");
+    };
+
+    const rows = appliedText.split("\n");
+    const data = rows.map((row, i) => {
+        const cols = row.split("\t");
+
+        return {
+            date: cols[0] === "" ? "-" : cols[0],
+            category: cols[1] ?? "-",
+            days: cols[2] ?? "-",
+            requestedAt: cols[3] ?? "-",
+            approver: cols[6] ?? "-",
+            status: cols[7] ?? "-",
+            flag: cols[8] === "Y" ? "✅" : "-",
+        };
+    });
+
     return (
         <div className="flex flex-col items-center gap-6 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
-            <div className="w-full flex flex-col md:flex-row gap-6">
-                <InputSection />
+            <div className="w-full flex flex-col md:flex-row gap-6 min-h-0">
+                <InputSection text={text} setText={setText} onApply={onApply} />
                 <OutputSection />
             </div>
-            <LeaveTableSection />
+            <LeaveTableSection data={data} />
         </div>
     );
 }
