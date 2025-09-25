@@ -7,12 +7,10 @@ export default function OutputSection() {
     const [joinDate, setJoinDate] = useState("");
 
     return (
-        <div className="w-full ">
-            <div className="w-full max-h-[42vh] bg-white border border-gray-200 rounded-lg shadow-sm p-8 overflow-y-auto scrollbar-auto-hide overscroll-contain">
-                <JoinDateField joinDate={joinDate} setJoinDate={setJoinDate} />
-                <SummaryField />
-                <LeaveHistory joinDate={joinDate} />
-            </div>
+        <div className="w-full max-h-[42vh] bg-white border border-gray-200 rounded-lg shadow-sm p-8 overflow-y-auto scrollbar-auto-hide overscroll-contain">
+            <JoinDateField joinDate={joinDate} setJoinDate={setJoinDate} />
+            <SummaryField />
+            <LeaveHistory joinDate={joinDate} />
         </div>
     );
 }
