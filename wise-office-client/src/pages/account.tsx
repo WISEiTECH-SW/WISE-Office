@@ -5,11 +5,13 @@ import ProjectCardsMy from "@/components/account/ProjectCardsMy";
 import { getMyProfile, updateProfileInfo } from "@/services/members";
 import { Profile, ProfileRequest } from "@/types/profile";
 import { toastMessage } from "@/lib/common/toastMessage";
+import Link from "next/link";
 
 export default function Account() {
     const [profile, setProfile] = useState<Profile>();
     const [team, setTeam] = useState<string>("");
     const [rank, setRank] = useState<string>("");
+
     useEffect(() => {
         const fetchData = async () => {
             const profile = await getMyProfile();
@@ -39,8 +41,13 @@ export default function Account() {
         <div className="flex flex-col md:flex-row justify-center items-start py-10 px-4">
             <div className="md:mt-10 max-w-6xl w-full md:grid md:grid-cols-12 gap-10">
                 {/* 프로필 영역 - 가운데 정렬 */}
-                <section className="col-span-12 md:col-span-2 rounded-lg p-6 flex flex-col items-center justify-center">
+                <section className="col-span-12 md:col-span-2 rounded-lg p-6 flex flex-col items-center justify-center gap-6">
                     {profile && <UserProfile props={profile} />}
+                    <Link href="/leave-tracker">
+                        <button className="w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded px-4 py-2 transition duration-300 cursor-pointer">
+                            연차계산기
+                        </button>
+                    </Link>
                 </section>
 
                 {/* 부서/직급 및 저장 버튼 영역 */}
