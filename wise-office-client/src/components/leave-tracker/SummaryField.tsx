@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { isOverOneYear } from "@/utils/dateToString";
 import SummaryCard from "@/components/leave-tracker/SummaryCard";
-import { useLeaveStore } from "@/store/useLeaveStore";
+import { useLeaveSummary } from "@/hooks/useLeaveSummary";
 
 type JoinDateProps = {
     today: Date;
@@ -10,6 +9,7 @@ type JoinDateProps = {
     thisYear: number;
     joinYear: number;
 };
+
 export default function SummaryField({
     today,
     joinDate,
@@ -17,76 +17,33 @@ export default function SummaryField({
     joinYear,
 }: JoinDateProps) {
     const [showMore, setShowMore] = useState(false);
-    const { inputData } = useLeaveStore();
 
-    const data = useMemo(() => {
-        const deduction = ["연차", "반차(오후)", "반차(오전)", "반반차"];
-        const substitute = ["대체반차(오전)", "대체반차(오후)", "대체"];
-        const defense = ["국방(반차)", "국방"];
-
-        if (!joinDate || inputData.length === 0) {
-            return {
-                annualAvailable: 0.0,
-                annualUsed: 0.0,
-                annualRemaining: 0.0,
-                substituteLeaveUsed: 0.0,
-                officialLeaveUsed: 0.0,
-                defenseLeaveUsed: 0.0,
-            };
-        }
-
-        // 사용가능한 연차 계산
-        const annualAvailable = isOverOneYear(today, joinDate)
-            ? (thisYear - joinYear) * 15
-            : 11;
-
-        var annualUsed = 0.0;
-        var substituteLeaveUsed = 0.0;
-        var officialLeaveUsed = 0.0;
-        var defenseLeaveUsed = 0.0;
-
-        for (let i = 0; i < inputData.length; i++) {
-            if (deduction.includes(inputData[i].category))
-                annualUsed += Number(inputData[i].days);
-            if (substitute.includes(inputData[i].category))
-                substituteLeaveUsed += Number(inputData[i].days);
-            if (inputData[i].category === "공가")
-                officialLeaveUsed += Number(inputData[i].days);
-            if (defense.includes(inputData[i].category))
-                defenseLeaveUsed += Number(inputData[i].days);
-        }
-
-        const annualRemaining = annualAvailable - annualUsed;
-
-        return {
-            annualAvailable,
-            annualUsed,
-            annualRemaining,
-            substituteLeaveUsed,
-            officialLeaveUsed,
-            defenseLeaveUsed,
-        };
-    }, [joinDate, inputData]);
+    const {
+        annualAvailable,
+        annualUsed,
+        annualRemaining,
+        substituteLeaveUsed,
+        officialLeaveUsed,
+        defenseLeaveUsed,
+    } = useLeaveSummary({ today, joinDate, thisYear, joinYear });
 
     return (
         <div className="mt-6 px-2">
-            {/* <label className="font-bold text-gray-800 shrink-0">요약</label> */}
-
             {/* 상단 3개 */}
             <div className="grid grid-cols-3 gap-3">
                 <SummaryCard
                     title="사용가능한 연차"
-                    count={data.annualAvailable}
+                    count={annualAvailable}
                     bg="bg-gray-100"
                 />
                 <SummaryCard
                     title="사용한 연차"
-                    count={data.annualUsed}
+                    count={annualUsed}
                     bg="bg-gray-100"
                 />
                 <SummaryCard
                     title="잔여 연차"
-                    count={data.annualRemaining}
+                    count={annualRemaining}
                     bg="bg-blue-100"
                 />
             </div>
@@ -110,17 +67,17 @@ export default function SummaryField({
                     <div className="grid grid-cols-3 gap-3 mt-1">
                         <SummaryCard
                             title="사용한 대체휴가"
-                            count={data.substituteLeaveUsed}
+                            count={substituteLeaveUsed}
                             bg="bg-gray-100"
                         />
                         <SummaryCard
                             title="사용한 공가휴가"
-                            count={data.officialLeaveUsed}
+                            count={officialLeaveUsed}
                             bg="bg-gray-100"
                         />
                         <SummaryCard
                             title="사용한 국방휴가"
-                            count={data.defenseLeaveUsed}
+                            count={defenseLeaveUsed}
                             bg="bg-gray-100"
                         />
                     </div>
