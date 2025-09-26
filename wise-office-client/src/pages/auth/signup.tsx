@@ -95,7 +95,6 @@ export default function Signup() {
 
     const verifyCode = async () => {
         const success = await handleCodeVerify(email, code);
-        console.log(success);
 
         if (success) {
             setEmailValid(true);
