@@ -25,7 +25,11 @@ export default function LeaveHistory({ thisYear, joinYear }: JoinYearProps) {
         <div className="mt-6">
             <ul>
                 {joinYear && inputData.length > 0 ? (
-                    workingYears.map((year) => <SummaryList year={year} />)
+                    workingYears.map((year) => (
+                        <li key={year}>
+                            <SummaryList year={year} />
+                        </li>
+                    ))
                 ) : (
                     <p className="w-full text-sm text-gray-600">
                         * 입사일을 입력해 연도별 연차 사용 내역을 확인하세요.

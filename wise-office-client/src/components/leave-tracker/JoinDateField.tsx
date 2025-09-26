@@ -2,7 +2,6 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Korean } from "flatpickr/dist/l10n/ko.js";
 import { dateToString } from "@/utils/dateToString";
-import Tooltip from "../ui/Tootip";
 
 type JoinDateProps = {
     joinDate: string;

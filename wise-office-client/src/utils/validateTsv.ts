@@ -21,7 +21,7 @@ export function validateTsv(text: string): ValidateResult<Row> {
     // 각 라인은 \t로 구분되어 7칸이며, \n로 끝남
     const pattern = /^([^\n]*\t){6}[^\n]*$/;
     const failedLine = lines.findIndex((line) => {
-        !pattern.test(line);
+        return !pattern.test(line);
     });
     if (failedLine !== -1) {
         return {
