@@ -1,24 +1,22 @@
 import { useState, useEffect } from "react";
 
-type HistoryProps = {
-    joinDate: string;
+type JoinYearProps = {
+    thisYear: number;
+    joinYear: number;
 };
 
-export default function LeaveHistory({ joinDate }: HistoryProps) {
-    const today = new Date();
-    const thisYear = Number(today.getFullYear());
-    const joinYear = Number(joinDate.split("-")[0]);
+export default function LeaveHistory({ thisYear, joinYear }: JoinYearProps) {
     const [workingYears, setWorkingYears] = useState<number[]>([thisYear]);
 
     useEffect(() => {
         if (!joinYear || joinYear > thisYear) return;
 
         const years: number[] = [];
-        for (let i = thisYear; i >= joinYear; i--) {
+        for (let i = thisYear - 1; i >= joinYear; i--) {
             years.push(i);
         }
         setWorkingYears(years);
-    }, [joinDate]);
+    }, [joinYear]);
 
     return (
         <div className="mt-6">
@@ -26,11 +24,11 @@ export default function LeaveHistory({ joinDate }: HistoryProps) {
                 연도별 연차 사용 내역
             </label> */}
             <ul>
-                {joinDate ? (
+                {joinYear && joinYear < thisYear ? (
                     workingYears.map((year) => (
                         <li key={year}>
                             <div className="flex border border-gray-200 rounded-full px-6 py-2 gap-6 mb-2">
-                                <p className="font-medium">{year}</p>
+                                <p className="font-medium">{year}년</p>
                                 <p className="font-base">0.000</p>
                             </div>
                         </li>

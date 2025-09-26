@@ -2,15 +2,12 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Korean } from "flatpickr/dist/l10n/ko.js";
 import { useId } from "react";
+import { dateToString } from "@/utils/dateToString";
 
 type JoinDateProps = {
     joinDate: string;
     setJoinDate: (v: string) => void;
 };
-
-const pad2 = (n: number) => String(n).padStart(2, "0");
-const toYYYYMMDD = (d: Date) =>
-    `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 
 export default function JoinDateField({
     joinDate,
@@ -41,11 +38,11 @@ export default function JoinDateField({
                     }}
                     value={joinDate}
                     onChange={(dates) => {
-                        if (dates.length) setJoinDate(toYYYYMMDD(dates[0]));
+                        if (dates.length) setJoinDate(dateToString(dates[0]));
                     }}
                     onClose={(selectedDates) => {
                         if (selectedDates?.[0])
-                            setJoinDate(toYYYYMMDD(selectedDates[0]));
+                            setJoinDate(dateToString(selectedDates[0]));
                     }}
                     className="w-full border border-gray-300 rounded-md pl-10 pr-10 py-2 text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="입사일을 입력하세요"

@@ -1,6 +1,6 @@
 type SummaryCardProps = {
     title: string;
-    count: string;
+    count: number;
     bg: string;
 };
 

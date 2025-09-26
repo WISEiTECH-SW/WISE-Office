@@ -12,13 +12,13 @@ export default function LeaveTable({
     onApply,
 }: TextProps) {
     return (
-        <div className="w-full bg-white border border-gray-200 rounded-lg shadow-sm p-8 flex flex-col justify-between gap-6">
+        <div className="w-full h-[42vh] bg-white border border-gray-200 rounded-lg shadow-sm p-8 flex flex-col justify-between gap-6">
             <p className="text-xl font-bold">표를 붙여넣기 하세요.</p>
             <div className="w-full h-full">
                 <textarea
-                    className="w-full h-full border border-gray-300 rounded-md text-xs p-4 resize-none"
+                    className="w-full h-full border border-gray-300 rounded-md text-sm p-4 resize-none"
                     placeholder="표를 붙여넣기 하세요"
-                    rows={5}
+                    rows={4}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                 />
