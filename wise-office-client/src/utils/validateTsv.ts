@@ -22,7 +22,6 @@ export function validateTsv(text: string): ValidateResult<Row> {
     const pattern = /^([^\n]*\t){6}[^\n]*$/;
     const failedLine = lines.findIndex((line) => {
         !pattern.test(line);
-        console.log(line);
     });
     if (failedLine !== -1) {
         return {

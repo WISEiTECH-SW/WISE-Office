@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
-import SummaryCard from "@/components/leave-tracker/SummaryCard";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { dateToString } from "@/utils/dateToString";
+import { isOverOneYear } from "@/utils/dateToString";
+import SummaryCard from "@/components/leave-tracker/SummaryCard";
+import { useLeaveStore } from "@/store/useLeaveStore";
 
 type JoinDateProps = {
     today: Date;
@@ -16,38 +17,58 @@ export default function SummaryField({
     joinYear,
 }: JoinDateProps) {
     const [showMore, setShowMore] = useState(false);
+    const { inputData } = useLeaveStore();
 
-    function isOverOneYear(today: Date, joinDate: string): boolean {
-        const plusOneYear = new Date(joinDate);
-        plusOneYear.setFullYear(plusOneYear.getFullYear() + 1);
-        return dateToString(today) >= dateToString(plusOneYear);
-    }
+    console.log("input: ", inputData);
 
     const data = useMemo(() => {
-        if (!joinDate) {
+        const deduction = ["연차", "반차(오후)", "반차(오전)", "반반차"];
+        const substitute = ["대체반차(오전)", "대체반차(오후)", "대체"];
+        const defense = ["국방(반차)", "국방"];
+
+        if (!joinDate || inputData.length === 0) {
             return {
                 annualAvailable: 0.0,
                 annualUsed: 0.0,
                 annualRemaining: 0.0,
-                compLeaveUsed: 0.0,
+                substituteLeaveUsed: 0.0,
                 officialLeaveUsed: 0.0,
                 defenseLeaveUsed: 0.0,
             };
         }
 
+        // 사용가능한 연차 계산
         const annualAvailable = isOverOneYear(today, joinDate)
             ? (thisYear - joinYear) * 15
             : 11;
 
+        var annualUsed = 0.0;
+        var substituteLeaveUsed = 0.0;
+        var officialLeaveUsed = 0.0;
+        var defenseLeaveUsed = 0.0;
+
+        for (let i = 0; i < inputData.length; i++) {
+            if (deduction.includes(inputData[i].category))
+                annualUsed += Number(inputData[i].days);
+            if (substitute.includes(inputData[i].category))
+                substituteLeaveUsed += Number(inputData[i].days);
+            if (inputData[i].category === "공가")
+                officialLeaveUsed += Number(inputData[i].days);
+            if (defense.includes(inputData[i].category))
+                defenseLeaveUsed += Number(inputData[i].days);
+        }
+
+        const annualRemaining = annualAvailable - annualUsed;
+
         return {
             annualAvailable,
-            annualUsed: 0.0,
-            annualRemaining: 0.0,
-            compLeaveUsed: 0.0,
-            officialLeaveUsed: 0.0,
-            defenseLeaveUsed: 0.0,
+            annualUsed,
+            annualRemaining,
+            substituteLeaveUsed,
+            officialLeaveUsed,
+            defenseLeaveUsed,
         };
-    }, [joinDate]);
+    }, [joinDate, inputData]);
 
     return (
         <div className="mt-6 px-2">
@@ -91,7 +112,7 @@ export default function SummaryField({
                     <div className="grid grid-cols-3 gap-3 mt-1">
                         <SummaryCard
                             title="사용한 대체휴가"
-                            count={data.compLeaveUsed}
+                            count={data.substituteLeaveUsed}
                             bg="bg-gray-100"
                         />
                         <SummaryCard

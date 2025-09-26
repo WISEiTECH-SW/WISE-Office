@@ -1,10 +1,7 @@
-import type { Row } from "@/types/annualLeave";
+import { useLeaveStore } from "@/store/useLeaveStore";
 
-type DataProps = {
-    data: Row[];
-};
-
-export default function LeaveTableSection({ data }: DataProps) {
+export default function LeaveTableSection() {
+    const { inputData } = useLeaveStore();
     const headers = [
         "휴가일자",
         "휴가구분",
@@ -47,7 +44,7 @@ export default function LeaveTableSection({ data }: DataProps) {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((row, i) => (
+                        {inputData.map((row, i) => (
                             <tr key={i}>
                                 <td className="px-4 py-2 border-b border-gray-100 text-gray-600 text-center">
                                     {row.date}

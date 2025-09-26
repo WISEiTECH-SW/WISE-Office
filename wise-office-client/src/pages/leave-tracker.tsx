@@ -1,14 +1,13 @@
 import { useCallback, useState } from "react";
 import { validateTsv } from "@/utils/validateTsv";
-import type { Row } from "@/types/annualLeave";
+import { useLeaveStore } from "@/store/useLeaveStore";
 import InputSection from "@/components/leave-tracker/InputSection";
 import OutputSection from "@/components/leave-tracker/OutputSection";
 import LeaveTableSection from "@/components/leave-tracker/LeaveTableSection";
 
 export default function LeaveTracker() {
     const [text, setText] = useState("");
-    const [appliedText, setAppliedText] = useState("");
-    const [data, setData] = useState<Row[]>([]);
+    const { setInputData } = useLeaveStore();
     const [error, setError] = useState("");
 
     const onApply = useCallback(() => {
@@ -20,13 +19,12 @@ export default function LeaveTracker() {
         }
 
         setError("");
-        setData(result.rows!);
-        setAppliedText(text);
+        setInputData(result.rows!);
         setText("");
     }, [text]);
 
     return (
-        <div className="flex flex-col items-center gap-6 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
+        <div className="flex flex-col items-center gap-6 max-w-screen-lg mx-auto my-14 px-2">
             <div className="w-full flex flex-col md:flex-row gap-6 min-h-0">
                 <InputSection
                     text={text}
@@ -36,7 +34,7 @@ export default function LeaveTracker() {
                 />
                 <OutputSection />
             </div>
-            <LeaveTableSection data={data} />
+            <LeaveTableSection />
         </div>
     );
 }
