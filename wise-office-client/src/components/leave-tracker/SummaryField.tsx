@@ -19,8 +19,6 @@ export default function SummaryField({
     const [showMore, setShowMore] = useState(false);
     const { inputData } = useLeaveStore();
 
-    console.log("input: ", inputData);
-
     const data = useMemo(() => {
         const deduction = ["연차", "반차(오후)", "반차(오전)", "반반차"];
         const substitute = ["대체반차(오전)", "대체반차(오후)", "대체"];

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import JoinDateField from "./JoinDateFeild";
+import JoinDateField from "./JoinDateField";
 import LeaveHistory from "./LeaveHistory";
 import SummaryField from "./SummaryField";
 

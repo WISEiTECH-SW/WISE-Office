@@ -1,8 +1,8 @@
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Korean } from "flatpickr/dist/l10n/ko.js";
-import { useId } from "react";
 import { dateToString } from "@/utils/dateToString";
+import Tooltip from "../ui/Tootip";
 
 type JoinDateProps = {
     joinDate: string;
@@ -13,20 +13,14 @@ export default function JoinDateField({
     joinDate,
     setJoinDate,
 }: JoinDateProps) {
-    const inputId = useId();
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-12 items-center gap-3">
-            <label
-                htmlFor={inputId}
-                className="md:col-span-3 font-bold text-gray-800 shrink-0"
-            >
+            <p className="md:col-span-3 font-bold text-gray-800 shrink-0">
                 입사일
-            </label>
+            </p>
 
             <div className="md:col-span-9 relative">
                 <Flatpickr
-                    id={inputId}
                     options={{
                         locale: Korean,
                         disableMobile: true,

@@ -1,3 +1,5 @@
+import Tooltip from "../ui/Tootip";
+
 type TextProps = {
     text: string;
     setText: (v: string) => void;
@@ -12,17 +14,22 @@ export default function LeaveTable({
     onApply,
 }: TextProps) {
     return (
-        <div className="w-full h-[42vh] bg-white border border-gray-200 rounded-lg shadow-sm p-8 flex flex-col justify-between gap-6">
-            <p className="text-xl font-bold">표를 붙여넣기 하세요.</p>
-            <div className="w-full h-full">
+        <div className="w-full md:h-[42vh] bg-white border border-gray-200 rounded-lg shadow-sm p-8 flex flex-col justify-between gap-2">
+            <div className="flex items-center gap-4">
+                <p className="text-xl font-bold">표를 붙여넣기 하세요.</p>
+                <Tooltip message="입력하신 내용은 저장되지 않습니다" />
+            </div>
+            <div>
                 <textarea
-                    className="w-full h-full border border-gray-300 rounded-md text-sm p-4 resize-none"
+                    className="relative w-full border border-gray-300 rounded-md text-sm p-4 resize-none"
                     placeholder="표를 붙여넣기 하세요"
-                    rows={4}
+                    rows={5}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                 />
-                <p className="h-4 ml-1 px-1 text-red-500 text-xs">{error}</p>
+                <p className="absolute h-4 ml-1 px-1 text-red-500 text-xs">
+                    {error}
+                </p>
             </div>
             <div className="flex justify-end">
                 <button
