@@ -7,6 +7,7 @@ import kr.co.wise.office.domain.comment.entity.CommentEntity;
 import kr.co.wise.office.domain.member.dto.MemberPositionUpdateRequest;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,10 @@ public class MemberEntity {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "hire_date")
+    @Builder.Default
+    private LocalDate hireDate = null;
 
 
     @OneToMany(mappedBy = "member")

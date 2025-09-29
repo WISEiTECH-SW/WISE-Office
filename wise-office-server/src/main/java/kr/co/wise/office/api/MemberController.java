@@ -162,6 +162,13 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/hire-date")
+    public ResponseEntity<HireDateResponse> getHireDateLoginUser(
+    @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser){
+        HireDateResponse response = memberService.getHireDate(loginUser.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     private void validateEmail(String email) {
         if (!email.endsWith(allowDomain)) {
             throw new ApplicationRuntimeException(ErrorMessage.FORBIDDEN_SIGNUP);
