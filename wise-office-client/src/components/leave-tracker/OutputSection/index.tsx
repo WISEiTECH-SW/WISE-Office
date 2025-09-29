@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LeaveHistory from "./LeaveHistory";
 import SummaryField from "./SummaryField";
+import { getJoinDate } from "@/services/members";
 
 export default function OutputSection() {
-    const [joinDate, setJoinDate] = useState("");
+    const [joinDate, setJoinDate] = useState<string>("");
+
+    useEffect(() => {
+        getJoinDate().then((date) => setJoinDate(date));
+    }, []);
+
     const today = new Date();
     const thisYear = Number(today.getFullYear());
     const joinYear = Number(joinDate.split("-")[0]) || thisYear;
