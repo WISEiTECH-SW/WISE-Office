@@ -2,7 +2,6 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import SummaryCard from "./SummaryCard";
 import { useLeaveSummary } from "@/hooks/useLeaveSummary";
-import Tooltip from "@/components/ui/Tootip";
 
 type JoinDateProps = {
     today: Date;
