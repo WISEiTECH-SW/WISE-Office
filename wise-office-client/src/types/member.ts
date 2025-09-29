@@ -12,4 +12,5 @@ export interface SignupForm {
     team: string;
     rank: string;
     email: string;
+    joinDate: string;
 }

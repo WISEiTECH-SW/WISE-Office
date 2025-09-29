@@ -1,5 +1,4 @@
 import { useState } from "react";
-import JoinDateField from "./JoinDateField";
 import LeaveHistory from "./LeaveHistory";
 import SummaryField from "./SummaryField";
 
@@ -13,10 +12,6 @@ export default function OutputSection() {
         <div className="w-full h-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col overflow-hidden">
             <div className="sticky top-0 z-10 -mx-8 bg-white border-b border-gray-200 shadow-[0_2px_0_0_rgba(0,0,0,0.03)]">
                 <div className="p-8 pb-4">
-                    {/* <JoinDateField
-                        joinDate={joinDate}
-                        setJoinDate={setJoinDate}
-                    /> */}
                     <SummaryField
                         today={today}
                         joinDate={joinDate}
