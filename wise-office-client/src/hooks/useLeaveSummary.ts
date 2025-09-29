@@ -34,7 +34,7 @@ export function useLeaveSummary(params: {
         }
 
         const annualAvailable = isOverOneYear(today, joinDate)
-            ? (thisYear - joinYear) * 15
+            ? 11 + (thisYear - joinYear) * 15
             : 11;
 
         const sums = inputData.reduce(

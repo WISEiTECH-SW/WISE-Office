@@ -1,4 +1,4 @@
-import Tooltip from "../ui/Tootip";
+import Tooltip from "../../ui/Tootip";
 
 type TextProps = {
     text: string;
@@ -27,11 +27,9 @@ export default function LeaveTable({
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                 />
-                <p className="absolute h-4 ml-1 px-1 text-red-500 text-xs">
-                    {error}
-                </p>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-between">
+                <p className="h-4 ml-1 px-1 text-red-500 text-xs">{error}</p>
                 <button
                     onClick={onApply}
                     className="px-2 py-1 md:px-4 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center gap-1 cursor-pointer"
