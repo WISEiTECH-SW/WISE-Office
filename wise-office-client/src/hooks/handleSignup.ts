@@ -37,9 +37,8 @@ export async function handleCodeVerify(
 // 회원가입 진행
 export async function handleSummitSignUpForm(formData: SignupForm) {
     try {
-        console.log(formData);
-        // await signup(formData);
-        // toastMessage.success("회원가입되었습니다.");
+        await signup(formData);
+        toastMessage.success("회원가입되었습니다.");
         return true;
     } catch (err) {
         console.log("회원가입 실패: ", err);
