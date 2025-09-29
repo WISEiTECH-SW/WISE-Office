@@ -13,7 +13,7 @@ export default function JoinDateField({
     setJoinDate,
 }: JoinDateProps) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-12 items-center gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-12 items-center gap-3 mx-8 mb-4">
             <p className="md:col-span-3 font-bold text-gray-800 shrink-0">
                 입사일
             </p>

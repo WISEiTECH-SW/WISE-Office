@@ -29,7 +29,10 @@ export default function SummaryField({
     } = useLeaveSummary({ today, joinDate, thisYear, joinYear });
 
     return (
-        <div className="mt-6 px-2">
+        <div className="px-8">
+            <p className="font-bold text-gray-800 shrink-0 mb-4">
+                전체 연차 사용 현황
+            </p>
             {/* 상단 3개 */}
             <div className="grid grid-cols-3 gap-3">
                 <div className="">
