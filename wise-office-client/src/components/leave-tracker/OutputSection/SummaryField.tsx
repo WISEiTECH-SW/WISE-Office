@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import SummaryCard from "@/components/leave-tracker/SummaryCard";
+import SummaryCard from "./SummaryCard";
 import { useLeaveSummary } from "@/hooks/useLeaveSummary";
 
 type JoinDateProps = {
@@ -28,14 +28,19 @@ export default function SummaryField({
     } = useLeaveSummary({ today, joinDate, thisYear, joinYear });
 
     return (
-        <div className="mt-6 px-2">
+        <div className="px-8">
+            <p className="font-bold text-gray-800 shrink-0 mb-4">
+                전체 연차 사용 현황
+            </p>
             {/* 상단 3개 */}
             <div className="grid grid-cols-3 gap-3">
-                <SummaryCard
-                    title="사용가능한 연차"
-                    count={annualAvailable}
-                    bg="bg-gray-100"
-                />
+                <div className="">
+                    <SummaryCard
+                        title="사용가능한 연차"
+                        count={annualAvailable}
+                        bg="bg-gray-100"
+                    />
+                </div>
                 <SummaryCard
                     title="사용한 연차"
                     count={annualUsed}

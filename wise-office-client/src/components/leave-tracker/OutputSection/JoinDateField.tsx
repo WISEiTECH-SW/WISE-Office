@@ -3,22 +3,25 @@ import "flatpickr/dist/flatpickr.min.css";
 import { Korean } from "flatpickr/dist/l10n/ko.js";
 import { dateToString } from "@/utils/dateToString";
 
-type JoinDateProps = {
-    joinDate: string;
-    setJoinDate: (v: string) => void;
+type SignupInputProps = {
+    labelName: string;
+    id: string;
+    value: string;
+    onChange: (value: string) => void;
 };
 
 export default function JoinDateField({
-    joinDate,
-    setJoinDate,
-}: JoinDateProps) {
+    labelName,
+    id,
+    value,
+    onChange,
+}: SignupInputProps) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-12 items-center gap-3">
-            <p className="md:col-span-3 font-bold text-gray-800 shrink-0">
-                입사일
-            </p>
-
-            <div className="md:col-span-9 relative">
+        <div className="w-full px-4">
+            <label htmlFor={id} className="text-sm font-medium text-gray-700">
+                {labelName}
+            </label>
+            <div className="relative mt-1">
                 <Flatpickr
                     options={{
                         locale: Korean,
@@ -29,20 +32,20 @@ export default function JoinDateField({
                         altInput: true,
                         altFormat: "Y-m-d",
                     }}
-                    value={joinDate}
+                    value={value}
                     onChange={(dates) => {
-                        if (dates.length) setJoinDate(dateToString(dates[0]));
+                        if (dates.length) onChange(dateToString(dates[0]));
                     }}
                     onClose={(selectedDates) => {
                         if (selectedDates?.[0])
-                            setJoinDate(dateToString(selectedDates[0]));
+                            onChange(dateToString(selectedDates[0]));
                     }}
-                    className="w-full border border-gray-300 rounded-md pl-10 pr-10 py-2 text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="입사일을 입력하세요"
+                    className="w-full pl-10 px-3 py-2 border border-gray-400 rounded-md outline-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="입사일을 선택하세요"
                 />
 
                 {/* calendar icon */}
-                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
+                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 flex items-center">
                     <svg
                         width="18"
                         height="18"

@@ -7,7 +7,8 @@ export function middleware(req: NextRequest) {
     const protectedPath =
         pathname === "/projects" ||
         pathname.startsWith("/projects/") ||
-        pathname === "/account";
+        pathname === "/account" ||
+        pathname.startsWith("/account/");
 
     if (protectedPath && !token) {
         // 절대 URL로 생성

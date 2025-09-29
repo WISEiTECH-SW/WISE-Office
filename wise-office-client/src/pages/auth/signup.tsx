@@ -15,6 +15,7 @@ import {
     handleCodeVerify,
     handleSummitSignUpForm,
 } from "@/hooks/handleSignup";
+import JoinDateField from "@/components/leave-tracker/OutputSection/JoinDateField";
 
 const RANK = ["직급을 선택해 주세요", "주임", "선임", "팀장", "수석"];
 const TEAM = ["소속을 선택해 주세요", "연구기획 1팀", "연구기획 2팀"];
@@ -26,6 +27,7 @@ export default function Signup() {
     const [name, setName] = useState("");
     const [rank, setRank] = useState("");
     const [team, setTeam] = useState("");
+    const [joinDate, setJoinDate] = useState("");
 
     // Email
     const [email, setEmail] = useState("");
@@ -50,6 +52,7 @@ export default function Signup() {
         name.trim() !== "" &&
         rank.trim() !== "" &&
         team.trim() !== "" &&
+        joinDate &&
         emailValid &&
         password.trim() !== "" &&
         password.length > 7 &&
@@ -113,6 +116,7 @@ export default function Signup() {
             team,
             rank,
             email,
+            joinDate,
         };
 
         const success = await handleSummitSignUpForm(signupInputData);
@@ -158,6 +162,7 @@ export default function Signup() {
                     value={name}
                     onChange={setName}
                 />
+
                 <SignupSelect
                     id="rank"
                     labelName="직급"
@@ -171,6 +176,13 @@ export default function Signup() {
                     options={TEAM}
                     value={team}
                     onChange={setTeam}
+                />
+
+                <JoinDateField
+                    id="join-date"
+                    labelName="입사일"
+                    value={joinDate}
+                    onChange={setJoinDate}
                 />
 
                 {/* Email */}

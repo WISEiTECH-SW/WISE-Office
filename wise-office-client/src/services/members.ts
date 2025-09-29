@@ -12,6 +12,11 @@ export async function getMyProfile(): Promise<Profile> {
     return data;
 }
 
+export async function getJoinDate(): Promise<string> {
+    const { data } = await api.get("/members/hire-date");
+    return data.hireDate;
+}
+
 export async function getMembers(): Promise<Member[]> {
     const { data } = await api.get<Member[]>("/members");
     return data;

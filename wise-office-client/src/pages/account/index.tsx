@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import UserProfile from "../components/account/UserProfile";
+import UserProfile from "@/components/account/UserProfile";
 import MyInfo from "@/components/account/MyInfo";
 import ProjectCardsMy from "@/components/account/ProjectCardsMy";
 import { getMyProfile, updateProfileInfo } from "@/services/members";
@@ -43,7 +43,7 @@ export default function Account() {
                 {/* 프로필 영역 - 가운데 정렬 */}
                 <section className="col-span-12 md:col-span-2 rounded-lg p-6 flex flex-col items-center justify-center gap-6">
                     {profile && <UserProfile props={profile} />}
-                    <Link href="/leave-tracker">
+                    <Link href="/account/leave-tracker">
                         <button className="w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded px-4 py-2 transition duration-300 cursor-pointer">
                             연차계산기
                         </button>

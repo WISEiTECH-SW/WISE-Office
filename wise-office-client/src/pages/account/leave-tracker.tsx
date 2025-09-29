@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 import { validateTsv } from "@/utils/validateTsv";
 import { useLeaveStore } from "@/store/useLeaveStore";
-import InputSection from "@/components/leave-tracker/InputSection";
-import OutputSection from "@/components/leave-tracker/OutputSection";
+import InputSection from "@/components/leave-tracker/InputSection/index";
+import OutputSection from "@/components/leave-tracker/OutputSection/index";
 import LeaveTableSection from "@/components/leave-tracker/LeaveTableSection";
 
 export default function LeaveTracker() {
@@ -25,7 +25,7 @@ export default function LeaveTracker() {
 
     return (
         <div className="flex flex-col items-center gap-6 max-w-screen-lg mx-auto my-14 px-2">
-            <div className="w-full flex flex-col md:flex-row gap-6 min-h-0">
+            <div className="w-full md:h-[72vh] flex flex-col md:flex-row gap-6 min-h-0">
                 <InputSection
                     text={text}
                     setText={setText}
