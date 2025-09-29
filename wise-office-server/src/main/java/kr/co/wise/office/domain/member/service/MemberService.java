@@ -54,6 +54,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
                 .password(passwordEncoder.encode(request.password()))
                 .roleType(MemberRoleType.WORKER)
                 .imageUrl(imagePath)
+                .hireDate(request.hireDate())
                 .build();
 
         memberRepository.save(newMember);
@@ -61,7 +62,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
 
     @Transactional(readOnly = true)
     public String login(LoginRequest loginRequest) {
-        MemberEntity member = memberRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+        MemberEntity member = findUserWithEmail(loginRequest.email());
         if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
             throw new UnAuthorizationException(ErrorMessage.INVALID_MEMBER);
         }
@@ -156,8 +157,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
 
     @Transactional(readOnly = true)
     public MyAccountResponse getMyAccountInfo(String currentUserEmail) {
-        MemberEntity account = memberRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+        MemberEntity account = findByEmail(currentUserEmail);
         MyAccountResponse response = MyAccountResponse.loadMyAccountInfo(account,
                 attendantService.getProjectsByAttendants(account));
         return response;
@@ -165,7 +165,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
 
     @Transactional
     public MemberPositionUpdateResponse updateMemberPosition(MemberPositionUpdateRequest request, String userEmail) {
-        MemberEntity loginMember = memberRepository.findByEmail(userEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+        MemberEntity loginMember = findUserWithEmail(userEmail);
         loginMember.updatePosition(request);
         memberRepository.save(loginMember);
         return new MemberPositionUpdateResponse(loginMember.getTeam(), loginMember.getRank());
@@ -173,7 +173,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
 
     @Transactional
     public void updateMemberProfile(String savedImageName, String userEmail) {
-        MemberEntity member = memberRepository.findByEmail(userEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+        MemberEntity member = findUserWithEmail(userEmail);
         member.updateInfo(member.getName(), savedImageName);
     }
 
@@ -193,4 +193,15 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
                 .roles(member.getRoleType().name())
                 .build();
     }
+
+    @Transactional(readOnly = true)
+    public HireDateResponse getHireDate(String email) {
+        MemberEntity member = findUserWithEmail(email);
+        return new HireDateResponse(member.getHireDate());
+    }
+
+    private MemberEntity findUserWithEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+    }
+
 }

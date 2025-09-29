@@ -29,6 +29,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -159,7 +161,7 @@ public class MemberControllerTest {
         @DisplayName("성공: 회원가입 - 이미지 포함")
         void signup_Success() throws Exception {
             // given
-            SignupRequest signupRequest = new SignupRequest(username, password, password, "팀", "직급", email, "empty");
+            SignupRequest signupRequest = new SignupRequest(username, password, password, "팀", "직급", email, LocalDate.now(),"empty");
             MockMultipartFile jsonRequest = new MockMultipartFile("request", "", "application/json", objectMapper.writeValueAsBytes(signupRequest));
             MockMultipartFile uploadImage = new MockMultipartFile("profile", "test.img", MediaType.IMAGE_JPEG_VALUE, "test image content".getBytes());
 
@@ -168,17 +170,20 @@ public class MemberControllerTest {
                     .andExpect(status().isOk())
                     .andDo(print());
 
+
             // then
             MemberEntity savedMember = memberRepository.findByEmail(email).get();
             assertThat(savedMember.getName()).isEqualTo("testUser");
             assertThat(savedMember.getImageUrl()).isNull();
+            assertThat(savedMember.getHireDate()).isEqualTo(LocalDate.now());
         }
 
         @Test
         @DisplayName("성공: 회원가입 - 이미지 미포함")
         void signup_notContainImage_Success() throws Exception {
             // given
-            SignupRequest signupRequest = new SignupRequest(username, password, password, "팀", "직급", email, "empty");
+            LocalDate joinDate = LocalDate.of(2024, 10, 14);
+            SignupRequest signupRequest = createRequestFormWithHireDate(joinDate);
             MockMultipartFile jsonRequest = new MockMultipartFile("request", "", "application/json", objectMapper.writeValueAsBytes(signupRequest));
 
             // when
@@ -190,6 +195,7 @@ public class MemberControllerTest {
             MemberEntity savedMember = memberRepository.findByEmail(email).get();
             assertThat(savedMember.getName()).isEqualTo("testUser");
             assertThat(savedMember.getImageUrl()).isNull();
+            assertThat(savedMember.getHireDate()).isEqualTo(joinDate);
         }
 
 
@@ -198,7 +204,7 @@ public class MemberControllerTest {
         void signup_Fail_PasswordMismatch() throws Exception {
             // given
             String wrongPassword = "wrongPassword123!";
-            SignupRequest signupRequest = new SignupRequest(username, password, wrongPassword,"팀", "직급", email, "empty");
+            SignupRequest signupRequest =  createRequestFormWithWrongPassword(wrongPassword);
             MockMultipartFile jsonRequest = new MockMultipartFile("request", "", "application/json", objectMapper.writeValueAsBytes(signupRequest));
 
             // when & then
@@ -212,11 +218,11 @@ public class MemberControllerTest {
         @DisplayName("실패: 이미 존재하는 이메일")
         void signup_Fail_DuplicateEmail() throws Exception {
             // given: 먼저 사용자를 한 명 가입시킴
-            SignupRequest signupRequest = new SignupRequest(username, password, password,"팀", "직급", email, "empty");
+            SignupRequest signupRequest = createRequestForm();
             memberService.signUp(signupRequest, "DEFAULT_PATH");
 
             // when: 동일한 이메일로 다시 가입 시도
-            SignupRequest duplicateSignupRequest = new SignupRequest(username, password, password, "팀", "직급", email, "empty");
+            SignupRequest duplicateSignupRequest = createRequestForm();
             MockMultipartFile jsonRequest = new MockMultipartFile("request", "", "application/json", objectMapper.writeValueAsBytes(duplicateSignupRequest));
 
             // then
@@ -225,6 +231,31 @@ public class MemberControllerTest {
                     .andExpect(jsonPath("$.message").value(ErrorMessage.AlREADY_SIGNUP_EMAIL.getMessage()))
                     .andDo(print());
         }
+
+        @Test
+        @DisplayName("실패: 입사일자 미입력")
+        void signup_Fail_emptyHireDate() throws Exception {
+            // given: 입사일자 미입력
+            SignupRequest signupRequest = createRequestFormWithHireDate(null);
+            MockMultipartFile jsonRequest = new MockMultipartFile("request", "", "application/json", objectMapper.writeValueAsBytes(signupRequest));
+
+            // then
+            mockMvc.perform(multipart("/api/members/signup").file(jsonRequest))
+                    .andExpect(status().isBadRequest())
+                    .andDo(print());
+        }
+    }
+
+    private SignupRequest createRequestFormWithWrongPassword(String wrongPassword) {
+        return new SignupRequest(username, password, wrongPassword, "팀", "직급", email, LocalDate.now(), "empty");
+    }
+
+    private SignupRequest createRequestFormWithHireDate(LocalDate hireDate) {
+        return new SignupRequest(username, password, password, "팀", "직급", email, hireDate, "empty");
+    }
+
+    private SignupRequest createRequestForm() {
+        return createRequestFormWithHireDate(LocalDate.now());
     }
 
     @Nested
@@ -267,7 +298,7 @@ public class MemberControllerTest {
             mockMvc.perform(post("/api/members/login")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(loginRequest)))
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.message").value(ErrorMessage.NOT_FOUND_MEMBER.getMessage()))
                     .andDo(print());
         }
