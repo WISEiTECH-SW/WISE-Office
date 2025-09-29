@@ -27,7 +27,7 @@ export default function Signup() {
     const [name, setName] = useState("");
     const [rank, setRank] = useState("");
     const [team, setTeam] = useState("");
-    const [joinDate, setJoinDate] = useState("");
+    const [hireDate, setHireDate] = useState("");
 
     // Email
     const [email, setEmail] = useState("");
@@ -52,7 +52,7 @@ export default function Signup() {
         name.trim() !== "" &&
         rank.trim() !== "" &&
         team.trim() !== "" &&
-        joinDate &&
+        hireDate &&
         emailValid &&
         password.trim() !== "" &&
         password.length > 7 &&
@@ -116,7 +116,7 @@ export default function Signup() {
             team,
             rank,
             email,
-            joinDate,
+            hireDate,
         };
 
         const success = await handleSummitSignUpForm(signupInputData);
@@ -179,10 +179,10 @@ export default function Signup() {
                 />
 
                 <JoinDateField
-                    id="join-date"
+                    id="hire-date"
                     labelName="입사일"
-                    value={joinDate}
-                    onChange={setJoinDate}
+                    value={hireDate}
+                    onChange={setHireDate}
                 />
 
                 {/* Email */}
