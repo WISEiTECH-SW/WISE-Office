@@ -1,6 +1,10 @@
 import { useRouter } from "next/router";
 import type { Project } from "@/types/project";
-import { calculateProjectDuration, formatYearMonth } from "@/lib/common/util";
+import {
+    calculateProjectDuration,
+    calculationDuration,
+    formatYearMonth,
+} from "@/lib/common/util";
 
 type Props = {
     project: Project;
@@ -8,6 +12,7 @@ type Props = {
 
 export default function ProjectListCard({ project }: Props) {
     const router = useRouter();
+    const titleDuration = calculationDuration(project.start);
     const { duration, state, stateColor, textColor } = calculateProjectDuration(
         project.start,
         project.end
@@ -25,7 +30,7 @@ export default function ProjectListCard({ project }: Props) {
             <div className="px-6 py-3 md:px-10 md:py-7 border-b border-gray-100">
                 <div className="flex justify-between items-start gap-6">
                     <p className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                        {state === "진행중" && `(${duration}) `}
+                        {state === "진행중" && `(${titleDuration})`}
                         {project.projectTitle}
                     </p>
                     <span

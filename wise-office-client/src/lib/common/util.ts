@@ -54,7 +54,7 @@ export function calculationDuration(startDate: Date) {
     const currentDate = new Date();
     const startYear = new Date(startDate).getFullYear();
     const currentYear = new Date(currentDate).getFullYear();
-    return `${currentYear - startYear + 1}년차`;
+    return `${currentYear - startYear + 1}차`;
 }
 
 /**

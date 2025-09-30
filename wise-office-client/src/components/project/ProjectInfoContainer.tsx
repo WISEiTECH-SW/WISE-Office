@@ -1,6 +1,10 @@
 import ProjectInfoItem from "./ProjectInfoItem";
 import type { ProjectInfo } from "@/types/project";
-import { calculateProjectDuration, formatYearMonth } from "@/lib/common/util";
+import {
+    calculateProjectDuration,
+    calculationDuration,
+    formatYearMonth,
+} from "@/lib/common/util";
 import {
     Calendar,
     TrendingUp,
@@ -26,11 +30,13 @@ export default function ProjectInfoContainer({
         projectInfo.start,
         projectInfo.end
     );
+    const titleDuration = calculationDuration(projectInfo.start);
+
     return (
         <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-6 md:mt-6">
             <div className="flex justify-between items-start mb-4">
                 <p className="text-lg md:text-2xl font-bold text-gray-800 break-words whitespace-normal">
-                    {duration.state === "진행중" && `(${duration.duration}) `}
+                    {duration.state === "진행중" && `(${titleDuration})`}
                     {projectInfo.projectTitle}
                 </p>
                 {projectInfo.canModify && (

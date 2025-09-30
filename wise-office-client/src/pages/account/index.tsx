@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import UserProfile from "@/components/account/UserProfile";
 import MyInfo from "@/components/account/MyInfo";
+import JoinDateField from "@/components/leave-tracker/OutputSection/JoinDateField";
 import ProjectCardsMy from "@/components/account/ProjectCardsMy";
-import { getMyProfile, updateProfileInfo } from "@/services/members";
+import {
+    getJoinDate,
+    getMyProfile,
+    updateProfileInfo,
+    updateJoinDate,
+} from "@/services/members";
 import { Profile, ProfileRequest } from "@/types/profile";
 import { toastMessage } from "@/lib/common/toastMessage";
 import Link from "next/link";
@@ -11,6 +17,7 @@ export default function Account() {
     const [profile, setProfile] = useState<Profile>();
     const [team, setTeam] = useState<string>("");
     const [rank, setRank] = useState<string>("");
+    const [joinDate, setJoinDate] = useState<string>("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -18,6 +25,7 @@ export default function Account() {
             setProfile(profile);
             setTeam(profile.team);
             setRank(profile.rank);
+            getJoinDate().then((date) => setJoinDate(date));
         };
         fetchData();
     }, []);
@@ -33,12 +41,23 @@ export default function Account() {
         };
         try {
             await updateProfileInfo(req);
+            onSave();
         } catch (error) {
             console.log(error);
         }
     };
+
+    const handleUpdateJoinDate = async () => {
+        try {
+            await updateJoinDate(joinDate);
+            onSave();
+        } catch (error) {
+            console.log("입사일 업데이트 실패:", error);
+        }
+    };
+
     return (
-        <div className="flex flex-col md:flex-row justify-center items-start py-10 px-4">
+        <div className="flex flex-col md:flex-row justify-center items-start px-4">
             <div className="md:mt-10 max-w-6xl w-full md:grid md:grid-cols-12 gap-10">
                 {/* 프로필 영역 - 가운데 정렬 */}
                 <section className="col-span-12 md:col-span-2 rounded-lg p-6 flex flex-col items-center justify-center gap-6">
@@ -60,12 +79,21 @@ export default function Account() {
                             setRank={setRank}
                         />
                     )}
-
                     <button
-                        onClick={() => {
-                            updateProfile();
-                            onSave();
-                        }}
+                        onClick={updateProfile}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded py-2 transition duration-300 cursor-pointer"
+                    >
+                        저장
+                    </button>
+                    <JoinDateField
+                        id="hire-date"
+                        labelName="입사일"
+                        value={joinDate}
+                        onChange={setJoinDate}
+                        page="account"
+                    />
+                    <button
+                        onClick={handleUpdateJoinDate}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded py-2 transition duration-300 cursor-pointer"
                     >
                         저장

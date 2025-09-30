@@ -8,6 +8,7 @@ type SignupInputProps = {
     id: string;
     value: string;
     onChange: (value: string) => void;
+    page: string;
 };
 
 export default function JoinDateField({
@@ -15,10 +16,17 @@ export default function JoinDateField({
     id,
     value,
     onChange,
+    page,
 }: SignupInputProps) {
+    const wrapperStyle = page === "account" ? "w-full" : "w-full px-4";
+    const labelStyle =
+        page === "account"
+            ? "block text-gray-700 font-semibold mb-2"
+            : "text-sm font-medium text-gray-700";
+
     return (
-        <div className="w-full px-4">
-            <label htmlFor={id} className="text-sm font-medium text-gray-700">
+        <div className={wrapperStyle}>
+            <label htmlFor={id} className={labelStyle}>
                 {labelName}
             </label>
             <div className="relative mt-1">

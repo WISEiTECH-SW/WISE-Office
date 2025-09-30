@@ -1,9 +1,7 @@
 package kr.co.wise.office.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.wise.office.domain.member.dto.LoginRequest;
-import kr.co.wise.office.domain.member.dto.SignupRequest;
-import kr.co.wise.office.domain.member.dto.VerificationCodeCreationRequest;
+import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
@@ -58,6 +56,8 @@ public class MemberControllerTest {
     private final String email = "test@wise.co.kr";
     private final String password = "password123!";
     private final String username = "testUser";
+    private static final LocalDate HIRE_DATE = LocalDate.of(2020, 1, 1);
+
 
     @Nested
     @DisplayName("이메일 인증 테스트")
@@ -339,8 +339,8 @@ public class MemberControllerTest {
     }
 
     @Nested
-    @DisplayName("프로필 이미지 업로드 테스트")
-    class ImageUpdateTest {
+    @DisplayName("회원 업데이트 테스트")
+    class UpdateTest {
 
         @BeforeEach
         void setUp() { //미리 회원가입 시켜둠
@@ -350,6 +350,8 @@ public class MemberControllerTest {
                     .name(username)
                     .roleType(MemberRoleType.WORKER)
                     .imageUrl("test")
+                    .team("RED")
+                    .rank("LEADER")
                     .build();
             memberRepository.save(member);
         }
@@ -366,7 +368,7 @@ public class MemberControllerTest {
 
             //then
             result.andExpect(status().isOk())
-                  .andDo(print());
+                    .andDo(print());
 
             MemberEntity updateMember = memberRepository.findByEmail(email).get();
             assertThat(updateMember.getImageUrl()).doesNotContain("test");
@@ -388,6 +390,51 @@ public class MemberControllerTest {
                     .andExpect(jsonPath("$.message").value(ErrorMessage.REJECT_IMAGE_FORMAT.getMessage()))
                     .andDo(print());
         }
+
+        @Test
+        @DisplayName("부서/직급 업데이트 테스트")
+        @WithMockCustomUser
+        void update_position() throws Exception {
+            // given
+            final String blueTeam = "BLUE";
+            final String rank = "WORKER";
+            MemberPositionUpdateRequest updateRequest = new MemberPositionUpdateRequest(blueTeam, rank);
+
+            // when & then
+            mockMvc.perform(patch("/api/members")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateRequest)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.team").value(blueTeam))
+                    .andExpect(jsonPath("$.rank").value(rank))
+                    .andDo(print());
+
+            MemberEntity member = memberRepository.findByEmail(email).get();
+            assertThat(member.getTeam()).isEqualTo(blueTeam);
+            assertThat(member.getRank()).isEqualTo(rank);
+        }
+
+
+        @Test
+        @DisplayName("입사일자 업데이트 테스트")
+        @WithMockCustomUser
+        void update_hire_date_test() throws Exception {
+            //given => 오늘 날짜로 입사일자 업데이트
+            final LocalDate updateDate = LocalDate.now();
+            final HireDateUpdateRequest request = new HireDateUpdateRequest(updateDate);
+
+            //when&then
+            mockMvc.perform(patch("/api/members/hire-date")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.hireDate").value(updateDate.toString()))
+                    .andDo(print());
+
+            MemberEntity member = memberRepository.findByEmail(email).get();
+            assertThat(member.getHireDate()).isEqualTo(updateDate);
+        }
+
     }
 
 
