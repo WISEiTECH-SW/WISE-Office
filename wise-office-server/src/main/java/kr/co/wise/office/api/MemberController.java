@@ -169,6 +169,16 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PatchMapping("/hire-date")
+    @Operation(summary = "입사 일자 수정")
+    public ResponseEntity<HireDateResponse> updateHireDate(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+            @Parameter(description = "업데이트할 입사일자 2020-01-01 형태") @Valid @RequestBody HireDateUpdateRequest request
+    ) {
+        HireDateResponse response = memberService.updateMemberHireDate(loginUser.getName(), request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     private void validateEmail(String email) {
         if (!email.endsWith(allowDomain)) {
             throw new ApplicationRuntimeException(ErrorMessage.FORBIDDEN_SIGNUP);

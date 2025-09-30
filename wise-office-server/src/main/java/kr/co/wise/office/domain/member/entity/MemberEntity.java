@@ -77,4 +77,8 @@ public class MemberEntity {
         this.rank = request.rank();
         this.team = request.team();
     }
+
+    public void updateHireDate(LocalDate hireDate) {
+        this.hireDate = hireDate;
+    }
 }

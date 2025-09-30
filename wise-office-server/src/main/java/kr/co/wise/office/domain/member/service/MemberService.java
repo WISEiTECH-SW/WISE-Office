@@ -136,8 +136,8 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional(readOnly = true)
-    public MemberEntity findByEmail(String email) {
-        return memberRepository.findByEmail(email).get();
+    public MemberEntity findByEmail(String loginUserEmail) {
+        return findUserWithEmail(loginUserEmail);
     }
 
     @Transactional(readOnly = true)
@@ -146,7 +146,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional(readOnly = true)
-    public List<MemberListResponse> searchAllMemberInfo(String currentUserEmail) {
+    public List<MemberListResponse> searchAllMemberInfo(String loginUserEmail) {
         List<MemberEntity> members = memberRepository.findAll();
 
 //        List<MemberEntity> exceptLoginUser = members.stream().filter(m -> !m.getEmail().equals(currentUserEmail))
@@ -156,30 +156,30 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional(readOnly = true)
-    public MyAccountResponse getMyAccountInfo(String currentUserEmail) {
-        MemberEntity account = findByEmail(currentUserEmail);
+    public MyAccountResponse getMyAccountInfo(String loginUserEmail) {
+        MemberEntity account = findByEmail(loginUserEmail);
         MyAccountResponse response = MyAccountResponse.loadMyAccountInfo(account,
                 attendantService.getProjectsByAttendants(account));
         return response;
     }
 
     @Transactional
-    public MemberPositionUpdateResponse updateMemberPosition(MemberPositionUpdateRequest request, String userEmail) {
-        MemberEntity loginMember = findUserWithEmail(userEmail);
+    public MemberPositionUpdateResponse updateMemberPosition(MemberPositionUpdateRequest request, String loginUserEmail) {
+        MemberEntity loginMember = findUserWithEmail(loginUserEmail);
         loginMember.updatePosition(request);
         memberRepository.save(loginMember);
         return new MemberPositionUpdateResponse(loginMember.getTeam(), loginMember.getRank());
     }
 
     @Transactional
-    public void updateMemberProfile(String savedImageName, String userEmail) {
-        MemberEntity member = findUserWithEmail(userEmail);
+    public void updateMemberProfile(String savedImageName, String loginUserEmail) {
+        MemberEntity member = findUserWithEmail(loginUserEmail);
         member.updateInfo(member.getName(), savedImageName);
     }
 
     @Transactional(readOnly = true)
-    public void checkAlreadySignUp(String email) {
-        memberRepository.findByEmail(email).ifPresent(member -> {
+    public void checkAlreadySignUp(String loginUserEmail) {
+        memberRepository.findByEmail(loginUserEmail).ifPresent(member -> {
             throw new ApplicationRuntimeException(ErrorMessage.AlREADY_SIGNUP_EMAIL);
         });
     }
@@ -195,13 +195,20 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional(readOnly = true)
-    public HireDateResponse getHireDate(String email) {
-        MemberEntity member = findUserWithEmail(email);
+    public HireDateResponse getHireDate(String loginUserEmail) {
+        MemberEntity member = findUserWithEmail(loginUserEmail);
         return new HireDateResponse(member.getHireDate());
     }
 
-    private MemberEntity findUserWithEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+    private MemberEntity findUserWithEmail(String loginUserEmail) {
+        return memberRepository.findByEmail(loginUserEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
     }
 
+    @Transactional
+    public HireDateResponse updateMemberHireDate(String loginUserEmail, HireDateUpdateRequest request) {
+        MemberEntity member = findUserWithEmail(loginUserEmail);
+        member.updateHireDate(request.hireDate());
+        memberRepository.save(member);
+        return new HireDateResponse(request.hireDate());
+    }
 }
