@@ -36,6 +36,11 @@ export async function updateProfileImage(file: File): Promise<string> {
     return res.data.imageUrl;
 }
 
+export async function updateJoinDate(hireDate: string): Promise<string> {
+    const { data } = await api.patch("members/hire-date", { hireDate });
+    return data.hireDate;
+}
+
 // 회원가입 진행
 export async function signup(req: SignupForm): Promise<SignupForm> {
     const formData = new FormData();

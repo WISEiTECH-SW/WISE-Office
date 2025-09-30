@@ -183,6 +183,7 @@ export default function Signup() {
                     labelName="입사일"
                     value={hireDate}
                     onChange={setHireDate}
+                    page="signup"
                 />
 
                 {/* Email */}
