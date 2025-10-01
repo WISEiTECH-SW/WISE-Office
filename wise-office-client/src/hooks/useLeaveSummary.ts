@@ -72,7 +72,8 @@ export function useLeaveSummary(params: {
                 const days = Number(row.days) || 0;
                 const category = row.category;
 
-                if (DEDUCTION.has(category)) acc.annualUsed += days;
+                if (DEDUCTION.has(category) && row.status === "결재")
+                    acc.annualUsed += days;
                 if (SUBSTITUTE.has(category)) acc.substituteLeaveUsed += days;
                 if (category === "공가") acc.officialLeaveUsed += days;
                 if (DEFENSE.has(category)) acc.defenseLeaveUsed += days;
@@ -116,7 +117,8 @@ export function useLeaveSummaryByYear(year: number) {
                 const days = Number(row.days) || 0;
                 const cat = row.category;
 
-                if (DEDUCTION.has(cat)) acc.annualUsed += days;
+                if (DEDUCTION.has(cat) && row.status === "결재")
+                    acc.annualUsed += days;
                 if (SUBSTITUTE.has(cat)) acc.substituteLeaveUsed += days;
                 if (cat === "공가") acc.officialLeaveUsed += days;
                 if (DEFENSE.has(cat)) acc.defenseLeaveUsed += days;
