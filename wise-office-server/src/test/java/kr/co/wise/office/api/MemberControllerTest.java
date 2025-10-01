@@ -233,7 +233,7 @@ public class MemberControllerTest {
         }
 
         @Test
-        @DisplayName("실패: 입사일자 미입력")
+        @DisplayName("성공: 입사일자 미입력")
         void signup_Fail_emptyHireDate() throws Exception {
             // given: 입사일자 미입력
             SignupRequest signupRequest = createRequestFormWithHireDate(null);
@@ -241,8 +241,11 @@ public class MemberControllerTest {
 
             // then
             mockMvc.perform(multipart("/api/members/signup").file(jsonRequest))
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isOk())
                     .andDo(print());
+
+            MemberEntity member = memberRepository.findByEmail(email).get();
+            assertThat(member.getHireDate()).isNull();
         }
     }
 
