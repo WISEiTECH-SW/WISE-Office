@@ -49,12 +49,6 @@ export function useLeaveSummary(params: {
 
         const joinDate_Date = joinDate ? new Date(joinDate) : undefined;
 
-        let diffDays: number | undefined = undefined;
-        if (joinDate_Date) {
-            const diffMs = today.getTime() - joinDate_Date.getTime();
-            diffDays = Math.floor(diffMs / 86_400_000); // 하루의 밀리초
-        }
-
         // joinDate가 없거나 미래 : annualAvailable = 0
         let annualAvailable = 0;
         if (!joinDate_Date || today < joinDate_Date) {

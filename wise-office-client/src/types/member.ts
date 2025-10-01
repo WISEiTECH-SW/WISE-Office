@@ -12,5 +12,4 @@ export interface SignupForm {
     team: string;
     rank: string;
     email: string;
-    hireDate: string;
 }
