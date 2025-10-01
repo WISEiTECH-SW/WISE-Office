@@ -2,10 +2,12 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import SummaryCard from "./SummaryCard";
 import { useLeaveSummary } from "@/hooks/useLeaveSummary";
+import JoinDateField from "./JoinDateField";
 
 type JoinDateProps = {
     today: Date;
     joinDate: string;
+    setJoinDate: (joinDate: string) => void;
     thisYear: number;
     joinYear: number;
 };
@@ -13,6 +15,7 @@ type JoinDateProps = {
 export default function SummaryField({
     today,
     joinDate,
+    setJoinDate,
     thisYear,
     joinYear,
 }: JoinDateProps) {
@@ -28,10 +31,19 @@ export default function SummaryField({
     } = useLeaveSummary({ today, joinDate, thisYear, joinYear });
 
     return (
-        <div className="px-8">
-            <p className="font-bold text-gray-800 shrink-0 mb-4">
-                전체 연차 사용 현황
-            </p>
+        <div>
+            <div className="flex items-center gap-4 md:gap-10 mb-4">
+                <p className="font-bold text-gray-800 shrink-0">
+                    전체 연차 사용 현황
+                </p>
+                <JoinDateField
+                    id="hire-date"
+                    labelName="입사일"
+                    value={joinDate}
+                    onChange={setJoinDate}
+                    page="leave"
+                />
+            </div>
             {/* 상단 3개 */}
             <div className="grid grid-cols-3 gap-3">
                 <div className="">

@@ -23,11 +23,8 @@ export default function LeaveHistory({ thisYear, joinYear }: JoinYearProps) {
 
     return (
         <div>
-            <p className="font-bold text-gray-800 shrink-0 mb-4">
-                연도별 연차 사용 현황
-            </p>
             <ul>
-                {joinYear && inputData.length > 0 ? (
+                {inputData.length > 0 ? (
                     workingYears.map((year) => (
                         <li key={year}>
                             <SummaryList year={year} />
@@ -35,7 +32,7 @@ export default function LeaveHistory({ thisYear, joinYear }: JoinYearProps) {
                     ))
                 ) : (
                     <p className="text-sm text-gray-500">
-                        입사일을 입력해 연도별 연차 사용 내역을 확인하세요.
+                        연차 내역을 입력해 연도별 연차 사용 내역을 확인하세요.
                     </p>
                 )}
             </ul>
