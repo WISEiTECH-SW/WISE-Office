@@ -18,17 +18,16 @@ export default function JoinDateField({
     onChange,
     page,
 }: SignupInputProps) {
-    const wrapperStyle = page === "account" ? "w-full" : "w-full px-4";
-    const labelStyle =
-        page === "account"
-            ? "block text-gray-700 font-semibold mb-2"
-            : "text-sm font-medium text-gray-700";
-
     return (
-        <div className={wrapperStyle}>
-            <label htmlFor={id} className={labelStyle}>
-                {labelName}
-            </label>
+        <div className="w-full">
+            {page !== "leave" && (
+                <label
+                    htmlFor={id}
+                    className="block text-gray-700 font-semibold mb-2"
+                >
+                    {labelName}
+                </label>
+            )}
             <div className="relative mt-1">
                 <Flatpickr
                     options={{

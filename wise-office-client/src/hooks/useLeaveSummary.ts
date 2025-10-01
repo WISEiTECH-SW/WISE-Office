@@ -5,11 +5,25 @@ const DEDUCTION = new Set(["연차", "반차(오후)", "반차(오전)", "반반
 const SUBSTITUTE = new Set(["대체반차(오전)", "대체반차(오후)", "대체"]);
 const DEFENSE = new Set(["국방(반차)", "국방"]);
 
-function isOverOneYear(today: Date, joinDate: string) {
-    const d = new Date(joinDate);
-    const plusOneYear = new Date(d);
-    plusOneYear.setFullYear(plusOneYear.getFullYear() + 1);
-    return today >= plusOneYear;
+function workingYears(start: Date, end: Date): number {
+    if (end < start) return 0;
+    let years = end.getFullYear() - start.getFullYear();
+    if (
+        end.getMonth() < start.getMonth() ||
+        (end.getMonth() === start.getMonth() && end.getDate() < start.getDate())
+    ) {
+        years -= 1;
+    }
+    return Math.max(0, years);
+}
+
+function workingMonths(start: Date, end: Date): number {
+    if (end < start) return 0;
+    let months =
+        (end.getFullYear() - start.getFullYear()) * 12 +
+        (end.getMonth() - start.getMonth());
+    if (end.getDate() < start.getDate()) months -= 1;
+    return Math.max(0, months);
 }
 
 export function useLeaveSummary(params: {
@@ -33,9 +47,25 @@ export function useLeaveSummary(params: {
             };
         }
 
-        const annualAvailable = isOverOneYear(today, joinDate)
-            ? 11 + (thisYear - joinYear) * 15
-            : 11;
+        const joinDate_Date = joinDate ? new Date(joinDate) : undefined;
+
+        // joinDate가 없거나 미래 : annualAvailable = 0
+        let annualAvailable = 0;
+        if (!joinDate_Date || today < joinDate_Date) {
+            annualAvailable = 0;
+        } else {
+            // 근속년수 계산
+            const years = workingYears(joinDate_Date, today);
+
+            if (years < 1) {
+                // 1년 미만 : 월차
+                const n = workingMonths(joinDate_Date, today);
+                annualAvailable = n;
+            } else {
+                // 1년 이상: 연차 (+15)
+                annualAvailable = 11 + years * 15;
+            }
+        }
 
         const sums = inputData.reduce(
             (acc, row) => {
