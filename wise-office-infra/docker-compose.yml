@@ -33,11 +33,17 @@ services:
         depends_on:
             database:
                 condition: service_healthy
+        volumes:
+            - ${IMAGE_VOLUME}
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
             interval: 10s
             timeout: 5s
             retries: 5
             start_period: 20s
+        env_file:
+            - ./.env.dev
+        environment:
+            SPRING_PROFILES_ACTIVE: docker
         ports:
             - "8080:8080"

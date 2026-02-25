@@ -3,11 +3,16 @@ FROM eclipse-temurin:17-jdk as builder
 
 WORKDIR /backoffice
 
-COPY . .
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
 
-RUN ./gradlew dependencies
+RUN ./gradlew dependencies --no-daemon
 
-RUN ./gradlew build -x test
+COPY src src
+
+RUN ./gradlew build -x test --no-daemon
 
 # 실행 스테이지
 FROM eclipse-temurin:17-jre
