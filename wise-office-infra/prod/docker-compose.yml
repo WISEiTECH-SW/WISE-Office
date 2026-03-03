@@ -36,6 +36,10 @@ services:
             context: ../../wise-office-server
             dockerfile: Dockerfile
         image: backoffice_server:latest
+        env_file:
+            - ./.env.prod
+        environment:
+            SPRING_PROFILES_ACTIVE: prod
         depends_on:
             database:
                 condition: service_healthy #healthcheck가 정상이 될 때까지 대기
@@ -67,6 +71,10 @@ services:
             context: ../../wise-office-server
             dockerfile: Dockerfile
         image: backoffice_server:latest
+        env_file:
+            - ./.env.prod
+        environment:
+            SPRING_PROFILES_ACTIVE: prod
         depends_on:
             database:
                 condition: service_healthy #healthcheck가 정상이 될 때까지 대기

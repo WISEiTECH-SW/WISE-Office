@@ -1,5 +1,10 @@
 // 회사 도메인 이메일 형태를 검사하는 메소드
 export const validateEmailForm = (value: string) => {
+    // 개발 환경에서는 모든 도메인 이메일 가입 가능
+    if (process.env.NODE_ENV === "development") {
+        return true;
+    }
+
     const re = /^.+@wise\.co\.kr$/;
     return re.test(value);
 };

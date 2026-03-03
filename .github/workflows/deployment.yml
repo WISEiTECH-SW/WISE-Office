@@ -1,69 +1,69 @@
-name: DPG AutoDeployment
+# name: DPG AutoDeployment
 
-on:
-  pull_request:
-    branches: ["dev"]
-    types: [closed]
+# on:
+#   pull_request:
+#     branches: ["dev"]
+#     types: [closed]
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      # 배포 스크립트 실행
-      - name: Deploy to Server
-        id: deploy_script
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{secrets.DPG_HOST}}
-          username: ${{secrets.DPG_USERNAME}}
-          key: ${{secrets.DPG_SSH_KEY}}
-          script: |
-            set -e
-            echo "🚚 서버 배포 중...."
-            cd ${{secrets.PROJECT_ROOT_PATH}}
-            git pull origin ${{github.ref_name}}
-            cd ./wise-office-infra/prod
-            ./blue-green-deploy.sh
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       # 배포 스크립트 실행
+#       - name: Deploy to Server
+#         id: deploy_script
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{secrets.DPG_HOST}}
+#           username: ${{secrets.DPG_USERNAME}}
+#           key: ${{secrets.DPG_SSH_KEY}}
+#           script: |
+#             set -e
+#             echo "🚚 서버 배포 중...."
+#             cd ${{secrets.PROJECT_ROOT_PATH}}
+#             git pull origin ${{github.ref_name}}
+#             cd ./wise-office-infra/prod
+#             ./blue-green-deploy.sh
 
-      # 날짜 / 시간 생성 
-      - name: Get current date
-        id: date
-        run: echo "date=$(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
-      
-      # 알림 전송 스텝
-      - name: Send Notification
-        if: always()
-        run: |
-          curl -v -g -X POST https://api.kakaowork.com/v1/messages.send \
-            -H "Authorization: Bearer ${{ secrets.KAKAO_WORK_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "conversation_id": "${{ secrets.KAKAO_WORK_CONVERSATION_ID}}",
-              "text": "GitHub Actions 배포 결과 알림",
-              "blocks": [
-                { "type": "header", "text": "Github Actions 배포 결과", "style": "white" },
-                {
-                  "type": "text", "text": "브랜치", "inlines": [
-                    { "type": "styled", "text": "브랜치 : ", "bold": true },
-                    { "type": "styled", "text": "${{ github.ref_name }}" }
-                  ]
-                },
-                {
-                  "type": "text", "text": "작업자", "inlines": [
-                    { "type": "styled", "text": "작업수행자 : ", "bold": true },
-                    { "type": "styled", "text": "${{ github.actor }}" }
-                  ]
-                },
-                {
-                  "type": "text", "text": "결과", "inlines": [
-                    { "type": "styled", "text": "수행결과 : ", "bold": true },
-                    { "type": "styled", "text": "${{ job.status }}" }
-                  ]
-                },
-                {
-                  "type": "description", "term": "날짜",
-                  "content": { "type": "text", "text": "${{ steps.date.outputs.date }}" },
-                  "accent": true
-                }
-              ]
-            }'
+#       # 날짜 / 시간 생성
+#       - name: Get current date
+#         id: date
+#         run: echo "date=$(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+
+#       # 알림 전송 스텝
+#       - name: Send Notification
+#         if: always()
+#         run: |
+#           curl -v -g -X POST https://api.kakaowork.com/v1/messages.send \
+#             -H "Authorization: Bearer ${{ secrets.KAKAO_WORK_API_KEY }}" \
+#             -H "Content-Type: application/json" \
+#             -d '{
+#               "conversation_id": "${{ secrets.KAKAO_WORK_CONVERSATION_ID}}",
+#               "text": "GitHub Actions 배포 결과 알림",
+#               "blocks": [
+#                 { "type": "header", "text": "Github Actions 배포 결과", "style": "white" },
+#                 {
+#                   "type": "text", "text": "브랜치", "inlines": [
+#                     { "type": "styled", "text": "브랜치 : ", "bold": true },
+#                     { "type": "styled", "text": "${{ github.ref_name }}" }
+#                   ]
+#                 },
+#                 {
+#                   "type": "text", "text": "작업자", "inlines": [
+#                     { "type": "styled", "text": "작업수행자 : ", "bold": true },
+#                     { "type": "styled", "text": "${{ github.actor }}" }
+#                   ]
+#                 },
+#                 {
+#                   "type": "text", "text": "결과", "inlines": [
+#                     { "type": "styled", "text": "수행결과 : ", "bold": true },
+#                     { "type": "styled", "text": "${{ job.status }}" }
+#                   ]
+#                 },
+#                 {
+#                   "type": "description", "term": "날짜",
+#                   "content": { "type": "text", "text": "${{ steps.date.outputs.date }}" },
+#                   "accent": true
+#                 }
+#               ]
+#             }'

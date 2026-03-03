@@ -180,6 +180,10 @@ public class MemberController {
     }
 
     private void validateEmail(String email) {
+        if (allowDomain.equals("all")) {
+            return;
+        }
+
         if (!email.endsWith(allowDomain)) {
             throw new ApplicationRuntimeException(ErrorMessage.FORBIDDEN_SIGNUP);
         }
