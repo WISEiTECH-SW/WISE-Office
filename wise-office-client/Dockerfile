@@ -27,7 +27,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/static ./.next/static
 
 ENV NODE_ENV=production
-ENV PORT=3000
 
 # 애플리케이션 실행
 CMD ["node", "server.js"]

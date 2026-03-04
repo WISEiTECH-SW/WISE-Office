@@ -1,13 +1,13 @@
+name: wise-office
+
 services:
   database:
-    container_name: postgres_container_ony_db
+    container_name: postgres
     image: postgres:15
     ports:
-      - "5432:5432"
-    expose:
-      - "5432"
+      - ${POSTGRES_PORT}:5432
     volumes:
-      - ${POSTGRES_VOLUME}
+      - ${POSTGRES_VOLUME}:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -15,8 +15,15 @@ services:
       TZ: Asia/Seoul
       PGTZ: Asia/Seoul
     healthcheck:
-      # 컨테이너가 DB 연결을 받을 준비가 되었는지 확인
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+    networks:
+      - wise-office-network
+
+networks:
+  wise-office-network:
+    name: wise-office-network
+    driver: bridge

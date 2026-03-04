@@ -50,24 +50,6 @@ services:
       database:
         condition: service_healthy
 
-  client:
-    container_name: wise-office-client
-    build:
-      context: ../wise-office-client
-      dockerfile: Dockerfile
-      args:
-        - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
-    image: wise-office-client:latest
-    ports:
-      - ${CLIENT_PORT}:3000
-    environment:
-      - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
-    depends_on:
-      application:
-        condition: service_healthy
-    networks:
-      - wise-office-network
-
 networks:
   wise-office-network:
     name: wise-office-network
