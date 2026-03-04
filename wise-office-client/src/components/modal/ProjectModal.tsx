@@ -1,27 +1,33 @@
-import React, { useEffect, useState } from "react";
-import ProjectNameWithPeriod from "@/components/project/ProjectNameWithPeriod";
-import SelectProjectMembers from "@/components/project/SelectProjectMembers";
-import { CreateProject } from "@/types/createProject";
-import { Member } from "@/types/member";
 import { getMembers } from "@/services/members";
-import { useRef } from "react";
-import { getProjectById, updateProject } from "@/services/projects";
+import {
+    getProjectById,
+    postProject,
+    updateProject,
+} from "@/services/projects";
+import { Member } from "@/types/member";
+import { ProjectInfo } from "@/types/project";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { toastMessage } from "@/lib/common/toastMessage";
-import { editProjectInfo } from "@/lib/project/info";
-import { ProjectInfo } from "@/types/project";
-
-type ProjectUpdateModalProps = {
-    projectId: number;
-    setProjectInfo: React.Dispatch<React.SetStateAction<ProjectInfo | null>>;
+import { useProjects } from "@/store/useProjects";
+import { CreateProject } from "@/types/createProject";
+import SelectProjectMembers from "../project/SelectProjectMembers";
+import ProjectNameWithPeriod from "../project/ProjectNameWithPeriod";
+type ProjectModalProps = {
+    mode: "create" | "update";
+    projectId?: number; // update일 때만 필요
+    setProjectInfo?: React.Dispatch<React.SetStateAction<ProjectInfo | null>>;
     onClose: () => void;
+    onCreated?: () => Promise<void> | void; // create일 때만 필요
 };
 
-export default function ProjectUpdateModal({
+export default function ProjectModal({
+    mode,
     projectId,
     setProjectInfo,
     onClose,
-}: ProjectUpdateModalProps) {
+    onCreated,
+}: ProjectModalProps) {
     const [projectTitle, setProjectTitle] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -31,7 +37,6 @@ export default function ProjectUpdateModal({
     const [manager, setManager] = useState<Member | undefined>();
     const [members, setMembers] = useState<Member[]>([]);
     const modalRef = useRef<HTMLDivElement>(null);
-
     const router = useRouter();
     const handleProjectTitleChange = (value: string) => {
         if (value.length > 100) {
@@ -40,64 +45,6 @@ export default function ProjectUpdateModal({
         }
         setProjectTitle(value);
     };
-
-    const handleContentChange = (value: string) => {
-        if (value.length > 500) {
-            toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
-            return;
-        }
-        setContent(value);
-    };
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            const modal = modalRef.current;
-            const flatpickrCalendars = document.querySelectorAll(
-                ".flatpickr-calendar"
-            );
-            if (
-                modal &&
-                !modal.contains(event.target as Node) &&
-                !Array.from(flatpickrCalendars).some((cal) =>
-                    cal.contains(event.target as Node)
-                )
-            ) {
-                onClose();
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [onClose]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!router.isReady) return;
-            if (typeof projectId !== "number" || isNaN(projectId)) return;
-
-            const members = await getMembers();
-            const project_old = await getProjectById(projectId);
-            setMembers(members);
-            setProjectTitle(project_old.projectTitle);
-            setContent(project_old.detail);
-            setStartDate(String(project_old.start).slice(0, 7));
-            setEndDate(String(project_old.end).slice(0, 7));
-            setManager(
-                members.find(
-                    (member) =>
-                        member.memberId === project_old.managerName.memberId
-                )
-            );
-            const selected = members.filter((member) =>
-                project_old.attendant.some(
-                    (att) => att.memberId === member.memberId
-                )
-            );
-            setSelectedMembers(selected);
-        };
-        fetchData();
-    }, [router.isReady, projectId]);
-
     const [errors, setErrors] = useState({
         projectTitle: "",
         startDate: "",
@@ -106,6 +53,40 @@ export default function ProjectUpdateModal({
         selectedMembers: "",
         manager: "",
     });
+    useEffect(() => {
+        const fetchMembers = async () => {
+            const members = await getMembers();
+            setMembers(members);
+
+            if (mode === "update" && projectId && router.isReady) {
+                const project_old = await getProjectById(projectId);
+
+                setProjectTitle(project_old.projectTitle);
+                setContent(project_old.detail);
+                setStartDate(String(project_old.start).slice(0, 7));
+                setEndDate(String(project_old.end).slice(0, 7));
+
+                setManager(
+                    members.find(
+                        (member) =>
+                            member.memberId ===
+                            project_old.managerName.memberId,
+                    ),
+                );
+
+                const selected = members.filter((member) =>
+                    project_old.attendant.some(
+                        (att) => att.memberId === member.memberId,
+                    ),
+                );
+
+                setSelectedMembers(selected);
+            }
+        };
+
+        if (!router.isReady) return;
+        fetchMembers();
+    }, [mode, projectId, router.isReady]);
     const validateForm = () => {
         let valid = true;
         const newErrors = {
@@ -162,7 +143,6 @@ export default function ProjectUpdateModal({
         setErrors(newErrors);
         return valid;
     };
-
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
@@ -170,31 +150,44 @@ export default function ProjectUpdateModal({
         const [year, month] = endDate.split("-").map(Number);
         const lastDay = new Date(year, month, 0).getDate();
         const end = `${endDate}-${lastDay.toString().padStart(2, "0")}`;
-        //
-        const projectManagerId = manager?.memberId;
-        const attendants = selectedMembers.map((member) => member.memberId);
+
         const projectData: CreateProject = {
             projectTitle,
             start,
             end,
             content,
-            projectManagerId,
-            attendants,
+            projectManagerId: manager?.memberId,
+            attendants: selectedMembers.map((m) => m.memberId),
         };
 
         try {
-            const newProject = await updateProject(projectData, projectId);
-            editProjectInfo();
-            setProjectInfo(newProject);
+            if (mode === "create") {
+                const newProject = await postProject(projectData);
+                useProjects.getState().addProject(newProject);
+                if (onCreated) await onCreated();
+                toastMessage.success("프로젝트가 등록되었습니다.");
+            } else {
+                const updated = await updateProject(projectData, projectId!);
+                if (setProjectInfo) setProjectInfo(updated);
+                toastMessage.success("프로젝트가 수정되었습니다.");
+            }
+
             onClose();
         } catch (err) {
             toastMessage.error(
-                "프로젝트 수정에 실패했습니다. 다시 시도해주세요."
+                mode === "create"
+                    ? "프로젝트 등록에 실패했습니다."
+                    : "프로젝트 수정에 실패했습니다.",
             );
-            console.log("프로젝트 수정 오류: ", err);
         }
     };
-
+    const handleContentChange = (value: string) => {
+        if (value.length > 500) {
+            toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
+            return;
+        }
+        setContent(value);
+    };
     return (
         <div className="Overlay fixed inset-0 bg-opacity-40 flex justify-center items-center z-50 p-6">
             <div
@@ -213,7 +206,7 @@ export default function ProjectUpdateModal({
 
                 {/* 제목 */}
                 <h2 className="text-center text-2xl font-extrabold mb-6 text-gray-900 col-span-full">
-                    프로젝트 수정
+                    {mode === "create" ? "프로젝트 생성" : "프로젝트 수정"}
                 </h2>
 
                 {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}
@@ -250,7 +243,7 @@ export default function ProjectUpdateModal({
                     onClick={handleSubmit}
                     type="button"
                 >
-                    수정 완료
+                    {mode === "create" ? "생성 완료" : "수정 완료"}
                 </button>
             </div>
         </div>
