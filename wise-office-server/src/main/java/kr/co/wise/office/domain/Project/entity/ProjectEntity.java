@@ -40,13 +40,23 @@ public class ProjectEntity {
     private boolean closed = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_member_project")
+    @JoinColumn(
+            name = "fk_member_project",
+            foreignKey = @ForeignKey(name = "fk_project_member")
+    )
     private MemberEntity member;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name ="fk_project_attendant")
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Builder.Default
     private List<AttendantEntity> attendant = new ArrayList<>();
+
+    //전담 기관
+    @Column(name = "institution")
+    private String institution;
+
+    //사업명
+    @Column(name = "business_name")
+    private String businessName;
 
     public void update(ProjectUpdateRequest request) {
         this.title = request.projectTitle();

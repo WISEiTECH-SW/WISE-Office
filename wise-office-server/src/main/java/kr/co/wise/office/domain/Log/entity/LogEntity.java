@@ -37,11 +37,17 @@ public class LogEntity {
     private LocalDateTime writtenAt;
 
     @ManyToOne
-    @JoinColumn(name = "fk_member_log")
+    @JoinColumn(
+            name = "fk_member_log",
+            foreignKey = @ForeignKey(name = "fk_log_member")
+    )
     private MemberEntity member;
 
     @ManyToOne
-    @JoinColumn(name = "fk_project_log")
+    @JoinColumn(
+            name = "fk_project_log",
+            foreignKey = @ForeignKey(name = "fk_log_project")
+    )
     private ProjectEntity project;
 
     @OneToMany(mappedBy = "log")

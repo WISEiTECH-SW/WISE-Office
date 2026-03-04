@@ -21,11 +21,17 @@ public class AttendantEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_member_attendant")
+    @JoinColumn(
+            name = "fk_member_attendant",
+            foreignKey = @ForeignKey(name = "fk_attendant_member")
+    )
     private MemberEntity member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_project_attendant")
+    @JoinColumn(
+            name = "fk_project_attendant",
+            foreignKey = @ForeignKey(name = "fk_attendant_project")
+    )
     private ProjectEntity project;
 
     @Enumerated(EnumType.STRING)

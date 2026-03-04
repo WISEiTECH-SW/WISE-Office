@@ -30,11 +30,17 @@ public class CommentEntity {
     private LocalDateTime writtenAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_log_comment")
+    @JoinColumn(
+            name = "fk_log_comment",
+            foreignKey = @ForeignKey(name = "fk_comment_log")
+    )
     private LogEntity log;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_member_comment")
+    @JoinColumn(
+            name = "fk_member_comment",
+            foreignKey = @ForeignKey(name = "fk_comment_member")
+    )
     private MemberEntity member;
 
     @Column(name = "deleted")
