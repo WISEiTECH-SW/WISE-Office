@@ -37,17 +37,9 @@ public class ApproveEntity {
     @Column(name = "write_date")
     private LocalDate writeDate;
 
-    // 품의 부서
-    @Column(name = "department")
-    private String department;
-
     // 접수 일자
     @Column(name = "submit_date")
     private LocalDate submitDate;
-
-    // 회의 일시
-    @Column(name = "minutes_date")
-    private LocalDate minutesDate;
 
     // 회의 목적
     @Column(name = "minutes_purpose")
