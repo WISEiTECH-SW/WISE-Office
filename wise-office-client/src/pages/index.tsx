@@ -3,7 +3,7 @@ import ProjectListCard from "@/components/ProjectListCard";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProjects } from "@/store/useProjects";
 import { useEffect, useState } from "react";
-import { ProjectCreateModal } from "@/components/modal";
+import ProjectModal from "@/components/modal/ProjectModal";
 
 export default function Home() {
     const projects = useProjects((s) => s.projects);
@@ -70,7 +70,8 @@ export default function Home() {
                             />
                         </div>
                         {isModalOpen && (
-                            <ProjectCreateModal
+                            <ProjectModal
+                                mode={"create"}
                                 onClose={() => setIsModalOpen(false)}
                                 onCreated={async () => {
                                     await fetchProjects({

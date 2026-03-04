@@ -14,12 +14,13 @@ import {
     ProjectLog,
     ProjectAttendantList,
 } from "@/components/project";
-import { LogWriteModal, ProjectUpdateModal } from "@/components/modal";
+import { LogWriteModal } from "@/components/modal";
 
 import { useComments } from "@/hooks/domain/useComments";
 import { useProjects } from "@/hooks/domain/useProjects";
 
 import ConfirmModal from "@/components/modal/ConfirmModal";
+import ProjectModal from "@/components/modal/ProjectModal";
 
 export default function ProjectPageById() {
     const router = useRouter();
@@ -91,8 +92,8 @@ export default function ProjectPageById() {
             prev.map((log) =>
                 log.logId === updatedLog?.logId
                     ? { ...log, ...updatedLog }
-                    : log
-            )
+                    : log,
+            ),
         );
     };
 
@@ -105,8 +106,8 @@ export default function ProjectPageById() {
                           ...log,
                           commentCnt: log.commentCnt + (isIncrease ? 1 : -1),
                       }
-                    : log
-            )
+                    : log,
+            ),
         );
     };
 
@@ -149,7 +150,8 @@ export default function ProjectPageById() {
                 onDelete={() => handleConfirmModal("project", projectId)}
             />
             {isEditOpen && projectInfo.projectId && (
-                <ProjectUpdateModal
+                <ProjectModal
+                    mode={"update"}
                     projectId={projectInfo.projectId}
                     setProjectInfo={setProjectInfo}
                     onClose={() => setIsEditOpen(false)}
