@@ -1,13 +1,13 @@
 spring:
   application:
-    name: office
+    name: wise-office
   config:
     import: optional:file:../wise-office-infra/.env.dev[.properties]
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${LOCAL_DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${DB_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
@@ -51,7 +51,7 @@ domain:
   email: all
 
 image:
-  dir: C:/myVolumes/images
+  dir: ${IMAGE_UPLOAD_DIR}
   prefix: http://localhost:8080/images/
 
 front:

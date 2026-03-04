@@ -18,12 +18,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:///" + imageDir + "/");
+                .addResourceLocations("file:" + imageDir + "/");
     }
 
     // MessageSource 지정
     @Bean
-    public MessageSource validationMessageSource(){
+    public MessageSource validationMessageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:ValidationMessages");
         messageSource.setDefaultEncoding("UTF-8");
