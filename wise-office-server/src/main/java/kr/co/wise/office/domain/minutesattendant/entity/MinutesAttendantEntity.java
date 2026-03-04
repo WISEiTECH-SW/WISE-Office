@@ -18,7 +18,7 @@ public class MinutesAttendantEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pk")
+    @Column(name = "minutes_attendant_pk")
     private Long id;
 
     // 참여 인원 번호
