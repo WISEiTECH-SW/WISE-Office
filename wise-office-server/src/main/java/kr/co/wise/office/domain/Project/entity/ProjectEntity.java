@@ -48,6 +48,14 @@ public class ProjectEntity {
     @Builder.Default
     private List<AttendantEntity> attendant = new ArrayList<>();
 
+    //전담 기관
+    @Column(name = "institution")
+    private String institution;
+
+    //사업명
+    @Column(name = "business_name")
+    private String businessName;
+
     public void update(ProjectUpdateRequest request) {
         this.title = request.projectTitle();
         this.detail = request.content();
