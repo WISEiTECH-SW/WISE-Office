@@ -113,7 +113,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                     <Toolbar />
                 </header>
 
-                <main className="flex-grow p-4 mt-20">
+                <main className="flex-grow p-4 mt-24">
                     <Component {...pageProps} />
                     <ToastContainer className="mt-25" limit={1} />
                 </main>
