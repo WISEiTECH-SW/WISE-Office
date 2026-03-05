@@ -13,6 +13,7 @@ import { useProjects } from "@/store/useProjects";
 import { CreateProject } from "@/types/createProject";
 import SelectProjectMembers from "../project/SelectProjectMembers";
 import ProjectNameWithPeriod from "../project/ProjectNameWithPeriod";
+import Tab from "../project/Tab";
 type ProjectModalProps = {
     mode: "create" | "update";
     projectId?: number; // update일 때만 필요
@@ -38,6 +39,7 @@ export default function ProjectModal({
     const [members, setMembers] = useState<Member[]>([]);
     const modalRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
+    const [tab, setTab] = useState("프로젝트 정보");
     const handleProjectTitleChange = (value: string) => {
         if (value.length > 100) {
             toastMessage.error("프로젝트 제목은 100자까지 입력 가능합니다.");
@@ -208,7 +210,16 @@ export default function ProjectModal({
                 <h2 className="text-center text-2xl font-extrabold mb-6 text-gray-900 col-span-full">
                     {mode === "create" ? "프로젝트 생성" : "프로젝트 수정"}
                 </h2>
-
+                {/* 탭 */}
+                <div className="w-full flex justify-center mb-6">
+                    <div className="w-2/3">
+                        <Tab
+                            options={["프로젝트 정보", "인원 정보"]}
+                            selectedTab={tab}
+                            onTabChange={setTab}
+                        />
+                    </div>
+                </div>
                 {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}
                 <div className="flex flex-col md:flex-row gap-8 flex-grow overflow-hidden">
                     {/* 왼쪽 영역 */}
