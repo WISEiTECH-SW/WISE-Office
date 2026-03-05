@@ -32,7 +32,7 @@ export default function HeaderAuth() {
         <div className="flex gap-5">
             <div
                 onClick={handleProfileClick}
-                className="relative w-12 h-12 flex-none rounded-full overflow-hidden hover:border-gray-300 transition-colors cursor-pointer"
+                className="relative w-10 h-10 flex-none rounded-full overflow-hidden hover:border-gray-300 transition-colors cursor-pointer"
             >
                 <ProfileImage imageUrl={profile?.imageUrl} />
             </div>
