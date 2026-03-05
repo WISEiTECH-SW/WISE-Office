@@ -64,6 +64,9 @@ front:
 #  api-docs:
 #    enabled: false
 
+member:
+  init-path: init/memberList.txt
+
 ---
 spring:
   config:

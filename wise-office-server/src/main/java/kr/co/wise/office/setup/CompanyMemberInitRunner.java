@@ -5,6 +5,7 @@ import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.companymember.repository.CompanyMemberEntityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,9 @@ public class CompanyMemberInitRunner implements CommandLineRunner {
 
     private final CompanyMemberEntityRepository companyMemberEntityRepository;
 
+    @Value("${member.init-path}")
+    private String memberInitPath;
+
     @Override
     public void run(String... args) throws Exception {
         // 초기 데이터가 삽입되었는지 확인
@@ -35,7 +39,7 @@ public class CompanyMemberInitRunner implements CommandLineRunner {
         }
 
         // 전사 사원 데이터 추가
-        ClassPathResource initResourcePath = new ClassPathResource("init/memberList-260304.txt");
+        ClassPathResource initResourcePath = new ClassPathResource(memberInitPath);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(initResourcePath.getInputStream()))){
             List<CompanyMemberEntity> companyMemberEntities = new ArrayList<>();
             reader.lines().forEach(line -> {
