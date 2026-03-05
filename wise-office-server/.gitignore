@@ -40,3 +40,5 @@ out/
 *.env
 
 run.bat
+
+memberList.txt
