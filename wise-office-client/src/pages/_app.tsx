@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HeaderAuth from "@/components/header/HeaderAuth";
+import Toolbar from "@/components/header/Toolbar";
 import { useInitAuth } from "@/hooks/useInitAuth";
 import { useAuthLoginToast } from "@/hooks/useLoginToast";
 import { useRouteGuard } from "@/hooks/useRouteGuard";
@@ -94,26 +95,27 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
             <div className="min-h-screen flex flex-col">
                 <header
-                    className={`fixed top-0 left-0 right-0 z-50 
-                bg-blue-600 text-white p-4 flex justify-between items-center
-                transition-transform duration-300
+                    className={`fixed top-0 left-0 right-0 z-50 flex flex-col transition-transform duration-300
                 ${showHeader ? "translate-y-0" : "-translate-y-full"}`}
                 >
-                    <Link href="/" className="text-lg font-bold">
-                        <Image
-                            src="/logo.png"
-                            alt="Wise Office Logo"
-                            className="h-12 w-auto"
-                            width={120}
-                            height={48}
-                        />
-                    </Link>
-                    <HeaderAuth />
+                    <div className="bg-blue-600 text-white px-4 py-2 flex justify-between items-center">
+                        <Link href="/" className="text-lg font-bold">
+                            <Image
+                                src="/logo.png"
+                                alt="Wise Office Logo"
+                                className="h-10 w-auto"
+                                width={120}
+                                height={48}
+                            />
+                        </Link>
+                        <HeaderAuth />
+                    </div>
+                    <Toolbar />
                 </header>
 
                 <main className="flex-grow p-4 mt-20">
                     <Component {...pageProps} />
-                    <ToastContainer className="mt-20" limit={1} />
+                    <ToastContainer className="mt-25" limit={1} />
                 </main>
             </div>
 
