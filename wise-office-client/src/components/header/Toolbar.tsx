@@ -14,8 +14,8 @@ export default function Toolbar() {
     const linkClass = (path: string) =>
         `flex items-center gap-2 px-3 py-1 rounded-sm transition-colors ${
             pathname === path
-                ? "bg-blue-500/10 text-blue-600 font-semibold"
-                : "text-text-primary hover:bg-gray-100"
+                ? "bg-blue-500/10 !text-blue-600 font-semibold"
+                : "!text-text-primary hover:bg-gray-100"
         }`;
 
     return (
