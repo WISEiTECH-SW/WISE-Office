@@ -117,7 +117,7 @@ public class MinutesEntity {
                 .endTime(request.endTime())
                 .location(request.location())
                 .purpose(request.purpose())
-                .instAttendants(request.attendants())
+                .instAttendants(request.instAttendants())
                 .writer(request.writer())
                 .meetingContent(request.content())
                 .project(project)

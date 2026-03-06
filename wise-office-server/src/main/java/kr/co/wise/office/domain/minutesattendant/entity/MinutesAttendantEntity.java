@@ -36,4 +36,10 @@ public class MinutesAttendantEntity {
             foreignKey = @ForeignKey(name = "fk_minutes_attendants_minutes")
     )
     private MinutesEntity minutesEntity;
+
+    public MinutesAttendantEntity(ProposalAttendantEntity proposalAttendantEntity, MinutesEntity minutesEntity) {
+        this.proposalAttendantEntity = proposalAttendantEntity;
+        this.minutesEntity = minutesEntity;
+    }
+
 }

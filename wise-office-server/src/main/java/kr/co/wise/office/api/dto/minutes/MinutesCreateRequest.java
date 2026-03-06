@@ -15,7 +15,8 @@ public record MinutesCreateRequest(
         @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate minutesDate,
         @Schema(type = "string", defaultValue = "14:30") @DateTimeFormat(pattern = "HH:mm") @NotNull LocalTime startTime,
         @Schema(type = "string", defaultValue =  "16:30") @DateTimeFormat(pattern = "HH:mm") @NotNull LocalTime endTime,
-        @SubjectNotBlank(subject = "참석자") String attendants,
+        @SubjectNotBlank(subject = "사내 참석자 (ex) 이름,이름,이름 형태의 문자열 값으로 전달)") String minutesAttendants,
+        @SubjectNotBlank(subject = "외부 기관 참석자") String instAttendants,
         @SubjectNotBlank(subject = "작성자") String writer,
         @SubjectNotBlank(subject = "회의 내용") String content
 ) {

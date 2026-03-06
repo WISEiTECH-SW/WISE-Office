@@ -10,10 +10,12 @@ import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.service.MinutesService;
+import kr.co.wise.office.domain.minutesattendant.service.MinutesAttendantsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -25,6 +27,7 @@ public class MinutesServiceApi {
     private final MemberService memberService;
     private final ProjectService projectService;
     private final MinutesService minutesService;
+    private final MinutesAttendantsService minutesAttendantsService ;
 
     @Transactional(readOnly = true)
     public List<MinutesListResponse> getMinutesBriefInfo(
@@ -52,7 +55,9 @@ public class MinutesServiceApi {
 
         long currentMinutesNumber = minutesService.getlastMinutesNumber(request.minutesDate()) + 1;
         MinutesEntity minutes = minutesService.createMinutes(project, request, currentMinutesNumber);
-        // TODO : 회의 참석인원 엔티티 추가 로직 작성 필요
+
+        List<String> attendantNames = Arrays.stream(request.minutesAttendants().split(",")).toList();
+        minutesAttendantsService.createMinutesAttendants(attendantNames, projectId, minutes);
 
         return minutes.getId();
     }
