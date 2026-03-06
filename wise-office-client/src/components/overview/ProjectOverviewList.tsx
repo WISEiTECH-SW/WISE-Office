@@ -32,19 +32,29 @@ export default function ProjectOverviewList() {
             {groupedByMonth
                 .sort((a, b) => a.month - b.month)
                 .map(({ month, data }) => (
-                    <div key={month} className="flex flex-col gap-4">
+                    <div key={month} className="flex flex-col gap-4 pr-16">
                         <p className="text-lg font-semibold">{month}월</p>
 
-                        <div className="flex flex-col gap-6">
-                            {data.map((minutes) => (
-                                <>
-                                    <OverviewCard
-                                        key={minutes.minutes_pk}
-                                        minutes={minutes}
-                                    />
-                                </>
-                            ))}
-                        </div>
+                        {data.map((minutes, index) => (
+                            <div
+                                key={minutes.minutes_pk}
+                                className={`flex flex-col gap-3 ${
+                                    index !== data.length - 1
+                                        ? "pb-4 border-b border-gray-200"
+                                        : ""
+                                }`}
+                            >
+                                <OverviewCard
+                                    key={minutes.minutes_pk}
+                                    minutes={minutes}
+                                />
+                                <OverviewCard
+                                    key={minutes.minutes_pk}
+                                    minutes={minutes}
+                                    isApproval={true}
+                                />
+                            </div>
+                        ))}
                     </div>
                 ))}
         </div>

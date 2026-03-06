@@ -1,12 +1,14 @@
 import { Minutes, Approval } from "@/types/document";
-import PreviewButton from "../ui/button/PreviewButton";
-import PrintButton from "../ui/button/PrintButton";
+import PreviewButton from "@/components/ui/button/PreviewButton";
+import PrintButton from "@/components/ui/button/PrintButton";
+import { APPROVALS } from "@/lib/data/overview";
 
 interface Props {
     minutes?: Minutes;
+    isApproval?: boolean;
 }
 
-export default function OverviewCard({ minutes }: Props) {
+export default function OverviewCard({ minutes, isApproval }: Props) {
     return (
         <div className="flex bg-white border border-gray-300 rounded-lg px-4 py-2 items-center justify-between gap-6">
             {/* 문서 정보 */}
@@ -20,7 +22,11 @@ export default function OverviewCard({ minutes }: Props) {
                 </div>
                 {/* 문서번호 */}
                 <p className="col-span-1 flex items-center">
-                    {minutes?.minutes_number}
+                    {isApproval
+                        ? APPROVALS.find(
+                              (a) => a.meeting_pk === minutes?.minutes_pk,
+                          )?.report_no
+                        : minutes?.minutes_number}
                 </p>
                 {/* 참석자 명단 */}
                 <p className="col-span-1 text-xs flex items-center">
