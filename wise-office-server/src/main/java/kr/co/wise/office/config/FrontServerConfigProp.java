@@ -11,7 +11,11 @@ public class FrontServerConfigProp {
     private final String url;
     private final String port;
 
-    public String getFrontUrl(){
+    public String getUrl() {
+        return url;
+    }
+
+    public String getFrontUrl() {
         return url + ":" + port;
     }
 }

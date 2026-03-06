@@ -52,11 +52,11 @@ domain:
 
 image:
   dir: ${IMAGE_UPLOAD_DIR}
-  prefix: http://localhost:8080/images/
+  prefix: http://localhost:${SERVER_PORT}/images/
 
 front:
-  url: http://localhost
-  port: 3000
+  url: ${CLIENT_URL}
+  port: ${CLIENT_PORT}
 
 #springdoc:
 #  swagger-ui:
