@@ -1,35 +1,37 @@
-import { MINUTES, APPROVALS } from "@/lib/data/overview";
+import { Minutes, Approval } from "@/types/document";
+import PreviewButton from "../ui/button/PreviewButton";
+import PrintButton from "../ui/button/PrintButton";
 
-type Minute = (typeof MINUTES)[number];
-type Approval = (typeof APPROVALS)[number] | undefined;
+interface Props {
+    minutes?: Minutes;
+}
 
-export default function OverviewCard({
-    minute,
-    approval,
-}: {
-    minute: Minute;
-    approval: Approval;
-}) {
+export default function OverviewCard({ minutes }: Props) {
     return (
-        <div className="flex border border-gray-300 rounded-xl h-16 p-8 items-center justify-between gap-8">
-            <div className="flex-1 flex justify-between">
+        <div className="flex bg-white border border-gray-300 rounded-lg px-4 py-2 items-center justify-between gap-6">
+            {/* 문서 정보 */}
+            <div className="flex-1 grid grid-cols-3">
                 {/* 날짜/시간 */}
-                <div className="flex justify-between gap-8">
-                    <p>{minute.minutes_date.toLocaleDateString("ko-KR")}</p>
+                <div className="col-span-1 flex flex-col 2xl:flex-row gap-2">
+                    <p>{minutes?.minutes_date.toLocaleDateString("ko-KR")}</p>
                     <p>
-                        {minute.start_time}~{minute.end_time}
+                        {minutes?.start_time}~{minutes?.end_time}
                     </p>
                 </div>
                 {/* 문서번호 */}
-                <p className="flex justify-center">
-                    {minute.minutes_number || "-"}
+                <p className="col-span-1 flex items-center">
+                    {minutes?.minutes_number}
                 </p>
                 {/* 참석자 명단 */}
-                <p className="flex">{minute.inst_attendants.join(" ")}</p>
+                <p className="col-span-1 text-xs flex items-center">
+                    {minutes?.inst_attendants.join(" ")}
+                </p>
             </div>
-            <div className="flex justify-between gap-8">
-                <p>button</p>
-                <p>button</p>
+
+            {/* 버튼 */}
+            <div className="flex justify-between gap-2">
+                <PreviewButton />
+                <PrintButton />
             </div>
         </div>
     );

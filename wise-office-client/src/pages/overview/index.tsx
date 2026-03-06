@@ -5,8 +5,6 @@ import { useApproval } from "@/store/useApprovalStore";
 export default function Overview() {
     const { year, projectId } = useApproval();
 
-    console.log({ year, projectId });
-
     return (
         <div className="min-h-screen flex my-24 mx-24 gap-16">
             <LeftMenu />

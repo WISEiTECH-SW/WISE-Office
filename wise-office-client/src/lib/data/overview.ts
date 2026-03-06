@@ -101,7 +101,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관02"],
         start_time: "10:00",
         end_time: "12:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-031201",
     },
     {
         minutes_pk: 2,
@@ -116,7 +116,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관03", "타기관04"],
         start_time: "14:00",
         end_time: "16:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-070801",
     },
     {
         minutes_pk: 3,
@@ -131,7 +131,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관05"],
         start_time: "09:00",
         end_time: "11:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-112001",
     },
     {
         minutes_pk: 4,
@@ -146,7 +146,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관02", "타기관03"],
         start_time: "11:00",
         end_time: "21:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-010201",
     },
     {
         minutes_pk: 5,
@@ -161,7 +161,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관04"],
         start_time: "10:00",
         end_time: "12:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-031801",
     },
 
     // ===== project_pk: 2 =====
@@ -178,7 +178,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관06"],
         start_time: "13:00",
         end_time: "15:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-021801",
     },
     {
         minutes_pk: 7,
@@ -193,7 +193,7 @@ export const MINUTES = [
         inst_attendants: ["타기관03", "타기관07", "타기관08"],
         start_time: "10:30",
         end_time: "12:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-061101",
     },
     {
         minutes_pk: 8,
@@ -208,7 +208,7 @@ export const MINUTES = [
         inst_attendants: ["타기관05", "타기관06"],
         start_time: "14:00",
         end_time: "16:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-100701",
     },
     {
         minutes_pk: 9,
@@ -223,7 +223,7 @@ export const MINUTES = [
         inst_attendants: ["타기관03", "타기관07"],
         start_time: "09:00",
         end_time: "11:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-020301",
     },
     {
         minutes_pk: 10,
@@ -238,7 +238,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관05", "타기관06"],
         start_time: "11:00",
         end_time: "13:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-041501",
     },
 
     // ===== project_pk: 3 =====
@@ -255,7 +255,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관09"],
         start_time: "10:00",
         end_time: "12:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-042201",
     },
     {
         minutes_pk: 12,
@@ -270,7 +270,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관08", "타기관10"],
         start_time: "13:30",
         end_time: "15:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-081401",
     },
     {
         minutes_pk: 13,
@@ -285,7 +285,7 @@ export const MINUTES = [
         inst_attendants: ["타기관05", "타기관09"],
         start_time: "09:30",
         end_time: "11:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-120301",
     },
     {
         minutes_pk: 14,
@@ -300,7 +300,7 @@ export const MINUTES = [
         inst_attendants: ["타기관05", "타기관09"],
         start_time: "10:30",
         end_time: "12:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-021001",
     },
     {
         minutes_pk: 15,
@@ -315,7 +315,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관02", "타기관08"],
         start_time: "14:00",
         end_time: "16:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-052001",
     },
 
     // ===== project_pk: 4 =====
@@ -332,7 +332,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관06"],
         start_time: "10:00",
         end_time: "12:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-011601",
     },
     {
         minutes_pk: 17,
@@ -347,7 +347,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관07", "타기관10"],
         start_time: "15:00",
         end_time: "17:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-052901",
     },
     {
         minutes_pk: 18,
@@ -362,7 +362,7 @@ export const MINUTES = [
         inst_attendants: ["타기관04", "타기관06"],
         start_time: "11:00",
         end_time: "13:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-091101",
     },
     {
         minutes_pk: 19,
@@ -377,7 +377,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관06", "타기관10"],
         start_time: "15:00",
         end_time: "17:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-021401",
     },
     {
         minutes_pk: 20,
@@ -392,7 +392,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관07"],
         start_time: "09:00",
         end_time: "11:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-042201",
     },
 
     // ===== project_pk: 5 =====
@@ -409,7 +409,7 @@ export const MINUTES = [
         inst_attendants: ["타기관03", "타기관11"],
         start_time: "09:30",
         end_time: "11:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-032501",
     },
     {
         minutes_pk: 22,
@@ -424,7 +424,7 @@ export const MINUTES = [
         inst_attendants: ["타기관04", "타기관08", "타기관09"],
         start_time: "14:00",
         end_time: "16:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-071701",
     },
     {
         minutes_pk: 23,
@@ -439,7 +439,7 @@ export const MINUTES = [
         inst_attendants: ["타기관03", "타기관11"],
         start_time: "10:00",
         end_time: "12:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-110401",
     },
     {
         minutes_pk: 24,
@@ -454,7 +454,7 @@ export const MINUTES = [
         inst_attendants: ["타기관03", "타기관08", "타기관11"],
         start_time: "09:30",
         end_time: "11:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-021701",
     },
     {
         minutes_pk: 25,
@@ -469,7 +469,7 @@ export const MINUTES = [
         inst_attendants: ["타기관04", "타기관09"],
         start_time: "13:00",
         end_time: "15:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-050601",
     },
 
     // ===== project_pk: 6 =====
@@ -486,7 +486,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관10"],
         start_time: "10:00",
         end_time: "12:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-020601",
     },
     {
         minutes_pk: 27,
@@ -501,7 +501,7 @@ export const MINUTES = [
         inst_attendants: ["타기관05", "타기관06", "타기관11"],
         start_time: "13:30",
         end_time: "15:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-062401",
     },
     {
         minutes_pk: 28,
@@ -516,7 +516,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관05"],
         start_time: "09:00",
         end_time: "11:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-101501",
     },
     {
         minutes_pk: 29,
@@ -531,7 +531,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관05", "타기관10"],
         start_time: "10:00",
         end_time: "12:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-022401",
     },
     {
         minutes_pk: 30,
@@ -546,7 +546,7 @@ export const MINUTES = [
         inst_attendants: ["타기관06", "타기관11", "타기관12"],
         start_time: "14:00",
         end_time: "16:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-051201",
     },
 
     // ===== project_pk: 7 =====
@@ -563,7 +563,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관12"],
         start_time: "10:00",
         end_time: "12:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-041001",
     },
     {
         minutes_pk: 32,
@@ -578,7 +578,7 @@ export const MINUTES = [
         inst_attendants: ["타기관07", "타기관10", "타기관11"],
         start_time: "14:00",
         end_time: "16:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-082601",
     },
     {
         minutes_pk: 33,
@@ -593,7 +593,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관08"],
         start_time: "11:00",
         end_time: "13:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2025-121101",
     },
     {
         minutes_pk: 34,
@@ -608,7 +608,7 @@ export const MINUTES = [
         inst_attendants: ["타기관02", "타기관07", "타기관12"],
         start_time: "10:00",
         end_time: "12:00",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-030401",
     },
     {
         minutes_pk: 35,
@@ -623,7 +623,7 @@ export const MINUTES = [
         inst_attendants: ["타기관01", "타기관08", "타기관10", "타기관11"],
         start_time: "15:00",
         end_time: "17:30",
-        minutes_number: "",
+        minutes_number: "WISEMM2026-052801",
     },
 ];
 
@@ -631,7 +631,7 @@ export const APPROVALS = [
     {
         approve_pk: 1,
         meeting_pk: 1,
-        report_no: 1,
+        report_no: "WISEBM2026-010101",
         write_date: new Date("2026-01-01"),
         department: "연구기획1팀",
         submit_date: new Date("2026-01-05"),
@@ -639,7 +639,7 @@ export const APPROVALS = [
     {
         approve_pk: 2,
         meeting_pk: 2,
-        report_no: 1,
+        report_no: "WISEBM2026-010101",
         write_date: new Date("2026-01-01"),
         department: "연구기획1팀",
         submit_date: new Date("2026-01-05"),
@@ -647,7 +647,7 @@ export const APPROVALS = [
     {
         approve_pk: 3,
         meeting_pk: 3,
-        report_no: 1,
+        report_no: "WISEBM2026-010101",
         write_date: new Date("2026-01-01"),
         department: "연구기획1팀",
         submit_date: new Date("2026-01-05"),

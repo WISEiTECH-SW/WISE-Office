@@ -5,28 +5,19 @@ import { MINUTES, APPROVALS } from "@/lib/data/overview";
 export default function OverviewList() {
     const { year, projectId } = useApproval();
 
-    const filteredMinutes = MINUTES.filter(
+    const filteredData = MINUTES.filter(
         (m) =>
             m.project_pk === projectId && m.minutes_date.getFullYear() === year,
-    );
-
-    const filteredData = filteredMinutes.map((minute) => {
-        const approval = APPROVALS.find(
-            (a) => a.meeting_pk === minute.minutes_pk,
-        );
-        return { minute, approval };
-    });
-
-    console.log({ filteredMinutes, filteredData });
+    ).map((minutes) => ({
+        minutes,
+    }));
 
     return (
         <div className="flex flex-col gap-6 px-8">
-            {filteredData.map(({ minute, approval }) => (
-                <OverviewCard
-                    key={minute.minutes_pk}
-                    minute={minute}
-                    approval={approval}
-                />
+            {filteredData.map(({ minutes }) => (
+                <>
+                    <OverviewCard minutes={minutes!} />
+                </>
             ))}
         </div>
     );
