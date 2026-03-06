@@ -1,20 +1,48 @@
+export const projectNames = [
+    {
+        project_pk: 1,
+        title: "역주행 사고 방지를 위한 에스컬레이터 및 예지보전 시스템 개발",
+    },
+    {
+        project_pk: 2,
+        title: "고독성 분해 기술을 활용한 AI 폐수 처리 자동화 시스템 개발 및 실증",
+    },
+    {
+        project_pk: 3,
+        title: "자동차 업종 데이터 활용 MFM 기반 SDM 실증 테스트베드 구축",
+    },
+    {
+        project_pk: 4,
+        title: "인간 지향적 AGI의 윤리적 추론 및 메타인지 기술 연구",
+    },
+    {
+        project_pk: 5,
+        title: "로봇기반 임산물 산지종합유통센터 자동화 핵심기술개발 및 실증 연구",
+    },
+    {
+        project_pk: 6,
+        title: "노코드 기반 제조·로봇 산업 특화 오픈소스 AI 분석 플랫폼 개발 및 사업화",
+    },
+    {
+        project_pk: 7,
+        title: "산림복지 이용 활성화를 위한 대국민 맞춤 지능형 서비스 개발",
+    },
+];
+
 export const menus = [
     {
         year: 2024,
         items: [
             {
                 project_pk: 1,
-                year: 2024,
                 title: "역주행 사고 방지를 위한 에스컬레이터 및 예지보전 시스템 개발",
             },
             {
                 project_pk: 2,
-                year: 2024,
                 title: "고독성 분해 기술을 활용한 AI 폐수 처리 자동화 시스템 개발 및 실증",
             },
             {
                 project_pk: 3,
-                year: 2024,
                 title: "자동차 업종 데이터 활용 MFM 기반 SDM 실증 테스트베드 구축",
             },
         ],
@@ -24,27 +52,22 @@ export const menus = [
         items: [
             {
                 project_pk: 1,
-                year: 2025,
                 title: "역주행 사고 방지를 위한 에스컬레이터 및 예지보전 시스템 개발",
             },
             {
                 project_pk: 2,
-                year: 2025,
                 title: "고독성 분해 기술을 활용한 AI 폐수 처리 자동화 시스템 개발 및 실증",
             },
             {
                 project_pk: 3,
-                year: 2025,
                 title: "자동차 업종 데이터 활용 MFM 기반 SDM 실증 테스트베드 구축",
             },
             {
                 project_pk: 4,
-                year: 2025,
                 title: "인간 지향적 AGI의 윤리적 추론 및 메타인지 기술 연구",
             },
             {
                 project_pk: 5,
-                year: 2025,
                 title: "로봇기반 임산물 산지종합유통센터 자동화 핵심기술개발 및 실증 연구",
             },
         ],
@@ -54,32 +77,26 @@ export const menus = [
         items: [
             {
                 project_pk: 1,
-                year: 2026,
                 title: "역주행 사고 방지를 위한 에스컬레이터 및 예지보전 시스템 개발",
             },
             {
                 project_pk: 3,
-                year: 2026,
                 title: "자동차 업종 데이터 활용 MFM 기반 SDM 실증 테스트베드 구축",
             },
             {
                 project_pk: 4,
-                year: 2026,
                 title: "인간 지향적 AGI의 윤리적 추론 및 메타인지 기술 연구",
             },
             {
                 project_pk: 5,
-                year: 2026,
                 title: "로봇기반 임산물 산지종합유통센터 자동화 핵심기술개발 및 실증 연구",
             },
             {
                 project_pk: 6,
-                year: 2026,
                 title: "노코드 기반 제조·로봇 산업 특화 오픈소스 AI 분석 플랫폼 개발 및 사업화",
             },
             {
                 project_pk: 7,
-                year: 2026,
                 title: "산림복지 이용 활성화를 위한 대국민 맞춤 지능형 서비스 개발",
             },
         ],

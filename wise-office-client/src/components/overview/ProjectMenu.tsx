@@ -4,7 +4,7 @@ import { useOverview } from "@/store/useOverviewStore";
 import { menus } from "@/lib/data/overview";
 
 export default function ProjectMenu() {
-    const { setYear, setProjectId } = useOverview();
+    const { year, projectId, setYear, setProjectId } = useOverview();
     const [openYear, setOpenYear] = useState<number[]>([
         Math.max(...menus.map((m) => m.year)),
     ]);
@@ -20,7 +20,7 @@ export default function ProjectMenu() {
     const sortedMenus = [...menus].sort((a, b) => b.year - a.year);
 
     return (
-        <aside>
+        <aside className="w-72">
             <ul>
                 {sortedMenus.map((menu) => (
                     <li key={menu.year}>
@@ -35,7 +35,11 @@ export default function ProjectMenu() {
                                     <Folder strokeWidth={1} />
                                 )}
                             </span>
-                            {menu.year}
+                            <p
+                                className={`${openYear.includes(menu.year) ? "font-bold" : ""}`}
+                            >
+                                {menu.year}
+                            </p>
                         </button>
 
                         {openYear.includes(menu.year) && (
@@ -43,7 +47,7 @@ export default function ProjectMenu() {
                                 {menu.items.map((item) => (
                                     <li
                                         key={item.title}
-                                        className="px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium"
+                                        className={`px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium ${item.project_pk === projectId && menu.year === year ? "bg-gray-100 font-medium" : ""}`}
                                         onClick={() => {
                                             setProjectId(item.project_pk);
                                             setYear(menu.year);
