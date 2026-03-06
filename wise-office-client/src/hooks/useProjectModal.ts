@@ -27,6 +27,9 @@ export function useProjectModal({
     setProjectInfo,
 }: UseProjectModalProps) {
     const [projectTitle, setProjectTitle] = useState("");
+    const [instituion, setInstitution] = useState(""); // 전담기관
+    const [businessTitle, setBusinessTitle] = useState(""); // 사업명
+    const [companyMembers, setCompanyMembers] = useState<Member[]>([]); // 회사 전체 인력
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [content, setContent] = useState("");
@@ -47,8 +50,10 @@ export function useProjectModal({
 
     useEffect(() => {
         const fetchMembers = async () => {
-            const members = await getMembers();
-            setMembers(members);
+            const groupedmembers = await getMembers();
+            console.log(groupedmembers);
+            setMembers(groupedmembers.members);
+            setCompanyMembers(groupedmembers.companyMembers);
 
             if (mode === "update" && projectId && router.isReady) {
                 const project_old = await getProjectById(projectId);
@@ -204,7 +209,6 @@ export function useProjectModal({
         setSearchText,
         setSelectedMembers,
         setManager,
-
         handleSubmit,
         handleContentChange,
         handleProjectTitleChange,

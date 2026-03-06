@@ -55,7 +55,7 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "멤버 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = MemberListResponse.class))))
     })
     @GetMapping
-    public ResponseEntity<List<MemberListResponse>> viewAllMemberInfo(
+    public ResponseEntity<MemberGroupedResponse> viewAllMemberInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberService.searchAllMemberInfo(loginUser.getName()));

@@ -81,7 +81,6 @@ export default function ProjectModal({
                         />
                     </div>
                 </div>
-                {/* 좌우 영역: flex-grow 해서 남은 높이 전부 차지 */}
                 {tab === "프로젝트 정보" ? (
                     <ProjectNameWithPeriod
                         projectTitle={projectTitle}
