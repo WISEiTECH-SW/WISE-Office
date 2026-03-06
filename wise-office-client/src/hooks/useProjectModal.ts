@@ -75,13 +75,18 @@ export function useProjectModal({
                     ),
                 );
 
-                const selected = members.filter((member) =>
+                const selectedMembers = members.filter((member) =>
                     project_old.attendant.some(
                         (att) => att.memberId === member.memberId,
                     ),
                 );
-
-                setSelectedMembers(selected);
+                const selectedCompanyMembers = companyMembers.filter((member) =>
+                    project_old.proposalAttendant.some(
+                        (att) => att.memberId === member.memberId,
+                    ),
+                );
+                setSelectedMembers(selectedMembers);
+                setCompanyMembers(selectedCompanyMembers);
             }
         };
 
@@ -161,6 +166,7 @@ export function useProjectModal({
             content,
             projectManagerId: manager?.memberId,
             attendants: selectedMembers.map((m) => m.memberId),
+            proposalAttendants: selectedCompanyMembers.map((m) => m.memberId),
         };
 
         try {

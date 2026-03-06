@@ -7,4 +7,5 @@ export interface CreateProject {
     content: string;
     projectManagerId: number | undefined;
     attendants: number[];
+    proposalAttendants: number[];
 }

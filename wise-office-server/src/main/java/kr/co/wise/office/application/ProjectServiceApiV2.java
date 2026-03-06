@@ -6,9 +6,12 @@ import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantRoleType;
 import kr.co.wise.office.domain.attendant.service.AttendantService;
+import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
+import kr.co.wise.office.domain.companymember.service.CompanyMemberService;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.service.MemberService;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.UnAuthorizationException;
 import lombok.AllArgsConstructor;
@@ -24,6 +27,8 @@ public class ProjectServiceApiV2 {
     private final ProjectService projectService;
     private final AttendantService attendantService;
     private final MemberService memberService;
+    private final CompanyMemberService companyMemberService;
+    private final ProposalAttendantService proposalAttendantService;
 
     // 메인화면 조회시 모든 프로젝트 간략 정보를 가져오는 메소드
     @Transactional(readOnly = true)
@@ -50,6 +55,7 @@ public class ProjectServiceApiV2 {
         // 참여자 설정 및 수정 유무 확인
         attendantService.getDetailAttendants(response, LoginUser);
 
+
         //이후 Log 및 Comment도 가져오는 로직 추가
         return response;
     }
@@ -68,7 +74,11 @@ public class ProjectServiceApiV2 {
         List<MemberEntity> workers = memberService.findByIds(request.attendants());
         List<String> attendantsName = attendantService.makeAttendantsV2(creator, pm, workers, project);
 
-        ProjectCreateResponse response = ProjectCreateResponse.from(project, attendantsName, pm.getName());
+        // 편성인원 등록
+        List<CompanyMemberEntity> proposalAttendants = companyMemberService.findByIds(request.proposalAttendants());
+        List<String> proposalAttendantsName = proposalAttendantService.makeProposalAttendants(proposalAttendants,project);
+
+        ProjectCreateResponse response = ProjectCreateResponse.from(project, attendantsName, pm.getName(), proposalAttendantsName);
         return response;
     }
 

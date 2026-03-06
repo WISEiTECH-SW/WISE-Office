@@ -20,9 +20,12 @@ export interface ProjectInfo {
     detail: string;
     start: Date;
     end: Date;
+    institute: string;
+    businessName: string;
     currentYear: number;
     managerName: ProjectAttendant;
     attendant: ProjectAttendant[];
+    proposalAttendant: ProjectAttendant[];
     canModify: boolean;
     attending: boolean;
 }
