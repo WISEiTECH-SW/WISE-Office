@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Folder, FolderOpen } from "lucide-react";
-import { menus } from "@/lib/data/approval";
+import { useApproval } from "@/store/useApprovalStore";
+import { menus } from "@/lib/data/overview";
 
 export default function LeftMenu() {
+    const { setYear, setProjectId } = useApproval();
     const [openYear, setOpenYear] = useState<number[]>([
         Math.max(...menus.map((m) => m.year)),
     ]);
@@ -15,10 +17,12 @@ export default function LeftMenu() {
         );
     };
 
+    const sortedMenus = [...menus].sort((a, b) => b.year - a.year);
+
     return (
         <aside className="w-72">
             <ul>
-                {menus.map((menu) => (
+                {sortedMenus.map((menu) => (
                     <li key={menu.year}>
                         <button
                             onClick={() => selectYear(menu.year)}
@@ -38,10 +42,14 @@ export default function LeftMenu() {
                             <ul className="ml-10 cursor-pointer">
                                 {menu.items.map((item) => (
                                     <li
-                                        key={item}
+                                        key={item.title}
                                         className="px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium"
+                                        onClick={() => {
+                                            setProjectId(item.project_pk);
+                                            setYear(menu.year);
+                                        }}
                                     >
-                                        {item}
+                                        {item.title}
                                     </li>
                                 ))}
                             </ul>
