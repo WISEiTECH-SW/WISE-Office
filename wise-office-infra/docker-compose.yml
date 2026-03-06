@@ -38,7 +38,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      test: ["CMD", "curl", "-f", "http://application:${SERVER_PORT}/health"]
       interval: 10s
       timeout: 5s
       retries: 5

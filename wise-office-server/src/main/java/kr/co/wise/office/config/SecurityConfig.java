@@ -45,15 +45,15 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
 
     public SecurityConfig(@Qualifier("oauth2SuccessHandler") AuthenticationSuccessHandler oauth2SuccessHandler,
-                          @Qualifier("oauth2FailureHandler") AuthenticationFailureHandler oauth2FailureHandler,
-                          @Qualifier("customLoginFailHandler") AuthenticationFailureHandler customLoginFailHandler,
-                          @Qualifier("customLoginSuccessHandler") AuthenticationSuccessHandler customLoginSuccessHandler,
-                          AccessDeniedHandler customAccessDeniedHandler,
-                          FrontServerConfigProp frontConfig,
-                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-                          AuthenticationConfiguration authenticationConfiguration,
-                          UserDetailsService userDetailsService,
-                          PasswordEncoder passwordEncoder) {
+            @Qualifier("oauth2FailureHandler") AuthenticationFailureHandler oauth2FailureHandler,
+            @Qualifier("customLoginFailHandler") AuthenticationFailureHandler customLoginFailHandler,
+            @Qualifier("customLoginSuccessHandler") AuthenticationSuccessHandler customLoginSuccessHandler,
+            AccessDeniedHandler customAccessDeniedHandler,
+            FrontServerConfigProp frontConfig,
+            CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+            AuthenticationConfiguration authenticationConfiguration,
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
         this.oauth2SuccessHandler = oauth2SuccessHandler;
         this.oauth2FailureHandler = oauth2FailureHandler;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
@@ -67,7 +67,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(){
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
         provider.setUserDetailsService(userDetailsService);
@@ -82,33 +82,36 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
         http.cors(cors -> cors.configurationSource(corsConfiguration()));
 
-//        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        // http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/login/oauth2/code/google", "/oauth2/**", "/health", "/swagger-ui/**",
                         "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v2/projects",
                         "/api/members/emails/verification", "/swagger-ui.html", "/api/v3/projects",
-                        "/images/**", "/github-action").permitAll()
+                        "/images/**", "/github-action")
+                .permitAll()
                 .anyRequest().authenticated());
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-//        http.oauth2Login(
-//                oauth2 -> oauth2
-//                        .successHandler(oauth2SuccessHandler)
-//                        .failureHandler(oauth2FailureHandler)
-//                        .permitAll());
+        // http.oauth2Login(
+        // oauth2 -> oauth2
+        // .successHandler(oauth2SuccessHandler)
+        // .failureHandler(oauth2FailureHandler)
+        // .permitAll());
 
         http.exceptionHandling(exceptionConfig -> exceptionConfig
-                        .accessDeniedHandler(customAccessDeniedHandler)
-                        .authenticationEntryPoint(customAuthenticationEntryPoint));
+                .accessDeniedHandler(customAccessDeniedHandler)
+                .authenticationEntryPoint(customAuthenticationEntryPoint));
 
-        //http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
+        // http.addFilterBefore(new
+        // LoginFilter(authenticationManager(authenticationConfiguration)),
+        // UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JWTFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterAt(customEmailPasswordFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -117,7 +120,8 @@ public class SecurityConfig {
 
     @Bean
     public CustomEmailPasswordFilter customEmailPasswordFilter() throws Exception {
-        CustomEmailPasswordFilter filter = new CustomEmailPasswordFilter(authenticationManager(authenticationConfiguration));
+        CustomEmailPasswordFilter filter = new CustomEmailPasswordFilter(
+                authenticationManager(authenticationConfiguration));
 
         filter.setAuthenticationSuccessHandler(customLoginSuccessHandler);
         filter.setAuthenticationFailureHandler(customLoginFailHandler);
@@ -126,7 +130,7 @@ public class SecurityConfig {
 
     // cors 설정
     @Bean
-    public CorsConfigurationSource corsConfiguration(){
+    public CorsConfigurationSource corsConfiguration() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         final String frontUrl = frontConfig.getFrontUrl();
         corsConfig.setAllowedMethods(
@@ -134,7 +138,7 @@ public class SecurityConfig {
                         HttpMethod.DELETE.name(), HttpMethod.PATCH.name(),
                         HttpMethod.PUT.name(), HttpMethod.OPTIONS.name()));
         corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        corsConfig.setAllowedOriginPatterns(List.of(frontUrl));
+        corsConfig.setAllowedOriginPatterns(List.of(frontUrl, frontConfig.getUrl()));
         corsConfig.setAllowCredentials(true); // 쿠키
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
