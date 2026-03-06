@@ -16,8 +16,9 @@ public class ProjectCreateResponse {
     private int currentYear;
     private String managerName;
     private List<String> attendant;
+    private List<String> proposalAttendant;
 
-    public static ProjectCreateResponse from(ProjectEntity projectEntity, List<String> attendantsName, String managerName) {
+    public static ProjectCreateResponse from(ProjectEntity projectEntity, List<String> attendantsName, String managerName, List<String> proposalAttendantsName) {
         ProjectCreateResponse response = new ProjectCreateResponse();
         response.setProjectId(projectEntity.getId());
         response.setProjectTitle(projectEntity.getTitle());
@@ -26,6 +27,7 @@ public class ProjectCreateResponse {
         response.setCurrentYear(LocalDate.now().getYear() - projectEntity.getStartYear().getYear() + 1);
         response.setManagerName(managerName);
         response.setAttendant(attendantsName);
+        response.setProposalAttendant(proposalAttendantsName);
         return response;
     }
 
