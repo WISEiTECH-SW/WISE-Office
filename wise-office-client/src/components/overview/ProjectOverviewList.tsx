@@ -1,9 +1,9 @@
-import { useApproval } from "@/store/useApprovalStore";
+import { useOverview } from "@/store/useOverviewStore";
 import OverviewCard from "./OverviewCard";
 import { MINUTES, APPROVALS } from "@/lib/data/overview";
 
-export default function OverviewList() {
-    const { year, projectId } = useApproval();
+export default function ProjectOverviewList() {
+    const { year, projectId } = useOverview();
 
     const filteredData = MINUTES.filter(
         (m) =>

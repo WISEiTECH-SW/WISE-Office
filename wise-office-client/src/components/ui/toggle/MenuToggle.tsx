@@ -1,8 +1,8 @@
-import { useApproval } from "@/store/useApprovalStore";
+import { useOverview } from "@/store/useOverviewStore";
 import { Calendar1, Folder } from "lucide-react";
 
 export default function ToggleExample() {
-    const { optionIndex, setOptionIndex } = useApproval();
+    const { optionIndex, setOptionIndex } = useOverview();
 
     const options = [
         { name: "프로젝트", icon: <Folder size={18} strokeWidth={1.5} /> },

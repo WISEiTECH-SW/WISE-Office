@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Folder, FolderOpen } from "lucide-react";
-import { useApproval } from "@/store/useApprovalStore";
+import { useOverview } from "@/store/useOverviewStore";
 import { menus } from "@/lib/data/overview";
 
 export default function ProjectMenu() {
-    const { setYear, setProjectId } = useApproval();
+    const { setYear, setProjectId } = useOverview();
     const [openYear, setOpenYear] = useState<number[]>([
         Math.max(...menus.map((m) => m.year)),
     ]);
