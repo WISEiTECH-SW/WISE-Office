@@ -1,0 +1,47 @@
+package kr.co.wise.office.application;
+
+
+import kr.co.wise.office.api.dto.proposal_attendant.PossibleAttendantsResponse;
+import kr.co.wise.office.domain.minutesattendant.entity.MinutesAttendantEntity;
+import kr.co.wise.office.domain.minutesattendant.service.MinutesAttendantsService;
+import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class ProposalAttendantsServiceApi {
+
+    private final ProposalAttendantsService attendantsService;
+    private final MinutesAttendantsService minutesAttendantsService;
+
+
+    /**
+     * 특정 날짜에 회의를 참석 중인 인원은 같은 날짜에 다른 회의에 참여하지 못하도록 설정
+     */
+    @Transactional(readOnly = true)
+    public List<PossibleAttendantsResponse> findPossibleAttendants(long projectId, LocalDate minutesDate) {
+        // 현재 프로젝트에 참여 중인 편성 인원 리스트 조회
+        List<ProposalAttendantEntity> proposalAttendants = attendantsService.findById(projectId);
+
+        // 회의 생성 당일날 다른 회의에 참석 중인 리스트 조회
+        List<MinutesAttendantEntity> busyAttendants = minutesAttendantsService.findByProposalAndMinutesDate(proposalAttendants, minutesDate);
+
+        // 금일 다른 회의에 참석중인 사람들의 id
+        Set<Long> busyIds = busyAttendants.stream().map(m -> m.getProposalAttendantEntity().getId()).collect(Collectors.toSet());
+
+        List<PossibleAttendantsResponse> statusList = proposalAttendants.stream().map(pa -> {
+            boolean canAttend = !busyIds.contains(pa.getId());
+            return new PossibleAttendantsResponse(pa.getCompanyMember().getName(), canAttend);
+        }).toList();
+
+        return statusList;
+    }
+}

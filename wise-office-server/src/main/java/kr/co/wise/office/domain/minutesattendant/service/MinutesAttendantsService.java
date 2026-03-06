@@ -10,6 +10,7 @@ import kr.co.wise.office.domain.proposalattendant.repository.ProposalAttendantEn
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,13 +28,18 @@ public class MinutesAttendantsService {
         List<CompanyMemberEntity> companyMembers = companyMemberEntityRepository.findByNameIn(attendantNames);
 
         // 제안서상 참여자 리스트 조회
-        List<ProposalAttendantEntity> proposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberInAndProjectId(companyMembers, projectId);
+        List<ProposalAttendantEntity> proposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberInAndId(companyMembers, projectId);
 
         // 저장
         List<MinutesAttendantEntity> minutesAttendants = proposalAttendants.stream()
                 .map(attendant -> new MinutesAttendantEntity(attendant, minutes))
                 .collect(Collectors.toList());
         attendantEntityRepository.saveAll(minutesAttendants);
+    }
+
+    public List<MinutesAttendantEntity> findByProposalAndMinutesDate(List<ProposalAttendantEntity> attendants,
+                                                                     LocalDate minutesDate) {
+        return attendantEntityRepository.findByProposalAndMinutesDate(attendants, minutesDate);
     }
 
 }
