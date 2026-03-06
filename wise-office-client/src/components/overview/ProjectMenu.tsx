@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Folder, FolderOpen } from "lucide-react";
 import { useOverview } from "@/store/useOverviewStore";
 import { menus } from "@/lib/data/overview";
@@ -17,7 +17,10 @@ export default function ProjectMenu() {
         );
     };
 
-    const sortedMenus = [...menus].sort((a, b) => b.year - a.year);
+    const sortedMenus = useMemo(
+        () => [...menus].sort((a, b) => b.year - a.year),
+        [],
+    );
 
     return (
         <aside className="w-72">

@@ -71,7 +71,7 @@ export default function Calendar() {
 
                 <div className="flex gap-2">
                     {/* 연도 드롭다운 */}
-                    <div className="relative rounded-md">
+                    <button className="relative rounded-md">
                         <button
                             onClick={() => {
                                 setOpenYear(!openYear);
@@ -102,10 +102,10 @@ export default function Calendar() {
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </button>
 
                     {/* 월 드롭다운 */}
-                    <div className="relative">
+                    <button className="relative">
                         <button
                             onClick={() => {
                                 setOpenMonth(!openMonth);
@@ -136,7 +136,7 @@ export default function Calendar() {
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </button>
                 </div>
 
                 <button

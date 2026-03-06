@@ -1,7 +1,7 @@
 import { useOverview } from "@/store/useOverviewStore";
 import { Calendar1, Folder } from "lucide-react";
 
-export default function ToggleExample() {
+export default function MenuToggle() {
     const { optionIndex, setOptionIndex } = useOverview();
 
     const options = [
