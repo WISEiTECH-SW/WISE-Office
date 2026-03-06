@@ -2,6 +2,7 @@ import MenuToggle from "@/components/ui/toggle/MenuToggle";
 import ProjectMenu from "@/components/overview/ProjectMenu";
 import Calendar from "@/components/overview/Calendar";
 import ProjectOverviewList from "@/components/overview/ProjectOverviewList";
+import MonthOverviewList from "@/components/overview/MonthOverviewList";
 import { useOverview } from "@/store/useOverviewStore";
 
 export default function Overview() {
@@ -14,7 +15,11 @@ export default function Overview() {
                 {optionIndex === 0 ? <ProjectMenu /> : <Calendar />}
             </div>
             <div className="flex-1">
-                {optionIndex === 0 ? <ProjectOverviewList /> : ""}
+                {optionIndex === 0 ? (
+                    <ProjectOverviewList />
+                ) : (
+                    <MonthOverviewList />
+                )}
             </div>
         </div>
     );
