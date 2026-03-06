@@ -46,7 +46,7 @@ export default function ProjectMenu() {
                             <ul className="ml-10 cursor-pointer">
                                 {menu.items.map((item) => (
                                     <li
-                                        key={item.title}
+                                        key={item.project_pk}
                                         className={`px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium ${item.project_pk === projectId && menu.year === year ? "bg-gray-100 font-medium" : ""}`}
                                         onClick={() => {
                                             setProjectId(item.project_pk);

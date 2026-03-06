@@ -15,7 +15,7 @@ export default function OverviewCard({ minutes, isApproval }: Props) {
             <div className="flex-1 grid grid-cols-3">
                 {/* 날짜/시간 */}
                 <div className="col-span-1 flex flex-col 2xl:flex-row gap-2">
-                    <p>{minutes?.minutes_date.toISOString().slice(0, 10)}</p>
+                    <p>{minutes?.minutes_date.toLocaleDateString("sv")}</p>
                     <p>
                         {minutes?.start_time}~{minutes?.end_time}
                     </p>

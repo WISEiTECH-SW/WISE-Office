@@ -17,9 +17,13 @@ type ApprovalState = {
 
 export const useOverview = create<ApprovalState>((set) => ({
     optionIndex: 0,
-    year: Math.max(...MINUTES.map((m) => m.minutes_date.getFullYear())),
+    year:
+        MINUTES.length > 0
+            ? Math.max(...MINUTES.map((m) => m.minutes_date.getFullYear()))
+            : today.getFullYear(),
     month: today.getMonth(),
-    projectId: Math.min(...MINUTES.map((m) => m.project_pk)),
+    projectId:
+        MINUTES.length > 0 ? Math.min(...MINUTES.map((m) => m.project_pk)) : 0,
 
     setOptionIndex: (optionIndex) => set({ optionIndex }),
     setYear: (year) => set({ year }),

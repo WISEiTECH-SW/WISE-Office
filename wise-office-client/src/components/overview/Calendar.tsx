@@ -4,7 +4,7 @@ import { menus } from "@/lib/data/overview";
 
 const days = ["일", "월", "화", "수", "목", "금", "토"];
 
-export default function MonthMenu() {
+export default function Calendar() {
     const years = menus.map((m) => m.year).sort((a, b) => b - a);
     const { year, month, setYear, setMonth } = useOverview();
 
