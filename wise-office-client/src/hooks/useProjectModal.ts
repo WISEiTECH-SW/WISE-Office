@@ -35,8 +35,10 @@ export function useProjectModal({
     const [content, setContent] = useState("");
 
     const [members, setMembers] = useState<Member[]>([]);
-    const [searchText, setSearchText] = useState("");
     const [selectedMembers, setSelectedMembers] = useState<Member[]>([]);
+    const [selectedCompanyMembers, setSelectedCompanyMembers] = useState<
+        Member[]
+    >([]);
     const [manager, setManager] = useState<Member | undefined>();
 
     const [errors, setErrors] = useState({
@@ -48,10 +50,12 @@ export function useProjectModal({
         manager: "",
     });
 
+    const [memberSearchText, setMemberSearchText] = useState("");
+    const [companyMemberSearchText, setCompanyMemberSearchText] = useState("");
+
     useEffect(() => {
         const fetchMembers = async () => {
             const groupedmembers = await getMembers();
-            console.log(groupedmembers);
             setMembers(groupedmembers.members);
             setCompanyMembers(groupedmembers.companyMembers);
 
@@ -199,18 +203,23 @@ export function useProjectModal({
         startDate,
         endDate,
         content,
-        searchText,
         members,
+        companyMembers,
         selectedMembers,
+        selectedCompanyMembers,
         manager,
         errors,
         setStartDate,
         setEndDate,
-        setSearchText,
         setSelectedMembers,
+        setSelectedCompanyMembers,
         setManager,
         handleSubmit,
         handleContentChange,
         handleProjectTitleChange,
+        memberSearchText,
+        companyMemberSearchText,
+        setMemberSearchText,
+        setCompanyMemberSearchText,
     };
 }
