@@ -1,9 +1,11 @@
 package kr.co.wise.office.domain.minutes.entity;
 
 import jakarta.persistence.*;
+import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.approve.entity.ApproveEntity;
 import kr.co.wise.office.domain.minutesattendant.entity.MinutesAttendantEntity;
+import kr.co.wise.office.util.DateUtil;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -86,5 +88,51 @@ public class MinutesEntity {
     @OneToMany(mappedBy = "minutesEntity")
     @Builder.Default
     private List<ApproveEntity> approveEntities = new ArrayList<>();
+
+    @Builder
+    private MinutesEntity(String title, String host, LocalDate minutesDate, String location, String purpose, String writer,
+                         String meetingContent, String instAttendants, LocalTime startTime, LocalTime endTime,
+                         String minutesNumber) {
+        this.title = title;
+        this.host = host;
+        this.minutesDate = minutesDate;
+        this.location = location;
+        this.purpose = purpose;
+        this.writer = writer;
+        this.meetingContent = meetingContent;
+        this.instAttendants = instAttendants;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.minutesNumber = minutesNumber;
+    }
+
+
+    public static MinutesEntity from(MinutesCreateRequest request, ProjectEntity project, long currentMinutesNumber) {
+        return MinutesEntity
+                .builder()
+                .title(createMinutesNumber(currentMinutesNumber, request.minutesDate()))
+                .host(request.host())
+                .minutesDate(request.minutesDate())
+                .startTime(request.startTime())
+                .endTime(request.endTime())
+                .location(request.location())
+                .purpose(request.purpose())
+                .instAttendants(request.attendants())
+                .writer(request.writer())
+                .meetingContent(request.content())
+                .project(project)
+                .build();
+    }
+
+
+    /**
+     * 회의록 번호 만드는 메소드
+     */
+    private static String createMinutesNumber(long id, LocalDate minutesDate) {
+        final String prefix = "WISEMM";
+        String formattedDate = minutesDate.format(DateUtil.titleFormatter);
+        String formattedNumber = String.format("%02d", id);
+        return prefix + formattedDate + formattedNumber;
+    }
 
 }

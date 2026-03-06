@@ -1,0 +1,76 @@
+package kr.co.wise.office.application;
+
+import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
+import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
+import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
+import kr.co.wise.office.domain.Project.Service.ProjectService;
+import kr.co.wise.office.domain.Project.entity.ProjectEntity;
+import kr.co.wise.office.domain.attendant.service.AttendantService;
+import kr.co.wise.office.domain.member.entity.MemberEntity;
+import kr.co.wise.office.domain.member.service.MemberService;
+import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
+import kr.co.wise.office.domain.minutes.service.MinutesService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class MinutesServiceApi {
+
+
+    private final AttendantService attendantService;
+    private final MemberService memberService;
+    private final ProjectService projectService;
+    private final MinutesService minutesService;
+
+    @Transactional(readOnly = true)
+    public List<MinutesListResponse> getMinutesBriefInfo(
+            long projectId,
+            String loginUserEmail
+    ) {
+        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
+        if (loginUser.isAdmin()) {
+            return minutesService.getMinutesBriefInfo(projectId);
+        }
+
+        ProjectEntity project = projectService.findById(projectId);
+        attendantService.validateParticipatingProject(loginUser, project);
+        return minutesService.getMinutesBriefInfo(projectId);
+    }
+
+    @Transactional
+    public long createMinutes(long projectId, String loginUserEmail, MinutesCreateRequest request) {
+        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
+        ProjectEntity project = projectService.findById(projectId);
+
+        if(!loginUser.isAdmin()){
+            attendantService.validateParticipatingProject(loginUser, project);
+        }
+
+        long currentMinutesNumber = minutesService.getlastMinutesNumber(request.minutesDate()) + 1;
+        MinutesEntity minutes = minutesService.createMinutes(project, request, currentMinutesNumber);
+        // TODO : 회의 참석인원 엔티티 추가 로직 작성 필요
+
+        return minutes.getId();
+    }
+
+
+    @Transactional(readOnly = true)
+    public MinutesDetailResponse getMinutesDetailInfo(
+            long projectId,
+            long minutesId,
+            String loginUserEmail
+    ) {
+        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
+        if (loginUser.isAdmin()) {
+            return minutesService.getMinutesDetailInfo(projectId, minutesId);
+        }
+
+        ProjectEntity project = projectService.findById(projectId);
+        attendantService.validateParticipatingProject(loginUser, project);
+        return minutesService.getMinutesDetailInfo(projectId, minutesId);
+    }
+}

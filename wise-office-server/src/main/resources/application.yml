@@ -67,6 +67,11 @@ front:
 member:
   init-path: init/memberList.txt
 
+holiday:
+  api:
+    key: ${HOLIDAY_API_KEY}
+
+
 ---
 spring:
   config:

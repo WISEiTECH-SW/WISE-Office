@@ -9,6 +9,7 @@ public enum ErrorMessage {
     NOT_FOUND_MEMBER(HttpStatus.BAD_REQUEST, "존재하지 않는 회원입니다."),
     NOT_FOUND_ATTENDANT(HttpStatus.BAD_REQUEST, "참여하지 않은 멤버입니다."),
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "존재하지 않는 댓글입니다."),
+    NOT_FOUND_MINUTES(HttpStatus.BAD_REQUEST, "존재하지 않는 회의록입니다."),
 
     REJECT_MODIFYING_PROJECT(HttpStatus.UNAUTHORIZED, "프로젝트 수정/삭제 권한이 없습니다."),
     REJECT_MODIFYING_LOG(HttpStatus.UNAUTHORIZED, "로그 수정/삭제 권한이 없습니다."),

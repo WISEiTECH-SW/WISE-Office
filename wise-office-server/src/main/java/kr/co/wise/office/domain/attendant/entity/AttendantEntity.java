@@ -48,4 +48,8 @@ public class AttendantEntity {
     public void changeRole(AttendantRoleType attendantRoleType) {
         this.role = attendantRoleType;
     }
+
+    public boolean hasRole(AttendantRoleType role) {
+        return this.role == role;
+    }
 }
