@@ -3,7 +3,7 @@ import { Folder, FolderOpen } from "lucide-react";
 import { useApproval } from "@/store/useApprovalStore";
 import { menus } from "@/lib/data/overview";
 
-export default function LeftMenu() {
+export default function ProjectMenu() {
     const { setYear, setProjectId } = useApproval();
     const [openYear, setOpenYear] = useState<number[]>([
         Math.max(...menus.map((m) => m.year)),
@@ -20,7 +20,7 @@ export default function LeftMenu() {
     const sortedMenus = [...menus].sort((a, b) => b.year - a.year);
 
     return (
-        <aside className="w-72">
+        <aside>
             <ul>
                 {sortedMenus.map((menu) => (
                     <li key={menu.year}>
