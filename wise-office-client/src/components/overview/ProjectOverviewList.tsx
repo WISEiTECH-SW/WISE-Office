@@ -45,11 +45,11 @@ export default function ProjectOverviewList() {
                                 }`}
                             >
                                 <OverviewCard
-                                    key={minutes.minutes_pk}
+                                    key={`${minutes.minutes_pk}-minutes`}
                                     minutes={minutes}
                                 />
                                 <OverviewCard
-                                    key={minutes.minutes_pk}
+                                    key={`${minutes.minutes_pk}-approval`}
                                     minutes={minutes}
                                     isApproval={true}
                                 />
