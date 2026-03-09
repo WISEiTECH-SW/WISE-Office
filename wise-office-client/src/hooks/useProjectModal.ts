@@ -91,19 +91,19 @@ export function useProjectModal({
                         ),
                     );
 
-                if (manager) {
-                    setSelectedMembers((prev) => {
-                        const exists = prev.some(
-                            (m) => m.memberId === manager.memberId,
-                        );
-                        return exists ? prev : [...prev, manager];
-                    });
+                if (
+                    manager &&
+                    !selectedMembers.some(
+                        (m) => m.memberId === manager.memberId,
+                    )
+                ) {
+                    setSelectedMembers([...selectedMembers, manager]);
+                } else {
+                    setSelectedMembers(selectedMembers);
                 }
                 setSelectedCompanyMembers(selectedCompanyMembers);
             }
         };
-
-        if (!router.isReady) return;
         fetchMembers();
     }, [mode, projectId, router.isReady]);
 

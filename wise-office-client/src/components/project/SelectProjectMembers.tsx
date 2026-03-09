@@ -43,14 +43,13 @@ export default function SelectProjectMembers({
 }: SelectProjectMembersProps) {
     const filteredMembers = members.filter(
         (m) =>
-            m.name?.includes(memberSearchText) ||
-            m.rank?.includes(memberSearchText),
+            m.name.includes(memberSearchText) ||
+            m.rank.includes(memberSearchText),
     );
-
     const filteredCompanyMembers = companyMembers.filter(
         (m) =>
-            m.name?.includes(companyMemberSearchText) ||
-            m.rank?.includes(companyMemberSearchText),
+            m.name.includes(companyMemberSearchText) ||
+            m.rank.includes(companyMemberSearchText),
     );
     // 수행 인원 선택
     const toggleMember = (member: Member) => {

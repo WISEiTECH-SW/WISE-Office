@@ -26,5 +26,5 @@ public record ProjectCreateRequest(
         @NotNull(message = "{project.end}") LocalDate end,
         @NotBlank(message = "{project.content}") @Size(max = 500, message = "{project.content.size}") String content,
         @NotNull(message = "{project.pm}") Long projectManagerId,
-        List<Long> attendants,List<Long> proposalAttendants) {
+        List<Long> attendants, List<Long> proposalAttendants) {
 }
