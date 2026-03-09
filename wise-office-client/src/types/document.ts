@@ -22,3 +22,5 @@ export interface Approval {
     department: string;
     submit_date: Date;
 }
+
+export type DocType = "minute" | "approve" | "trip";
