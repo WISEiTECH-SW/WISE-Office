@@ -16,12 +16,14 @@ export default function EmailVerifyButton({
 
     // 카운트다운 실행
     useEffect(() => {
-        let timer: NodeJS.Timeout;
+        let timer: ReturnType<typeof setInterval>;
+
         if (cooldown > 0) {
             timer = setInterval(() => {
                 setCooldown((prev) => prev - 1);
             }, 1000);
         }
+
         return () => clearInterval(timer);
     }, [cooldown]);
 

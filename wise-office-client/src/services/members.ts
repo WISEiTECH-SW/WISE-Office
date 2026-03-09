@@ -1,5 +1,5 @@
 import { api } from "@/lib/clientApi";
-import { GroupedMember, Member, SignupForm } from "@/types/member";
+import { GroupedMember, SignupForm } from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
 
 type loginForm = {

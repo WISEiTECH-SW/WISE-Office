@@ -27,8 +27,6 @@ export default function OutputSection() {
                         today={today}
                         joinDate={joinDate}
                         setJoinDate={setJoinDate}
-                        thisYear={thisYear}
-                        joinYear={joinYear ?? thisYear}
                     />
                 </div>
             </div>

@@ -8,16 +8,12 @@ type JoinDateProps = {
     today: Date;
     joinDate: string;
     setJoinDate: (joinDate: string) => void;
-    thisYear: number;
-    joinYear: number;
 };
 
 export default function SummaryField({
     today,
     joinDate,
     setJoinDate,
-    thisYear,
-    joinYear,
 }: JoinDateProps) {
     const [showMore, setShowMore] = useState(false);
 
@@ -28,7 +24,7 @@ export default function SummaryField({
         substituteLeaveUsed,
         officialLeaveUsed,
         defenseLeaveUsed,
-    } = useLeaveSummary({ today, joinDate, thisYear, joinYear });
+    } = useLeaveSummary({ today, joinDate });
 
     return (
         <div>
