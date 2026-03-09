@@ -1,0 +1,29 @@
+name: WISE-Office Client CI
+
+on:
+  pull_request:
+    paths:
+      - "wise-office-client/**"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: wise-office-client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: wise-office-client
+        run: npm ci
+
+      - name: Run build
+        working-directory: wise-office-client
+        run: npm run build
