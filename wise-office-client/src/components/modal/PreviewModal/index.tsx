@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Buttonbar from "./Buttonbar";
+import { usePreview } from "@/store/useOverviewStore";
 
 const data = {
     title: "회의록 제목",
@@ -13,7 +14,8 @@ const data = {
     ],
 };
 
-export default function PreviewModal({ onClose }: { onClose: () => void }) {
+export default function PreviewModal() {
+    const { onClose } = usePreview();
     const [scale, setScale] = useState(1);
 
     useEffect(() => {
