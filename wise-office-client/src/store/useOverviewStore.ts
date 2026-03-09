@@ -3,7 +3,7 @@ import { MINUTES } from "@/lib/data/overview";
 
 const today = new Date();
 
-type ApprovalState = {
+type OverviewState = {
     optionIndex: number;
     year: number;
     month: number;
@@ -15,7 +15,7 @@ type ApprovalState = {
     setProjectId: (projectId: number) => void;
 };
 
-export const useOverview = create<ApprovalState>((set) => ({
+export const useOverview = create<OverviewState>((set) => ({
     optionIndex: 0,
     year:
         MINUTES.length > 0

@@ -9,6 +9,10 @@ interface Props {
 }
 
 export default function OverviewCard({ minutes, isApproval }: Props) {
+    const approvalMap = Object.fromEntries(
+        APPROVALS.map((a) => [a.meeting_pk, a]),
+    );
+
     return (
         <div className="flex bg-white border border-gray-300 rounded-lg px-4 py-2 items-center justify-between gap-6">
             {/* 문서 정보 */}
@@ -22,10 +26,8 @@ export default function OverviewCard({ minutes, isApproval }: Props) {
                 </div>
                 {/* 문서번호 */}
                 <p className="col-span-1 flex items-center">
-                    {isApproval
-                        ? APPROVALS.find(
-                              (a) => a.meeting_pk === minutes?.minutes_pk,
-                          )?.report_no
+                    {isApproval && minutes?.minutes_pk
+                        ? approvalMap[minutes.minutes_pk]?.report_no
                         : minutes?.minutes_number}
                 </p>
                 {/* 참석자 명단 */}
