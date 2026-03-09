@@ -1,26 +1,26 @@
-import MenuToggle from "@/components/ui/toggle/MenuToggle";
-import ProjectMenu from "@/components/overview/ProjectMenu";
-import Calendar from "@/components/overview/Calendar";
-import ProjectOverviewList from "@/components/overview/ProjectOverviewList";
-import MonthOverviewList from "@/components/overview/MonthOverviewList";
-import { useOverview } from "@/store/useOverviewStore";
+import { useState } from "react";
+import PreviewModal from "@/components/modal/PreviewModal";
 
 export default function Overview() {
-    const { optionIndex } = useOverview();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const onOpen = () => {
+        setIsOpen(true);
+    };
+
+    const onClose = () => {
+        setIsOpen(false);
+    };
 
     return (
-        <div className="min-h-screen flex mx-24 my-16 gap-16">
-            <div className="w-72 flex flex-col gap-8 items-center">
-                <MenuToggle />
-                {optionIndex === 0 ? <ProjectMenu /> : <Calendar />}
-            </div>
-            <div className="flex-1">
-                {optionIndex === 0 ? (
-                    <ProjectOverviewList />
-                ) : (
-                    <MonthOverviewList />
-                )}
-            </div>
+        <div>
+            <button
+                onClick={onOpen}
+                className="border border-gray-300 p-2 cursor-pointer"
+            >
+                미리보기 버튼
+            </button>
+            {isOpen && <PreviewModal onClose={onClose} />}
         </div>
     );
 }
