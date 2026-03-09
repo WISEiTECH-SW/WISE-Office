@@ -86,7 +86,7 @@ export function useProjectModal({
                     ),
                 );
                 setSelectedMembers(selectedMembers);
-                setCompanyMembers(selectedCompanyMembers);
+                setSelectedCompanyMembers(selectedCompanyMembers);
             }
         };
 
