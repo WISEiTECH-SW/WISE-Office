@@ -158,7 +158,7 @@ public class AttendantService {
 
 //        기존 회원 추가
         List<AttendantEntity> attendants = attendantRepository
-                .findAllWithMemberAndProject(List.of(response.getProjectId())).orElseThrow(IllegalArgumentException::new);
+                .findAllWithMemberAndProject(List.of(response.getProjectId())).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT));
 
         AttendantEntity manager = attendants.stream().filter(att -> att.getRole() == AttendantRoleType.PM).findFirst().get();
 

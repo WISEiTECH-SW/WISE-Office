@@ -77,12 +77,25 @@ export function useProjectModal({
                 );
                 setManager(manager);
 
-                const selectedMembers = groupedmembers.members.filter(
+                let initialSelectedMembers = groupedmembers.members.filter(
                     (member) =>
                         project_old.attendant.some(
                             (att) => att.memberId === member.memberId,
                         ),
                 );
+
+                if (
+                    manager &&
+                    !initialSelectedMembers.some(
+                        (m) => m.memberId === manager.memberId,
+                    )
+                ) {
+                    initialSelectedMembers = [
+                        ...initialSelectedMembers,
+                        manager,
+                    ];
+                }
+                setSelectedMembers(initialSelectedMembers);
 
                 const selectedCompanyMembers =
                     groupedmembers.companyMembers.filter((member) =>
@@ -91,16 +104,6 @@ export function useProjectModal({
                         ),
                     );
 
-                if (
-                    manager &&
-                    !selectedMembers.some(
-                        (m) => m.memberId === manager.memberId,
-                    )
-                ) {
-                    setSelectedMembers([...selectedMembers, manager]);
-                } else {
-                    setSelectedMembers(selectedMembers);
-                }
                 setSelectedCompanyMembers(selectedCompanyMembers);
             }
         };

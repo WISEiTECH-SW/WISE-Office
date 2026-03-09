@@ -27,11 +27,14 @@ public class ProposalAttendantService {
                 .attendDate(LocalDate.now()).build()).toList();
         proposalAttendantEntityRepository.saveAll(attendantEntities);
 
-        List<String> proposalAttendantsName = new ArrayList<>();
-        for(ProposalAttendantEntity proposalAttendant : attendantEntities){
-            proposalAttendantsName.add(proposalAttendant.getCompanyMember().getName());
-        }
-        return proposalAttendantsName;
+//        List<String> proposalAttendantsName = new ArrayList<>();
+//        for(ProposalAttendantEntity proposalAttendant : attendantEntities){
+//            proposalAttendantsName.add(proposalAttendant.getCompanyMember().getName());
+//        }
+//        return proposalAttendantsName;
+        return members.stream()
+                .map(CompanyMemberEntity::getName)
+                .toList();
     }
 
     public void updateProposalAttendants(ProjectEntity project, List<CompanyMemberEntity> newMembers){
