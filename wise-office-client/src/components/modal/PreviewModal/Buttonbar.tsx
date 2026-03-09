@@ -6,7 +6,7 @@ export default function Buttonbar({
     modalWidth,
     onClose,
 }: {
-    position: string;
+    position: "top" | "bottom";
     modalWidth: number;
     onClose?: () => void;
 }) {
@@ -16,16 +16,16 @@ export default function Buttonbar({
             className={`h-10 bg-background-default flex flex-row-reverse p-2 text-xs
                 ${position === "top" ? "rounded-t-xl border-b" : "rounded-b-xl border-t"} border-gray-200`}
         >
-            <button
-                onClick={onClose}
-                className="px-2 flex items-center cursor-pointer"
-            >
-                {position === "top" ? (
+            {position === "top" ? (
+                <button
+                    onClick={onClose}
+                    className="px-2 flex items-center cursor-pointer"
+                >
                     <X size={20} color="gray" />
-                ) : (
-                    <PrintButton />
-                )}
-            </button>
+                </button>
+            ) : (
+                <PrintButton />
+            )}
         </div>
     );
 }
