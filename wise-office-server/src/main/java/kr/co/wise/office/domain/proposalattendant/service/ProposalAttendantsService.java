@@ -13,7 +13,7 @@ public class ProposalAttendantsService {
 
     private final ProposalAttendantEntityRepository proposalAttendantEntityRepository;
 
-    public List<ProposalAttendantEntity> findById(long projectId) {
+    public List<ProposalAttendantEntity> findByProjectId(long projectId) {
         //제안서상 편성 인원 조회
         return proposalAttendantEntityRepository.findByProjectIdWithCompanyName(projectId);
     }

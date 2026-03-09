@@ -11,8 +11,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.wise.office.api.dto.proposal_attendant.PossibleAttendantsResponse;
 import kr.co.wise.office.application.ProposalAttendantsServiceApi;
+import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,10 +41,10 @@ public class ProposalAttendantsController {
     })
     public List<PossibleAttendantsResponse> getPossibleAttendantsList(
             @Parameter(description = "회의록을 작성할 프로젝트 id") @PathVariable(name = "projectId") long projectId,
-            @Parameter(description = "회의록을 작성할 날짜") @RequestParam(name = "minutes-date") LocalDate minutesDate
+            @Parameter(description = "회의록을 작성할 날짜") @RequestParam(name = "minutes-date") LocalDate minutesDate,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser
     ) {
-
-        return proposalAttendantsServiceApi.findPossibleAttendants(projectId, minutesDate);
+        return proposalAttendantsServiceApi.findPossibleAttendants(projectId, minutesDate, loginUser.getName());
     }
 
 

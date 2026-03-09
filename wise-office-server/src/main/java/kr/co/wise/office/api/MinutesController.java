@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
-import kr.co.wise.office.api.dto.minutes.MinutesCreateResponse;
 import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
 import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
 import kr.co.wise.office.application.MinutesServiceApi;
@@ -56,7 +55,7 @@ public class MinutesController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "회의록 작성 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = MinutesCreateResponse.class))),
+                            schema = @Schema(implementation = MinutesDetailResponse.class))),
     })
     public ResponseEntity<MinutesDetailResponse> createMinutes(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,

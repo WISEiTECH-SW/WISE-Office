@@ -41,11 +41,11 @@ public class MinutesService {
     /**
      * 회의록 작성 일자에 작성된 회의록 개수를 반환
      */
-    public long getlastMinutesNumber(LocalDate writeDate) {
+    public long countByMinutesDate(LocalDate writeDate) {
         return minutesEntityRepository.countByMinutesDate(writeDate);
     }
 
-    public MinutesDetailResponse getMinutesDetailInfo(long projectId, long minutesId) {
+    public MinutesDetailResponse getMinutesDetailInfo(long minutesId) {
         MinutesEntity minutesEntity = minutesEntityRepository.findById(minutesId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES));
 

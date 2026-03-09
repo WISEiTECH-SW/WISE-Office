@@ -56,7 +56,7 @@ public class MinutesServiceApi {
         }
 
         // 회의록 작성 번호 확인 => 마지막 회의 번호 + 1
-        long currentMinutesNumber = minutesService.getlastMinutesNumber(request.minutesDate()) + 1;
+        long currentMinutesNumber = minutesService.countByMinutesDate(request.minutesDate()) + 1;
         MinutesEntity minutes = minutesService.createMinutes(project, request, currentMinutesNumber);
 
         // 회의 참석자 등록
@@ -76,11 +76,11 @@ public class MinutesServiceApi {
     ) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         if (loginUser.isAdmin()) {
-            return minutesService.getMinutesDetailInfo(projectId, minutesId);
+            return minutesService.getMinutesDetailInfo(minutesId);
         }
 
         ProjectEntity project = projectService.findById(projectId);
         attendantService.validateParticipatingProject(loginUser, project);
-        return minutesService.getMinutesDetailInfo(projectId, minutesId);
+        return minutesService.getMinutesDetailInfo(minutesId);
     }
 }

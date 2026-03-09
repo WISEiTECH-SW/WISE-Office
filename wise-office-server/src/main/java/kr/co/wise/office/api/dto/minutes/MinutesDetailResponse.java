@@ -21,7 +21,7 @@ public record MinutesDetailResponse(
         String minutesAttendants,
         String instAttendants,
         String writer,
-        String content
+        String meetingContent
 ){
 
     public static MinutesDetailResponse from(MinutesEntity minutes, String minutesAttendants) {
