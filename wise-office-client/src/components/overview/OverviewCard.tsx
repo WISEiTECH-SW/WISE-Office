@@ -1,4 +1,4 @@
-import { Minutes, Approval } from "@/types/document";
+import { Minutes } from "@/types/document";
 import PreviewButton from "@/components/ui/button/PreviewButton";
 import PrintButton from "@/components/ui/button/PrintButton";
 import { APPROVALS } from "@/lib/data/overview";

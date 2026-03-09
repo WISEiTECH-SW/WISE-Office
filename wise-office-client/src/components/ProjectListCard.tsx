@@ -15,7 +15,7 @@ export default function ProjectListCard({ project }: Props) {
     const titleDuration = calculationDuration(project.start);
     const { duration, state, stateColor, textColor } = calculateProjectDuration(
         project.start,
-        project.end
+        project.end,
     );
 
     const handleProjectClick = () => {
@@ -76,7 +76,7 @@ export default function ProjectListCard({ project }: Props) {
                         </span>
                         <div className="flex items-center gap-2">
                             <span className="text-sm text-gray-700 font-medium">
-                                {project.managerName}
+                                {project.managerName.name}
                             </span>
                         </div>
                     </div>
@@ -87,7 +87,7 @@ export default function ProjectListCard({ project }: Props) {
                         </span>
                         <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-700 font-medium">
                             {(project.attendant ?? []).join(
-                                "\u00A0\u00A0\u00A0"
+                                "\u00A0\u00A0\u00A0",
                             )}
                         </div>
                     </div>

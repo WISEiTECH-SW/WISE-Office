@@ -10,10 +10,11 @@ import { toastMessage } from "@/lib/common/toastMessage";
 import { ProjectInfo } from "@/types/project";
 import { CreateProject } from "@/types/createProject";
 import { useProjects } from "@/store/useProjects";
+import { NextRouter } from "next/router";
 type UseProjectModalProps = {
     mode: "create" | "update";
     projectId?: number;
-    router: any;
+    router: NextRouter;
     onCreated?: () => Promise<void> | void;
     onClose: () => void;
     setProjectInfo?: React.Dispatch<React.SetStateAction<ProjectInfo | null>>;
@@ -218,7 +219,7 @@ export function useProjectModal({
             }
 
             onClose();
-        } catch (err) {
+        } catch {
             toastMessage.error(
                 mode === "create"
                     ? "프로젝트 등록에 실패했습니다."

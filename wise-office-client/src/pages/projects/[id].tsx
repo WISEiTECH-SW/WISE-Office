@@ -136,7 +136,7 @@ export default function ProjectPageById() {
     useEffect(() => {
         getProjectById(projectId).then(setProjectInfo).catch(console.error);
         getLogList(projectId).then(setLogList).catch(console.error);
-    }, [router.isReady, id]);
+    }, [router.isReady, id, projectId]);
 
     if (!projectInfo) return <div>!!No Project!!</div>;
     return (

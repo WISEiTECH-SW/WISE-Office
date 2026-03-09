@@ -26,14 +26,9 @@ function workingMonths(start: Date, end: Date): number {
     return Math.max(0, months);
 }
 
-export function useLeaveSummary(params: {
-    today: Date;
-    joinDate?: string;
-    thisYear: number;
-    joinYear: number;
-}) {
+export function useLeaveSummary(params: { today: Date; joinDate?: string }) {
     const { inputData } = useLeaveStore();
-    const { today, joinDate, thisYear, joinYear } = params;
+    const { today, joinDate } = params;
 
     return useMemo(() => {
         if (!joinDate) {
@@ -85,7 +80,7 @@ export function useLeaveSummary(params: {
                 substituteLeaveUsed: 0,
                 officialLeaveUsed: 0,
                 defenseLeaveUsed: 0,
-            }
+            },
         );
 
         const annualRemaining = Math.max(0, annualAvailable - sums.annualUsed);
@@ -98,7 +93,7 @@ export function useLeaveSummary(params: {
             officialLeaveUsed: sums.officialLeaveUsed,
             defenseLeaveUsed: sums.defenseLeaveUsed,
         };
-    }, [today, joinDate, thisYear, joinYear, inputData]);
+    }, [today, joinDate, inputData]);
 }
 
 /** 특정 year에 해당하는 사용량만 합산해서 반환 */
@@ -109,7 +104,7 @@ export function useLeaveSummaryByYear(year: number) {
         const sums = inputData.reduce(
             (acc, row) => {
                 const inputDataYear = Number(
-                    row.date.split(" ")[0]?.split("-")[0]
+                    row.date.split(" ")[0]?.split("-")[0],
                 );
 
                 if (year !== inputDataYear) return acc;
@@ -130,7 +125,7 @@ export function useLeaveSummaryByYear(year: number) {
                 substituteLeaveUsed: 0,
                 officialLeaveUsed: 0,
                 defenseLeaveUsed: 0,
-            }
+            },
         );
 
         return sums;

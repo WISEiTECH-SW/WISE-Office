@@ -19,7 +19,7 @@ export default function LeaveHistory({ thisYear, joinYear }: JoinYearProps) {
             years.push(i);
         }
         setWorkingYears(years);
-    }, [joinYear]);
+    }, [joinYear, thisYear]);
 
     return (
         <div>

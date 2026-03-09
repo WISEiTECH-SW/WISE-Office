@@ -27,5 +27,5 @@ export function useInitAuth() {
                 reset();
             }
         })();
-    }, [setHasToken]);
+    }, [setHasToken, reset]);
 }

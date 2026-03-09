@@ -21,7 +21,7 @@ export default function LeaveTracker() {
         setError("");
         setInputData(result.rows!);
         setText("");
-    }, [text]);
+    }, [text, setInputData]);
 
     return (
         <div className="flex flex-col items-center gap-6 max-w-screen-lg mx-auto my-14 px-2">
