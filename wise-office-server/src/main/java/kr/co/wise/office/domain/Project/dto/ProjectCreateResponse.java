@@ -11,6 +11,8 @@ public class ProjectCreateResponse {
 
     private long projectId;
     private String projectTitle;
+    private String institution;
+    private String businessName;
     private LocalDate start;
     private LocalDate end;
     private int currentYear;
@@ -22,6 +24,8 @@ public class ProjectCreateResponse {
         ProjectCreateResponse response = new ProjectCreateResponse();
         response.setProjectId(projectEntity.getId());
         response.setProjectTitle(projectEntity.getTitle());
+        response.setInstitution(projectEntity.getInstitution());
+        response.setBusinessName(projectEntity.getBusinessName());
         response.setStart(projectEntity.getStartYear());
         response.setEnd(projectEntity.getEndYear());
         response.setCurrentYear(LocalDate.now().getYear() - projectEntity.getStartYear().getYear() + 1);

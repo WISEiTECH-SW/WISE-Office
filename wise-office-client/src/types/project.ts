@@ -1,11 +1,14 @@
 export interface Project {
     projectId: number;
     projectTitle: string;
+    institution: string;
+    businessName: string;
     start: Date;
     end: Date;
     currentYear: number;
-    managerName: string;
+    managerName: ProjectAttendant;
     attendant: string[];
+    proposalAttendant: string[];
 }
 
 export interface ProjectAttendant {
@@ -20,7 +23,7 @@ export interface ProjectInfo {
     detail: string;
     start: Date;
     end: Date;
-    institute: string;
+    institution: string;
     businessName: string;
     currentYear: number;
     managerName: ProjectAttendant;
@@ -32,6 +35,8 @@ export interface ProjectInfo {
 
 export interface CreateProject {
     projectTitle: string;
+    institution: string;
+    businessName: string;
     start: string;
     end: string;
     content: string;
