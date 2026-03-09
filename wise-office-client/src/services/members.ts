@@ -1,5 +1,5 @@
 import { api } from "@/lib/clientApi";
-import { Member, SignupForm } from "@/types/member";
+import { GroupedMember, Member, SignupForm } from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
 
 type loginForm = {
@@ -17,13 +17,13 @@ export async function getJoinDate(): Promise<string> {
     return data.hireDate;
 }
 
-export async function getMembers(): Promise<Member[]> {
-    const { data } = await api.get<Member[]>("/members");
+export async function getMembers(): Promise<GroupedMember> {
+    const { data } = await api.get<GroupedMember>("/members");
     return data;
 }
 
 export async function updateProfileInfo(
-    req: ProfileRequest
+    req: ProfileRequest,
 ): Promise<ProfileRequest[]> {
     return await api.patch("/members", req).then((res) => res.data);
 }
@@ -46,7 +46,7 @@ export async function signup(req: SignupForm): Promise<SignupForm> {
     const formData = new FormData();
     formData.append(
         "request",
-        new Blob([JSON.stringify(req)], { type: "application/json" })
+        new Blob([JSON.stringify(req)], { type: "application/json" }),
     );
     return await api.post("/members/signup", formData).then((res) => res.data);
 }
@@ -71,7 +71,7 @@ export async function requestCode(req: string): Promise<string> {
 // 이메일 검증 인증 코드 검사
 export async function verifyCode(
     inputEmail: string,
-    inputCode: string
+    inputCode: string,
 ): Promise<boolean> {
     const res = await api.get("/members/emails/verification", {
         params: {

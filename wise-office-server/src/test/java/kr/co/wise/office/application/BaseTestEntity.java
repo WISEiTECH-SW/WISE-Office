@@ -53,8 +53,8 @@ public abstract class BaseTestEntity {
         this.creator = createMember(creatorInfo.email, creatorInfo.name, MemberRoleType.WORKER);
         this.admin = createMember(adminInfo.email, adminInfo.name, MemberRoleType.MASTER);
 
-        ProjectCreateRequest request = new ProjectCreateRequest("title", BASE_DATE, BASE_DATE.plusDays(10),
-                "content", pm.getId(), List.of(worker1.getId(), worker2.getId(), creator.getId()));
+        ProjectCreateRequest request = new ProjectCreateRequest("title","institution", "businessName", BASE_DATE, BASE_DATE.plusDays(10),
+                "content", pm.getId(), List.of(worker1.getId(), worker2.getId(), creator.getId()), List.of());
         ProjectCreateResponse response = projectServiceApiV2.createProjectV2(request, creator.getEmail());
         this.projectId = response.getProjectId();
     }
@@ -74,17 +74,24 @@ public abstract class BaseTestEntity {
 
     protected ProjectCreateRequest createProjectRequest(
             String title,
+            String institution,
+            String businessName,
             String content,
             Long pmId,
-            List<Long> workerIds
+            List<Long> workerIds,
+            List<Long> proposalAttendantsIds
     ) {
         return new ProjectCreateRequest(
                 title,
+                institution,
+                businessName,
                 BASE_DATE,
                 BASE_DATE.plusDays(10),
                 content,
                 pmId,
-                workerIds);
+                workerIds,
+                proposalAttendantsIds
+                );
     }
 
     public static class MemberCreationInfo {

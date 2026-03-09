@@ -28,7 +28,7 @@ export default function ProjectInfoContainer({
 }: ProjectContainerProps) {
     const duration = calculateProjectDuration(
         projectInfo.start,
-        projectInfo.end
+        projectInfo.end,
     );
     const titleDuration = calculationDuration(projectInfo.start);
 
@@ -63,7 +63,7 @@ export default function ProjectInfoContainer({
                     icon={<Calendar className="w-5 h-5 md:w-6 md:h-6" />}
                     label="프로젝트 기간"
                     value={`${formatYearMonth(
-                        projectInfo.start
+                        projectInfo.start,
                     )} ~ ${formatYearMonth(projectInfo.end)}`}
                 />
                 <ProjectInfoItem

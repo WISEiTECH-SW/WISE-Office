@@ -50,12 +50,12 @@ public class MemberController {
         this.imageService = imageService;
     }
 
-    @Operation(summary = "전체 멤버 정보 조회", description = "모든 회원의 직급, 계급, 이름, PK 값을 반환합니다, 현재 로그인 중인 사람은 반환되지 않습니다.")
+    @Operation(summary = "전체 멤버 정보 조회", description = "가입 회원, 회사 전체 인원 각각 모든 사람의 직급, 계급, 이름, PK 값을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "멤버 정보 조회 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = MemberListResponse.class))))
     })
     @GetMapping
-    public ResponseEntity<List<MemberListResponse>> viewAllMemberInfo(
+    public ResponseEntity<MemberGroupedResponse> viewAllMemberInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberService.searchAllMemberInfo(loginUser.getName()));

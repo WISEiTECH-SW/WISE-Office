@@ -42,6 +42,8 @@ public class ProjectService {
     public ProjectEntity makeProject(ProjectCreateRequest request, MemberEntity creator) {
         ProjectEntity projectEntity = ProjectEntity.builder()
                 .title(request.projectTitle())
+                .institution(request.institution())
+                .businessName(request.businessName())
                 .detail(request.content()) // content를 detail로 매핑
                 .startYear(request.start())
                 .endYear(request.end())

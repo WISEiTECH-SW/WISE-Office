@@ -1,6 +1,8 @@
 package kr.co.wise.office.domain.member.service;
 
 import kr.co.wise.office.domain.attendant.service.AttendantService;
+import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
+import kr.co.wise.office.domain.companymember.repository.CompanyMemberEntityRepository;
 import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
@@ -39,6 +41,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     private final MemberRepository memberRepository;
     private final AttendantService attendantService;
     private final PasswordEncoder passwordEncoder;
+    private final CompanyMemberEntityRepository companyMemberEntityRepository;
 
     @Transactional
     public void signUp(SignupRequest request, String imagePath) {
@@ -146,13 +149,15 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional(readOnly = true)
-    public List<MemberListResponse> searchAllMemberInfo(String loginUserEmail) {
+    public MemberGroupedResponse searchAllMemberInfo(String loginUserEmail) {
         List<MemberEntity> members = memberRepository.findAll();
+        List<CompanyMemberEntity> cMembers = companyMemberEntityRepository.findAll();
+        
+        List<MemberListResponse> projectMembers = members.stream().map(MemberListResponse::loadMemberInfo).toList();
+        List<MemberListResponse> companyMembers = cMembers.stream().map(MemberListResponse::convertCompanyMembertoMember).toList();
+        MemberGroupedResponse res = new MemberGroupedResponse(projectMembers, companyMembers);
 
-//        List<MemberEntity> exceptLoginUser = members.stream().filter(m -> !m.getEmail().equals(currentUserEmail))
-//                .toList();
-
-        return members.stream().map(MemberListResponse::loadMemberInfo).toList();
+        return res;
     }
 
     @Transactional(readOnly = true)

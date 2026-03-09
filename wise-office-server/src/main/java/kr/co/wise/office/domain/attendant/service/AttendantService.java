@@ -7,7 +7,10 @@ import kr.co.wise.office.domain.attendant.dto.AttendantDetail;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantRoleType;
 import kr.co.wise.office.domain.attendant.repository.AttendantRepository;
+import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
+import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
+import kr.co.wise.office.domain.proposalattendant.repository.ProposalAttendantEntityRepository;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.AllArgsConstructor;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class AttendantService {
 
     private final AttendantRepository attendantRepository;
+    private final ProposalAttendantEntityRepository proposalAttendantEntityRepository;
 
     public void makeAttendants(List<MemberEntity> attendants, ProjectEntity project) {
         List<AttendantEntity> entities = attendants.stream().map(attendant -> {
@@ -141,8 +145,20 @@ public class AttendantService {
     }
 
     public void getDetailAttendants(ProjectDetailResponse response, MemberEntity loginUser) {
+//        편성인원 추가
+        List<ProposalAttendantEntity> proposalAttendants =
+                proposalAttendantEntityRepository.findAllByProject_Id(response.getProjectId());
+
+        response.setProposalAttendant(
+                proposalAttendants.stream()
+                        .map(ProposalAttendantEntity::getCompanyMember)
+                        .map(AttendantDetail::of)
+                        .toList()
+        );
+
+//        기존 회원 추가
         List<AttendantEntity> attendants = attendantRepository
-                .findAllWithMemberAndProject(List.of(response.getProjectId())).orElseThrow(IllegalArgumentException::new);
+                .findAllWithMemberAndProject(List.of(response.getProjectId())).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT));
 
         AttendantEntity manager = attendants.stream().filter(att -> att.getRole() == AttendantRoleType.PM).findFirst().get();
 

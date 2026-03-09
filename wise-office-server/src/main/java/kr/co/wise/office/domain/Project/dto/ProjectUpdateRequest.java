@@ -20,10 +20,13 @@ import java.util.List;
 @ValidDateRange
 public record ProjectUpdateRequest(
         @NotBlank(message = "{project.title}") @Size(max = 100, message = "{project.title.size}") String projectTitle,
+        @NotBlank(message = "{project.institution}") @Size(max = 50, message = "{project.institution.size}") String institution,
+        @NotBlank(message = "{project.businessName}") @Size(max = 100, message = "{project.businessName.size}") String businessName,
         @NotNull(message = "{project.start}") LocalDate start,
         @NotNull(message = "{project.end}") LocalDate end,
         @NotBlank(message = "{project.content}") @Size(max = 500, message = "{project.content.size}") String content,
         @NotNull(message = "{project.pm}") Long projectManagerId,
-        List<Long> attendants) {
+        List<Long> attendants,
+        List<Long> proposalAttendants) {
 }
 
