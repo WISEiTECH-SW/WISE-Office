@@ -1,0 +1,52 @@
+package kr.co.wise.office.api;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.wise.office.api.dto.proposal_attendant.PossibleAttendantsResponse;
+import kr.co.wise.office.application.ProposalAttendantsServiceApi;
+import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@Tag(name = "회의록 참여 가능 인원 조회")
+public class ProposalAttendantsController {
+
+    private final ProposalAttendantsServiceApi proposalAttendantsServiceApi;
+
+    @GetMapping("/api/projects/{projectId}/attendants")
+    @Operation(summary = "참여 가능 인원 조회", description = "회의에 참석 가능한 인원을 조회합니다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "가능 인원 조회 canAttend=true : 참여 가능",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = PossibleAttendantsResponse.class))
+            ))
+    })
+    public List<PossibleAttendantsResponse> getPossibleAttendantsList(
+            @Parameter(description = "회의록을 작성할 프로젝트 id") @PathVariable(name = "projectId") long projectId,
+            @Parameter(description = "회의록을 작성할 날짜") @RequestParam(name = "minutes-date") LocalDate minutesDate,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser
+    ) {
+        return proposalAttendantsServiceApi.findPossibleAttendants(projectId, minutesDate, loginUser.getName());
+    }
+
+
+
+}

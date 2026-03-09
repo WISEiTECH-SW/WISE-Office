@@ -81,4 +81,8 @@ public class MemberEntity {
     public void updateHireDate(LocalDate hireDate) {
         this.hireDate = hireDate;
     }
+
+    public boolean isAdmin(){
+        return this.roleType == MemberRoleType.MASTER;
+    }
 }
