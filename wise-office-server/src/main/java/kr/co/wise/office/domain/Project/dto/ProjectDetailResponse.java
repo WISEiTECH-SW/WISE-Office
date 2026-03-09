@@ -18,9 +18,12 @@ public class ProjectDetailResponse {
     private String detail;
     private LocalDate start;
     private LocalDate end;
+    private String institution;
+    private String businessName;
     private int currentYear;
     private AttendantDetail managerName;
     private List<AttendantDetail> attendant;
+    private List<AttendantDetail> proposalAttendant;
 
     @Schema(description = "상세 조회 프로젝트 수정/삭제 권한 보유 여부 (true: 삭제/수정 가능)")
     private boolean canModify; // 수정 가능한 사람인지 유무
@@ -36,6 +39,8 @@ public class ProjectDetailResponse {
         response.setDetail(projectEntity.getDetail());
         response.setCurrentYear(LocalDate.now().getYear() - projectEntity.getStartYear().getYear() + 1);
         response.setCanModify(false);
+        response.setInstitution(projectEntity.getInstitution());
+        response.setBusinessName(projectEntity.getBusinessName());
         return response;
     }
 
