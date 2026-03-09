@@ -13,3 +13,8 @@ export interface SignupForm {
     rank: string;
     email: string;
 }
+
+export interface GroupedMember {
+    members: Member[];
+    companyMembers: Member[];
+}
