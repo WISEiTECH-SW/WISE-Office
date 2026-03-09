@@ -30,3 +30,20 @@ export const useOverview = create<OverviewState>((set) => ({
     setMonth: (month) => set({ month }),
     setProjectId: (projectId) => set({ projectId }),
 }));
+
+// 미리보기 모달 상태
+type PreviewState = {
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+
+    onOpen: () => void;
+    onClose: () => void;
+};
+
+export const usePreview = create<PreviewState>((set) => ({
+    isOpen: false,
+    setIsOpen: (isOpen) => set({ isOpen }),
+
+    onOpen: () => set({ isOpen: true }),
+    onClose: () => set({ isOpen: false }),
+}));
