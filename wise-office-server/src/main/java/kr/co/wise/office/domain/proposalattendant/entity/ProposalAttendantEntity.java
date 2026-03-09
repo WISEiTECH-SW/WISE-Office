@@ -6,7 +6,7 @@ import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.minutesattendant.entity.MinutesAttendantEntity;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,14 +43,18 @@ public class ProposalAttendantEntity {
 
     // 참여 일자
     @Column(name = "attend_date")
-    private LocalDateTime attendDate;
+    private LocalDate attendDate;
 
     // (soft delete) 참여 종료 일자
     @Column(name = "exit_date")
-    private LocalDateTime exitDate;
+    private LocalDate exitDate;
 
     @OneToMany(mappedBy = "proposalAttendantEntity")
     @Builder.Default
     private List<MinutesAttendantEntity> minutesAttendantEntities = new ArrayList<>();
+
+    public void leaveProject(){
+        this.exitDate = LocalDate.now();
+    }
 
 }
