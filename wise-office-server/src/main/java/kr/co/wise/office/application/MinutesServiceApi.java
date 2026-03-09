@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class MinutesServiceApi {
     }
 
     @Transactional
-    public long createMinutes(long projectId, String loginUserEmail, MinutesCreateRequest request) {
+    public MinutesDetailResponse createMinutes(long projectId, String loginUserEmail, MinutesCreateRequest request) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
 
@@ -59,10 +60,11 @@ public class MinutesServiceApi {
         MinutesEntity minutes = minutesService.createMinutes(project, request, currentMinutesNumber);
 
         // 회의 참석자 등록
-        List<String> attendantNames = Arrays.stream(request.minutesAttendants().split(",")).map(String::trim).toList();
+        List<String> attendantNames = new ArrayList<>(Arrays.stream(request.minutesAttendants().split(",")).map(String::trim).toList());
+        attendantNames.add(request.writer()); // 회의록 작성자도 추가
         minutesAttendantsService.createMinutesAttendants(attendantNames, projectId, minutes);
 
-        return minutes.getId();
+        return MinutesDetailResponse.from(minutes, request.minutesAttendants());
     }
 
 

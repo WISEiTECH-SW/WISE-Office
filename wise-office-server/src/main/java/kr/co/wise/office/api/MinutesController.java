@@ -58,14 +58,13 @@ public class MinutesController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = MinutesCreateResponse.class))),
     })
-    public ResponseEntity<MinutesCreateResponse> createMinutes(
+    public ResponseEntity<MinutesDetailResponse> createMinutes(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "회의록을 생성할 프로젝트 번호") @PathVariable(value = "projectId") long projectId,
             @Parameter(description = "생성할 회의록 세부 내용") @Valid @RequestBody MinutesCreateRequest request
         ) {
 
-        long minutesId = minutesServiceApi.createMinutes(projectId, loginUser.getName(), request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MinutesCreateResponse(minutesId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(minutesServiceApi.createMinutes(projectId, loginUser.getName(), request));
     }
 
     @GetMapping("/{minutesId}")

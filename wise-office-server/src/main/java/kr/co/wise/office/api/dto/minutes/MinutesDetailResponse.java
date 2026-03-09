@@ -18,12 +18,13 @@ public record MinutesDetailResponse(
         LocalTime endTime,
         String location,
         String purpose,
-        String attendants,
+        String minutesAttendants,
+        String instAttendants,
         String writer,
         String content
 ){
 
-    public static MinutesDetailResponse of(MinutesEntity minutes) {
+    public static MinutesDetailResponse from(MinutesEntity minutes, String minutesAttendants) {
         return new MinutesDetailResponse(
                 minutes.getId(),
                 minutes.getHost(),
@@ -32,6 +33,7 @@ public record MinutesDetailResponse(
                 minutes.getEndTime(),
                 minutes.getLocation(),
                 minutes.getPurpose(),
+                minutesAttendants,
                 minutes.getInstAttendants(),
                 minutes.getWriter(),
                 minutes.getMeetingContent());

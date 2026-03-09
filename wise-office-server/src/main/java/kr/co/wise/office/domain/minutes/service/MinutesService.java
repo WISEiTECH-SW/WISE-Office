@@ -6,6 +6,7 @@ import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.repository.MinutesEntityRepository;
+import kr.co.wise.office.domain.minutesattendant.repository.MinutesAttendantEntityRepository;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ import java.util.List;
 public class MinutesService {
 
     private final MinutesEntityRepository minutesEntityRepository;
+
+    private final MinutesAttendantEntityRepository minutesAttendantEntityRepository;
 
     public List<MinutesListResponse> getMinutesBriefInfo(
             long projectId
@@ -45,6 +48,9 @@ public class MinutesService {
     public MinutesDetailResponse getMinutesDetailInfo(long projectId, long minutesId) {
         MinutesEntity minutesEntity = minutesEntityRepository.findById(minutesId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES));
-        return MinutesDetailResponse.of(minutesEntity);
+
+        List<String> membersName = minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutesId);
+
+        return MinutesDetailResponse.from(minutesEntity, String.join(", ", membersName));
     }
 }
