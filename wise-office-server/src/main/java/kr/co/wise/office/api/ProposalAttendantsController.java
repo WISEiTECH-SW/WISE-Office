@@ -39,7 +39,7 @@ public class ProposalAttendantsController {
     })
     public List<PossibleAttendantsResponse> getPossibleAttendantsList(
             @Parameter(description = "회의록을 작성할 프로젝트 id") @PathVariable(name = "projectId") long projectId,
-            @Parameter(description = "회의록을 주최할 날짜") @RequestParam(name = "minutes-date") LocalDate minutesDate
+            @Parameter(description = "회의록을 작성할 날짜") @RequestParam(name = "minutes-date") LocalDate minutesDate
     ) {
 
         return proposalAttendantsServiceApi.findPossibleAttendants(projectId, minutesDate);
