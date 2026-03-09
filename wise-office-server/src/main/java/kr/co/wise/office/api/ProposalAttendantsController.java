@@ -1,12 +1,14 @@
 package kr.co.wise.office.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.wise.office.api.dto.proposal_attendant.PossibleAttendantsResponse;
 import kr.co.wise.office.application.ProposalAttendantsServiceApi;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "회의록 참여 가능 인원 조회")
 public class ProposalAttendantsController {
 
     private final ProposalAttendantsServiceApi proposalAttendantsServiceApi;
@@ -31,12 +34,12 @@ public class ProposalAttendantsController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "가능 인원 조회 canAttend=true : 참여 가능",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = MinutesDetailResponse.class))
-            )
+                            array = @ArraySchema(schema = @Schema(implementation = PossibleAttendantsResponse.class))
+            ))
     })
     public List<PossibleAttendantsResponse> getPossibleAttendantsList(
-            @PathVariable(name = "projectId") long projectId,
-            @RequestParam(name = "minutes-date") LocalDate minutesDate
+            @Parameter(description = "회의록을 작성할 프로젝트 id") @PathVariable(name = "projectId") long projectId,
+            @Parameter(description = "회의록을 주최할 날짜") @RequestParam(name = "minutes-date") LocalDate minutesDate
     ) {
 
         return proposalAttendantsServiceApi.findPossibleAttendants(projectId, minutesDate);

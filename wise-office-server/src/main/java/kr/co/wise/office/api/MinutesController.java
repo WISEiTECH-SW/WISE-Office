@@ -61,7 +61,7 @@ public class MinutesController {
     public ResponseEntity<MinutesCreateResponse> createMinutes(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "회의록을 생성할 프로젝트 번호") @PathVariable(value = "projectId") long projectId,
-            @Parameter(description = "생성할 로그 제목 및 내용") @Valid @RequestBody MinutesCreateRequest request
+            @Parameter(description = "생성할 회의록 세부 내용") @Valid @RequestBody MinutesCreateRequest request
         ) {
 
         long minutesId = minutesServiceApi.createMinutes(projectId, loginUser.getName(), request);
