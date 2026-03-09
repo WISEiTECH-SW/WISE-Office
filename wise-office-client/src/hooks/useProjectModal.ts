@@ -56,36 +56,40 @@ export function useProjectModal({
     useEffect(() => {
         const fetchMembers = async () => {
             const groupedmembers = await getMembers();
+
             setMembers(groupedmembers.members);
             setCompanyMembers(groupedmembers.companyMembers);
 
-            if (mode === "update" && projectId && router.isReady) {
+            if (mode === "update" && projectId) {
                 const project_old = await getProjectById(projectId);
-
                 setProjectTitle(project_old.projectTitle);
                 setContent(project_old.detail);
                 setStartDate(String(project_old.start).slice(0, 7));
                 setEndDate(String(project_old.end).slice(0, 7));
 
-                setManager(
-                    members.find(
-                        (member) =>
-                            member.memberId ===
-                            project_old.managerName.memberId,
-                    ),
+                const manager = groupedmembers.members.find(
+                    (member) =>
+                        member.memberId === project_old.managerName.memberId,
+                );
+                setManager(manager);
+
+                const selectedMembers = groupedmembers.members.filter(
+                    (member) =>
+                        project_old.attendant.some(
+                            (att) => att.memberId === member.memberId,
+                        ),
                 );
 
-                const selectedMembers = members.filter((member) =>
-                    project_old.attendant.some(
-                        (att) => att.memberId === member.memberId,
-                    ),
-                );
-                const selectedCompanyMembers = companyMembers.filter((member) =>
-                    project_old.proposalAttendant.some(
-                        (att) => att.memberId === member.memberId,
-                    ),
-                );
-                setSelectedMembers(selectedMembers);
+                const selectedCompanyMembers =
+                    groupedmembers.companyMembers.filter((member) =>
+                        project_old.proposalAttendant.some(
+                            (att) => att.memberId === member.memberId,
+                        ),
+                    );
+
+                if (manager) {
+                    setSelectedMembers([...selectedMembers, manager]);
+                }
                 setSelectedCompanyMembers(selectedCompanyMembers);
             }
         };
