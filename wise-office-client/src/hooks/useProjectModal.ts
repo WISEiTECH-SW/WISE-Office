@@ -55,7 +55,7 @@ export function useProjectModal({
     const [companyMemberSearchText, setCompanyMemberSearchText] = useState("");
 
     useEffect(() => {
-        if (!router.isReady || !projectId) return;
+        if (!router.isReady) return;
         const fetchMembers = async () => {
             const groupedmembers = await getMembers();
 
