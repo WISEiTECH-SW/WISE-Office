@@ -47,6 +47,10 @@ export default function ProjectModal({
         companyMemberSearchText,
         setMemberSearchText,
         setCompanyMemberSearchText,
+        institution,
+        setInstitution,
+        businessName,
+        setBusinessName,
     } = useProjectModal({
         mode,
         projectId,
@@ -93,6 +97,10 @@ export default function ProjectModal({
                     {tab === "프로젝트 정보" ? (
                         <ProjectNameWithPeriod
                             projectTitle={projectTitle}
+                            institution={institution}
+                            setInstitution={setInstitution}
+                            businessName={businessName}
+                            setBusinessName={setBusinessName}
                             startDate={startDate}
                             endDate={endDate}
                             content={content}

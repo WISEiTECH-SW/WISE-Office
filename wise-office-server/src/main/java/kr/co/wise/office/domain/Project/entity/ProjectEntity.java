@@ -63,6 +63,8 @@ public class ProjectEntity {
         this.detail = request.content();
         this.startYear = request.start();
         this.endYear = request.end();
+        this.institution = request.institution();
+        this.businessName = request.businessName();
     }
 
     public void closeProject() {
