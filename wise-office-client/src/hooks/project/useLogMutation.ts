@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createLog, patchLog, deleteLog } from "@/services/logs";
 import { LogInput } from "@/types/log";
 
-export const useLogMutation = (projectId: number, logId: number | null) => {
+export const useLogMutation = (projectId: number, logId: number) => {
     const queryClient = useQueryClient();
 
     // CREATE
@@ -15,7 +15,7 @@ export const useLogMutation = (projectId: number, logId: number | null) => {
 
     // UPDATE
     const updateMutation = useMutation({
-        mutationFn: (data: LogInput) => patchLog(projectId, logId!, data),
+        mutationFn: (data: LogInput) => patchLog(projectId, logId, data),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["logs", projectId],

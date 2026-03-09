@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { DeleteModalState, DeleteModalType } from "@/types/project";
+import Button from "../common/Button";
 
 interface DeleteModalProps {
     deleteTarget: DeleteModalState;
@@ -62,20 +63,18 @@ export default function DeleteModal({
                 </div>
 
                 <div className="flex flex-row-reverse gap-2">
-                    <button
+                    <Button
+                        label="취소"
                         onClick={onClose}
-                        disabled={isLoading}
-                        className="px-4 py-2 bg-gray-400 text-white text-sm rounded hover:bg-gray-500 cursor-pointer disabled:opacity-50"
-                    >
-                        취소
-                    </button>
-                    <button
+                        variant="secondary"
+                        isLoading={isLoading}
+                    />
+                    <Button
+                        label="삭제"
                         onClick={onDelete}
-                        disabled={isLoading}
-                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 cursor-pointer disabled:bg-blue-300"
-                    >
-                        {isLoading ? "삭제 중..." : "삭제"}
-                    </button>
+                        variant="primary"
+                        isLoading={isLoading}
+                    />
                 </div>
             </div>
         </div>

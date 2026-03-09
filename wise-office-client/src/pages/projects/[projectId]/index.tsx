@@ -46,7 +46,7 @@ export default function ProjectById() {
 
     const { log, comments } = useLogDetail(
         projectId,
-        selectedDoc.type === "log" ? selectedDoc.id : null,
+        selectedDoc.type === "log" ? selectedDoc.id : 0,
     );
 
     /* ----- mutation ----- */
