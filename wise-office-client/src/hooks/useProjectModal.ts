@@ -27,8 +27,8 @@ export function useProjectModal({
     setProjectInfo,
 }: UseProjectModalProps) {
     const [projectTitle, setProjectTitle] = useState("");
-    const [instituion, setInstitution] = useState(""); // 전담기관
-    const [businessTitle, setBusinessTitle] = useState(""); // 사업명
+    const [institution, setInstitution] = useState(""); // 전담기관
+    const [businessName, setBusinessName] = useState(""); // 사업명
     const [companyMembers, setCompanyMembers] = useState<Member[]>([]); // 회사 전체 인력
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -43,17 +43,19 @@ export function useProjectModal({
 
     const [errors, setErrors] = useState({
         projectTitle: "",
+        institution: "",
+        businessName: "",
         startDate: "",
         endDate: "",
         content: "",
         selectedMembers: "",
         manager: "",
     });
-
     const [memberSearchText, setMemberSearchText] = useState("");
     const [companyMemberSearchText, setCompanyMemberSearchText] = useState("");
 
     useEffect(() => {
+        if (!router.isReady || !projectId) return;
         const fetchMembers = async () => {
             const groupedmembers = await getMembers();
 
@@ -63,6 +65,8 @@ export function useProjectModal({
             if (mode === "update" && projectId) {
                 const project_old = await getProjectById(projectId);
                 setProjectTitle(project_old.projectTitle);
+                setInstitution(project_old.institution);
+                setBusinessName(project_old.businessName);
                 setContent(project_old.detail);
                 setStartDate(String(project_old.start).slice(0, 7));
                 setEndDate(String(project_old.end).slice(0, 7));
@@ -88,7 +92,12 @@ export function useProjectModal({
                     );
 
                 if (manager) {
-                    setSelectedMembers([...selectedMembers, manager]);
+                    setSelectedMembers((prev) => {
+                        const exists = prev.some(
+                            (m) => m.memberId === manager.memberId,
+                        );
+                        return exists ? prev : [...prev, manager];
+                    });
                 }
                 setSelectedCompanyMembers(selectedCompanyMembers);
             }
@@ -102,6 +111,8 @@ export function useProjectModal({
         let valid = true;
         const newErrors = {
             projectTitle: "",
+            institution: "",
+            businessName: "",
             startDate: "",
             endDate: "",
             content: "",
@@ -115,6 +126,22 @@ export function useProjectModal({
         } else if (projectTitle.length > 100) {
             newErrors.projectTitle =
                 "프로젝트 제목은 100자까지 입력 가능합니다.";
+            valid = false;
+        }
+
+        if (institution.trim() === "") {
+            newErrors.institution = "전담기관명을 입력해주세요.";
+            valid = false;
+        } else if (institution.length > 50) {
+            newErrors.institution = "전담기관명은 50자까지 입력 가능합니다.";
+            valid = false;
+        }
+
+        if (businessName.trim() === "") {
+            newErrors.businessName = "사업명을 입력해주세요.";
+            valid = false;
+        } else if (businessName.length > 100) {
+            newErrors.businessName = "사업명은 100자까지 입력 가능합니다.";
             valid = false;
         }
 
@@ -165,6 +192,8 @@ export function useProjectModal({
 
         const projectData: CreateProject = {
             projectTitle,
+            institution,
+            businessName,
             start,
             end,
             content,
@@ -231,5 +260,9 @@ export function useProjectModal({
         companyMemberSearchText,
         setMemberSearchText,
         setCompanyMemberSearchText,
+        institution,
+        setInstitution,
+        businessName,
+        setBusinessName,
     };
 }
