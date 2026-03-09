@@ -14,9 +14,24 @@ export default function DeleteModal({
     onClose,
     isLoading = false,
 }: DeleteModalProps) {
-    if (!deleteTarget) return;
-
     const modalRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                modalRef.current &&
+                !modalRef.current.contains(event.target as Node)
+            ) {
+                onClose();
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, [onClose]);
+
+    if (!deleteTarget) return null;
 
     const messageMap: Record<
         DeleteModalType,
@@ -30,20 +45,6 @@ export default function DeleteModal({
     };
 
     const { target, particle } = messageMap[deleteTarget.type];
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                modalRef.current &&
-                !modalRef.current.contains(event.target as Node)
-            ) {
-                onClose();
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () =>
-            document.removeEventListener("mousedown", handleClickOutside);
-    }, [onClose]);
 
     return (
         <div className="Overlay fixed inset-0 bg-[rgba(43,43,43,0.1)] bg-opacity-40 flex justify-center items-center z-50">

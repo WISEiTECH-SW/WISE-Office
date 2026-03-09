@@ -3,8 +3,12 @@ import { Send } from "lucide-react";
 import Button from "@/components/common/Button";
 import { toastMessage } from "@/lib/common/toastMessage";
 
+interface CommentAddOptions {
+    onSuccess?: () => void;
+}
+
 interface CommentInputProps {
-    onAdd: (content: string, options?: any) => void;
+    onAdd: (content: string, options?: CommentAddOptions) => void;
     isCommentLoading: boolean;
 }
 

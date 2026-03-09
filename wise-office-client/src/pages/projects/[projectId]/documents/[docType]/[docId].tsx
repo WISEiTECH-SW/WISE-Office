@@ -13,9 +13,9 @@ export default function DocumentPage() {
     const { projectId, docType, docId } = router.query;
 
     const [currentDoc, setCurrentDoc] = useState<DocType>("minute");
-    const [lastSaved, setLastSaved] = useState<boolean>(false);
-    const [savedTime, setSavedTime] = useState<string | null>(null);
-    const [isFading, setIsFading] = useState<boolean>(false);
+    const [lastSaved] = useState<boolean>(false);
+    const [savedTime] = useState<string | null>(null);
+    const [isFading] = useState<boolean>(false);
 
     useEffect(() => {
         if (
