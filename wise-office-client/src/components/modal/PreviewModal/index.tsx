@@ -39,16 +39,16 @@ export default function PreviewModal() {
                 <Buttonbar
                     key="buttonbar-top"
                     position="top"
-                    modalWidth={A4_WIDTH}
+                    modalWidth={A4_WIDTH * scale}
                     onClose={onClose}
                 />
 
                 {/* A4 용지 */}
                 <div
                     style={{
-                        width: A4_WIDTH,
-                        height: A4_HEIGHT,
-                        padding: A4_PADDING,
+                        width: A4_WIDTH * scale,
+                        height: A4_HEIGHT * scale,
+                        padding: A4_PADDING * scale,
                     }}
                     className={`relative bg-white overflow-y-auto`}
                 >
@@ -58,7 +58,7 @@ export default function PreviewModal() {
                 <Buttonbar
                     key="buttonbar-bottom"
                     position="bottom"
-                    modalWidth={A4_WIDTH}
+                    modalWidth={A4_WIDTH * scale}
                 />
             </div>
         </div>
