@@ -1,5 +1,6 @@
 package kr.co.wise.office.api;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ public class HealthCheckController {
     }
 
     @RequestMapping("favicon.ico")
+    @Hidden
     public ResponseEntity<Void> favicon() {
         return ResponseEntity.noContent().build(); // 204 No Content
     }
