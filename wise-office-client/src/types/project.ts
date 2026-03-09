@@ -44,3 +44,16 @@ export interface CreateProject {
     attendants: number[];
     proposalAttendants: number[];
 }
+
+export type DocumentType = "log" | "minute" | "approve";
+
+export type SelectedDocument = { type: DocumentType; id: number };
+
+export type DeleteModalType =
+    | "project"
+    | "log"
+    | "comment"
+    | "minute"
+    | "approve";
+
+export type DeleteModalState = { type: DeleteModalType; id: number } | null;

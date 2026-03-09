@@ -3,3 +3,5 @@ export { default as ConfirmModal } from "./ConfirmModal";
 export { default as LogWriteModal } from "./LogWriteModal";
 
 export { default as ProjectModal } from "./ProjectModal";
+
+export { default as DeleteModal } from "./DeleteModal";

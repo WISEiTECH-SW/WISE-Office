@@ -1,17 +1,17 @@
 import Image from "next/image";
 import { useState } from "react";
 
-type ProjectAttendantItemProps = {
+type AttendantListItemProps = {
     isPm: boolean;
     name: string;
     imageUrl: string;
 };
 
-export default function ProjectAttendantItem({
+export default function AttendantListItem({
     isPm,
     name,
     imageUrl,
-}: ProjectAttendantItemProps) {
+}: AttendantListItemProps) {
     const [imageError, setImageError] = useState(false);
 
     if (isPm) {
