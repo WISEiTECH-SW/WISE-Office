@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoutButton from "@/components/header/LogoutButton";
@@ -6,7 +5,7 @@ import ProfileImage from "./ProfileImage";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProfileStore } from "@/store/useProfileStore";
 
-function HeaderAuth() {
+export default function HeaderAuth() {
     const router = useRouter();
     const hasToken = useAuthStore((s) => s.hasToken);
     const { profile } = useProfileStore();
@@ -39,5 +38,3 @@ function HeaderAuth() {
         </div>
     );
 }
-
-export default memo(HeaderAuth);
