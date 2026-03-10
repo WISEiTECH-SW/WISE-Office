@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MinutesEntityRepository extends JpaRepository<MinutesEntity, Long> {
@@ -17,5 +18,5 @@ public interface MinutesEntityRepository extends JpaRepository<MinutesEntity, Lo
     int countByMinutesDate(LocalDate minutesDate);
 
     @Query("select m from MinutesEntity m join fetch m.project where m.id = :minutesId")
-    MinutesEntity findByIdWithProject(@Param("minutesId") long minutesId);
+    Optional<MinutesEntity> findByIdWithProject(@Param("minutesId") long minutesId);
 }
