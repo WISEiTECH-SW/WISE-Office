@@ -1,3 +1,5 @@
+import { Member } from "./member";
+
 export interface Project {
     projectId: number;
     projectTitle: string;
@@ -28,7 +30,7 @@ export interface ProjectInfo {
     currentYear: number;
     managerName: ProjectAttendant;
     attendant: ProjectAttendant[];
-    proposalAttendant: ProjectAttendant[];
+    proposalAttendant: Member[];
     canModify: boolean;
     attending: boolean;
 }

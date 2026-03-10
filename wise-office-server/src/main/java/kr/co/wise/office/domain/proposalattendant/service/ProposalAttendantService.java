@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,16 +36,33 @@ public class ProposalAttendantService {
     }
 
     public void updateProposalAttendants(ProjectEntity project, List<CompanyMemberEntity> newMembers){
-        List<ProposalAttendantEntity> nowAttendants = proposalAttendantEntityRepository.findProposalAttendantsByProjectIdWithCompanyMember(project);
 
-        // 편성인원 삭제 처리
-        nowAttendants.forEach(ProposalAttendantEntity::leaveProject);
-        // 새 인원 등록
-        List<ProposalAttendantEntity> attendantEntities = newMembers.stream()
-                .map(a -> ProposalAttendantEntity.builder()
-                        .companyMember(a)
+        List<ProposalAttendantEntity> nowAttendants =
+                proposalAttendantEntityRepository.findProposalAttendantsByProjectIdWithCompanyMember(project);
+
+        Map<Long, ProposalAttendantEntity> nowMap = nowAttendants.stream()
+                .collect(Collectors.toMap(
+                        a -> a.getCompanyMember().getId(),
+                        a -> a
+                ));
+
+        Set<Long> newIds = newMembers.stream()
+                .map(CompanyMemberEntity::getId)
+                .collect(Collectors.toSet());
+
+        // 삭제 대상
+        nowAttendants.stream()
+                .filter(a -> !newIds.contains(a.getCompanyMember().getId()))
+                .forEach(ProposalAttendantEntity::leaveProject);
+
+        // 추가 대상
+        newMembers.stream()
+                .filter(m -> !nowMap.containsKey(m.getId()))
+                .map(m -> ProposalAttendantEntity.builder()
+                        .companyMember(m)
                         .project(project)
-                        .attendDate(LocalDate.now()).build()).toList();
-        proposalAttendantEntityRepository.saveAll(attendantEntities);
+                        .attendDate(LocalDate.now())
+                        .build())
+                .forEach(proposalAttendantEntityRepository::save);
     }
 }

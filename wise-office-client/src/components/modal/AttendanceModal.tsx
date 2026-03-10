@@ -1,55 +1,49 @@
 import { useState } from "react";
 import Button from "../common/Button";
+import CompanyMemberSelector from "./ProjectModal/CompanyMemberSelector";
+import { Member } from "@/types/member";
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: (data: string[]) => void;
     initialData: string[];
+    attendants: Member[] | undefined;
 }
 
 export default function AttendanceModal({
     onClose,
     onConfirm,
     initialData,
+    attendants,
 }: ModalProps) {
     // 모달 내부에서 임시로 선택 상태 관리
-    const [tempList, setTempList] = useState<string[]>(initialData);
-
+    // 선택된 인원
+    const [selectedCompanyMembers, setSelectedCompanyMembers] = useState<
+        Member[]
+    >([]);
+    const [companyMemberSearchText, setCompanyMemberSearchText] = useState("");
+    const handleConfirm = () => {
+        const names = selectedCompanyMembers.map(
+            (member) => `${member.name} ${member.rank}`,
+        );
+        onConfirm(names);
+    };
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-xl w-[400px]">
-                <h3 className="text-lg font-bold mb-4">참석자 선택(임시)</h3>
-
-                <div className="min-h-[200px] border p-2 mb-4">
-                    {["류정훈", "서주연", "오서현", "최재원"].map((name) => (
-                        <label
-                            key={name}
-                            className="block p-2 hover:bg-gray-50 cursor-pointer"
-                        >
-                            <input
-                                type="checkbox"
-                                checked={tempList.includes(name)}
-                                onChange={(e) => {
-                                    if (e.target.checked)
-                                        setTempList([...tempList, name]);
-                                    else
-                                        setTempList(
-                                            tempList.filter((n) => n !== name),
-                                        );
-                                }}
-                                className="mr-2"
-                            />
-                            {name}
-                        </label>
-                    ))}
-                </div>
-
+                <CompanyMemberSelector
+                    companyMembers={attendants ?? []}
+                    selectedCompanyMembers={selectedCompanyMembers}
+                    companyMemberSearchText={companyMemberSearchText}
+                    setSelectedCompanyMembers={setSelectedCompanyMembers}
+                    setCompanyMemberSearchText={setCompanyMemberSearchText}
+                />
                 <div className="flex justify-end gap-2">
                     <Button
                         label="확인"
                         variant="primary"
-                        onClick={() => onConfirm(tempList)}
+                        onClick={() => handleConfirm()}
                     />
                     <Button
                         label="취소"
