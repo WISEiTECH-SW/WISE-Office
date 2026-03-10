@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Member } from "@/types/member";
 import { getMembers } from "@/services/members";
-import { getProjectById, postProject } from "@/services/projects";
+import { getProjectById } from "@/services/projects";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { NextRouter } from "next/router";
 import { useProjectMutation } from "./project/useProjectMutation";

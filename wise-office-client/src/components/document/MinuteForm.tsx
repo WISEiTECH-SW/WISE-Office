@@ -144,7 +144,6 @@ export default function MinuteForm({ projectInfo }: MinuteFormProps) {
                     isOpen={isModalOpen}
                     onClose={closeModal}
                     onConfirm={handleSelectAttendees}
-                    initialData={[]} // 기존 선택 데이터
                     attendants={projectInfo?.proposalAttendant}
                 />
             )}

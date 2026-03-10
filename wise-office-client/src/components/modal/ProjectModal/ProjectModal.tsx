@@ -1,4 +1,3 @@
-import { ProjectInfo } from "@/types/project";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import SelectProjectMembers from "../../project/SelectProjectMembers";

@@ -7,14 +7,12 @@ interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: (data: string[]) => void;
-    initialData: string[];
     attendants: Member[] | undefined;
 }
 
 export default function AttendanceModal({
     onClose,
     onConfirm,
-    initialData,
     attendants,
 }: ModalProps) {
     // 모달 내부에서 임시로 선택 상태 관리
