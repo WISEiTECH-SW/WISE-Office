@@ -39,3 +39,46 @@ a {
     -ms-overflow-style: -ms-autohiding-scrollbar; /* IE/Edge 옛 버전 */
     scrollbar-width: thin; /* Firefox */
 }
+
+@media print {
+    /* 1. 페이지 설정 */
+    @page {
+        margin: 0;
+        size: A4 portrait;
+    }
+
+    /* 2. html/body 여백 제거 */
+    html,
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100vh !important;
+        overflow: hidden !important;
+    }
+
+    /* 3. 전체 숨김 */
+    body * {
+        visibility: hidden;
+    }
+
+    /* 4. print-area만 표시 */
+    .print-area,
+    .print-area * {
+        visibility: visible;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    /* 5. print-area를 전체 화면으로 확장 */
+    .print-area {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 30mm 20mm 30mm 20mm !important; /* 상 우 하 좌 */
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+}
