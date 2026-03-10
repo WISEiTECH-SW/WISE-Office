@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 public record MinutesDetailResponse(
         @Schema(type = "string", description = "저장된 회의록 ID") long minutesId,
-        @Schema(type = "string", description = "회의록 번호") String title,
+        @Schema(type = "string", description = "과제명") String title,
         @Schema(type = "string", description = "회의주관기관") String host,
         @Schema(type = "string", description = "회의일시 (YYYY-MM-dd) 형태로 전달", defaultValue = "2026-02-27") @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate minutesDate,

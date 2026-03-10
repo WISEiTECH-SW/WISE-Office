@@ -45,8 +45,8 @@ public class MinutesService {
         return minutesEntityRepository.countByMinutesDate(writeDate);
     }
 
-    public MinutesDetailResponse getMinutesDetailInfo(long minutesId) {
-        MinutesEntity minutesEntity = minutesEntityRepository.findByIdWithProject(minutesId)
+    public MinutesDetailResponse getMinutesDetailInfo(long minutesId, long projectId) {
+        MinutesEntity minutesEntity = minutesEntityRepository.findByIdWithProject(minutesId, projectId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES));
 
         List<String> membersName = minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutesId);
@@ -54,8 +54,8 @@ public class MinutesService {
         return MinutesDetailResponse.from(minutesEntity, String.join(", ", membersName));
     }
 
-    public MinutesEntity getMinutesInfoWithProject(long minutesId) {
-        return minutesEntityRepository.findByIdWithProject(minutesId)
+    public MinutesEntity getMinutesInfoWithProject(long minutesId, long projectId) {
+        return minutesEntityRepository.findByIdWithProject(minutesId, projectId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES));
     }
 }

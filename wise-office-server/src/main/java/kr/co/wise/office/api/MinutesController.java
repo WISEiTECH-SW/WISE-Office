@@ -33,7 +33,7 @@ public class MinutesController {
     private final MinutesServiceApi minutesServiceApi;
 
     @GetMapping
-    @Operation(summary = "회의록 목록 조회", description = "프로젝트에서 작성된 회의록 목록을 조회합니다.",
+    @Operation(summary = "회의록 목록 조회", description = "프로젝트에서 작성된 회의록 목록을 조회합니다. 해당 프로젝트에 참여하지 않아도 조회 가능",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회의록 리스트 반환",
@@ -67,7 +67,7 @@ public class MinutesController {
     }
 
     @GetMapping("/{minutesId}")
-    @Operation(summary = "회의록 상세 조회", description = "특정 회의록을 상세 조회합니다.",
+    @Operation(summary = "회의록 상세 조회", description = "특정 회의록을 상세 조회합니다. 해당 프로젝트에 참여하지 않아도 조회 가능",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "작성된 회의록 정보 반환",
@@ -76,11 +76,10 @@ public class MinutesController {
                     )
     })
     public ResponseEntity<MinutesDetailResponse> getMinutesDetail(
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "회의록을 조회할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId,
             @Parameter(description = "상세조회할 회의록 번호") @PathVariable(value = "minutesId") long minutesId
     ) {
-        return ResponseEntity.ok(minutesServiceApi.getMinutesDetailInfo(projectId, loginUser.getName(), minutesId));
+        return ResponseEntity.ok(minutesServiceApi.getMinutesDetailInfo(minutesId, projectId));
     }
 
 }

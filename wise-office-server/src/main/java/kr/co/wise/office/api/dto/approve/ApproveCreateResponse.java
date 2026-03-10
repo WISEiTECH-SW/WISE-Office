@@ -26,6 +26,7 @@ public record ApproveCreateResponse(
         return ApproveCreateResponse
                 .builder()
                 .approveId(approve.getId())
+                .minutesId(minutesEntity.getId())
                 .approveNo(approve.getReportNo())
                 .writtenAt(approve.getWriteDate().format(writtenAtDateFormatter))
                 .writer(minutesEntity.getWriter())

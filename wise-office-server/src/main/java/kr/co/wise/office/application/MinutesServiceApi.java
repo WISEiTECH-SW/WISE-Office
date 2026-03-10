@@ -6,8 +6,6 @@ import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
 import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
 import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
-import kr.co.wise.office.domain.attendant.service.AttendantService;
-import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.service.MinutesService;
 import kr.co.wise.office.domain.minutesattendant.service.MinutesAttendantsService;
@@ -24,14 +22,10 @@ import java.util.List;
 public class MinutesServiceApi {
 
 
-    private final AttendantService attendantService;
-    private final MemberService memberService;
     private final ProjectService projectService;
     private final MinutesService minutesService;
     private final MinutesAttendantsService minutesAttendantsService ;
 
-    @CheckProjectAuth
-    @Transactional(readOnly = true)
     public List<MinutesListResponse> getMinutesBriefInfo(
             long projectId,
             String loginUserEmail
@@ -55,14 +49,12 @@ public class MinutesServiceApi {
         return MinutesDetailResponse.from(minutes, request.minutesAttendants());
     }
 
-
-    @CheckProjectAuth
     @Transactional(readOnly = true)
     public MinutesDetailResponse getMinutesDetailInfo(
-            long projectId,
-            String loginUserEmail,
-            long minutesId
-    ) {
-        return minutesService.getMinutesDetailInfo(minutesId);
+            long minutesId,
+            long projectId) {
+        return minutesService.getMinutesDetailInfo(minutesId, projectId);
     }
+
+
 }
