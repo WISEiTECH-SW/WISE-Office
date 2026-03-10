@@ -80,7 +80,7 @@ public class MinutesController {
             @Parameter(description = "회의록을 조회할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId,
             @Parameter(description = "상세조회할 회의록 번호") @PathVariable(value = "minutesId") long minutesId
     ) {
-        return ResponseEntity.ok(minutesServiceApi.getMinutesDetailInfo(projectId, minutesId, loginUser.getName()));
+        return ResponseEntity.ok(minutesServiceApi.getMinutesDetailInfo(projectId, loginUser.getName(), minutesId));
     }
 
 }

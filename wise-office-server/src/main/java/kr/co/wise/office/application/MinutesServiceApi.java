@@ -1,12 +1,12 @@
 package kr.co.wise.office.application;
 
+import kr.co.wise.office.aop.CheckProjectAuth;
 import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
 import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
 import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
 import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.service.AttendantService;
-import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.service.MinutesService;
@@ -30,32 +30,20 @@ public class MinutesServiceApi {
     private final MinutesService minutesService;
     private final MinutesAttendantsService minutesAttendantsService ;
 
+    @CheckProjectAuth
     @Transactional(readOnly = true)
     public List<MinutesListResponse> getMinutesBriefInfo(
             long projectId,
             String loginUserEmail
     ) {
-        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
-        if (loginUser.isAdmin()) {
-            return minutesService.getMinutesBriefInfo(projectId);
-        }
-
-        ProjectEntity project = projectService.findById(projectId);
-        attendantService.validateParticipatingProject(loginUser, project);
         return minutesService.getMinutesBriefInfo(projectId);
     }
 
+    @CheckProjectAuth
     @Transactional
     public MinutesDetailResponse createMinutes(long projectId, String loginUserEmail, MinutesCreateRequest request) {
-        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
-        ProjectEntity project = projectService.findById(projectId);
-
-        // 회의록 작성 권한 확인
-        if(!loginUser.isAdmin()){
-            attendantService.validateParticipatingProject(loginUser, project);
-        }
-
         // 회의록 작성 번호 확인 => 마지막 회의 번호 + 1
+        ProjectEntity project = projectService.findById(projectId);
         long currentMinutesNumber = minutesService.countByMinutesDate(request.minutesDate()) + 1;
         MinutesEntity minutes = minutesService.createMinutes(project, request, currentMinutesNumber);
 
@@ -68,19 +56,13 @@ public class MinutesServiceApi {
     }
 
 
+    @CheckProjectAuth
     @Transactional(readOnly = true)
     public MinutesDetailResponse getMinutesDetailInfo(
             long projectId,
-            long minutesId,
-            String loginUserEmail
+            String loginUserEmail,
+            long minutesId
     ) {
-        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
-        if (loginUser.isAdmin()) {
-            return minutesService.getMinutesDetailInfo(minutesId);
-        }
-
-        ProjectEntity project = projectService.findById(projectId);
-        attendantService.validateParticipatingProject(loginUser, project);
         return minutesService.getMinutesDetailInfo(minutesId);
     }
 }
