@@ -1,32 +1,25 @@
 import { useEffect, useState } from "react";
 import { Member } from "@/types/member";
 import { getMembers } from "@/services/members";
-import {
-    getProjectById,
-    postProject,
-    updateProject,
-} from "@/services/projects";
+import { getProjectById, postProject } from "@/services/projects";
 import { toastMessage } from "@/lib/common/toastMessage";
-import { ProjectInfo } from "@/types/project";
-import { CreateProject } from "@/types/createProject";
-import { useProjects } from "@/store/useProjects";
 import { NextRouter } from "next/router";
+import { useProjectMutation } from "./project/useProjectMutation";
+import { CreateProject } from "@/types/project";
 type UseProjectModalProps = {
     mode: "create" | "update";
     projectId?: number;
     router: NextRouter;
     onCreated?: () => Promise<void> | void;
     onClose: () => void;
-    setProjectInfo?: React.Dispatch<React.SetStateAction<ProjectInfo | null>>;
 };
 export function useProjectModal({
     mode,
     projectId,
     router,
-    onCreated,
     onClose,
-    setProjectInfo,
 }: UseProjectModalProps) {
+    const { updateProject, createProject } = useProjectMutation();
     const [projectTitle, setProjectTitle] = useState("");
     const [institution, setInstitution] = useState(""); // 전담기관
     const [businessName, setBusinessName] = useState(""); // 사업명
@@ -208,14 +201,12 @@ export function useProjectModal({
 
         try {
             if (mode === "create") {
-                const newProject = await postProject(projectData);
-                useProjects.getState().addProject(newProject);
-                if (onCreated) await onCreated();
-                toastMessage.success("프로젝트가 등록되었습니다.");
-            } else {
-                const updated = await updateProject(projectData, projectId!);
-                if (setProjectInfo) setProjectInfo(updated);
-                toastMessage.success("프로젝트가 수정되었습니다.");
+                createProject(projectData);
+            } else if (projectId) {
+                updateProject({
+                    projectData,
+                    projectId: projectId,
+                });
             }
 
             onClose();
@@ -227,6 +218,7 @@ export function useProjectModal({
             );
         }
     };
+
     const handleContentChange = (value: string) => {
         if (value.length > 500) {
             toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");
