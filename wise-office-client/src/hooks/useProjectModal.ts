@@ -12,12 +12,16 @@ type UseProjectModalProps = {
     router: NextRouter;
     onCreated?: () => Promise<void> | void;
     onClose: () => void;
+    tab: string;
+    setTab: (tab: string) => void;
 };
 export function useProjectModal({
     mode,
     projectId,
     router,
     onClose,
+    tab,
+    setTab,
 }: UseProjectModalProps) {
     const { updateProject, createProject } = useProjectMutation();
     const [projectTitle, setProjectTitle] = useState("");
@@ -176,11 +180,39 @@ export function useProjectModal({
         }
 
         setErrors(newErrors);
-        return valid;
+        return { valid, newErrors };
     };
 
     const handleSubmit = async () => {
-        if (!validateForm()) return;
+        const { valid, newErrors } = validateForm();
+
+        // 다른 탭에서 validation 통과 못하면 toastmessage
+        if (!valid) {
+            const projectInfoErrors = [
+                newErrors.projectTitle,
+                newErrors.institution,
+                newErrors.businessName,
+                newErrors.startDate,
+                newErrors.endDate,
+                newErrors.content,
+            ].some(Boolean);
+
+            const memberErrors = [
+                newErrors.selectedMembers,
+                newErrors.manager,
+            ].some(Boolean);
+
+            if (tab === "프로젝트 정보" && memberErrors) {
+                toastMessage.error("인원 정보를 확인해 주세요!");
+                setTab("인원 정보");
+            }
+
+            if (tab === "인원 정보" && projectInfoErrors) {
+                toastMessage.error("프로젝트 정보를 확인해 주세요!");
+                setTab("프로젝트 정보");
+            }
+            return;
+        }
 
         const start = startDate + "-01";
         const [year, month] = endDate.split("-").map(Number);

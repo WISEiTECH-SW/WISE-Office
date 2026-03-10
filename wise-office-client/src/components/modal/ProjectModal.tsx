@@ -55,6 +55,8 @@ export default function ProjectModal({
         router,
         onCreated,
         onClose,
+        tab,
+        setTab,
     });
 
     return (
