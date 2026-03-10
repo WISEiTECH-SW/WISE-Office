@@ -15,7 +15,7 @@ export default function Toolbar() {
     const linkClass = (path: string) => {
         const isActive =
             path === "/"
-                ? pathname === "/" || pathname.startsWith("/project")
+                ? pathname === "/" || pathname.startsWith("/projects/")
                 : pathname.startsWith(path);
 
         return `flex items-center gap-2 px-3 py-1 rounded-sm transition-colors ${
