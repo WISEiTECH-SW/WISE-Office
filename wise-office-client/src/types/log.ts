@@ -21,3 +21,8 @@ export interface LogInput {
     title: string;
     content: string;
 }
+
+export type LogModalState =
+    | { type: "CREATE" }
+    | { type: "EDIT"; data: LogInput }
+    | null;

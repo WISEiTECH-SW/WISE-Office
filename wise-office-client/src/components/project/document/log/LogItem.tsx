@@ -1,18 +1,13 @@
-import React from "react";
-import { MessageCircle } from "lucide-react";
 import { Log } from "@/types/log";
+import { MessageCircle } from "lucide-react";
 
-interface ProjectLogListItemProps {
+interface LogItemProps {
     log: Log;
     isSelected: boolean;
-    onSelect: (logId: number) => void;
+    onSelect: (id: number) => void;
 }
 
-export default function ProjectLogListItem({
-    log,
-    isSelected,
-    onSelect,
-}: ProjectLogListItemProps) {
+export default function LogItem({ log, isSelected, onSelect }: LogItemProps) {
     return (
         <div
             onClick={() => onSelect(log.logId)}

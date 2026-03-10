@@ -1,17 +1,17 @@
 import Image from "next/image";
-import { XCircle } from "lucide-react";
 import { Comment } from "@/types/comment";
+import { XCircle } from "lucide-react";
 import { formatDateTime } from "@/lib/common/util";
 
-interface ProjectCommentListItemProps {
+interface CommentListItemProps {
     comment: Comment;
     onDelete: (target: string, ommentId: number) => void;
 }
 
-export default function ProjectCommentListItem({
+export default function CommentListItem({
     comment,
     onDelete,
-}: ProjectCommentListItemProps) {
+}: CommentListItemProps) {
     return (
         <div className="flex gap-3 items-baseline">
             <Image

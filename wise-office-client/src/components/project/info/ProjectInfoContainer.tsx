@@ -1,10 +1,8 @@
-import ProjectInfoItem from "./ProjectInfoItem";
 import type { ProjectInfo } from "@/types/project";
-import {
-    calculateProjectDuration,
-    calculationDuration,
-    formatYearMonth,
-} from "@/lib/common/util";
+
+import ProjectInfoItem from "./ProjectInfoItem";
+import Button from "@/components/common/Button";
+
 import {
     Calendar,
     TrendingUp,
@@ -15,9 +13,15 @@ import {
     Trash2,
 } from "lucide-react";
 
+import {
+    calculateProjectDuration,
+    calculationDuration,
+    formatYearMonth,
+} from "@/lib/common/util";
+
 type ProjectContainerProps = {
     projectInfo: ProjectInfo;
-    onEdit?: () => void;
+    onEdit: () => void;
     onDelete: () => void;
 };
 
@@ -41,20 +45,18 @@ export default function ProjectInfoContainer({
                 </p>
                 {projectInfo.canModify && (
                     <div className="flex ml-4 gap-2 flex-shrink-0">
-                        <button
+                        <Button
+                            label="수정"
                             onClick={onEdit}
-                            className="p-2 md:px-4 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 cursor-pointer"
-                        >
-                            <Edit className="h-4 w-4 md:hidden" />
-                            <p className="hidden md:block">수정</p>
-                        </button>
-                        <button
+                            variant="secondary"
+                            icon={<Edit className="h-4 w-4" />}
+                        />
+                        <Button
+                            label="삭제"
                             onClick={onDelete}
-                            className="p-2 md:px-4 bg-gray-400 text-white text-sm rounded hover:bg-gray-500 cursor-pointer"
-                        >
-                            <Trash2 className="h-4 w-4 md:hidden" />
-                            <p className="hidden md:block">삭제</p>
-                        </button>
+                            variant="danger"
+                            icon={<Trash2 className="h-4 w-4" />}
+                        />
                     </div>
                 )}
             </div>

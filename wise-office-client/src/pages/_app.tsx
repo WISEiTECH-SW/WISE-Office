@@ -15,6 +15,19 @@ import Image from "next/image";
 import { useAuthStore } from "@/store/useAuthStore";
 import { handleLogout } from "@/hooks/handleLogout";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+// React-Query 설정
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 60 * 5,
+            refetchOnWindowFocus: false,
+            retry: 1,
+        },
+    },
+});
+
 export default function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
     const { hasToken } = useAuthStore();
@@ -87,7 +100,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }, [hasToken, router]);
 
     return (
-        <>
+        <QueryClientProvider client={queryClient}>
             <Head>
                 <title>Wise Office</title>
                 <link rel="icon" href="/favicon.png" />
@@ -122,6 +135,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             <footer className="bg-gray-800 text-white p-4 text-center text-sm">
                 © 2025 Wise Office. All rights reserved.
             </footer>
-        </>
+        </QueryClientProvider>
     );
 }

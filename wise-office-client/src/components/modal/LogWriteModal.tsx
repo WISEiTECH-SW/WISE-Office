@@ -1,69 +1,71 @@
 import React, { useState } from "react";
 import { X, FileText } from "lucide-react";
+
 import type { LogInput } from "@/types/log";
+import { SelectedDocument } from "@/types/project";
+
+import { useLogMutation } from "@/hooks/project/useLogMutation";
+import { toastMessage } from "@/lib/common/toastMessage";
+import Button from "../common/Button";
 
 interface LogWriteModalProps {
-    isOpen: boolean;
+    projectId: number;
+    logId: number | null;
+    initialData: LogInput | null;
     onClose: () => void;
-    onSubmit: (logInput: LogInput) => void;
-    editingLog?: LogInput | null;
+    setSelectedDoc: (doc: SelectedDocument) => void;
 }
 export default function LogWriteModal({
-    isOpen,
+    projectId,
+    logId,
+    initialData,
     onClose,
-    onSubmit,
-    editingLog,
+    setSelectedDoc,
 }: LogWriteModalProps) {
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-
-    React.useEffect(() => {
-        if (editingLog) {
-            setTitle(editingLog.title);
-            setContent(editingLog.content);
-        } else {
-            setTitle("");
-            setContent("");
-        }
-    }, [editingLog, isOpen]);
+    const isEditMode = !!initialData;
+    const { createLog, updateLog, isLogLoading } = useLogMutation(
+        projectId,
+        logId!,
+    );
+    const [formData, setFormData] = useState<LogInput>({
+        title: initialData?.title ?? "",
+        content: initialData?.content ?? "",
+    });
 
     const handleSubmit = () => {
-        if (!title.trim() || !content.trim()) return;
-
-        onSubmit({
-            title: title.trim(),
-            content: content.trim(),
-        });
-
-        // 폼 초기화
-        setTitle("");
-        setContent("");
-        onClose();
+        if (isEditMode && initialData) {
+            updateLog(formData, {
+                onSuccess: () => {
+                    toastMessage.success("로그가 수정되었습니다.");
+                    onClose();
+                },
+            });
+        } else {
+            createLog(formData, {
+                onSuccess: (data) => {
+                    onClose();
+                    toastMessage.success("로그가 작성되었습니다.");
+                    setSelectedDoc({ type: "log", id: data.logId });
+                },
+            });
+        }
     };
-
-    const handleCancel = () => {
-        setTitle("");
-        setContent("");
-        onClose();
-    };
-
-    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
-                {/* Header */}
+                {/* 제목 */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
                     <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
                             <FileText className="w-4 h-4 text-white" />
                         </div>
                         <h2 className="text-xl font-semibold text-gray-900">
-                            {editingLog ? "로그 수정" : "로그 작성"}
+                            {isEditMode ? "로그 수정" : "로그 작성"}
                         </h2>
                     </div>
                     <button
-                        onClick={handleCancel}
+                        onClick={onClose}
                         className="p-1 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
                     >
                         <X className="w-5 h-5 text-gray-500" />
@@ -78,8 +80,13 @@ export default function LogWriteModal({
                         </label>
                         <input
                             type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            value={formData.title}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    title: e.target.value,
+                                })
+                            }
                             placeholder="로그 제목을 입력하세요"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors"
                         />
@@ -91,32 +98,36 @@ export default function LogWriteModal({
                             내용
                         </label>
                         <textarea
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
+                            value={formData.content}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    content: e.target.value,
+                                })
+                            }
                             placeholder="내용을 입력하세요"
                             className="w-full min-h-[200px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors resize-y"
                         />
                     </div>
                 </div>
 
-                {/* Footer */}
+                {/* 버튼 */}
                 <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
-                    <button
-                        type="button"
-                        onClick={handleCancel}
-                        className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                    >
-                        취소
-                    </button>
-                    <button
-                        type="button"
+                    <Button
+                        label={isEditMode ? "수정" : "작성"}
                         onClick={handleSubmit}
-                        disabled={!title.trim() || !content.trim()}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2 cursor-pointer"
-                    >
-                        <FileText className="w-4 h-4" />
-                        <span>{editingLog ? "로그 수정" : "로그 작성"}</span>
-                    </button>
+                        variant="primary"
+                        isLoading={isLogLoading}
+                        disabled={
+                            !formData.title.trim() || !formData.content.trim()
+                        }
+                    />
+                    <Button
+                        label="취소"
+                        onClick={onClose}
+                        variant="secondary"
+                        isLoading={isLogLoading}
+                    />
                 </div>
             </div>
         </div>
