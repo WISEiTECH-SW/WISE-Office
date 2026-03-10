@@ -11,7 +11,6 @@ import {
 } from "@/services/members";
 import { Profile, ProfileRequest } from "@/types/profile";
 import { toastMessage } from "@/lib/common/toastMessage";
-import Link from "next/link";
 
 export default function Account() {
     const [profile, setProfile] = useState<Profile>();
