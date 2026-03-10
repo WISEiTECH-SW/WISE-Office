@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import Image from "next/image";
 
 type ProfileImageProps = {
     imageUrl?: string;
 };
 
-export default function ProfileImage({ imageUrl }: ProfileImageProps) {
+function ProfileImage({ imageUrl }: ProfileImageProps) {
     const [imageError, setImageError] = useState(false);
 
     return (
@@ -22,3 +22,5 @@ export default function ProfileImage({ imageUrl }: ProfileImageProps) {
         />
     );
 }
+
+export default memo(ProfileImage);
