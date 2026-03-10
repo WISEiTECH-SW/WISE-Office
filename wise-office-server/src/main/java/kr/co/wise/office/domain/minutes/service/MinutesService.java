@@ -28,7 +28,7 @@ public class MinutesService {
     public List<MinutesListResponse> getMinutesBriefInfo(
             long projectId
     ) {
-        List<MinutesEntity> minutesEntities = minutesEntityRepository.findByProjectId(projectId);
+        List<MinutesEntity> minutesEntities = minutesEntityRepository.findByProjectIdOrderByIdDesc(projectId);
         return minutesEntities.stream().map(MinutesListResponse::of).toList();
     }
 
@@ -52,5 +52,9 @@ public class MinutesService {
         List<String> membersName = minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutesId);
 
         return MinutesDetailResponse.from(minutesEntity, String.join(", ", membersName));
+    }
+
+    public MinutesEntity getMinutesInfoWithProject(long minutesId) {
+        return minutesEntityRepository.findByIdWithProject(minutesId);
     }
 }

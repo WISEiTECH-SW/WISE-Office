@@ -77,7 +77,6 @@ public class MinutesEntity {
     @Column(name = "end_time")
     private LocalTime endTime;
 
-    //회의록 번호 (ex WISEMM-YYYY-mmddHH)
     @Column(name = "minutes_number")
     private String minutesNumber;
 

@@ -1,6 +1,7 @@
 package kr.co.wise.office.domain.approve.entity;
 
 import jakarta.persistence.*;
+import kr.co.wise.office.api.dto.approve.ApproveUpdateRequest;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.util.DateUtil;
 import lombok.*;
@@ -42,9 +43,13 @@ public class ApproveEntity {
     @Column(name = "submit_date")
     private LocalDate submitDate;
 
-    // 회의 목적
+    // 품의 부서
     @Column(name = "minutes_department")
     private String minutesDepartment;
+
+    // 품의자
+    @Column(name = "writer")
+    private String writer;
 
     @Builder
     private ApproveEntity(MinutesEntity minutesEntity, String reportNo, LocalDate writeDate, LocalDate submitDate, String minutesDepartment) {
@@ -55,25 +60,22 @@ public class ApproveEntity {
         this.minutesDepartment = minutesDepartment;
     }
 
-    public static ApproveEntity of(MinutesEntity minutes, LocalDate submitDate) {
-        String reportNo = createReportNumber(minutes.getId(), submitDate);
+    public static ApproveEntity from(MinutesEntity minutesEntity, LocalDate submitDate) {
+        String reportNo = minutesEntity.getTitle().replace("WISEMM", "WISEBM");
         return ApproveEntity.builder()
+                .reportNo(reportNo)
                 .submitDate(submitDate)
                 .writeDate(submitDate)
                 .minutesDepartment("연구기획")
-                .minutesEntity(minutes)
-                .reportNo(reportNo)
+                .minutesEntity(minutesEntity)
+                .writer(minutesEntity.getWriter())
                 .build();
     }
 
-    /**
-     * 품의서 번호 만드는 메소드
-     */
-    private static String createReportNumber(long id, LocalDate submitDate) {
-        final String prefix = "WISEBM";
-        String formattedDate = submitDate.format(DateUtil.titleFormatter);
-        String formattedNumber = String.format("%02d", id);
-        return prefix + formattedDate + formattedNumber;
+    public void updateApprove(ApproveUpdateRequest request) {
+        this.reportNo = request.reportNo();
+        this.writeDate = LocalDate.parse(request.writtenAt(), DateUtil.writtenAtDateFormatter);
+        this.submitDate = LocalDate.parse(request.submitAt(), DateUtil.writtenAtDateFormatter);
+        this.writer = request.writer();
     }
-
 }
