@@ -3,7 +3,7 @@ import ProjectListCard from "@/components/ProjectListCard";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProjects } from "@/store/useProjects";
 import { useEffect, useState } from "react";
-import ProjectModal from "@/components/modal/ProjectModal";
+import ProjectModal from "@/components/modal/ProjectModal/ProjectModal";
 
 export default function Home() {
     const projects = useProjects((s) => s.projects);

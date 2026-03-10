@@ -1,9 +1,9 @@
 import { ProjectInfo } from "@/types/project";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import SelectProjectMembers from "../project/SelectProjectMembers";
-import ProjectNameWithPeriod from "../project/ProjectNameWithPeriod";
-import Tab from "../project/Tab";
+import SelectProjectMembers from "../../project/SelectProjectMembers";
+import ProjectNameWithPeriod from "../../project/ProjectNameWithPeriod";
+import Tab from "../../project/Tab";
 import { useProjectModal } from "@/hooks/useProjectModal";
 type ProjectModalProps = {
     mode: "create" | "update";
