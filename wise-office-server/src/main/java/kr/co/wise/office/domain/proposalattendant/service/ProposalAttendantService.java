@@ -55,14 +55,17 @@ public class ProposalAttendantService {
                 .filter(a -> !newIds.contains(a.getCompanyMember().getId()))
                 .forEach(ProposalAttendantEntity::leaveProject);
 
-        // 추가 대상
-        newMembers.stream()
+        // 추가 대상 (리스트로 수집)
+        List<ProposalAttendantEntity> newAttendants = newMembers.stream()
                 .filter(m -> !nowMap.containsKey(m.getId()))
                 .map(m -> ProposalAttendantEntity.builder()
                         .companyMember(m)
                         .project(project)
                         .attendDate(LocalDate.now())
                         .build())
-                .forEach(proposalAttendantEntityRepository::save);
+                .toList();
+
+        // 배치 저장
+        proposalAttendantEntityRepository.saveAll(newAttendants);
     }
 }

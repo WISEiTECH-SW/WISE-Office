@@ -230,25 +230,16 @@ export function useProjectModal({
             attendants: selectedMembers.map((m) => m.memberId),
             proposalAttendants: selectedCompanyMembers.map((m) => m.memberId),
         };
-
-        try {
-            if (mode === "create") {
-                createProject(projectData);
-            } else if (projectId) {
-                updateProject({
-                    projectData,
-                    projectId: projectId,
-                });
-            }
-
-            onClose();
-        } catch {
-            toastMessage.error(
-                mode === "create"
-                    ? "프로젝트 등록에 실패했습니다."
-                    : "프로젝트 수정에 실패했습니다.",
-            );
+        if (mode === "create") {
+            createProject(projectData);
+        } else if (projectId) {
+            updateProject({
+                projectData,
+                projectId: projectId,
+            });
         }
+
+        onClose();
     };
 
     const handleContentChange = (value: string) => {

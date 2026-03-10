@@ -24,6 +24,9 @@ export const useProjectMutation = () => {
             toastMessage.success("프로젝트가 등록되었습니다.");
             router.push("/");
         },
+        onError: () => {
+            toastMessage.error("프로젝트 등록에 실패했습니다.");
+        },
     });
 
     // UPDATE
@@ -41,6 +44,9 @@ export const useProjectMutation = () => {
             });
             toastMessage.success("프로젝트가 수정되었습니다.");
         },
+        onError: () => {
+            toastMessage.error("프로젝트 수정에 실패했습니다.");
+        },
     });
 
     // DELETE
@@ -57,6 +63,9 @@ export const useProjectMutation = () => {
 
             toastMessage.success("프로젝트가 삭제되었습니다.");
             router.push("/");
+        },
+        onError: () => {
+            toastMessage.error("프로젝트 삭제에 실패했습니다.");
         },
     });
     return {

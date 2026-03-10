@@ -1,7 +1,6 @@
-import { deleteProjectApi, getProjectById } from "@/services/projects";
+import { deleteProjectApi } from "@/services/projects";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useRouter } from "next/router";
-import { useQuery } from "@tanstack/react-query";
 
 export function useProjects(projectId: number) {
     const router = useRouter();
@@ -19,10 +18,3 @@ export function useProjects(projectId: number) {
 
     return { removeProject };
 }
-export const useProjectDetail = (projectId: number) => {
-    return useQuery({
-        queryKey: ["project", projectId],
-        queryFn: () => getProjectById(projectId),
-        enabled: !!projectId,
-    });
-};
