@@ -62,11 +62,6 @@ export default function Account() {
                 {/* 프로필 영역 - 가운데 정렬 */}
                 <section className="col-span-12 md:col-span-2 rounded-lg p-6 flex flex-col items-center justify-center gap-6">
                     {profile && <UserProfile props={profile} />}
-                    <Link href="/account/leave-tracker">
-                        <button className="w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded px-4 py-2 transition duration-300 cursor-pointer">
-                            연차계산기
-                        </button>
-                    </Link>
                 </section>
 
                 {/* 부서/직급 및 저장 버튼 영역 */}
