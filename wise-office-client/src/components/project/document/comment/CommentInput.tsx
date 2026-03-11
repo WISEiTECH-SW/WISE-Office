@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
 import Button from "@/components/common/Button";
-import { toastMessage } from "@/lib/common/toastMessage";
-
-interface CommentAddOptions {
-    onSuccess?: () => void;
-}
 
 interface CommentInputProps {
-    onAdd: (content: string, options?: CommentAddOptions) => void;
+    onAdd: (commentInput: string) => void;
     isCommentLoading: boolean;
 }
 
@@ -21,12 +16,9 @@ export default function CommentInput({
     const handleSubmit = () => {
         if (!content.trim() || isCommentLoading) return;
 
-        onAdd(content, {
-            onSuccess: () => {
-                setContent("");
-                toastMessage.success("댓글이 작성되었습니다.");
-            },
-        });
+        onAdd(content);
+
+        setContent("");
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {

@@ -1,20 +1,18 @@
-import { SelectedDocument } from "@/types/project";
+import { DocumentType, SelectedDocument } from "@/types/project";
 import { Log } from "@/types/log";
-import LogItem from "./log/LogItem";
+import { MinutesListResponse } from "@/types/document";
+import LogItem from "./list-item/LogItem";
+import MinuteItem from "./list-item/MinuteItem";
 
 interface DocumentListProps {
     selectedDoc: SelectedDocument | null;
-    logList: Log[];
-    //minuteList: Minute[]
-    //approveList: Approve[]
-    onSelectDoc: (id: number) => void;
+    docData: { logList: Log[]; minuteList: MinutesListResponse[] };
+    onSelectDoc: (type: DocumentType, id: number) => void;
 }
 
 export default function DocumentList({
     selectedDoc,
-    logList,
-    //minuteList,
-    //approveList,
+    docData,
     onSelectDoc,
 }: DocumentListProps) {
     const renderEmpty = (text: string) => (
@@ -25,12 +23,16 @@ export default function DocumentList({
         </div>
     );
 
+    const handleSelectDoc = (type: DocumentType, id: number) => {
+        onSelectDoc(type, id);
+    };
+
     return (
         <div className="md:max-h-85 flex flex-nowrap pb-1 overflow-x-auto md:flex-col scrollbar-auto-hide">
             {(selectedDoc?.type === "log" || !selectedDoc) &&
-                (logList.length === 0
+                (docData.logList.length === 0
                     ? renderEmpty("작성된 로그가 없습니다.")
-                    : logList.map((log) => (
+                    : docData.logList.map((log) => (
                           <LogItem
                               key={log.logId}
                               log={log}
@@ -39,30 +41,32 @@ export default function DocumentList({
                                       ? selectedDoc.id === log.logId
                                       : false
                               }
-                              onSelect={onSelectDoc}
+                              onSelect={handleSelectDoc}
                           />
                       )))}
 
-            {/* 회의록, 품의서 데이터 추가 후 변경 예정 */}
             {selectedDoc?.type === "minute" &&
-                renderEmpty("작성된 회의록이 없습니다.")}
+                (docData.minuteList.length === 0
+                    ? renderEmpty("작성된 회의록이 없습니다.")
+                    : docData.minuteList.map((minute) => (
+                          <MinuteItem
+                              key={minute.minutesId}
+                              minute={minute}
+                              isSelected={
+                                  selectedDoc
+                                      ? selectedDoc.id === minute.minutesId
+                                      : false
+                              }
+                              onSelect={handleSelectDoc}
+                          />
+                      )))}
 
             {selectedDoc?.type === "approve" &&
                 renderEmpty("작성된 품의서가 없습니다.")}
 
-            {/* {selectedDoc?.type === "minute" &&
-                (minuteList.length === 0
-                    ? renderEmpty("작성된 회의록이 없습니다.")
-                    : minuteList.map((minute) => (
-                          <ProjectMinuteItem
-                              key={minute.minuteId}
-                              minute={minute}
-                          />
-                      )))}
-
-            {selectedDoc?.type === "approve" &&
+            {/* {selectedDoc?.type === "approve" &&
                 (approveList.length === 0
-                    ? renderEmpty("결재 문서가 없습니다.")
+                    ? renderEmpty("작성된 품의서가 없습니다.")
                     : approveList.map((approve) => (
                           <ProjectApproveItem
                               key={approve.approveId}

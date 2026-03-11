@@ -1,4 +1,6 @@
 import { toast, type ToastOptions } from "react-toastify";
+import { DeleteModalType } from "@/types/project";
+type ActionType = "create" | "update" | "delete";
 
 const DEFAULT: ToastOptions = {
     autoClose: 1000,
@@ -18,4 +20,25 @@ export const toastMessage = {
     info(msg: string, opts?: ToastOptions) {
         return toast(msg, { ...DEFAULT, type: "info", ...opts });
     },
+};
+
+const docTypeLabel: Record<DeleteModalType, string> = {
+    project: "프로젝트가",
+    log: "로그가",
+    comment: "댓글이",
+    minute: "회의록이",
+    approve: "품의서가",
+};
+
+const actionLabel: Record<ActionType, string> = {
+    create: "생성되었습니다.",
+    update: "수정되었습니다.",
+    delete: "삭제되었습니다.",
+};
+
+export const getDocumentToastMessage = (
+    docType: DeleteModalType,
+    action: ActionType,
+) => {
+    return `${docTypeLabel[docType]} ${actionLabel[action]}`;
 };

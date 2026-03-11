@@ -4,53 +4,56 @@ import { Log } from "@/types/log";
 import DocumentTabs from "./DocumentTabs";
 import DocumentList from "./DocumentList";
 import DocumentWriteButton from "./DocumentWriteButton";
+import { MinutesListResponse } from "@/types/document";
 
 interface DocumentSidebarProps {
-    logList: Log[];
-    selectedDocument: SelectedDocument;
-    onSelectDocument: (document: SelectedDocument) => void;
+    docData: { logList: Log[]; minuteList: MinutesListResponse[] };
+    selectedDoc: SelectedDocument | null;
     attending: boolean;
-    onButtonClick: () => void;
+    setSelectedDoc: (document: SelectedDocument) => void;
+    onWrite: (type: DocumentType) => void;
 }
 
 export default function DocumentSidebar({
-    logList,
-    selectedDocument,
-    onSelectDocument,
+    docData,
+    selectedDoc,
     attending,
-    onButtonClick,
+    setSelectedDoc,
+    onWrite,
 }: DocumentSidebarProps) {
     const selectTab = (tab: DocumentType) => {
-        onSelectDocument({ type: tab, id: 0 });
+        setSelectedDoc({ type: tab, id: 0 });
     };
 
-    const selectDoc = (id: number) => {
-        if (selectedDocument) {
-            onSelectDocument({ type: selectedDocument.type, id: id });
+    const selectDoc = (type: DocumentType, id: number) => {
+        setSelectedDoc({ type: type, id: id });
+    };
+
+    const handleWrite = () => {
+        if (selectedDoc?.type === "minute") {
+            onWrite("minute");
+        } else {
+            onWrite("log");
         }
     };
 
     return (
-        <div>
+        <div className="order-2 md:order-1 md:col-span-3 mb-6">
             <div className="md:min-h-52 bg-white rounded-lg shadow-sm">
                 <DocumentTabs
-                    activeDocType={selectedDocument.type}
+                    activeDocType={selectedDoc ? selectedDoc.type : "log"}
                     onChangeTab={selectTab}
                 />
 
                 <DocumentList
-                    selectedDoc={selectedDocument}
-                    logList={logList}
+                    selectedDoc={selectedDoc}
+                    docData={docData}
                     onSelectDoc={selectDoc}
-                    // minuteList={minuteList}
-                    // approveList={approveList}
                 />
             </div>
-            {attending && selectedDocument?.type != "approve" && (
-                <DocumentWriteButton
-                    label={"작성하기"}
-                    onClick={onButtonClick}
-                />
+
+            {attending && selectedDoc?.type != "approve" && (
+                <DocumentWriteButton label={"작성하기"} onClick={handleWrite} />
             )}
         </div>
     );

@@ -9,6 +9,17 @@ interface DeleteModalProps {
     isLoading?: boolean;
 }
 
+const messageMap: Record<
+    DeleteModalType,
+    { target: string; particle: string }
+> = {
+    project: { target: "프로젝트를", particle: "프로젝트는" },
+    log: { target: "로그를", particle: "로그는" },
+    comment: { target: "댓글을", particle: "댓글은" },
+    minute: { target: "회의록을", particle: "회의록은" },
+    approve: { target: "결재 문서를", particle: "결재 문서는" },
+};
+
 export default function DeleteModal({
     deleteTarget,
     onDelete,
@@ -33,17 +44,6 @@ export default function DeleteModal({
     }, [onClose]);
 
     if (!deleteTarget) return null;
-
-    const messageMap: Record<
-        DeleteModalType,
-        { target: string; particle: string }
-    > = {
-        project: { target: "프로젝트를", particle: "프로젝트는" },
-        log: { target: "로그를", particle: "로그는" },
-        comment: { target: "댓글을", particle: "댓글은" },
-        minute: { target: "회의록을", particle: "회의록은" },
-        approve: { target: "결재 문서를", particle: "결재 문서는" },
-    };
 
     const { target, particle } = messageMap[deleteTarget.type];
 
