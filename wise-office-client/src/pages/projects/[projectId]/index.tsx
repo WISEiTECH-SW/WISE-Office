@@ -23,7 +23,6 @@ import DocumentSidebar from "@/components/project/document/DocumentSidebar";
 import AttendantList from "@/components/project/attendant/AttendantList";
 import { LogWriteModal, DeleteModal, ProjectModal } from "@/components/modal";
 import { useProjectMutation } from "@/hooks/project/useProjectMutation";
-import { toastMessage } from "@/lib/common/toastMessage";
 
 import BasePreview from "@/components/project/document/preview/BasePreview";
 import LogPreview from "@/components/project/document/preview/LogPreview";
