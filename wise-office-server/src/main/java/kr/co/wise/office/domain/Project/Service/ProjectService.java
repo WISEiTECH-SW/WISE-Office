@@ -102,21 +102,33 @@ public class ProjectService {
         return projectsWithPaging;
     }
 
-    @Transactional(readOnly = true)
-    public List<ProjectGroupByYearResponse> getProjectsGroupByYear() {
-        return projectRepository.findAllOrderByYearAndPk()
-                .stream()
-                .collect(Collectors.groupingBy(
-                        p -> p.getStartYear().getYear()
-                ))
-                .entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(entry -> new ProjectGroupByYearResponse(
-                        entry.getKey(),
-                        entry.getValue().stream()
-                                .map(ProjectGroupByYearResponse.ProjectItem::new)
-                                .toList()
-                ))
-                .toList();
-    }
+   @Transactional(readOnly = true)
+public List<ProjectGroupByYearResponse> getProjectsGroupByYear() {
+
+    return projectRepository.findAllOrderByYearAndPk()
+            .stream()
+            .flatMap(project -> {
+
+                int start = project.getStartYear().getYear();
+                int end = project.getEndYear().getYear();
+
+                return java.util.stream.IntStream.rangeClosed(start, end)
+                        .mapToObj(year -> Map.entry(year, project));
+            })
+            .collect(Collectors.groupingBy(
+                    Map.Entry::getKey,
+                    Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+            ))
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.<Integer, List<ProjectEntity>>comparingByKey().reversed())
+            .map(entry -> new ProjectGroupByYearResponse(
+                    entry.getKey(),
+                    entry.getValue()
+                            .stream()
+                            .map(ProjectGroupByYearResponse.ProjectItem::new)
+                            .toList()
+            ))
+            .toList();
+}
 }

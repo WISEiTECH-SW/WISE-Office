@@ -25,6 +25,6 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
            countQuery = "select count(p) from ProjectEntity p where p.closed = false")
     Page<ProjectEntity> findProjectsWithPaging(Pageable pageable);
 
-    @Query("SELECT p FROM ProjectEntity p JOIN FETCH p.member WHERE p.closed = false ORDER BY YEAR(p.startYear) ASC, p.id ASC")
+    @Query("SELECT p FROM ProjectEntity p JOIN FETCH p.member WHERE p.closed = false ORDER BY p.startYear ASC, p.id ASC")
     List<ProjectEntity> findAllOrderByYearAndPk();
 }
