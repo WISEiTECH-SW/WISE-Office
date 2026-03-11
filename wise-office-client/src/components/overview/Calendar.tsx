@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { useOverview } from "@/store/useOverviewStore";
+import { useOverviewStore } from "@/store/useOverviewStore";
 import { menus } from "@/lib/data/overview";
 
 const days = ["일", "월", "화", "수", "목", "금", "토"];
 
 export default function Calendar() {
     const years = menus.map((m) => m.year).sort((a, b) => b - a);
-    const { year, month, setYear, setMonth } = useOverview();
+    const { year, month, setYear, setMonth } = useOverviewStore();
 
     const [openYear, setOpenYear] = useState(false);
     const [openMonth, setOpenMonth] = useState(false);

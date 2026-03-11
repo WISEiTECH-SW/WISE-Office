@@ -3,6 +3,7 @@ package kr.co.wise.office.application;
 import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponseWithPaging;
+import kr.co.wise.office.domain.Project.dto.ProjectGroupByYearResponse;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.member.service.MemberService;
@@ -37,4 +38,8 @@ public class ProjectServiceApiV3 {
         return new ProjectListResponseWithPaging(pageNationInfo, projectListResponses);
     }
 
+    @Transactional(readOnly = true)
+    public List<ProjectGroupByYearResponse> getProjectsGroupByYear() {
+        return projectService.getProjectsGroupByYear();
+    }
 }

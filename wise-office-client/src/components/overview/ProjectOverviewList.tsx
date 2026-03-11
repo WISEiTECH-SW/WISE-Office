@@ -1,9 +1,9 @@
-import { useOverview } from "@/store/useOverviewStore";
+import { useOverviewStore } from "@/store/useOverviewStore";
 import OverviewCard from "./OverviewCard";
 import { MINUTES, projectNames } from "@/lib/data/overview";
 
 export default function ProjectOverviewList() {
-    const { year, projectId } = useOverview();
+    const { year, projectId } = useOverviewStore();
 
     const projectName = projectNames.find(
         (m) => m.project_pk === projectId,

@@ -47,6 +47,16 @@ export interface CreateProject {
     proposalAttendants: number[];
 }
 
+export interface ProjectItem {
+    projectId: number;
+    projectTitle: string;
+}
+
+export interface ProjectGroupByYear {
+    year: number;
+    projects: ProjectItem[];
+}
+
 export type DocumentType = "log" | "minute" | "approve";
 
 export type SelectedDocument = { type: DocumentType; id: number };

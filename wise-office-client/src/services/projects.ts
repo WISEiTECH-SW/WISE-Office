@@ -1,5 +1,10 @@
 import { api } from "@/lib/clientApi";
-import type { Project, ProjectInfo, CreateProject } from "@/types/project";
+import type {
+    Project,
+    ProjectInfo,
+    CreateProject,
+    ProjectGroupByYear,
+} from "@/types/project";
 
 import { PageInfo, PageParams } from "@/types/page";
 
@@ -24,6 +29,13 @@ export async function getCurrentPageProjects({
         },
     });
     return res.data;
+}
+
+export async function getProjectsGroupByYear(): Promise<ProjectGroupByYear[]> {
+    const { data } = await api.get<ProjectGroupByYear[]>(
+        "v3/projects/groupByYear",
+    );
+    return data;
 }
 
 /**

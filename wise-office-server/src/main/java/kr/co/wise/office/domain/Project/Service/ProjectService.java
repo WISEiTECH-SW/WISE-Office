@@ -15,6 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
@@ -99,4 +103,46 @@ public class ProjectService {
         Page<ProjectEntity> projectsWithPaging = projectRepository.findProjectsWithPaging(pageable);
         return projectsWithPaging;
     }
+
+   @Transactional(readOnly = true)
+public List<ProjectGroupByYearResponse> getProjectsGroupByYear() {
+    final int MAX_YEAR_RANGE = 100; // 안전 범위 제한
+
+    return projectRepository.findAllOrderByYearAndPk()
+            .stream()
+            .flatMap(project -> {
+                if (project.getStartYear() == null || project.getEndYear() == null) {
+                    return Stream.empty();
+                }
+
+                int start = project.getStartYear().getYear();
+                int end = project.getEndYear().getYear();
+
+                if (start > end) {
+                    return Stream.empty();
+                }
+
+                if (end - start > MAX_YEAR_RANGE) {
+                    end = start + MAX_YEAR_RANGE;
+                }
+
+                return IntStream.rangeClosed(start, end)
+                        .mapToObj(year -> Map.entry(year, project));
+            })
+            .collect(Collectors.groupingBy(
+                    Map.Entry::getKey,
+                    Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+            ))
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.<Integer, List<ProjectEntity>>comparingByKey().reversed())
+            .map(entry -> new ProjectGroupByYearResponse(
+                    entry.getKey(),
+                    entry.getValue()
+                            .stream()
+                            .map(ProjectGroupByYearResponse.ProjectItem::new)
+                            .toList()
+            ))
+            .toList();
+}
 }

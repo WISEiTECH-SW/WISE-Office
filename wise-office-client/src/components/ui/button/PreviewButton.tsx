@@ -1,8 +1,8 @@
-import { usePreview } from "@/store/useOverviewStore";
+import { usePreviewStore } from "@/store/useOverviewStore";
 import { LucideFileSearch } from "lucide-react";
 
 export default function PreviewButton() {
-    const { onOpen } = usePreview();
+    const { onOpen } = usePreviewStore();
 
     return (
         <button

@@ -1,8 +1,8 @@
-import { useOverview } from "@/store/useOverviewStore";
+import { useOverviewStore } from "@/store/useOverviewStore";
 import { Calendar1, Folder } from "lucide-react";
 
 export default function MenuToggle() {
-    const { optionIndex, setOptionIndex } = useOverview();
+    const { optionIndex, setOptionIndex } = useOverviewStore();
 
     const options = [
         { name: "프로젝트", icon: <Folder size={18} strokeWidth={1.5} /> },
