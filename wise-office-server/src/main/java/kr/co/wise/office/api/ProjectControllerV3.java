@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.wise.office.application.ProjectServiceApiV3;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponseWithPaging;
+import kr.co.wise.office.domain.Project.dto.ProjectGroupByYearResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -39,6 +42,16 @@ public class ProjectControllerV3 {
                                                                           @RequestParam(name = "offset", defaultValue = "6") int offset) {
 
         return ResponseEntity.status(HttpStatus.OK).body(projectServiceApiV3.getProjectInfoWithPaging(page-1, offset));
+    }
+
+    @Operation(summary = "프로젝트 연도별 조회", description = "연도별로 프로젝트 리스트를 조회합니다")
+    @GetMapping("/groupByYear")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로젝트 조회 성공. 연도별 프로젝트 리스트가 반환됩니다.",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ProjectListResponse.class)))),
+    })
+    public ResponseEntity<List<ProjectGroupByYearResponse>> getProjectsGroupByYear() {
+        return ResponseEntity.status(HttpStatus.OK).body(projectServiceApiV3.getProjectsGroupByYear());
     }
 
 }

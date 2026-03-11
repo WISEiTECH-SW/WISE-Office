@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -98,5 +100,23 @@ public class ProjectService {
     public Page<ProjectEntity> searchProjectWithManagerWithPaging(PageRequest pageable) {
         Page<ProjectEntity> projectsWithPaging = projectRepository.findProjectsWithPaging(pageable);
         return projectsWithPaging;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectGroupByYearResponse> getProjectsGroupByYear() {
+        return projectRepository.findAllOrderByYearAndPk()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        p -> p.getStartYear().getYear()
+                ))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> new ProjectGroupByYearResponse(
+                        entry.getKey(),
+                        entry.getValue().stream()
+                                .map(ProjectGroupByYearResponse.ProjectItem::new)
+                                .toList()
+                ))
+                .toList();
     }
 }
