@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { MINUTES } from "@/lib/data/overview";
+import { ProjectGroupByYear } from "@/types/project";
+import { getProjectsGroupByYear } from "@/services/projects";
 
 const today = new Date();
 
@@ -15,7 +17,7 @@ type OverviewState = {
     setProjectId: (projectId: number) => void;
 };
 
-export const useOverview = create<OverviewState>((set) => ({
+export const useOverviewStore = create<OverviewState>((set) => ({
     optionIndex: 0,
     year:
         MINUTES.length > 0
@@ -31,6 +33,26 @@ export const useOverview = create<OverviewState>((set) => ({
     setProjectId: (projectId) => set({ projectId }),
 }));
 
+// 연도별 프로젝트 메뉴
+interface ProjectGroupByYearState {
+    groupByYear: ProjectGroupByYear[];
+    fetchGroupByYear: () => Promise<void>;
+}
+
+export const useProjectsGroupByYearStore = create<ProjectGroupByYearState>(
+    (set) => ({
+        groupByYear: [],
+
+        fetchGroupByYear: async () => {
+            const data = await getProjectsGroupByYear();
+
+            set({
+                groupByYear: Array.isArray(data) ? data : [],
+            });
+        },
+    }),
+);
+
 // 미리보기 모달 상태
 type PreviewState = {
     isOpen: boolean;
@@ -40,7 +62,7 @@ type PreviewState = {
     onClose: () => void;
 };
 
-export const usePreview = create<PreviewState>((set) => ({
+export const usePreviewStore = create<PreviewState>((set) => ({
     isOpen: false,
     setIsOpen: (isOpen) => set({ isOpen }),
 

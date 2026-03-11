@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Buttonbar from "./Buttonbar";
-import { usePreview } from "@/store/useOverviewStore";
+import { usePreviewStore } from "@/store/useOverviewStore";
 
 const A4_WIDTH = 595;
 const A4_HEIGHT = Math.round(595 * Math.SQRT2);
@@ -9,7 +9,7 @@ const MODAL_PADDING = 32;
 const HEADER_FOOTER_HEIGHT = 64;
 
 export default function PreviewModal() {
-    const { onClose } = usePreview();
+    const { onClose } = usePreviewStore();
     const [scale, setScale] = useState(1);
 
     useEffect(() => {

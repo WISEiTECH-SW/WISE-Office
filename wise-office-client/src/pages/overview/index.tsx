@@ -4,11 +4,11 @@ import Calendar from "@/components/overview/Calendar";
 import ProjectOverviewList from "@/components/overview/ProjectOverviewList";
 import MonthOverviewList from "@/components/overview/MonthOverviewList";
 import PreviewModal from "@/components/modal/PreviewModal";
-import { useOverview, usePreview } from "@/store/useOverviewStore";
+import { useOverviewStore, usePreviewStore } from "@/store/useOverviewStore";
 
 export default function Overview() {
-    const { optionIndex } = useOverview();
-    const { isOpen } = usePreview();
+    const { optionIndex } = useOverviewStore();
+    const { isOpen } = usePreviewStore();
 
     return (
         <div className="min-h-screen flex mx-24 my-16 gap-16">

@@ -1,13 +1,26 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Folder, FolderOpen } from "lucide-react";
-import { useOverview } from "@/store/useOverviewStore";
-import { menus } from "@/lib/data/overview";
+import {
+    useOverviewStore,
+    useProjectsGroupByYearStore,
+} from "@/store/useOverviewStore";
 
 export default function ProjectMenu() {
-    const { year, projectId, setYear, setProjectId } = useOverview();
-    const [openYear, setOpenYear] = useState<number[]>([
-        Math.max(...menus.map((m) => m.year)),
-    ]);
+    const { year, projectId, setYear, setProjectId } = useOverviewStore();
+    const { groupByYear, fetchGroupByYear } = useProjectsGroupByYearStore();
+
+    const [openYear, setOpenYear] = useState<number[]>([]);
+
+    useEffect(() => {
+        fetchGroupByYear();
+    }, [fetchGroupByYear]);
+
+    useEffect(() => {
+        if (groupByYear.length > 0) {
+            const latestYear = Math.max(...groupByYear.map((m) => m.year));
+            setOpenYear([latestYear]);
+        }
+    }, [groupByYear]);
 
     const selectYear = (year: number) => {
         setOpenYear((prev) =>
@@ -18,8 +31,8 @@ export default function ProjectMenu() {
     };
 
     const sortedMenus = useMemo(
-        () => [...menus].sort((a, b) => b.year - a.year),
-        [],
+        () => [...groupByYear].sort((a, b) => b.year - a.year),
+        [groupByYear],
     );
 
     return (
@@ -47,16 +60,16 @@ export default function ProjectMenu() {
 
                         {openYear.includes(menu.year) && (
                             <ul className="ml-10 cursor-pointer">
-                                {menu.items.map((item) => (
+                                {menu.projects.map((item) => (
                                     <li
-                                        key={item.project_pk}
-                                        className={`px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium ${item.project_pk === projectId && menu.year === year ? "bg-gray-100 font-medium" : ""}`}
+                                        key={item.projectId}
+                                        className={`px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium ${item.projectId === projectId && menu.year === year ? "bg-gray-100 font-medium" : ""}`}
                                         onClick={() => {
-                                            setProjectId(item.project_pk);
+                                            setProjectId(item.projectId);
                                             setYear(menu.year);
                                         }}
                                     >
-                                        {item.title}
+                                        {item.projectTitle}
                                     </li>
                                 ))}
                             </ul>

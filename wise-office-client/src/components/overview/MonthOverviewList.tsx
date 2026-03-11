@@ -1,9 +1,9 @@
 import OverviewCard from "./OverviewCard";
-import { useOverview } from "@/store/useOverviewStore";
+import { useOverviewStore } from "@/store/useOverviewStore";
 import { MINUTES } from "@/lib/data/overview";
 
 export default function MonthOverviewList() {
-    const { year, month } = useOverview();
+    const { year, month } = useOverviewStore();
 
     const filteredData = MINUTES.filter(
         (m) =>
