@@ -101,6 +101,7 @@ export default function DocumentPage() {
                             <div className="print-area">
                                 {currentDoc == "minute" && (
                                     <MinuteForm
+                                        projectInfo={projectInfo}
                                         projectName={
                                             projectInfo
                                                 ? projectInfo.projectTitle
