@@ -19,8 +19,8 @@ import {
     DocumentPreview,
 } from "@/components/project/document";
 import AttendantList from "@/components/project/attendant/AttendantList";
-import { LogWriteModal, DeleteModal } from "@/components/modal";
-
+import { LogWriteModal, DeleteModal, ProjectModal } from "@/components/modal";
+import { useProjectMutation } from "@/hooks/project/useProjectMutation";
 import { toastMessage } from "@/lib/common/toastMessage";
 
 export default function ProjectById() {
@@ -39,6 +39,7 @@ export default function ProjectById() {
     // modal
     const [logModal, setLogModal] = useState<LogModalState>(null);
     const [deleteTarget, setDeleteTarget] = useState<DeleteModalState>(null);
+    const [isEditOpen, setIsEditOpen] = useState(false);
 
     /* ----- query ----- */
     const { data: projectInfo } = useProjectDetail(projectId);
@@ -58,6 +59,7 @@ export default function ProjectById() {
         projectId,
         selectedDoc.id,
     );
+    const { deleteProject } = useProjectMutation();
 
     /* ----- func ----- */
     const setEditLog = () => {
@@ -110,10 +112,13 @@ export default function ProjectById() {
         <div className="md:px-6">
             <ProjectInfoContainer
                 projectInfo={projectInfo}
-                onEdit={() => {}}
-                onDelete={() => {}}
+                onEdit={() => {
+                    setIsEditOpen(true);
+                }}
+                onDelete={() => {
+                    deleteProject(projectId);
+                }}
             />
-
             <div className="flex flex-col md:grid md:grid-cols-12 md:gap-6 mb-10">
                 {/* Left Side - Doc List */}
                 <div className="order-2 md:order-1 md:col-span-3 mb-6">
@@ -155,7 +160,6 @@ export default function ProjectById() {
                     />
                 </div>
             </div>
-
             {/* Modal */}
             {logModal && (
                 <LogWriteModal
@@ -174,6 +178,14 @@ export default function ProjectById() {
                     onDelete={handleConfirmDelete}
                     onClose={() => setDeleteTarget(null)}
                     isLoading={isCommentLoading || isLogLoading}
+                />
+            )}
+            {/* Project Update Modal */}
+            {isEditOpen && projectInfo.projectId && (
+                <ProjectModal
+                    mode={"update"}
+                    projectId={projectInfo.projectId}
+                    onClose={() => setIsEditOpen(false)}
                 />
             )}
         </div>

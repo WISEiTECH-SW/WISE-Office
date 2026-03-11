@@ -1,32 +1,29 @@
 import { useEffect, useState } from "react";
 import { Member } from "@/types/member";
 import { getMembers } from "@/services/members";
-import {
-    getProjectById,
-    postProject,
-    updateProject,
-} from "@/services/projects";
+import { getProjectById } from "@/services/projects";
 import { toastMessage } from "@/lib/common/toastMessage";
-import { ProjectInfo } from "@/types/project";
-import { CreateProject } from "@/types/createProject";
-import { useProjects } from "@/store/useProjects";
 import { NextRouter } from "next/router";
+import { useProjectMutation } from "./project/useProjectMutation";
+import { CreateProject } from "@/types/project";
 type UseProjectModalProps = {
     mode: "create" | "update";
     projectId?: number;
     router: NextRouter;
     onCreated?: () => Promise<void> | void;
     onClose: () => void;
-    setProjectInfo?: React.Dispatch<React.SetStateAction<ProjectInfo | null>>;
+    tab: string;
+    setTab: (tab: string) => void;
 };
 export function useProjectModal({
     mode,
     projectId,
     router,
-    onCreated,
     onClose,
-    setProjectInfo,
+    tab,
+    setTab,
 }: UseProjectModalProps) {
+    const { updateProject, createProject } = useProjectMutation();
     const [projectTitle, setProjectTitle] = useState("");
     const [institution, setInstitution] = useState(""); // 전담기관
     const [businessName, setBusinessName] = useState(""); // 사업명
@@ -183,11 +180,39 @@ export function useProjectModal({
         }
 
         setErrors(newErrors);
-        return valid;
+        return { valid, newErrors };
     };
 
     const handleSubmit = async () => {
-        if (!validateForm()) return;
+        const { valid, newErrors } = validateForm();
+
+        // 다른 탭에서 validation 통과 못하면 toastmessage
+        if (!valid) {
+            const projectInfoErrors = [
+                newErrors.projectTitle,
+                newErrors.institution,
+                newErrors.businessName,
+                newErrors.startDate,
+                newErrors.endDate,
+                newErrors.content,
+            ].some(Boolean);
+
+            const memberErrors = [
+                newErrors.selectedMembers,
+                newErrors.manager,
+            ].some(Boolean);
+
+            if (tab === "프로젝트 정보" && memberErrors) {
+                toastMessage.error("인원 정보를 확인해 주세요!");
+                setTab("인원 정보");
+            }
+
+            if (tab === "인원 정보" && projectInfoErrors) {
+                toastMessage.error("프로젝트 정보를 확인해 주세요!");
+                setTab("프로젝트 정보");
+            }
+            return;
+        }
 
         const start = startDate + "-01";
         const [year, month] = endDate.split("-").map(Number);
@@ -205,28 +230,18 @@ export function useProjectModal({
             attendants: selectedMembers.map((m) => m.memberId),
             proposalAttendants: selectedCompanyMembers.map((m) => m.memberId),
         };
-
-        try {
-            if (mode === "create") {
-                const newProject = await postProject(projectData);
-                useProjects.getState().addProject(newProject);
-                if (onCreated) await onCreated();
-                toastMessage.success("프로젝트가 등록되었습니다.");
-            } else {
-                const updated = await updateProject(projectData, projectId!);
-                if (setProjectInfo) setProjectInfo(updated);
-                toastMessage.success("프로젝트가 수정되었습니다.");
-            }
-
-            onClose();
-        } catch {
-            toastMessage.error(
-                mode === "create"
-                    ? "프로젝트 등록에 실패했습니다."
-                    : "프로젝트 수정에 실패했습니다.",
-            );
+        if (mode === "create") {
+            createProject(projectData);
+        } else if (projectId) {
+            updateProject({
+                projectData,
+                projectId: projectId,
+            });
         }
+
+        onClose();
     };
+
     const handleContentChange = (value: string) => {
         if (value.length > 500) {
             toastMessage.error("프로젝트 설명은 500자까지 입력 가능합니다.");

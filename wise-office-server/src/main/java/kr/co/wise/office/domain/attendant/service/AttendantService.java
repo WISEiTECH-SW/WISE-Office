@@ -8,6 +8,7 @@ import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantRoleType;
 import kr.co.wise.office.domain.attendant.repository.AttendantRepository;
 import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
+import kr.co.wise.office.domain.member.dto.MemberListResponse;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import kr.co.wise.office.domain.proposalattendant.repository.ProposalAttendantEntityRepository;
@@ -152,7 +153,7 @@ public class AttendantService {
         response.setProposalAttendant(
                 proposalAttendants.stream()
                         .map(ProposalAttendantEntity::getCompanyMember)
-                        .map(AttendantDetail::of)
+                        .map(MemberListResponse::convertCompanyMembertoMember)
                         .toList()
         );
 

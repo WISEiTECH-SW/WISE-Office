@@ -4,8 +4,11 @@ import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
 import AttendanceModal from "../modal/AttendanceModal";
 import ApprovalSeal from "./ApprovalSeal";
-
-export default function MinuteForm() {
+import { ProjectInfo } from "@/types/project";
+interface MinuteFormProps {
+    projectInfo: ProjectInfo | undefined;
+}
+export default function MinuteForm({ projectInfo }: MinuteFormProps) {
     const [attendance, setAttendance] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -141,7 +144,7 @@ export default function MinuteForm() {
                     isOpen={isModalOpen}
                     onClose={closeModal}
                     onConfirm={handleSelectAttendees}
-                    initialData={[]} // 기존 선택 데이터
+                    attendants={projectInfo?.proposalAttendant}
                 />
             )}
         </div>

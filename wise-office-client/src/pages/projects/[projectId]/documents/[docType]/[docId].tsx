@@ -7,11 +7,12 @@ import ApproveForm from "@/components/document/ApproveForm";
 
 import ActionBar from "@/components/document/ActionBar";
 import Sidebar from "@/components/document/side-bar/SideBar";
+import { useProjectDetail } from "@/hooks/project/useDocuments";
 
 export default function DocumentPage() {
     const router = useRouter();
     const { projectId, docType, docId } = router.query;
-
+    const { data: projectInfo } = useProjectDetail(Number(projectId));
     const [currentDoc, setCurrentDoc] = useState<DocType>("minute");
     const [lastSaved] = useState<boolean>(false);
     const [savedTime] = useState<string | null>(null);
@@ -58,7 +59,9 @@ export default function DocumentPage() {
                             }}
                         >
                             <div className="print-area">
-                                {currentDoc == "minute" && <MinuteForm />}
+                                {currentDoc == "minute" && (
+                                    <MinuteForm projectInfo={projectInfo} />
+                                )}
                                 {currentDoc == "approve" && <ApproveForm />}
                             </div>
                         </div>

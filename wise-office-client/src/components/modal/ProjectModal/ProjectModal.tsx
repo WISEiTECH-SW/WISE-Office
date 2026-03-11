@@ -1,14 +1,12 @@
-import { ProjectInfo } from "@/types/project";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import SelectProjectMembers from "../project/SelectProjectMembers";
-import ProjectNameWithPeriod from "../project/ProjectNameWithPeriod";
-import Tab from "../project/Tab";
+import SelectProjectMembers from "../../project/SelectProjectMembers";
+import ProjectNameWithPeriod from "../../project/ProjectNameWithPeriod";
+import Tab from "../../project/Tab";
 import { useProjectModal } from "@/hooks/useProjectModal";
 type ProjectModalProps = {
     mode: "create" | "update";
     projectId?: number; // update일 때만 필요
-    setProjectInfo?: React.Dispatch<React.SetStateAction<ProjectInfo | null>>;
     onClose: () => void;
     onCreated?: () => Promise<void> | void; // create일 때만 필요
 };
@@ -16,7 +14,6 @@ type ProjectModalProps = {
 export default function ProjectModal({
     mode,
     projectId,
-    setProjectInfo,
     onClose,
     onCreated,
 }: ProjectModalProps) {
@@ -57,7 +54,8 @@ export default function ProjectModal({
         router,
         onCreated,
         onClose,
-        setProjectInfo,
+        tab,
+        setTab,
     });
 
     return (

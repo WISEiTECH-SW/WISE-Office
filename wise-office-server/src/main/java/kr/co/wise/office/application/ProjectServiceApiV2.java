@@ -96,7 +96,7 @@ public class ProjectServiceApiV2 {
         List<MemberEntity> updateAttendantList = memberService.findByIds(request.attendants());
         // 참여자 업데이트
         attendantService.updateAttendants(project, newManager, updateAttendantList);
-        // 편성인원 업데이터
+        // 편성인원 업데이트
         List<CompanyMemberEntity> updateProposalAttendantList = companyMemberService.findByIds(request.proposalAttendants());
         proposalAttendantService.updateProposalAttendants(project, updateProposalAttendantList);
 
