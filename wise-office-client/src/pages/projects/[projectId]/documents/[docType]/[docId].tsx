@@ -57,8 +57,10 @@ export default function DocumentPage() {
                                     "0 2px 8px rgba(30,64,175,0.08), 0 8px 32px rgba(30,64,175,0.10), 0 0 0 1px rgba(30,64,175,0.06)",
                             }}
                         >
-                            {currentDoc == "minute" && <MinuteForm />}
-                            {currentDoc == "approve" && <ApproveForm />}
+                            <div className="print-area">
+                                {currentDoc == "minute" && <MinuteForm />}
+                                {currentDoc == "approve" && <ApproveForm />}
+                            </div>
                         </div>
                     </div>
                 </div>

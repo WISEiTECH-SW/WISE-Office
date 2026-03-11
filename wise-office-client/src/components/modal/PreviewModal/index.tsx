@@ -50,9 +50,9 @@ export default function PreviewModal() {
                         height: A4_HEIGHT * scale,
                         padding: A4_PADDING * scale,
                     }}
-                    className={`relative bg-white overflow-y-auto`}
+                    className="relative bg-white overflow-hidden"
                 >
-                    {/* 회의록/품의서 내용 */}
+                    <div className="print-area">{/* 회의록/품의서 내용 */}</div>
                 </div>
 
                 <Buttonbar

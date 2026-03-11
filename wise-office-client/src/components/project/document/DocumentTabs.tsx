@@ -16,7 +16,7 @@ export default function DocumentTabs({
     ];
     return (
         <div className="bg-gray-100 pt-2 px-2 flex border-b border-gray-300">
-            <div className="flex gap-2 items-end">
+            <div className="grid grid-cols-3 gap-2 items-end">
                 {tabs.map((tab) => {
                     const isActive = activeDocType === tab.key;
                     return (
@@ -24,7 +24,7 @@ export default function DocumentTabs({
                             key={tab.key}
                             onClick={() => onChangeTab(tab.key)}
                             className={`
-                            px-6 py-2 text-sm md:text-base transition-all cursor-pointer rounded-t-lg relative -mb-[1px]
+                            col-span-1 px-6 py-2 text-sm md:text-base transition-all cursor-pointer rounded-t-lg relative -mb-[1px]
                             ${
                                 isActive
                                     ? "bg-white text-blue-600 font-bold border-t border-l border-r border-gray-300 z-10"
