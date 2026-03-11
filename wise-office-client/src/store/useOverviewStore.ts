@@ -48,7 +48,9 @@ export const useProjectsGroupByYearStore = create<ProjectGroupByYearState>(
 
             set({
                 groupByYear: Array.isArray(data)
-                    ? data.filter((item) => item.year <= today.getFullYear())
+                    ? data.filter(
+                          (item) => item.year <= new Date().getFullYear(),
+                      )
                     : [],
             });
         },

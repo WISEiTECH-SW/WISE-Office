@@ -16,11 +16,11 @@ export default function ProjectMenu() {
     }, [fetchGroupByYear]);
 
     useEffect(() => {
-        if (groupByYear.length > 0) {
+        if (groupByYear.length > 0 && openYear.length === 0) {
             const latestYear = Math.max(...groupByYear.map((m) => m.year));
             setOpenYear([latestYear]);
         }
-    }, [groupByYear]);
+    }, [groupByYear, openYear]);
 
     const selectYear = (year: number) => {
         setOpenYear((prev) =>

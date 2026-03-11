@@ -48,7 +48,7 @@ public class ProjectControllerV3 {
     @GetMapping("/groupByYear")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "프로젝트 조회 성공. 연도별 프로젝트 리스트가 반환됩니다.",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ProjectListResponse.class)))),
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ProjectGroupByYearResponse.class)))),
     })
     public ResponseEntity<List<ProjectGroupByYearResponse>> getProjectsGroupByYear() {
         return ResponseEntity.status(HttpStatus.OK).body(projectServiceApiV3.getProjectsGroupByYear());
