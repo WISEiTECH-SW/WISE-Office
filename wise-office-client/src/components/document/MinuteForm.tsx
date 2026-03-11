@@ -4,27 +4,43 @@ import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
 import AttendanceModal from "../modal/AttendanceModal";
 import ApprovalSeal from "./ApprovalSeal";
+import { MinutesCreateRequest } from "@/types/document";
 import { ProjectInfo } from "@/types/project";
+
 interface MinuteFormProps {
     projectInfo: ProjectInfo | undefined;
+    form: MinutesCreateRequest;
+    setForm: React.Dispatch<React.SetStateAction<MinutesCreateRequest>>;
+    projectName: string;
 }
-export default function MinuteForm({ projectInfo }: MinuteFormProps) {
+
+export default function MinuteForm({
+    projectInfo,
+    form,
+    setForm,
+    projectName,
+}: MinuteFormProps) {
     const [attendance, setAttendance] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     const openModal = () => {
-        if (attendance) {
-            // 선택 되어 있을 경우 initial 데이터 로직
-            setIsModalOpen(true);
-        } else {
-            setIsModalOpen(true);
-        }
+        setIsModalOpen(true);
     };
 
     const closeModal = () => setIsModalOpen(false);
 
+    // 임시 선택 코드로, 교체 예정
     const handleSelectAttendees = (selectedList: string[]) => {
-        setAttendance(selectedList.join(", "));
+        const selectAttendance = selectedList.join(", ");
+
+        setAttendance(selectAttendance);
+
+        setForm((prev) => ({
+            ...prev,
+            minutesAttendants: selectAttendance,
+            instAttendants: selectAttendance,
+        }));
+
         closeModal();
     };
 
@@ -53,6 +69,8 @@ export default function MinuteForm({ projectInfo }: MinuteFormProps) {
                         <EditableCell
                             placeholder="과제명을 입력하세요"
                             colSpan={3}
+                            value={projectName}
+                            onChange={() => {}}
                         />
                     </tr>
                     <tr>
@@ -60,6 +78,10 @@ export default function MinuteForm({ projectInfo }: MinuteFormProps) {
                         <EditableCell
                             placeholder="주관기관을 입력하세요"
                             colSpan={3}
+                            value={form.host}
+                            onChange={(v) =>
+                                setForm((prev) => ({ ...prev, host: v }))
+                            }
                         />
                     </tr>
                     <tr className="h-4"></tr>
@@ -68,21 +90,42 @@ export default function MinuteForm({ projectInfo }: MinuteFormProps) {
                 <tbody>
                     <tr>
                         <LabelCell label="회의 날짜" />
-                        <td className="border border-black px-[10px] py-2 align-middle">
+                        <td className="border border-black p-2">
                             <input
                                 type="date"
+                                value={form.minutesDate}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        minutesDate: e.target.value,
+                                    }))
+                                }
                                 className="w-full bg-transparent text-sm text-black border-none focus:outline-none"
                             />
                         </td>
-                        <td className="border border-black px-[10px] py-2 align-middle">
+                        <td className="border border-black p-2">
                             <input
                                 type="time"
+                                value={form.startTime}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        startTime: e.target.value,
+                                    }))
+                                }
                                 className="w-full bg-transparent text-sm text-black border-none focus:outline-none"
                             />
                         </td>
-                        <td className="border border-black px-[10px] py-2 align-middle">
+                        <td className="border border-black p-2">
                             <input
                                 type="time"
+                                value={form.endTime}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        endTime: e.target.value,
+                                    }))
+                                }
                                 className="w-full bg-transparent text-sm text-black border-none focus:outline-none"
                             />
                         </td>
@@ -92,6 +135,10 @@ export default function MinuteForm({ projectInfo }: MinuteFormProps) {
                         <EditableCell
                             placeholder="회의 장소를 입력하세요"
                             colSpan={3}
+                            value={form.location}
+                            onChange={(v) =>
+                                setForm((prev) => ({ ...prev, location: v }))
+                            }
                         />
                     </tr>
                     <tr>
@@ -99,6 +146,10 @@ export default function MinuteForm({ projectInfo }: MinuteFormProps) {
                         <EditableCell
                             placeholder="회의 목적을 입력하세요"
                             colSpan={3}
+                            value={form.purpose}
+                            onChange={(v) =>
+                                setForm((prev) => ({ ...prev, purpose: v }))
+                            }
                         />
                     </tr>
                     <tr>
@@ -125,6 +176,10 @@ export default function MinuteForm({ projectInfo }: MinuteFormProps) {
                         <EditableCell
                             placeholder="작성자 이름을 입력하세요"
                             colSpan={3}
+                            value={form.writer}
+                            onChange={(v) =>
+                                setForm((prev) => ({ ...prev, writer: v }))
+                            }
                         />
                     </tr>
                     <tr className="h-4"></tr>
@@ -137,6 +192,8 @@ export default function MinuteForm({ projectInfo }: MinuteFormProps) {
             <SectionBody
                 placeholder="회의 내용을 입력하세요."
                 className="rounded-b min-h-[340px]"
+                value={form.content}
+                onChange={(v) => setForm((prev) => ({ ...prev, content: v }))}
             />
 
             {isModalOpen && (
