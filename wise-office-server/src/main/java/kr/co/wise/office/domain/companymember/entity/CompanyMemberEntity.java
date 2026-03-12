@@ -43,14 +43,15 @@ public class CompanyMemberEntity {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompanyMemberEntity that = (CompanyMemberEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(team, that.team) && Objects.equals(rank, that.rank);
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, team, rank);
+        return Objects.hash(id);
     }
 
 }

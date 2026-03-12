@@ -92,7 +92,7 @@ public class MinutesServiceApi {
 
     @CheckProjectAuth
     @Transactional
-    public void removeMinutesWithApprove(long projectId, String name, long minutesId) {
+    public void removeMinutesWithApprove(long projectId, String loginUserEmail, long minutesId) {
         //품의서 삭제
         approveService.deleteApprove(projectId, minutesId);
         //회의 참여 인원 삭제

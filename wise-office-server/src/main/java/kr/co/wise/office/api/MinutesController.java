@@ -90,9 +90,9 @@ public class MinutesController {
     @Operation(summary = "회의록 수정", description = "회의록을 수정합니다.",
             security = @SecurityRequirement(name = "bearerAuth"))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "수정된 회의록 데이터 전달",
+            @ApiResponse(responseCode = "200", description = "수정된 회의록 데이터 전달",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = MinutesUpdateResponse.class))),
+                            schema = @Schema(implementation = MinutesDetailResponse.class))),
     })
     public ResponseEntity<MinutesDetailResponse> updateMinutes(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
@@ -101,7 +101,7 @@ public class MinutesController {
             @Parameter(description = "생성할 회의록 세부 내용") @RequestBody MinutesUpdateRequest request
     ) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(minutesServiceApi.updateMinutes(projectId, loginUser.getName(), minutesId, request));
+        return ResponseEntity.status(HttpStatus.OK).body(minutesServiceApi.updateMinutes(projectId, loginUser.getName(), minutesId, request));
     }
 
 
