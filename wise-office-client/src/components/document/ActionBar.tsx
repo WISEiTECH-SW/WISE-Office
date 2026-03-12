@@ -2,16 +2,20 @@ import { Save, Printer, BadgePlus, OctagonX } from "lucide-react";
 import Button from "../common/Button";
 
 interface ActionBarProps {
+    isNew: boolean;
     lastSaved: boolean;
     savedTime: string | null;
+    isValid: boolean;
     saveDoc: () => void;
     createApprove: () => void;
     exit: () => void;
 }
 
 export default function ActionBar({
+    isNew,
     lastSaved,
     savedTime,
+    isValid,
     saveDoc,
     createApprove,
     exit,
@@ -33,10 +37,11 @@ export default function ActionBar({
             <div className="w-px h-5 bg-blue-100 mx-1" />
 
             <Button
-                label="저장"
+                label={isNew ? "저장" : "수정"}
                 onClick={saveDoc}
                 variant="primary"
                 icon={<Save className="w-4 h-4" />}
+                disabled={!isValid}
             />
 
             <Button

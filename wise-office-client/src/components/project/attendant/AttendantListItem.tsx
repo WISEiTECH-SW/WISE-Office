@@ -3,7 +3,7 @@ import ProfileImage from "@/components/header/ProfileImage";
 type AttendantListItemProps = {
     isPm: boolean;
     name: string;
-    imageUrl: string;
+    imageUrl?: string;
 };
 
 export default function AttendantListItem({

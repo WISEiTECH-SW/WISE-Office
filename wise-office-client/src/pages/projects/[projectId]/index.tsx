@@ -95,13 +95,12 @@ export default function ProjectById() {
         if (!deleteTarget || !selectedDoc) return;
 
         switch (deleteTarget.type) {
-            // case "project": break;
+            case "project":
+                deleteProject(projectId);
+                break;
             case "log":
                 deleteLog({ projectId, logId: deleteTarget.id });
-                setSelectedDoc({
-                    type: "log",
-                    id: 0,
-                });
+                setSelectedDoc(null);
                 break;
             case "comment":
                 deleteComment({
@@ -110,7 +109,9 @@ export default function ProjectById() {
                     commentId: deleteTarget.id,
                 });
                 break;
-            // case "minute" : break;
+            case "minute":
+                // 회의록 삭제 로직
+                break;
             // case "approve": break;
         }
 
@@ -128,7 +129,7 @@ export default function ProjectById() {
                     setIsEditOpen(true);
                 }}
                 onDelete={() => {
-                    deleteProject(projectId);
+                    setDeleteTarget({ type: "project", id: projectId });
                 }}
             />
             <div className="flex flex-col md:grid md:grid-cols-12 md:gap-6 mb-10">
@@ -164,6 +165,9 @@ export default function ProjectById() {
                                     <MinutePreview
                                         projectId={projectId}
                                         minuteDetail={minute}
+                                        isAttending={projectInfo.attending}
+                                        onEdit={openDocumentEditor}
+                                        onDelete={setDeleteTarget}
                                     />
                                 );
                             case "approve":
@@ -183,6 +187,7 @@ export default function ProjectById() {
                     <AttendantList
                         pm={projectInfo.managerName}
                         attendants={projectInfo.attendant}
+                        proposalAttendant={projectInfo.proposalAttendant}
                     />
                 </div>
             </div>

@@ -30,7 +30,7 @@ export interface MinutesCreateRequest {
 export interface MinutesListResponse {
     minutesId: number;
     title: string;
-    writtenAt: string;
+    minutesAt: string;
 }
 
 export interface MinutesDetail {

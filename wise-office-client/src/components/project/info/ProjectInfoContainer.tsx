@@ -5,12 +5,15 @@ import Button from "@/components/common/Button";
 
 import {
     Calendar,
-    TrendingUp,
-    User,
     Users,
-    NotepadText,
     Edit,
     Trash2,
+    Building2,
+    Activity,
+    UserPlus,
+    UserCheck,
+    FileText,
+    Briefcase,
 } from "lucide-react";
 
 import {
@@ -69,27 +72,44 @@ export default function ProjectInfoContainer({
                     )} ~ ${formatYearMonth(projectInfo.end)}`}
                 />
                 <ProjectInfoItem
-                    icon={<TrendingUp className="w-5 h-5 md:w-6 md:h-6" />}
+                    icon={<Activity className="w-5 h-5 md:w-6 md:h-6" />}
                     label="진행 상태"
                     value={duration.duration}
                 />
                 <ProjectInfoItem
-                    icon={<User className="w-5 h-5 md:w-6 md:h-6" />}
+                    icon={<Briefcase className="w-5 h-5 md:w-6 md:h-6" />}
+                    label="사업명"
+                    value={projectInfo.businessName}
+                />
+                <ProjectInfoItem
+                    icon={<Building2 className="w-5 h-5 md:w-6 md:h-6" />}
+                    label="전담기관"
+                    value={projectInfo.institution}
+                />
+            </div>
+            <div className="grid md:grid-cols-4 gap-2 md:gap-6 mb-2 md:mb-6">
+                <ProjectInfoItem
+                    icon={<UserCheck className="w-5 h-5 md:w-6 md:h-6" />}
                     label="책임자"
                     value={projectInfo.managerName.name}
                 />
                 <ProjectInfoItem
                     icon={<Users className="w-5 h-5 md:w-6 md:h-6" />}
-                    label="참여 인원"
+                    label="수행 인원"
                     value={`${projectInfo.attendant.length + 1}명`}
                 />
-            </div>
+                <ProjectInfoItem
+                    icon={<UserPlus className="w-5 h-5 md:w-6 md:h-6" />}
+                    label="편성 인원"
+                    value={`${projectInfo.proposalAttendant.length}명`}
+                />
 
-            <ProjectInfoItem
-                icon={<NotepadText className="w-5 h-5 md:w-6 md:h-6" />}
-                label="프로젝트 설명"
-                value={projectInfo.detail}
-            />
+                <ProjectInfoItem
+                    icon={<FileText className="w-5 h-5 md:w-6 md:h-6" />}
+                    label="프로젝트 설명"
+                    value={projectInfo.detail}
+                />
+            </div>
         </div>
     );
 }

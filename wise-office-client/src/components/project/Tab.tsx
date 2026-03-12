@@ -17,7 +17,7 @@ export default function Tab({ options, selectedTab, onTabChange }: TabProps) {
                         key={item}
                         onClick={() => onTabChange(item)}
                         className={`
-                            flex-1 py-2 rounded-full text-sm transition-all duration-200
+                            flex-1 py-2 rounded-full text-sm transition-all duration-200 cursor-pointer
                             ${
                                 isActive
                                     ? "bg-blue-600 text-white font-semibold shadow-sm"
