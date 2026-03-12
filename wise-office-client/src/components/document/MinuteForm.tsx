@@ -121,7 +121,7 @@ export default function MinuteForm({
                                 <td
                                     className="border border-black p-2  text-sm text-center cursor-pointer"
                                     colSpan={2}
-                                    onClick={() => setIsModalOpen(true)}
+                                    onClick={() => setIsDateTimeModalOpen(true)}
                                 >
                                     {formatMeetingTime(
                                         form.startTime,

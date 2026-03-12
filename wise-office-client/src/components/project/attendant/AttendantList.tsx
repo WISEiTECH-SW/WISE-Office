@@ -32,7 +32,7 @@ export default function AttendantList({
                 />
 
                 {selectAttendant === "수행 인원" ? (
-                    <div className="md:max-h-85 pt-4 jflex flex-nowrap gap-2 md:flex-col">
+                    <div className="md:max-h-85 pt-4 flex flex-nowrap gap-2 md:flex-col">
                         <AttendantListItem
                             isPm={true}
                             name={pm.name}
