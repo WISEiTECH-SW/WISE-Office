@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { DocType, MinutesCreateRequest } from "@/types/document";
+import { DocType, MinutesCreateRequest, MinutesDetail } from "@/types/document";
 
 import MinuteForm from "@/components/document/MinuteForm";
 import ApproveForm from "@/components/document/ApproveForm";
@@ -13,24 +13,23 @@ import { ProjectInfo } from "@/types/project";
 
 export default function DocumentPage() {
     const router = useRouter();
-    const { docType, docId } = router.query;
+    const { docType } = router.query;
 
     const projectId = Number(
         typeof router.query.projectId === "string" ? router.query.projectId : 0,
     );
 
+    const docId = Number(
+        typeof router.query.docId === "string" ? router.query.docId : 0,
+    );
+
+    const isNew = docId === 0 ? true : false;
+
     /* ----- useState ----- */
     const [currentDoc, setCurrentDoc] = useState<DocType>("minute");
     const [lastSaved] = useState<boolean>(false);
-    const [savedTime] = useState<string | null>(null);
+    const [savedTime, setSavedTime] = useState<string | null>(null);
     const [isFading] = useState<boolean>(false);
-
-    /* ----- query ----- */
-    const queryClient = useQueryClient();
-    const projectInfo = queryClient.getQueryData<ProjectInfo>([
-        "project",
-        projectId,
-    ]);
 
     const [form, setForm] = useState<MinutesCreateRequest>({
         host: "",
@@ -45,6 +44,30 @@ export default function DocumentPage() {
         content: "",
     });
 
+    const isValid =
+        form.host.trim() !== "" &&
+        form.minutesDate.trim() !== "" &&
+        form.startTime.trim() !== "" &&
+        form.endTime.trim() !== "" &&
+        form.location.trim() !== "" &&
+        form.purpose.trim() !== "" &&
+        form.minutesAttendants.trim() !== "" &&
+        form.instAttendants.trim() !== "" &&
+        form.writer.trim() !== "" &&
+        form.content.trim() !== "";
+
+    /* ----- query ----- */
+    const queryClient = useQueryClient();
+    const projectInfo = queryClient.getQueryData<ProjectInfo>([
+        "project",
+        projectId,
+    ]);
+    const minuteDetail = queryClient.getQueryData<MinutesDetail>([
+        "minutes",
+        projectId,
+        docType === "minute" ? docId : null,
+    ]);
+
     /* ----- mutation ----- */
     const { createMinute } = useMinutesMutation();
 
@@ -56,10 +79,14 @@ export default function DocumentPage() {
     const backToProjectPage = () => router.push(`/projects/${projectId}`);
 
     const saveDoc = () => {
-        createMinute(
-            { projectId, newMinute: form },
-            { onSuccess: () => backToProjectPage() },
-        );
+        if (isNew) {
+            createMinute(
+                { projectId, newMinute: form },
+                { onSuccess: () => backToProjectPage() },
+            );
+        } else {
+            // 수정로직
+        }
     };
 
     /* ----- hook ----- */
@@ -73,13 +100,47 @@ export default function DocumentPage() {
         }
     }, [docType]);
 
+    useEffect(() => {
+        if (minuteDetail) {
+            const {
+                host,
+                minutesDate,
+                startTime,
+                endTime,
+                location,
+                purpose,
+                minutesAttendants,
+                instAttendants,
+                writer,
+                meetingContent,
+            } = minuteDetail;
+
+            setForm({
+                host,
+                minutesDate,
+                startTime,
+                endTime,
+                location,
+                purpose,
+                minutesAttendants,
+                instAttendants,
+                writer,
+                content: meetingContent, // 필드명 불일치, 서버 dto 수정 예정
+            });
+
+            setSavedTime("MM/DD HH:MM");
+        }
+    }, [minuteDetail]);
+
     return (
         <div className="flex flex-1 overflow-hidden">
             <main className="flex-1 overflow-y-auto flex flex-col bg-blue-50">
                 {/* Header */}
                 <ActionBar
+                    isNew={isNew}
                     lastSaved={lastSaved}
                     savedTime={savedTime}
+                    isValid={isValid}
                     saveDoc={saveDoc}
                     createApprove={() =>
                         router.push(
@@ -93,7 +154,7 @@ export default function DocumentPage() {
                 <div className="flex-1 p-8">
                     <div className="flex justify-center">
                         <div
-                            className="bg-white w-full max-w-[720px] min-h-[1020px] p-[14mm] rounded-sm transition-opacity duration-200"
+                            className="bg-white w-full max-w-[720px] min-h-[1020px] px-16 py-8 rounded-sm transition-opacity duration-200"
                             style={{
                                 opacity: isFading ? 0 : 1,
                                 boxShadow:

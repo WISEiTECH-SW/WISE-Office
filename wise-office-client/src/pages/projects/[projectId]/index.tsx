@@ -109,7 +109,9 @@ export default function ProjectById() {
                     commentId: deleteTarget.id,
                 });
                 break;
-            // case "minute" : break;
+            case "minute":
+                // 회의록 삭제 로직
+                break;
             // case "approve": break;
         }
 
@@ -163,6 +165,9 @@ export default function ProjectById() {
                                     <MinutePreview
                                         projectId={projectId}
                                         minuteDetail={minute}
+                                        isAttending={projectInfo.attending}
+                                        onEdit={openDocumentEditor}
+                                        onDelete={setDeleteTarget}
                                     />
                                 );
                             case "approve":

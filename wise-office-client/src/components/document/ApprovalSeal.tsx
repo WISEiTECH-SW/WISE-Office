@@ -2,7 +2,7 @@ export default function ApprovalSeal() {
     const labels = ["담당", "과제책임자", "대표자"];
 
     return (
-        <div className="flex justify-end mb-8">
+        <div className="flex justify-end mb-4">
             <table className="border-collapse border border-black text-[12px]">
                 <tbody>
                     <tr>
