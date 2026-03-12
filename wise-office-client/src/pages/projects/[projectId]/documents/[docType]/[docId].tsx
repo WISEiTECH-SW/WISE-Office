@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { DocType, MinutesCreateRequest, MinutesDetail } from "@/types/document";
+import {
+    ApproveUpdateRequest,
+    DocType,
+    MinutesCreateRequest,
+    MinutesDetail,
+} from "@/types/document";
 
 import MinuteForm from "@/components/document/MinuteForm";
 import ApproveForm from "@/components/document/ApproveForm";
@@ -10,7 +15,7 @@ import Sidebar from "@/components/document/side-bar/SideBar";
 import { useMinutesMutation } from "@/hooks/doc/useMinutesMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { ProjectInfo } from "@/types/project";
-import { useApproveCreation } from "@/hooks/project/useDocuments";
+import { useApproveUpdate } from "@/hooks/project/useDocuments";
 
 export default function DocumentPage() {
     const router = useRouter();
@@ -45,6 +50,13 @@ export default function DocumentPage() {
         content: "",
     });
 
+    const [newApprove, setNewApprove] = useState<ApproveUpdateRequest>({
+        reportNo: "",
+        writtenAt: "",
+        submitAt: "",
+        writer: "",
+    });
+
     const isValid =
         form.host.trim() !== "" &&
         form.minutesDate.trim() !== "" &&
@@ -71,7 +83,7 @@ export default function DocumentPage() {
 
     /* ----- mutation ----- */
     const { createMinute } = useMinutesMutation();
-    const createApprove = useApproveCreation();
+    const approveUpdate = useApproveUpdate();
     /* ----- func ----- */
     const selectDocType = (docType: DocType) => {
         router.push(`/projects/${projectId}/documents/${docType}/${docId}`);
@@ -87,6 +99,11 @@ export default function DocumentPage() {
             );
         } else {
             // 수정로직
+            approveUpdate.mutate({
+                projectId,
+                approveId: Number(docId),
+                request: newApprove,
+            });
         }
     };
 

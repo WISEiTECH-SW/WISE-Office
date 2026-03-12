@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import {
     useProjectDetail,
     useDocumentLists,
+    useApproveDetail,
 } from "@/hooks/project/useDocuments";
 import { useLogDetail } from "@/hooks/project/useLogDetail";
 import { useMinutesDetail } from "@/hooks/doc/useMinutesDetail";
@@ -27,8 +28,8 @@ import { useProjectMutation } from "@/hooks/project/useProjectMutation";
 import BasePreview from "@/components/project/document/preview/BasePreview";
 import LogPreview from "@/components/project/document/preview/LogPreview";
 import MinutePreview from "@/components/project/document/preview/MinutePreview";
-import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
 import ApproveForm from "@/components/document/ApproveForm";
+import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
 
 export default function ProjectById() {
     const router = useRouter();
@@ -59,7 +60,9 @@ export default function ProjectById() {
         projectId,
         selectedDoc?.type === "minute" ? selectedDoc.id : null,
     );
-
+    const approveId =
+        selectedDoc?.type === "approve" ? selectedDoc.id : undefined;
+    const { data } = useApproveDetail(projectId, approveId); // approve
     /* ----- mutation ----- */
     const { deleteLog, isLogLoading } = useLogMutation();
     const { deleteComment, isCommentLoading } = useCommentMutation();
@@ -174,11 +177,11 @@ export default function ProjectById() {
                                 );
                             case "approve":
                                 return (
-                                    // <ApprovePreview
-                                    //     projectId={projectId}
-                                    //     approveDetail={undefined}
-                                    // />
-                                    <ApproveForm />
+                                    <ApprovePreview
+                                        projectId={projectId}
+                                        // approveId={selectedDoc.id}
+                                        approve={data!}
+                                    />
                                 );
                             default:
                                 return <BasePreview type="log" />;

@@ -4,9 +4,14 @@ import { useRouter } from "next/router";
 import { getLogList } from "@/services/logs";
 import { getProjectById } from "@/services/projects";
 import { getMinuteList } from "@/services/minutes";
-import { createApprove, getApproveDetail } from "@/services/documents";
+import {
+    createApprove,
+    getApproveDetail,
+    getApproveList,
+    updateApprove,
+} from "@/services/documents";
 
-import { ApproveCreateResonse } from "@/types/document";
+import { ApproveCreateResonse, ApproveUpdateRequest } from "@/types/document";
 
 /** 프로젝트 상세 조회 */
 export const useProjectDetail = (projectId: number) =>
@@ -27,7 +32,12 @@ export const useDocumentLists = (projectId: number) => {
         queryFn: () => getMinuteList(projectId),
     });
 
-    return { logs, minutes };
+    const approves = useQuery({
+        queryKey: ["approves", projectId],
+        queryFn: () => getApproveList(projectId),
+    });
+
+    return { logs, minutes, approves };
 };
 
 /** 품의서 생성 */
@@ -35,7 +45,6 @@ type ApproveCreationParams = {
     projectId: number;
     minutesId: number;
 };
-
 export const useApproveCreation = () => {
     const router = useRouter();
 
@@ -57,4 +66,18 @@ export const useApproveDetail = (projectId?: number, approveId?: number) =>
         queryKey: ["approveDetail", projectId, approveId],
         queryFn: () => getApproveDetail(projectId!, approveId!),
         enabled: !!projectId && !!approveId,
+    });
+
+/** 품의서 수정 */
+export const useApproveUpdate = () =>
+    useMutation({
+        mutationFn: ({
+            projectId,
+            approveId,
+            request,
+        }: {
+            projectId: number;
+            approveId: number;
+            request: ApproveUpdateRequest;
+        }) => updateApprove(projectId, approveId, request),
     });

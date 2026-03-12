@@ -43,9 +43,10 @@ export async function updateApprove(
     approveId: number,
     request: ApproveUpdateRequest,
 ): Promise<ApproveUpdateResponse> {
-    const res = await api.patch(`projects/${projectId}/approves/${approveId}`, {
-        request: request,
-    });
+    const res = await api.patch(
+        `projects/${projectId}/approves/${approveId}`,
+        request,
+    );
     return res.data;
 }
 

@@ -13,7 +13,7 @@ export default function ApproveItem({
     isSelected,
     onSelect,
 }: ApproveItemProps) {
-    const handleDocSelect = () => onSelect("minute", approve.approveId);
+    const handleDocSelect = () => onSelect("approve", approve.approveId);
 
     return (
         <div
