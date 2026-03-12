@@ -49,13 +49,6 @@ export default function ActionBar({
                 icon={<Printer className="w-4 h-4" />}
             />
 
-            {/* <Button
-                label="품의서 생성"
-                onClick={createApprove}
-                variant="primary"
-                icon={<BadgePlus className="w-4 h-4" />}
-            /> */}
-
             <Button
                 label="작성 취소"
                 onClick={exit}

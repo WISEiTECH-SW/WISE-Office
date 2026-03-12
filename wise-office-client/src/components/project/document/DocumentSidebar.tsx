@@ -40,7 +40,6 @@ export default function DocumentSidebar({
             onWrite("log");
         }
     };
-    console.log(docData);
 
     return (
         <div className="order-2 md:order-1 md:col-span-3 mb-6">

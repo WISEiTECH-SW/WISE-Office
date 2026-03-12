@@ -59,7 +59,6 @@ export default function ApprovePreview({ approve }: Props) {
                                 <tr>
                                     <td>문서번호</td>
                                     <td className="w-full outline-none">
-                                        {/* {form.approveNo} */}
                                         {approve.approveNo}
                                     </td>
                                     <td className="text-right">결 재</td>
@@ -69,7 +68,6 @@ export default function ApprovePreview({ approve }: Props) {
                                 <tr>
                                     <td className="py-1">작성일자</td>
                                     <td className="py-1 w-full outline-none">
-                                        {/* {form.writtenAt} */}
                                         {approve.writtenAt}
                                     </td>
                                     <td className="py-1"></td>
@@ -117,10 +115,8 @@ export default function ApprovePreview({ approve }: Props) {
                     </p>
 
                     {/* 리스트 */}
-                    <ol className="mt-6 space-y-2 pl-18 text-black-600 list-decimal text-[12px]">
-                        <li className="ml-2 outline-none">
-                            사업명 :{approve.businessName}
-                        </li>
+                    <ol className="mt-6 space-y-2 pl-16 text-black-600 list-decimal text-[12px]">
+                        <li>사업명 :{approve.businessName}</li>
 
                         <li>과제명 :{approve.title}</li>
 

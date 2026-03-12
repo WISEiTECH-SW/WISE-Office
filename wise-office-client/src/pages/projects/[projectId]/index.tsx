@@ -175,7 +175,7 @@ export default function ProjectById() {
                                     />
                                 );
                             case "approve":
-                                return <ApprovePreview approve={data!} />;
+                                return <ApprovePreview approve={data} />;
                             default:
                                 return <BasePreview type="log" />;
                         }

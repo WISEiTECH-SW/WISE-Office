@@ -79,7 +79,7 @@ export interface ApproveDetailResponse {
     writtenAt: string; // 작성일자
     writer: string; //품의자
     submitAt: string; // 접수일자
-    businessName: string; // 접수일자
+    businessName: string; // 사업명
     title: string; // 과제명
     institution: string; // 전담기관
     minutesAt: string; // 회의일자
