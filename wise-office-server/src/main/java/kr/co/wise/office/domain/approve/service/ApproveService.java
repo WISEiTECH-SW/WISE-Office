@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class ApproveService {
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_APPROVE));
     }
 
-    public boolean existsByMinutesId(long minutesId, long projectId) {
-        return approveEntityRepository.existsByMinutesIdAndProjectId(minutesId, projectId);
+    public Optional<ApproveEntity> findByMinutesIdAndProjectId(long minutesId, long projectId) {
+        return approveEntityRepository.findByMinutesIdAndProjectId(minutesId, projectId);
     }
 }

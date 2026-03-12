@@ -7,16 +7,21 @@ import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
 import kr.co.wise.office.api.dto.minutes.MinutesUpdateRequest;
 import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
+import kr.co.wise.office.domain.approve.entity.ApproveEntity;
+import kr.co.wise.office.domain.approve.service.ApproveService;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.service.MinutesService;
 import kr.co.wise.office.domain.minutesattendant.service.MinutesAttendantsService;
+import kr.co.wise.office.external.hoilday.dto.HolidayCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +31,9 @@ public class MinutesServiceApi {
     private final ProjectService projectService;
     private final MinutesService minutesService;
     private final MinutesAttendantsService minutesAttendantsService ;
+    private final ApproveService approveService;
+
+    private final HolidayCalculator holidayCalculator;
 
     public List<MinutesListResponse> getMinutesBriefInfo(
             long projectId,
@@ -47,7 +55,7 @@ public class MinutesServiceApi {
         attendantNames.add(request.writer()); // 회의록 작성자도 추가
         minutesAttendantsService.createMinutesAttendants(request, projectId, minutes);
 
-        return MinutesDetailResponse.from(minutes, request.minutesAttendants());
+        return MinutesDetailResponse.from(minutes, request.minutesAttendants(), null);
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +76,17 @@ public class MinutesServiceApi {
         // 참여 인력 수정
         minutesAttendantsService.updateMinutesAttendants(minutes, request.minutesAttendants(), request.writer(),  projectId);
 
-        return MinutesDetailResponse.from(minutes, request.minutesAttendants());
+        // 품의서 수정
+        Optional<ApproveEntity> approveEntity = approveService.findByMinutesIdAndProjectId(minutesId, projectId);
+        if (approveEntity.isEmpty()) {
+            return MinutesDetailResponse.from(minutes, request.minutesAttendants(), null);
+        }
+
+        ApproveEntity approve = approveEntity.get();
+        LocalDate changeApproveWrittenDate = holidayCalculator.calculateSubmitDate(request.minutesDate());
+        approve.updateApprove(minutes, changeApproveWrittenDate);
+
+        return MinutesDetailResponse.from(minutes, request.minutesAttendants(), approve.getId());
     }
 
 

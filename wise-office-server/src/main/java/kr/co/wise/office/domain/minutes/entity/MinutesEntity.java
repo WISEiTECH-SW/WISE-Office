@@ -11,6 +11,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,10 @@ public class MinutesEntity {
     @Column(name = "minutes_number")
     private String minutesNumber;
 
+    // 회의록 작성 시간
+    @Column(name =  "written_at", precision = 0)
+    private LocalDateTime writtenAt;
+
     @OneToMany(mappedBy = "minutesEntity")
     @Builder.Default
     private List<MinutesAttendantEntity> minutesAttendantEntities = new ArrayList<>();
@@ -146,6 +151,12 @@ public class MinutesEntity {
         String formattedDate = minutesDate.format(DateUtil.titleFormatter);
         String formattedNumber = String.format("%02d", id);
         return prefix + formattedDate + formattedNumber;
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void saveTime(){
+        this.writtenAt = LocalDateTime.now().withSecond(0).withNano(0);
     }
 
 
