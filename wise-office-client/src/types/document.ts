@@ -69,5 +69,19 @@ export interface ApproveCreateResonse {
     title: string;
     institution: string;
     minutesAt: string;
-    minutePurpose: string;
+    minutesPurpose: string;
+}
+
+export interface ApproveDetailResponse {
+    approveId: number;
+    minutesId: number; // 해당 품의서를 작성한 회의록 번호
+    approveNo: string; // 문서번호
+    writtenAt: string; // 작성일자
+    writer: string; //품의자
+    submitAt: string; // 접수일자
+    businessName: string; // 접수일자
+    title: string; // 과제명
+    institution: string; // 전담기관
+    minutesAt: string; // 회의일자
+    minutesPurpose: string; // 회의목적
 }

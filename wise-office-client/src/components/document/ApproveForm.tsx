@@ -1,11 +1,48 @@
-import { ApproveCreateResonse } from "@/types/document";
+import { useApproveDetail } from "@/hooks/project/useDocuments";
+import { ApproveDetailResponse } from "@/types/document";
 import Image from "next/image";
-import { EditableCell } from "./EditableCell";
-import { LabelCell } from "./LabelCell";
-import { SectionBody } from "./SectionBody";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-// export default function ApproveForm(data: ApproveCreateResonse) {
 export default function ApproveForm() {
+    const router = useRouter();
+    const { projectId, docId } = router.query;
+    const { data } = useApproveDetail(
+        router.isReady ? Number(projectId) : undefined,
+        router.isReady ? Number(docId) : undefined,
+    );
+
+    const [form, setForm] = useState({
+        approveNo: "",
+        writtenAt: "",
+        writer: "",
+        submitAt: "",
+        businessName: "",
+        title: "",
+        institution: "",
+        minutesAt: "",
+    });
+
+    useEffect(() => {
+        if (!data) return;
+
+        setForm({
+            approveNo: data.approveNo,
+            writtenAt: data.writtenAt,
+            writer: data.writer,
+            submitAt: data.submitAt,
+            businessName: data.businessName,
+            title: data.title,
+            institution: data.institution,
+            minutesAt: data.minutesAt,
+        });
+    }, [data]);
+    const handleChange = (key: keyof typeof form, value: string) => {
+        setForm((prev) => ({
+            ...prev,
+            [key]: value,
+        }));
+    };
     return (
         <div className="max-w-[718px] w-full mx-auto px-6 box-border">
             {/* 제목 */}
@@ -38,14 +75,36 @@ export default function ApproveForm() {
                     <tbody>
                         <tr>
                             <td>문서번호</td>
-                            <td>WISEBM2025-111201</td>
+                            <td>
+                                <input
+                                    value={form.approveNo}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            "approveNo",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full outline-none"
+                                />
+                            </td>
                             <td className="text-right">결 재</td>
                             <td className="text-center">대표이사</td>
                             <td className="text-center">전 결</td>
                         </tr>
                         <tr>
                             <td className="py-1">작성일자</td>
-                            <td className="py-1">2025.11.12</td>
+                            <td className="py-1">
+                                <input
+                                    value={form.writtenAt}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            "writtenAt",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full outline-none"
+                                />
+                            </td>
                             <td className="py-1"></td>
                             <td className="py-1 text-center">과제책임자</td>
                             <td className="py-1"></td>
@@ -59,10 +118,26 @@ export default function ApproveForm() {
                         </tr>
                         <tr>
                             <td className="py-1">품 의 자</td>
-                            <td className="py-1">홍길동</td>
+                            <td className="py-1">
+                                <input
+                                    value={form.writer}
+                                    onChange={(e) =>
+                                        handleChange("writer", e.target.value)
+                                    }
+                                    className="w-full outline-none"
+                                />
+                            </td>
                             <td className="py-1 text-right">접 수</td>
                             <td className="py-1 text-center">일 자</td>
-                            <td className="py-1 text-center">2025.11.12</td>
+                            <td className="py-1 text-center">
+                                <input
+                                    value={form.submitAt}
+                                    onChange={(e) =>
+                                        handleChange("submitAt", e.target.value)
+                                    }
+                                    className="text-center outline-none"
+                                />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -74,29 +149,58 @@ export default function ApproveForm() {
                     제 목:
                 </span>
                 <span className="font-semibold text-black-600">
-                    2025년도 AI 자율제조 SDM 플랫폼 기술 개발사업 회의비 지출의
-                    건
+                    {form.title} 회의비 지출의 건
                 </span>
             </div>
 
             {/* 설명 */}
             <p className="mt-6 pl-5 pr-5 text-black-600 leading-7 text-[12px]">
-                2025년도 AI 자율제조 SDM 플랫폼 기술 개발사업 관련하여 아래와
-                같이 회의비를 지출하고자 하오니 검토 후 승인 부탁드립니다.
+                {form.title} 관련하여 아래와 같이 회의비를 지출하고자 하오니
+                검토 후 승인 부탁드립니다.
             </p>
 
             {/* 리스트 */}
             <ol className="mt-6 space-y-2 pl-18 text-black-600 list-decimal text-[12px]">
-                <li>사업명 : 2025년도 AI 자율제조 SDM 플랫폼 기술 개발사업</li>
                 <li>
-                    과제명 : 자동차 엔진 데이터 활용 MFM 기반 SDM 실증
-                    테스트베드 구축
+                    사업명 :
+                    <input
+                        value={form.businessName}
+                        onChange={(e) =>
+                            handleChange("businessName", e.target.value)
+                        }
+                        className="ml-2 outline-none"
+                    />
                 </li>
-                <li>전담기관 : 한국산업기술평가원</li>
-                <li>회의 일시 : 2025년 11월 14일</li>
+
                 <li>
-                    회의 목적 : 자동차 부품 특화 데이터 인프라 설치 및 제조 DB
-                    구축 방안
+                    과제명 :
+                    <input
+                        value={form.title}
+                        onChange={(e) => handleChange("title", e.target.value)}
+                        className="ml-2 outline-none"
+                    />
+                </li>
+
+                <li>
+                    전담기관 :
+                    <input
+                        value={form.institution}
+                        onChange={(e) =>
+                            handleChange("institution", e.target.value)
+                        }
+                        className="ml-2 outline-none"
+                    />
+                </li>
+
+                <li>
+                    회의 일시 :
+                    <input
+                        value={form.minutesAt}
+                        onChange={(e) =>
+                            handleChange("minutesAt", e.target.value)
+                        }
+                        className="ml-2 outline-none"
+                    />
                 </li>
             </ol>
 

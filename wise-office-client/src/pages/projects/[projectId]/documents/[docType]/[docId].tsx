@@ -174,7 +174,7 @@ export default function DocumentPage() {
                                         setForm={setForm}
                                     />
                                 )}
-                                {currentDoc == "approve" && <ApproveForm />}
+                                {currentDoc === "approve" && <ApproveForm />}
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,7 @@ import { MinutesDetail } from "@/types/document";
 import BasePreview from "./BasePreview";
 import Button from "@/components/common/Button";
 import { DeleteModalState } from "@/types/project";
+import { useApproveCreation } from "@/hooks/project/useDocuments";
 
 interface MinutePreviewProps {
     projectId: number;
@@ -21,7 +22,7 @@ export default function MinutePreview({
     if (!minuteDetail) {
         return <BasePreview type="minute" />;
     }
-
+    const createApprove = useApproveCreation();
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <div className="flex flex-col p-4 md:pt-6">
@@ -29,7 +30,12 @@ export default function MinutePreview({
                     <div className="flex flex-row gap-4">
                         <Button
                             label="품의서 생성"
-                            onClick={() => {}}
+                            onClick={() =>
+                                createApprove.mutate({
+                                    projectId: Number(projectId),
+                                    minutesId: minuteDetail.minutesId,
+                                })
+                            }
                             variant="primary"
                         />
                         <Button

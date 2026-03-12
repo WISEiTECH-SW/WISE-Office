@@ -1,42 +1,60 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+
 import { getLogList } from "@/services/logs";
 import { getProjectById } from "@/services/projects";
 import { getMinuteList } from "@/services/minutes";
-import { createApprove } from "@/services/documents";
+import { createApprove, getApproveDetail } from "@/services/documents";
 
-export const useProjectDetail = (projectId: number) => {
-    return useQuery({
+import { ApproveCreateResonse } from "@/types/document";
+
+/** 프로젝트 상세 조회 */
+export const useProjectDetail = (projectId: number) =>
+    useQuery({
         queryKey: ["project", projectId],
         queryFn: () => getProjectById(projectId),
     });
-};
 
+/** 프로젝트 문서 목록 (로그 / 회의록) */
 export const useDocumentLists = (projectId: number) => {
-    return {
-        logs: useQuery({
-            queryKey: ["logs", projectId],
-            queryFn: () => getLogList(projectId),
-        }),
-        minutes: useQuery({
-            queryKey: ["minutes", projectId],
-            queryFn: () => getMinuteList(projectId),
-        }),
-        // approves: useQuery({
-        //     queryKey: ["approves", projectId],
-        //     queryFn: () => getApprovesList(projectId),
-        // }),
-    };
+    const logs = useQuery({
+        queryKey: ["logs", projectId],
+        queryFn: () => getLogList(projectId),
+    });
+
+    const minutes = useQuery({
+        queryKey: ["minutes", projectId],
+        queryFn: () => getMinuteList(projectId),
+    });
+
+    return { logs, minutes };
 };
 
-// 품의서 생성
+/** 품의서 생성 */
+type ApproveCreationParams = {
+    projectId: number;
+    minutesId: number;
+};
+
 export const useApproveCreation = () => {
+    const router = useRouter();
+
     return useMutation({
-        mutationFn: ({
-            projectId,
-            minutesId,
-        }: {
-            projectId: number;
-            minutesId: number;
-        }) => createApprove(projectId, minutesId),
+        mutationFn: ({ projectId, minutesId }: ApproveCreationParams) =>
+            createApprove(projectId, minutesId),
+
+        onSuccess: (data: ApproveCreateResonse, variables) => {
+            router.push(
+                `/projects/${variables.projectId}/documents/approve/${data.approveId}`,
+            );
+        },
     });
 };
+
+/** 품의서 상세 조회 */
+export const useApproveDetail = (projectId?: number, approveId?: number) =>
+    useQuery({
+        queryKey: ["approveDetail", projectId, approveId],
+        queryFn: () => getApproveDetail(projectId!, approveId!),
+        enabled: !!projectId && !!approveId,
+    });
