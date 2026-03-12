@@ -48,4 +48,8 @@ public class ApproveService {
         return approveEntityRepository.findByApproveIdWithMinutes(approveId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_APPROVE));
     }
+
+    public boolean existsByMinutesId(long minutesId, long projectId) {
+        return approveEntityRepository.existsByMinutesIdAndProjectId(minutesId, projectId);
+    }
 }

@@ -58,4 +58,11 @@ public class MinutesService {
         return minutesEntityRepository.findByIdWithProject(minutesId, projectId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES));
     }
+
+    public LocalDate findMinutesDateByMinutesId(long minutesId) {
+        return minutesEntityRepository.findById(minutesId)
+                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES))
+                .getMinutesDate();
+    }
+
 }

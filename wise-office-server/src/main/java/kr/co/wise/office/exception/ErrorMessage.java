@@ -23,6 +23,7 @@ public enum ErrorMessage {
 
     FORBIDDEN_SIGNUP(HttpStatus.BAD_REQUEST, "불가능한 이메일입니다. 회사 도메인의 이메일을 사용해주세요."),
     AlREADY_SIGNUP_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다. 다른 이메일을 이용하세요."),
+    ALREADY_CREATE_APPROVE(HttpStatus.BAD_REQUEST, "이미 품의서가 생성되어있습니다."),
 
     REPEATED_CALL(HttpStatus.BAD_REQUEST, "잠시 뒤에 다시 요청해 주세요.");
 

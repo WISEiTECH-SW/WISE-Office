@@ -21,10 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,10 +59,9 @@ public class ApproveController {
     public ResponseEntity<ApproveCreateResponse> createApprove(
             @Parameter(description = "프로젝트 ID") @PathVariable long projectId,
             @Parameter(description = "회의록 ID") @PathVariable long minutesId,
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "회의록 작성 일자") @RequestParam(name = "minutes-date") LocalDate minutesDate) {
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(approveServiceApi.createApprove(projectId, loginUser.getName(), minutesId, minutesDate));
+        return ResponseEntity.status(HttpStatus.CREATED).body(approveServiceApi.createApprove(projectId, loginUser.getName(), minutesId));
     }
 
     @Operation(summary = "품의서 상세 조회 API",

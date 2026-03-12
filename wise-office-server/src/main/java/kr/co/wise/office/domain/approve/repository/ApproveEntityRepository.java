@@ -20,4 +20,6 @@ public interface ApproveEntityRepository extends JpaRepository<ApproveEntity, Lo
     @Query("select a from ApproveEntity a join fetch a.minutesEntity m where a.id = :approveId and m.project.id = :projectId")
     Optional<ApproveEntity> findByApproveIdAndProjectId(@Param("approveId") long approveId, @Param("projectId") long projectId);
 
+    @Query("select count(a) > 0 from ApproveEntity a join a.minutesEntity m join m.project p where m.id = :minutesId and p.id = :projectId")
+    boolean existsByMinutesIdAndProjectId(@Param("minutesId") long minutesId, @Param("projectId") long projectId);
 }
