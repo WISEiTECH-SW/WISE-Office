@@ -19,4 +19,14 @@ public interface MinutesEntityRepository extends JpaRepository<MinutesEntity, Lo
 
     @Query("select m from MinutesEntity m join fetch m.project p where m.id = :minutesId and p.id = :projectId")
     Optional<MinutesEntity> findByIdWithProject(@Param("minutesId") long minutesId, @Param("projectId") long projectId);
+
+
+    @Query("""
+            select m
+            from MinutesEntity m
+            join fetch m.project p
+            where m.minutesDate between :start and :end
+            order by m.minutesDate desc, m.startTime desc, m.id desc
+            """)
+    List<MinutesEntity> findMonthlyOverviewTargets(@Param("start") LocalDate start, @Param("end") LocalDate end);
 }
