@@ -52,11 +52,11 @@ export default function ProjectById() {
 
     const { log, comments } = useLogDetail(
         projectId,
-        selectedDoc ? selectedDoc.id : null,
+        selectedDoc?.type === "log" ? selectedDoc.id : null,
     );
     const { minute } = useMinutesDetail(
         projectId,
-        selectedDoc ? selectedDoc.id : null,
+        selectedDoc?.type === "minute" ? selectedDoc.id : null,
     );
 
     /* ----- mutation ----- */

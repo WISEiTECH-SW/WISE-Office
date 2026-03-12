@@ -41,7 +41,7 @@ export default function DocumentPage() {
         purpose: "",
         minutesAttendants: "",
         instAttendants: "",
-        writer: "작성자 이름", // 사용자 이름 가져오는 로직 필요
+        writer: "",
         content: "",
     });
 
@@ -56,8 +56,10 @@ export default function DocumentPage() {
     const backToProjectPage = () => router.push(`/projects/${projectId}`);
 
     const saveDoc = () => {
-        createMinute({ projectId, newMinute: form });
-        backToProjectPage();
+        createMinute(
+            { projectId, newMinute: form },
+            { onSuccess: () => backToProjectPage() },
+        );
     };
 
     /* ----- hook ----- */

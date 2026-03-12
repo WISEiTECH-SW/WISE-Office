@@ -1,3 +1,5 @@
+import { autoResizeTextarea } from "@/utils/textArea";
+
 interface SectionBodyProps {
     placeholder: string;
     value: string;
@@ -11,17 +13,12 @@ export function SectionBody({
     onChange,
     className = "",
 }: SectionBodyProps) {
-    const autoResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        e.target.style.height = "auto";
-        e.target.style.height = e.target.scrollHeight + "px";
-    };
-
     return (
         <textarea
             placeholder={placeholder}
             value={value}
             onChange={(e) => {
-                autoResize(e);
+                autoResizeTextarea(e);
                 onChange(e.target.value);
             }}
             className={`w-full border border-t-0 border-black p-4 text-sm leading-relaxed 

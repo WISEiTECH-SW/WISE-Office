@@ -41,7 +41,7 @@ export interface MinutesDetail {
     endTime: string;
     location: string;
     purpose: string;
-    minuteAttendatns: string;
+    minutesAttendants: string;
     instAttendants: string;
     writer: string;
     meetingContent: string;
