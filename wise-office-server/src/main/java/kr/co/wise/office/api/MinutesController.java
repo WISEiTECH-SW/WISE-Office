@@ -104,4 +104,30 @@ public class MinutesController {
         return ResponseEntity.status(HttpStatus.CREATED).body(minutesServiceApi.updateMinutes(projectId, loginUser.getName(), minutesId, request));
     }
 
+
+    /**
+     * 회의록 삭제 API
+     * 해당 회의록 삭제시 자동으로 품의서도 삭제됩니다.
+     */
+    @DeleteMapping("/{minutesId}")
+    @Operation(summary = "회의록 삭제", description = "회의록을 삭제합니다. 회의록 삭제시 자동으로 품의서도 삭제됩니다..",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "삭제 성공, 응답 바디 X",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<Void> removeMinutes(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+            @Parameter(description = "회의록을 삭제할 프로젝트 번호") @PathVariable(value = "projectId") long projectId,
+            @Parameter(description = "삭제할 회의록 번호") @PathVariable(value = "minutesId") long minutesId
+    ) {
+
+        minutesServiceApi.removeMinutesWithApprove(projectId, loginUser.getName(), minutesId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+
+
 }

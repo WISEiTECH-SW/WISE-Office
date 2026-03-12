@@ -73,4 +73,11 @@ public class MinutesService {
                 .getMinutesDate();
     }
 
+    public void deleteMinutes(long projectId, long minutesId) {
+        MinutesEntity minutesEntity = minutesEntityRepository.findByIdWithProject(minutesId, projectId)
+                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES));
+
+        minutesEntityRepository.delete(minutesEntity);
+    }
+
 }

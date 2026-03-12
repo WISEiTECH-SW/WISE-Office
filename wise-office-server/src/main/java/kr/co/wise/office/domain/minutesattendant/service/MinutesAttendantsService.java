@@ -101,4 +101,9 @@ public class MinutesAttendantsService {
                 Stream.of(writer)
         ).distinct().toList();
     }
+
+    public void deleteAttendants(long minutesId) {
+        List<MinutesAttendantEntity> attendants = attendantEntityRepository.findAttendantsByMinutesId(minutesId);
+        attendantEntityRepository.deleteAll(attendants);
+    }
 }

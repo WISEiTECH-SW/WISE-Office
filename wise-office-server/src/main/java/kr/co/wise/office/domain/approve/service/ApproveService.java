@@ -53,4 +53,14 @@ public class ApproveService {
     public Optional<ApproveEntity> findByMinutesIdAndProjectId(long minutesId, long projectId) {
         return approveEntityRepository.findByMinutesIdAndProjectId(minutesId, projectId);
     }
+
+    public void deleteApprove(long projectId, long minutesId) {
+        Optional<ApproveEntity> approveEntity = approveEntityRepository.findByMinutesIdAndProjectId(minutesId, projectId);
+        // 생성된 품의서가 없다면 삭제 미진행
+        if (approveEntity.isEmpty()) {
+            return;
+        }
+        ApproveEntity approve = approveEntity.get();
+        approveEntityRepository.delete(approve);
+    }
 }
