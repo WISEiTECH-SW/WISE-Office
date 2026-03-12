@@ -7,7 +7,7 @@ import PreviewModal from "@/components/modal/PreviewModal";
 import { useOverviewStore, usePreviewStore } from "@/store/useOverviewStore";
 
 export default function Overview() {
-    const { optionIndex } = useOverviewStore();
+    const { optionIndex, projectInfo } = useOverviewStore();
     const { isOpen } = usePreviewStore();
 
     return (
@@ -18,7 +18,7 @@ export default function Overview() {
             </div>
             <div className="flex-1">
                 {optionIndex === 0 ? (
-                    <ProjectOverviewList />
+                    <ProjectOverviewList key={projectInfo.projectId} />
                 ) : (
                     <MonthOverviewList />
                 )}

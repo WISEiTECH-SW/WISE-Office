@@ -1,17 +1,34 @@
-import { Minutes } from "@/types/document";
+import { useEffect, useState } from "react";
 import PreviewButton from "@/components/ui/button/PreviewButton";
 import PrintButton from "@/components/ui/button/PrintButton";
-import { APPROVALS } from "@/lib/data/overview";
+import { getMinutesInfo } from "@/services/overview";
+import { useOverviewStore } from "@/store/useOverviewStore";
+import { MinutesInfo, MinutesItem } from "@/types/document";
 
 interface Props {
-    minutes?: Minutes;
+    minutes: MinutesItem;
     isApproval?: boolean;
 }
 
 export default function OverviewCard({ minutes, isApproval }: Props) {
-    const approvalMap = Object.fromEntries(
-        APPROVALS.map((a) => [a.meeting_pk, a]),
-    );
+    const { projectInfo } = useOverviewStore();
+    const [minutesInfo, setMinutesInfo] = useState<MinutesInfo>();
+
+    console.log(minutes);
+
+    useEffect(() => {
+        if (!projectInfo.projectId || !minutes?.minutesId) return;
+
+        const fetchInfo = async () => {
+            const data = await getMinutesInfo(
+                projectInfo.projectId,
+                minutes.minutesId,
+            );
+            setMinutesInfo(data);
+        };
+
+        fetchInfo();
+    }, [projectInfo.projectId, minutes?.minutesId]);
 
     return (
         <div className="flex bg-white border border-gray-300 rounded-lg px-4 py-2 items-center justify-between gap-6">
@@ -19,20 +36,24 @@ export default function OverviewCard({ minutes, isApproval }: Props) {
             <div className="flex-1 grid grid-cols-3">
                 {/* 날짜/시간 */}
                 <div className="col-span-1 flex flex-col 2xl:flex-row gap-2">
-                    <p>{minutes?.minutes_date.toLocaleDateString("sv")}</p>
                     <p>
-                        {minutes?.start_time}~{minutes?.end_time}
+                        {new Date(
+                            minutesInfo?.minutesDate ?? "",
+                        ).toLocaleDateString("sv")}
+                    </p>
+                    <p>
+                        {minutesInfo?.startTime}~{minutesInfo?.endTime}
                     </p>
                 </div>
                 {/* 문서번호 */}
                 <p className="col-span-1 flex items-center">
-                    {isApproval && minutes?.minutes_pk
-                        ? approvalMap[minutes.minutes_pk]?.report_no
-                        : minutes?.minutes_number}
+                    {isApproval && minutes?.minutesId
+                        ? "품의서"
+                        : minutes?.title}
                 </p>
                 {/* 참석자 명단 */}
                 <p className="col-span-1 text-xs flex items-center">
-                    {minutes?.inst_attendants.join(" ")}
+                    {minutesInfo?.instAttendants}
                 </p>
             </div>
 

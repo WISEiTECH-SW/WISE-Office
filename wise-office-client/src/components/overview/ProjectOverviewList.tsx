@@ -1,33 +1,43 @@
-import { useOverviewStore } from "@/store/useOverviewStore";
+import { useEffect, useState } from "react";
 import OverviewCard from "./OverviewCard";
-import { MINUTES, projectNames } from "@/lib/data/overview";
+import { useOverviewStore } from "@/store/useOverviewStore";
+import { getMinutes } from "@/services/overview";
+import { MinutesList } from "@/types/document";
 
 export default function ProjectOverviewList() {
-    const { year, projectId } = useOverviewStore();
+    const { year, projectInfo } = useOverviewStore();
+    const [minutesList, setMinutesList] = useState<MinutesList>();
 
-    const projectName = projectNames.find(
-        (m) => m.project_pk === projectId,
-    )?.title;
+    useEffect(() => {
+        const fetchMinutes = async () => {
+            const data = await getMinutes(projectInfo.projectId);
+            setMinutesList(data);
+        };
 
-    const filteredData = MINUTES.filter(
-        (m) =>
-            m.project_pk === projectId && m.minutes_date.getFullYear() === year,
-    );
+        fetchMinutes();
+    }, [projectInfo.projectId]);
+
+    const filteredData =
+        minutesList?.filter(
+            (m) => new Date(m.minutesAt).getFullYear() === year,
+        ) ?? [];
 
     const groupedByMonth = Array.from({ length: 12 }, (_, i) => {
-        const month = i + 1;
+        const month = i;
+
+        const data = filteredData.filter(
+            (m) => new Date(m.minutesAt).getMonth() === month,
+        );
 
         return {
-            month,
-            data: filteredData.filter(
-                (m) => m.minutes_date.getMonth() + 1 === month,
-            ),
+            month: month + 1,
+            data,
         };
     }).filter((m) => m.data.length > 0);
 
     return (
         <div className="flex flex-col gap-10">
-            <p className="text-2xl font-bold">{projectName}</p>
+            <p className="text-2xl font-bold">{projectInfo.projectTitle}</p>
 
             {groupedByMonth
                 .sort((a, b) => a.month - b.month)
@@ -37,7 +47,7 @@ export default function ProjectOverviewList() {
 
                         {data.map((minutes, index) => (
                             <div
-                                key={minutes.minutes_pk}
+                                key={minutes.minutesId}
                                 className={`flex flex-col gap-3 ${
                                     index !== data.length - 1
                                         ? "pb-4 border-b border-gray-200"
@@ -45,11 +55,11 @@ export default function ProjectOverviewList() {
                                 }`}
                             >
                                 <OverviewCard
-                                    key={`${minutes.minutes_pk}-minutes`}
+                                    key={`${minutes.minutesId}-minutes`}
                                     minutes={minutes}
                                 />
                                 <OverviewCard
-                                    key={`${minutes.minutes_pk}-approval`}
+                                    key={`${minutes.minutesId}-approval`}
                                     minutes={minutes}
                                     isApproval={true}
                                 />
