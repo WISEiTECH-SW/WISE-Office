@@ -182,6 +182,7 @@ export default function ProjectById() {
                     <AttendantList
                         pm={projectInfo.managerName}
                         attendants={projectInfo.attendant}
+                        proposalAttendant={projectInfo.proposalAttendant}
                     />
                 </div>
             </div>
