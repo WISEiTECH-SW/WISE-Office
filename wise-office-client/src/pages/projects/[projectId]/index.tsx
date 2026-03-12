@@ -28,7 +28,6 @@ import { useProjectMutation } from "@/hooks/project/useProjectMutation";
 import BasePreview from "@/components/project/document/preview/BasePreview";
 import LogPreview from "@/components/project/document/preview/LogPreview";
 import MinutePreview from "@/components/project/document/preview/MinutePreview";
-import ApproveForm from "@/components/document/ApproveForm";
 import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
 
 export default function ProjectById() {
@@ -176,13 +175,7 @@ export default function ProjectById() {
                                     />
                                 );
                             case "approve":
-                                return (
-                                    <ApprovePreview
-                                        projectId={projectId}
-                                        // approveId={selectedDoc.id}
-                                        approve={data!}
-                                    />
-                                );
+                                return <ApprovePreview approve={data!} />;
                             default:
                                 return <BasePreview type="log" />;
                         }

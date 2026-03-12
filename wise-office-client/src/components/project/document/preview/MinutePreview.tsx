@@ -19,10 +19,10 @@ export default function MinutePreview({
     onEdit,
     onDelete,
 }: MinutePreviewProps) {
+    const createApprove = useApproveCreation();
     if (!minuteDetail) {
         return <BasePreview type="minute" />;
     }
-    const createApprove = useApproveCreation();
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <div className="flex flex-col p-4 md:pt-6">

@@ -1,15 +1,11 @@
-import { useApproveDetail } from "@/hooks/project/useDocuments";
 import { ApproveDetailResponse } from "@/types/document";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import BasePreview from "./BasePreview";
 import Button from "@/components/common/Button";
 interface Props {
-    projectId: number;
     approve?: ApproveDetailResponse;
 }
-export default function ApprovePreview({ projectId, approve }: Props) {
+export default function ApprovePreview({ approve }: Props) {
     if (!approve) {
         return <BasePreview type="approve" />;
     }

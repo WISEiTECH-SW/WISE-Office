@@ -1,4 +1,4 @@
-import { Save, Printer, BadgePlus, OctagonX } from "lucide-react";
+import { Save, Printer, OctagonX } from "lucide-react";
 import Button from "../common/Button";
 
 interface ActionBarProps {

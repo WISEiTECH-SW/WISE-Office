@@ -1,5 +1,4 @@
 import { useApproveDetail } from "@/hooks/project/useDocuments";
-import { ApproveDetailResponse } from "@/types/document";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";

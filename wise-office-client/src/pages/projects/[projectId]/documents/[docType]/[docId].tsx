@@ -50,7 +50,7 @@ export default function DocumentPage() {
         content: "",
     });
 
-    const [newApprove, setNewApprove] = useState<ApproveUpdateRequest>({
+    const [newApprove] = useState<ApproveUpdateRequest>({
         reportNo: "",
         writtenAt: "",
         submitAt: "",
