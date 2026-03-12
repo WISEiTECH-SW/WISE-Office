@@ -1,8 +1,10 @@
+import { ApproveCreateResonse } from "@/types/document";
 import Image from "next/image";
 import { EditableCell } from "./EditableCell";
 import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
 
+// export default function ApproveForm(data: ApproveCreateResonse) {
 export default function ApproveForm() {
     return (
         <div className="max-w-[718px] w-full mx-auto px-6 box-border">
@@ -36,7 +38,7 @@ export default function ApproveForm() {
                     <tbody>
                         <tr>
                             <td>문서번호</td>
-                            <td>WISEBM2025-111201 </td>
+                            <td>WISEBM2025-111201</td>
                             <td className="text-right">결 재</td>
                             <td className="text-center">대표이사</td>
                             <td className="text-center">전 결</td>
@@ -78,13 +80,13 @@ export default function ApproveForm() {
             </div>
 
             {/* 설명 */}
-            <p className="mt-6 pl-4 text-black-600 leading-7 text-[12px]">
+            <p className="mt-6 pl-5 pr-5 text-black-600 leading-7 text-[12px]">
                 2025년도 AI 자율제조 SDM 플랫폼 기술 개발사업 관련하여 아래와
                 같이 회의비를 지출하고자 하오니 검토 후 승인 부탁드립니다.
             </p>
 
             {/* 리스트 */}
-            <ol className="mt-6 space-y-2 pl-8 text-black-600 list-decimal text-[12px]">
+            <ol className="mt-6 space-y-2 pl-18 text-black-600 list-decimal text-[12px]">
                 <li>사업명 : 2025년도 AI 자율제조 SDM 플랫폼 기술 개발사업</li>
                 <li>
                     과제명 : 자동차 엔진 데이터 활용 MFM 기반 SDM 실증

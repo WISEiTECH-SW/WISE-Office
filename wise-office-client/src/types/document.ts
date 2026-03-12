@@ -57,3 +57,17 @@ export interface Approval {
 }
 
 export type DocType = "minute" | "approve" | "trip";
+
+export interface ApproveCreateResonse {
+    approveId: number;
+    minutesId: number;
+    approveNo: string;
+    writtenAt: string;
+    writer: string;
+    submitAt: string;
+    businessName: string;
+    title: string;
+    institution: string;
+    minutesAt: string;
+    minutePurpose: string;
+}
