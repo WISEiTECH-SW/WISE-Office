@@ -22,4 +22,7 @@ public interface MinutesAttendantEntityRepository extends JpaRepository<MinutesA
     @Query("select c.name from MinutesAttendantEntity m join m.proposalAttendantEntity p join p.companyMember c where m.minutesEntity.id = :minutesId")
     List<String> findMemberNamesByMinutesId(@Param("minutesId") long minutesId);
 
+
+    @Query("select m from MinutesAttendantEntity m join fetch m.proposalAttendantEntity p join fetch p.companyMember c where m.minutesEntity.id = :minutesId")
+    List<MinutesAttendantEntity> findAttendantsByMinutesId(@Param("minutesId") long minutesId);
 }

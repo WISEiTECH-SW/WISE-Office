@@ -22,7 +22,7 @@ public record MinutesDetailResponse(
         @Schema(type = "string", description = "사내 참석자 (ex) 이름,이름,이름 형태의 문자열 값으로 전달)") String minutesAttendants,
         @Schema(type = "string", description = "외부 참석자, 형식 X") String instAttendants,
         @Schema(type = "string", description = "작성자") String writer,
-        @Schema(type = "string", description = "회의 내용") String meetingContent
+        @Schema(type = "string", description = "회의 내용") String content //
 ){
 
     public static MinutesDetailResponse from(MinutesEntity minutes, String minutesAttendants) {

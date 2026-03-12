@@ -10,9 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
-import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
-import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
+import kr.co.wise.office.api.dto.minutes.*;
 import kr.co.wise.office.application.MinutesServiceApi;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import lombok.AllArgsConstructor;
@@ -80,6 +78,30 @@ public class MinutesController {
             @Parameter(description = "상세조회할 회의록 번호") @PathVariable(value = "minutesId") long minutesId
     ) {
         return ResponseEntity.ok(minutesServiceApi.getMinutesDetailInfo(minutesId, projectId));
+    }
+
+
+    /**
+     * 회의록 업데이트 API
+     * 해당 회의록 업데이트시 자등으로
+     * 품의서의 내용의 일부(회의 일자, 회의 목적)이 업데이트 됩니다.
+     */
+    @PatchMapping("/{minutesId}")
+    @Operation(summary = "회의록 수정", description = "회의록을 수정합니다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "수정된 회의록 데이터 전달",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = MinutesUpdateResponse.class))),
+    })
+    public ResponseEntity<MinutesDetailResponse> updateMinutes(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+            @Parameter(description = "회의록을 업데이트할 프로젝트 번호") @PathVariable(value = "projectId") long projectId,
+            @Parameter(description = "업데이트할 회의록 번호") @PathVariable(value = "minutesId") long minutesId,
+            @Parameter(description = "생성할 회의록 세부 내용") @RequestBody MinutesUpdateRequest request
+    ) {
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(minutesServiceApi.updateMinutes(projectId, loginUser.getName(), minutesId, request));
     }
 
 }

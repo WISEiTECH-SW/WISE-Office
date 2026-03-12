@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 사원 테이블
@@ -39,4 +40,18 @@ public class CompanyMemberEntity {
     @OneToMany(mappedBy = "companyMember")
     @Builder.Default
     private List<ProposalAttendantEntity> proposalAttendantEntities = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CompanyMemberEntity that = (CompanyMemberEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(team, that.team) && Objects.equals(rank, that.rank);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, team, rank);
+    }
+
 }
+

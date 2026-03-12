@@ -4,6 +4,7 @@ import kr.co.wise.office.aop.CheckProjectAuth;
 import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
 import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
 import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
+import kr.co.wise.office.api.dto.minutes.MinutesUpdateRequest;
 import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
@@ -44,7 +45,7 @@ public class MinutesServiceApi {
         // 회의 참석자 등록
         List<String> attendantNames = new ArrayList<>(Arrays.stream(request.minutesAttendants().split(",")).map(String::trim).toList());
         attendantNames.add(request.writer()); // 회의록 작성자도 추가
-        minutesAttendantsService.createMinutesAttendants(attendantNames, projectId, minutes);
+        minutesAttendantsService.createMinutesAttendants(request, projectId, minutes);
 
         return MinutesDetailResponse.from(minutes, request.minutesAttendants());
     }
@@ -55,6 +56,21 @@ public class MinutesServiceApi {
             long projectId) {
         return minutesService.getMinutesDetailInfo(minutesId, projectId);
     }
+
+
+    @CheckProjectAuth
+    @Transactional
+    public MinutesDetailResponse updateMinutes(long projectId, String loginUserEmail, long minutesId, MinutesUpdateRequest request) {
+        // 회의록 수정
+        MinutesEntity minutes = minutesService.getMinutesInfoWithProject(minutesId, projectId);
+        minutes.update(request);
+
+        // 참여 인력 수정
+        minutesAttendantsService.updateMinutesAttendants(minutes, request.minutesAttendants(), request.writer(),  projectId);
+
+        return MinutesDetailResponse.from(minutes, request.minutesAttendants());
+    }
+
 
 
 }
