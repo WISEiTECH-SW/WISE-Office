@@ -10,6 +10,7 @@ import Sidebar from "@/components/document/side-bar/SideBar";
 import { useMinutesMutation } from "@/hooks/doc/useMinutesMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { ProjectInfo } from "@/types/project";
+import { useApproveCreation } from "@/hooks/project/useDocuments";
 
 export default function DocumentPage() {
     const router = useRouter();
@@ -70,7 +71,7 @@ export default function DocumentPage() {
 
     /* ----- mutation ----- */
     const { createMinute } = useMinutesMutation();
-
+    const createApprove = useApproveCreation();
     /* ----- func ----- */
     const selectDocType = (docType: DocType) => {
         router.push(`/projects/${projectId}/documents/${docType}/${docId}`);
@@ -142,11 +143,13 @@ export default function DocumentPage() {
                     savedTime={savedTime}
                     isValid={isValid}
                     saveDoc={saveDoc}
-                    createApprove={() =>
-                        router.push(
-                            `/projects/${projectId}/documents/approve/${docId}`,
-                        )
-                    }
+                    // 추후 수정
+                    // createApprove={() =>
+                    //     createApprove.mutate({
+                    //         projectId: Number(projectId),
+                    //         minutesId: Number(docId),
+                    //     })
+                    // }
                     exit={backToProjectPage}
                 />
 

@@ -28,6 +28,7 @@ import BasePreview from "@/components/project/document/preview/BasePreview";
 import LogPreview from "@/components/project/document/preview/LogPreview";
 import MinutePreview from "@/components/project/document/preview/MinutePreview";
 import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
+import ApproveForm from "@/components/document/ApproveForm";
 
 export default function ProjectById() {
     const router = useRouter();
@@ -48,7 +49,7 @@ export default function ProjectById() {
 
     /* ----- query ----- */
     const { data: projectInfo } = useProjectDetail(projectId);
-    const { logs, minutes } = useDocumentLists(projectId);
+    const { logs, minutes, approves } = useDocumentLists(projectId);
 
     const { log, comments } = useLogDetail(
         projectId,
@@ -138,6 +139,7 @@ export default function ProjectById() {
                     docData={{
                         logList: logs.data ?? [],
                         minuteList: minutes.data ?? [],
+                        approveList: approves.data ?? [],
                     }}
                     selectedDoc={selectedDoc}
                     attending={projectInfo.attending}
@@ -172,10 +174,11 @@ export default function ProjectById() {
                                 );
                             case "approve":
                                 return (
-                                    <ApprovePreview
-                                        projectId={projectId}
-                                        approveDetail={undefined}
-                                    />
+                                    // <ApprovePreview
+                                    //     projectId={projectId}
+                                    //     approveDetail={undefined}
+                                    // />
+                                    <ApproveForm />
                                 );
                             default:
                                 return <BasePreview type="log" />;

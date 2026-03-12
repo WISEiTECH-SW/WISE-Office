@@ -85,3 +85,24 @@ export interface ApproveDetailResponse {
     minutesAt: string; // 회의일자
     minutesPurpose: string; // 회의목적
 }
+
+export interface ApproveUpdateResponse {
+    approveId: number;
+    reportNo: string; // 수정된 품의서 번호 (문서번호)
+    writtenAt: string; // 작성일자
+    writer: string; // 작성자
+    submitAt: string; // 접수일자
+}
+
+export interface ApproveUpdateRequest {
+    reportNo: string;
+    writtenAt: string;
+    submitAt: string;
+    writer: string;
+}
+
+export interface ApproveListResponse {
+    approveId: number;
+    title: string; // 문서번호
+    submitDate: string; // 접수일자
+}

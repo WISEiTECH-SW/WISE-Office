@@ -4,10 +4,14 @@ import { Log } from "@/types/log";
 import DocumentTabs from "./DocumentTabs";
 import DocumentList from "./DocumentList";
 import DocumentWriteButton from "./DocumentWriteButton";
-import { MinutesListResponse } from "@/types/document";
+import { ApproveListResponse, MinutesListResponse } from "@/types/document";
 
 interface DocumentSidebarProps {
-    docData: { logList: Log[]; minuteList: MinutesListResponse[] };
+    docData: {
+        logList: Log[];
+        minuteList: MinutesListResponse[];
+        approveList: ApproveListResponse[];
+    };
     selectedDoc: SelectedDocument | null;
     attending: boolean;
     setSelectedDoc: (document: SelectedDocument) => void;
@@ -36,6 +40,7 @@ export default function DocumentSidebar({
             onWrite("log");
         }
     };
+    console.log(docData);
 
     return (
         <div className="order-2 md:order-1 md:col-span-3 mb-6">

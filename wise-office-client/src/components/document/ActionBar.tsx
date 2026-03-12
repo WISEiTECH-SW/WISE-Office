@@ -7,7 +7,6 @@ interface ActionBarProps {
     savedTime: string | null;
     isValid: boolean;
     saveDoc: () => void;
-    createApprove: () => void;
     exit: () => void;
 }
 
@@ -17,7 +16,6 @@ export default function ActionBar({
     savedTime,
     isValid,
     saveDoc,
-    createApprove,
     exit,
 }: ActionBarProps) {
     return (
@@ -51,12 +49,12 @@ export default function ActionBar({
                 icon={<Printer className="w-4 h-4" />}
             />
 
-            <Button
+            {/* <Button
                 label="품의서 생성"
                 onClick={createApprove}
                 variant="primary"
                 icon={<BadgePlus className="w-4 h-4" />}
-            />
+            /> */}
 
             <Button
                 label="작성 취소"
