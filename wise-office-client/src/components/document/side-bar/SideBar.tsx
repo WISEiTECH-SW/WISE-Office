@@ -34,7 +34,7 @@ export default function Sidebar({ currentDoc, selectDoc }: SideBarProps) {
             />
 
             <SidebarItem
-                label="출정복명서"
+                label="출장복명서"
                 icon={<BriefcaseBusiness />}
                 isActive={isActive("trip")}
                 onClick={() => selectDoc("trip")}

@@ -22,10 +22,13 @@ export default function AttendanceModal({
     >([]);
     const [companyMemberSearchText, setCompanyMemberSearchText] = useState("");
     const handleConfirm = () => {
-        const names = selectedCompanyMembers.map(
-            (member) => `${member.name} ${member.rank}`,
-        );
+        const names = selectedCompanyMembers.map((member) => `${member.name}`);
         onConfirm(names);
+        // 작성 API에 맞게 이름만 제공
+        // const names = selectedCompanyMembers.map(
+        //     (member) => `${member.name} ${member.rank}`,
+        // );
+        // onConfirm(names);
     };
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

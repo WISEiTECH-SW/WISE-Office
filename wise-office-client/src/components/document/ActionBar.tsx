@@ -4,6 +4,7 @@ import Button from "../common/Button";
 interface ActionBarProps {
     lastSaved: boolean;
     savedTime: string | null;
+    saveDoc: () => void;
     createApprove: () => void;
     exit: () => void;
 }
@@ -11,6 +12,7 @@ interface ActionBarProps {
 export default function ActionBar({
     lastSaved,
     savedTime,
+    saveDoc,
     createApprove,
     exit,
 }: ActionBarProps) {
@@ -32,7 +34,7 @@ export default function ActionBar({
 
             <Button
                 label="저장"
-                onClick={() => {}}
+                onClick={saveDoc}
                 variant="primary"
                 icon={<Save className="w-4 h-4" />}
             />

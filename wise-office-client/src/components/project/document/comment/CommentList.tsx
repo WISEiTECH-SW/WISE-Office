@@ -22,10 +22,11 @@ export default function ProjectCommentList({
     commentList,
     onDelete,
 }: CommentListProps) {
-    const { addComment, isCommentLoading } = useCommentMutation(
-        projectId,
-        logId,
-    );
+    const { createComment, isCommentLoading } = useCommentMutation();
+
+    const handleAddComment = (commentInput: string) => {
+        createComment({ projectId, logId, commentInput });
+    };
 
     return (
         <div className="p-6 md:p-8 w-full">
@@ -38,7 +39,7 @@ export default function ProjectCommentList({
 
             {isAttending && (
                 <CommentInput
-                    onAdd={addComment}
+                    onAdd={handleAddComment}
                     isCommentLoading={isCommentLoading}
                 />
             )}

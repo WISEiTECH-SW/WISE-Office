@@ -1,38 +1,61 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createLog, patchLog, deleteLog } from "@/services/logs";
 import { LogInput } from "@/types/log";
+import {
+    toastMessage,
+    getDocumentToastMessage,
+} from "@/lib/common/toastMessage";
 
-export const useLogMutation = (projectId: number, logId: number) => {
+interface CreateLogParams {
+    projectId: number;
+    logInput: LogInput;
+}
+
+interface UpdateLogParams {
+    projectId: number;
+    logId: number;
+    logInput: LogInput;
+}
+
+interface DeleteLogParams {
+    projectId: number;
+    logId: number;
+}
+
+export const useLogMutation = () => {
     const queryClient = useQueryClient();
+
+    const invalidateLogs = (projectId: number) => {
+        queryClient.invalidateQueries({ queryKey: ["logs", projectId] });
+    };
 
     // CREATE
     const createMutation = useMutation({
-        mutationFn: (data: LogInput) => createLog(projectId, data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["logs", projectId] });
+        mutationFn: ({ projectId, logInput }: CreateLogParams) =>
+            createLog(projectId, logInput),
+        onSuccess: (_, variables) => {
+            invalidateLogs(variables.projectId);
+            toastMessage.success(getDocumentToastMessage("log", "create"));
         },
     });
 
     // UPDATE
     const updateMutation = useMutation({
-        mutationFn: (data: LogInput) => patchLog(projectId, logId, data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["logs", projectId],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ["log", logId],
-            });
+        mutationFn: ({ projectId, logId, logInput }: UpdateLogParams) =>
+            patchLog(projectId, logId, logInput),
+        onSuccess: (_, variables) => {
+            invalidateLogs(variables.projectId);
+            toastMessage.success(getDocumentToastMessage("log", "update"));
         },
     });
 
     //DELETE
     const deleteMutation = useMutation({
-        mutationFn: () => deleteLog(projectId, logId!),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["logs", projectId],
-            });
+        mutationFn: ({ projectId, logId }: DeleteLogParams) =>
+            deleteLog(projectId, logId!),
+        onSuccess: (_, variables) => {
+            invalidateLogs(variables.projectId);
+            toastMessage.success(getDocumentToastMessage("log", "delete"));
         },
     });
 

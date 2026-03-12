@@ -5,7 +5,6 @@ import type { LogInput } from "@/types/log";
 import { SelectedDocument } from "@/types/project";
 
 import { useLogMutation } from "@/hooks/project/useLogMutation";
-import { toastMessage } from "@/lib/common/toastMessage";
 import Button from "../common/Button";
 
 interface LogWriteModalProps {
@@ -23,31 +22,34 @@ export default function LogWriteModal({
     setSelectedDoc,
 }: LogWriteModalProps) {
     const isEditMode = !!initialData;
-    const { createLog, updateLog, isLogLoading } = useLogMutation(
-        projectId,
-        logId!,
-    );
-    const [formData, setFormData] = useState<LogInput>({
+
+    const [logInput, setLogInput] = useState<LogInput>({
         title: initialData?.title ?? "",
         content: initialData?.content ?? "",
     });
 
+    const { createLog, updateLog, isLogLoading } = useLogMutation();
+
     const handleSubmit = () => {
-        if (isEditMode && initialData) {
-            updateLog(formData, {
-                onSuccess: () => {
-                    toastMessage.success("로그가 수정되었습니다.");
-                    onClose();
+        if (isEditMode && initialData && logId) {
+            updateLog(
+                { projectId, logId, logInput },
+                {
+                    onSuccess: () => {
+                        onClose();
+                    },
                 },
-            });
+            );
         } else {
-            createLog(formData, {
-                onSuccess: (data) => {
-                    onClose();
-                    toastMessage.success("로그가 작성되었습니다.");
-                    setSelectedDoc({ type: "log", id: data.logId });
+            createLog(
+                { projectId, logInput },
+                {
+                    onSuccess: (data) => {
+                        onClose();
+                        setSelectedDoc({ type: "log", id: data.logId });
+                    },
                 },
-            });
+            );
         }
     };
 
@@ -80,10 +82,10 @@ export default function LogWriteModal({
                         </label>
                         <input
                             type="text"
-                            value={formData.title}
+                            value={logInput.title}
                             onChange={(e) =>
-                                setFormData({
-                                    ...formData,
+                                setLogInput({
+                                    ...logInput,
                                     title: e.target.value,
                                 })
                             }
@@ -98,10 +100,10 @@ export default function LogWriteModal({
                             내용
                         </label>
                         <textarea
-                            value={formData.content}
+                            value={logInput.content}
                             onChange={(e) =>
-                                setFormData({
-                                    ...formData,
+                                setLogInput({
+                                    ...logInput,
                                     content: e.target.value,
                                 })
                             }
@@ -119,7 +121,7 @@ export default function LogWriteModal({
                         variant="primary"
                         isLoading={isLogLoading}
                         disabled={
-                            !formData.title.trim() || !formData.content.trim()
+                            !logInput.title.trim() || !logInput.content.trim()
                         }
                     />
                     <Button
