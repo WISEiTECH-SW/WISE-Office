@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import {
@@ -41,7 +41,16 @@ export default function ProjectById() {
     const [selectedDoc, setSelectedDoc] = useState<SelectedDocument | null>(
         null,
     );
+    useEffect(() => {
+        const { type, docId } = router.query;
 
+        if (type && docId) {
+            setSelectedDoc({
+                type: type as DocumentType,
+                id: Number(docId),
+            });
+        }
+    }, [router.query]);
     // modal
     const [logModal, setLogModal] = useState<LogModalState>(null);
     const [deleteTarget, setDeleteTarget] = useState<DeleteModalState>(null);
@@ -175,7 +184,12 @@ export default function ProjectById() {
                                     />
                                 );
                             case "approve":
-                                return <ApprovePreview approve={data} />;
+                                return (
+                                    <ApprovePreview
+                                        projectId={projectId}
+                                        approve={data}
+                                    />
+                                );
                             default:
                                 return <BasePreview type="log" />;
                         }

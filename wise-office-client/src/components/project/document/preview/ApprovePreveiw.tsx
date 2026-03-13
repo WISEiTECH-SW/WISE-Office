@@ -2,10 +2,13 @@ import { ApproveDetailResponse } from "@/types/document";
 import Image from "next/image";
 import BasePreview from "./BasePreview";
 import Button from "@/components/common/Button";
+import { useRouter } from "next/router";
 interface Props {
+    projectId: number;
     approve?: ApproveDetailResponse;
 }
-export default function ApprovePreview({ approve }: Props) {
+export default function ApprovePreview({ projectId, approve }: Props) {
+    const router = useRouter();
     if (!approve) {
         return <BasePreview type="approve" />;
     }
@@ -16,18 +19,24 @@ export default function ApprovePreview({ approve }: Props) {
                 <div className="flex flex-row gap-4">
                     <Button
                         label="출력하기"
-                        onClick={() => {}}
+                        onClick={() => {
+                            window.print();
+                        }}
                         variant="secondary"
                     />
                     <Button
                         label="수정하기"
-                        onClick={() => {}}
+                        onClick={() => {
+                            router.push(
+                                `/projects/${projectId}/documents/approve/${approve.approveId}`,
+                            );
+                        }}
                         variant="primary"
                     />
                 </div>
 
                 {/* 품의서 */}
-                <div className="max-w-[718px] w-full mx-auto px-6 box-border bg-white rounded-lg mt-6">
+                <div className="max-w-[718px] w-full mx-auto p-12 box-border bg-white rounded-lg mt-6">
                     {/* 제목 */}
                     <div className="flex flex-col items-center mt-6">
                         <div className="inline-block relative">
@@ -47,7 +56,7 @@ export default function ApprovePreview({ approve }: Props) {
 
                     {/* 상단 정보 */}
                     <div className="pl-4">
-                        <table className="w-full text-[13px] table-fixed border-collapse">
+                        <table className="w-full text-[16px] table-fixed border-collapse">
                             <colgroup>
                                 <col className="w-[90px]" />
                                 <col />
@@ -99,7 +108,7 @@ export default function ApprovePreview({ approve }: Props) {
                     </div>
 
                     {/* 제목 */}
-                    <div className="border-b border-black mt-5 mb-5 pt-2 pl-2 text-[14px]">
+                    <div className="border-b border-black mt-5 mb-5 pt-2 pl-2 text-[16px]">
                         <span className="font-semibold mr-2 tracking-[6px]">
                             제 목:
                         </span>
@@ -109,13 +118,13 @@ export default function ApprovePreview({ approve }: Props) {
                     </div>
 
                     {/* 설명 */}
-                    <p className="mt-6 pl-5 pr-5 text-black-600 leading-7 text-[12px]">
+                    <p className="mt-6 pl-5 pr-5 text-black-600 leading-7 text-[15px]">
                         {approve.title} 관련하여 아래와 같이 회의비를 지출하고자
                         하오니 검토 후 승인 부탁드립니다.
                     </p>
 
                     {/* 리스트 */}
-                    <ol className="mt-6 space-y-2 pl-16 text-black-600 list-decimal text-[12px]">
+                    <ol className="mt-6 space-y-2 pl-16 text-black-600 list-decimal text-[15px]">
                         <li>사업명 :{approve.businessName}</li>
 
                         <li>과제명 :{approve.title}</li>
@@ -126,7 +135,7 @@ export default function ApprovePreview({ approve }: Props) {
                     </ol>
 
                     {/* 끝 */}
-                    <div className="text-center mt-24 text-gray-600">
+                    <div className="text-center mt-24 text-gray-600  text-[15px]">
                         - 끝 -
                     </div>
 

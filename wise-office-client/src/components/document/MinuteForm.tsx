@@ -1,57 +1,27 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { EditableCell } from "./EditableCell";
 import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
-import AttendanceModal from "../modal/AttendanceModal";
 import ApprovalSeal from "./ApprovalSeal";
 import { MinutesCreateRequest } from "@/types/document";
-import { ProjectInfo } from "@/types/project";
 import { formatMeetingDate, formatMeetingTime } from "@/utils/dateToString";
 import DateTimeModal from "../modal/DateTimeModal";
 
 interface MinuteFormProps {
-    projectInfo: ProjectInfo | undefined;
     form: MinutesCreateRequest;
     setForm: React.Dispatch<React.SetStateAction<MinutesCreateRequest>>;
     projectName: string;
+    openAttendanceModal: () => void;
 }
 
 export default function MinuteForm({
-    projectInfo,
     form,
     setForm,
     projectName,
+    openAttendanceModal,
 }: MinuteFormProps) {
-    const [attendance, setAttendance] = useState<string | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isDateTimeModalOpen, setIsDateTimeModalOpen] =
         useState<boolean>(false);
-
-    /* ---- func ---- */
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => setIsModalOpen(false);
-
-    const handleSelectAttendees = (selectedList: string[]) => {
-        const selectAttendance = selectedList.join(", ");
-
-        setAttendance(selectAttendance);
-
-        setForm((prev) => ({
-            ...prev,
-            minutesAttendants: selectAttendance,
-            instAttendants: selectAttendance,
-        }));
-
-        closeModal();
-    };
-
-    /* ---- hook ---- */
-    useEffect(() => {
-        setAttendance(form.instAttendants);
-    }, [form]);
 
     return (
         <div className="items-center">
@@ -157,31 +127,61 @@ export default function MinuteForm({
                         <LabelCell label="참 석 자" />
                         <td
                             colSpan={4}
-                            onClick={openModal}
-                            className="border border-black px-[10px] py-2 align-middle text-[13.5px]
-                                min-h-[32px] cursor-pointer transition-colors
-                                hover:bg-blue-50 active:bg-gray-200    
-                                text-left text-gray-700  "
+                            className="border border-black px-[10px] py-2 text-[13.5px]"
                         >
-                            {attendance ? (
-                                <span>{attendance}</span>
-                            ) : (
-                                <span className="text-gray-400 italic">
-                                    참석자를 선택하세요
-                                </span>
-                            )}
+                            <div className="flex flex-col gap-2">
+                                {/* 외부기관 참석자 */}
+                                <input
+                                    type="text"
+                                    placeholder="기관명: 참석자1, 참석자2,... 와 같이 외부기관 참석자를 입력해 주세요."
+                                    value={form.instAttendants}
+                                    onChange={(e) =>
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            instAttendants: e.target.value,
+                                        }))
+                                    }
+                                    className="w-full outline-none text-[13.5px] placeholder-gray-400"
+                                />
+
+                                {/* 내부 참석자 */}
+                                <div
+                                    onClick={openAttendanceModal}
+                                    className="cursor-pointer hover:bg-blue-50 px-1 py-[2px]"
+                                >
+                                    {form.minutesAttendants ? (
+                                        <span>
+                                            <span className="font-medium">
+                                                위세아이텍:
+                                            </span>{" "}
+                                            {form.minutesAttendants}
+                                        </span>
+                                    ) : (
+                                        <span className="text-gray-400 italic">
+                                            <span className="font-medium text-gray-600">
+                                                위세아이텍:
+                                            </span>{" "}
+                                            우측 리스트에서 참석자를 선택하세요
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     <tr>
                         <LabelCell label="작 성 자" />
-                        <EditableCell
-                            placeholder="작성자 이름을 입력하세요"
+                        <td
                             colSpan={4}
-                            value={form.writer}
-                            onChange={(v) =>
-                                setForm((prev) => ({ ...prev, writer: v }))
-                            }
-                        />
+                            className="border border-black px-[10px] py-2 text-[13.5px]"
+                        >
+                            {form.writer ? (
+                                <span>{form.writer}</span>
+                            ) : (
+                                <span className="text-gray-400 italic">
+                                    우측 리스트에서 작성자를 선택하세요
+                                </span>
+                            )}
+                        </td>
                     </tr>
                     <tr className="h-4"></tr>
                 </tbody>
@@ -196,15 +196,6 @@ export default function MinuteForm({
                 value={form.content}
                 onChange={(v) => setForm((prev) => ({ ...prev, content: v }))}
             />
-
-            {isModalOpen && (
-                <AttendanceModal
-                    isOpen={isModalOpen}
-                    onClose={closeModal}
-                    onConfirm={handleSelectAttendees}
-                    attendants={projectInfo?.proposalAttendant}
-                />
-            )}
 
             {isDateTimeModalOpen && (
                 <DateTimeModal

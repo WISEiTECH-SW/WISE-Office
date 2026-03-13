@@ -1,43 +1,28 @@
-import { useApproveDetail } from "@/hooks/project/useDocuments";
+import { ApproveDetailResponse, ApproveUpdateRequest } from "@/types/document";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+interface ApproveFormProps {
+    approve: ApproveDetailResponse | undefined;
+    newApprove: ApproveUpdateRequest;
+    setNewApprove: React.Dispatch<React.SetStateAction<ApproveUpdateRequest>>;
+}
 
-export default function ApproveForm() {
-    const router = useRouter();
-    const { projectId, docId } = router.query;
-    const { data } = useApproveDetail(
-        router.isReady ? Number(projectId) : undefined,
-        router.isReady ? Number(docId) : undefined,
-    );
-
-    const [form, setForm] = useState({
-        approveNo: "",
-        writtenAt: "",
-        writer: "",
-        submitAt: "",
-        businessName: "",
-        title: "",
-        institution: "",
-        minutesAt: "",
-    });
-
+export default function ApproveForm({
+    approve,
+    newApprove,
+    setNewApprove,
+}: ApproveFormProps) {
     useEffect(() => {
-        if (!data) return;
+        if (!approve) return;
 
-        setForm({
-            approveNo: data.approveNo,
-            writtenAt: data.writtenAt,
-            writer: data.writer,
-            submitAt: data.submitAt,
-            businessName: data.businessName,
-            title: data.title,
-            institution: data.institution,
-            minutesAt: data.minutesAt,
+        setNewApprove({
+            reportNo: approve.approveNo ?? "",
+            writer: approve.writer ?? "",
         });
-    }, [data]);
-    const handleChange = (key: keyof typeof form, value: string) => {
-        setForm((prev) => ({
+    }, [approve]);
+
+    const handleChange = (key: keyof typeof newApprove, value: string) => {
+        setNewApprove((prev) => ({
             ...prev,
             [key]: value,
         }));
@@ -63,7 +48,7 @@ export default function ApproveForm() {
 
             {/* 상단 정보 */}
             <div className="pl-4">
-                <table className="w-full text-[13px] table-fixed border-collapse">
+                <table className="w-full text-[16px] table-fixed border-collapse">
                     <colgroup>
                         <col className="w-[90px]" />
                         <col />
@@ -76,12 +61,9 @@ export default function ApproveForm() {
                             <td>문서번호</td>
                             <td>
                                 <input
-                                    value={form.approveNo}
+                                    value={newApprove.reportNo}
                                     onChange={(e) =>
-                                        handleChange(
-                                            "approveNo",
-                                            e.target.value,
-                                        )
+                                        handleChange("reportNo", e.target.value)
                                     }
                                     className="w-full outline-none"
                                 />
@@ -92,18 +74,7 @@ export default function ApproveForm() {
                         </tr>
                         <tr>
                             <td className="py-1">작성일자</td>
-                            <td className="py-1">
-                                <input
-                                    value={form.writtenAt}
-                                    onChange={(e) =>
-                                        handleChange(
-                                            "writtenAt",
-                                            e.target.value,
-                                        )
-                                    }
-                                    className="w-full outline-none"
-                                />
-                            </td>
+                            <td className="py-1">{approve?.writtenAt}</td>
                             <td className="py-1"></td>
                             <td className="py-1 text-center">과제책임자</td>
                             <td className="py-1"></td>
@@ -119,7 +90,7 @@ export default function ApproveForm() {
                             <td className="py-1">품 의 자</td>
                             <td className="py-1">
                                 <input
-                                    value={form.writer}
+                                    value={newApprove.writer}
                                     onChange={(e) =>
                                         handleChange("writer", e.target.value)
                                     }
@@ -129,13 +100,7 @@ export default function ApproveForm() {
                             <td className="py-1 text-right">접 수</td>
                             <td className="py-1 text-center">일 자</td>
                             <td className="py-1 text-center">
-                                <input
-                                    value={form.submitAt}
-                                    onChange={(e) =>
-                                        handleChange("submitAt", e.target.value)
-                                    }
-                                    className="text-center outline-none"
-                                />
+                                {approve?.submitAt}
                             </td>
                         </tr>
                     </tbody>
@@ -143,68 +108,36 @@ export default function ApproveForm() {
             </div>
 
             {/* 제목 */}
-            <div className="border-b border-black mt-5 mb-5 pt-2 pl-2 text-[14px]">
+            <div className="border-b border-black mt-5 mb-5 pt-2 pl-2 text-[16px]">
                 <span className="font-semibold mr-2 tracking-[6px]">
                     제 목:
                 </span>
                 <span className="font-semibold text-black-600">
-                    {form.title} 회의비 지출의 건
+                    {approve?.title} 회의비 지출의 건
                 </span>
             </div>
 
             {/* 설명 */}
-            <p className="mt-6 pl-5 pr-5 text-black-600 leading-7 text-[12px]">
-                {form.title} 관련하여 아래와 같이 회의비를 지출하고자 하오니
+            <p className="mt-6 pl-5 pr-5 text-black-600 leading-7 text-[15px]">
+                {approve?.title} 관련하여 아래와 같이 회의비를 지출하고자 하오니
                 검토 후 승인 부탁드립니다.
             </p>
 
             {/* 리스트 */}
-            <ol className="mt-6 space-y-2 pl-18 text-black-600 list-decimal text-[12px]">
-                <li>
-                    사업명 :
-                    <input
-                        value={form.businessName}
-                        onChange={(e) =>
-                            handleChange("businessName", e.target.value)
-                        }
-                        className="ml-2 outline-none"
-                    />
-                </li>
+            <ol className="mt-6 space-y-2 pl-18 text-black-600 list-decimal text-[15px]">
+                <li>사업명 : {approve?.businessName}</li>
 
-                <li>
-                    과제명 :
-                    <input
-                        value={form.title}
-                        onChange={(e) => handleChange("title", e.target.value)}
-                        className="ml-2 outline-none"
-                    />
-                </li>
+                <li>과제명 : {approve?.title}</li>
 
-                <li>
-                    전담기관 :
-                    <input
-                        value={form.institution}
-                        onChange={(e) =>
-                            handleChange("institution", e.target.value)
-                        }
-                        className="ml-2 outline-none"
-                    />
-                </li>
+                <li>전담기관 :{approve?.institution}</li>
 
-                <li>
-                    회의 일시 :
-                    <input
-                        value={form.minutesAt}
-                        onChange={(e) =>
-                            handleChange("minutesAt", e.target.value)
-                        }
-                        className="ml-2 outline-none"
-                    />
-                </li>
+                <li>회의 일시 : {approve?.minutesAt}</li>
             </ol>
 
             {/* 끝 */}
-            <div className="text-center mt-24 text-gray-600">- 끝 -</div>
+            <div className="text-center mt-24 text-gray-600  text-[15px]">
+                - 끝 -
+            </div>
 
             {/* 로고 */}
             <div className="flex justify-end mt-60">

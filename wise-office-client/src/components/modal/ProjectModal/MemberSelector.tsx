@@ -58,20 +58,18 @@ export default function MemberSelector({
                 <h3 className="font-semibold mb-2">수행 인원</h3>
 
                 {/* 선택된 수행 인원 */}
-                {selectedMembers.length > 0 && (
-                    <div className="border border-gray-300 rounded-md h-40 mb-3 p-2 overflow-y-auto">
-                        {selectedMembers.map((member) => (
-                            <div
-                                key={member.memberId}
-                                className="flex justify-between"
-                            >
-                                <span>
-                                    {member.name} {member.rank}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                <div className="border border-gray-300 rounded-md h-40 mb-3 p-2 overflow-y-auto">
+                    {selectedMembers.map((member) => (
+                        <div
+                            key={member.memberId}
+                            className="flex justify-between"
+                        >
+                            <span>
+                                {member.name} {member.rank}
+                            </span>
+                        </div>
+                    ))}
+                </div>
                 <p className="h-2 ml-1 text-red-500 text-xs mt-1">
                     {errors.selectedMembers}{" "}
                 </p>

@@ -15,11 +15,38 @@ import Sidebar from "@/components/document/side-bar/SideBar";
 import { useMinutesMutation } from "@/hooks/doc/useMinutesMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { ProjectInfo } from "@/types/project";
-import { useApproveUpdate } from "@/hooks/project/useDocuments";
+import {
+    useApproveDetail,
+    useApproveUpdate,
+} from "@/hooks/project/useDocuments";
+import AttendanceModal from "@/components/modal/AttendanceModal";
 
 export default function DocumentPage() {
     const router = useRouter();
     const { docType } = router.query;
+
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+    /* ---- func ---- */
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleSelectAttendees = (data: {
+        attendants: string[];
+        writer: string;
+    }) => {
+        const selectAttendance = data.attendants.join(", ");
+
+        setForm((prev) => ({
+            ...prev,
+            minutesAttendants: selectAttendance,
+            writer: data.writer,
+        }));
+
+        closeModal();
+    };
 
     const projectId = Number(
         typeof router.query.projectId === "string" ? router.query.projectId : 0,
@@ -50,24 +77,25 @@ export default function DocumentPage() {
         content: "",
     });
 
-    const [newApprove] = useState<ApproveUpdateRequest>({
+    const [newApprove, setNewApprove] = useState<ApproveUpdateRequest>({
         reportNo: "",
-        writtenAt: "",
-        submitAt: "",
         writer: "",
     });
 
     const isValid =
-        form.host.trim() !== "" &&
-        form.minutesDate.trim() !== "" &&
-        form.startTime.trim() !== "" &&
-        form.endTime.trim() !== "" &&
-        form.location.trim() !== "" &&
-        form.purpose.trim() !== "" &&
-        form.minutesAttendants.trim() !== "" &&
-        form.instAttendants.trim() !== "" &&
-        form.writer.trim() !== "" &&
-        form.content.trim() !== "";
+        docType === "minute"
+            ? (form.host ?? "").trim() !== "" &&
+              (form.minutesDate ?? "").trim() !== "" &&
+              (form.startTime ?? "").trim() !== "" &&
+              (form.endTime ?? "").trim() !== "" &&
+              (form.location ?? "").trim() !== "" &&
+              (form.purpose ?? "").trim() !== "" &&
+              (form.minutesAttendants ?? "").trim() !== "" &&
+              (form.instAttendants ?? "").trim() !== "" &&
+              (form.writer ?? "").trim() !== "" &&
+              (form.content ?? "").trim() !== ""
+            : (newApprove.reportNo ?? "").trim() !== "" &&
+              (newApprove.writer ?? "").trim() !== "";
 
     /* ----- query ----- */
     const queryClient = useQueryClient();
@@ -80,7 +108,10 @@ export default function DocumentPage() {
         projectId,
         docType === "minute" ? docId : null,
     ]);
-
+    const { data: approveDetail } = useApproveDetail(
+        router.isReady ? Number(projectId) : undefined,
+        router.isReady ? Number(docId) : undefined,
+    );
     /* ----- mutation ----- */
     const { createMinute } = useMinutesMutation();
     const approveUpdate = useApproveUpdate();
@@ -92,6 +123,7 @@ export default function DocumentPage() {
     const backToProjectPage = () => router.push(`/projects/${projectId}`);
 
     const saveDoc = () => {
+        if (!router.isReady) return;
         if (isNew) {
             createMinute(
                 { projectId, newMinute: form },
@@ -99,11 +131,14 @@ export default function DocumentPage() {
             );
         } else {
             // 수정로직
-            approveUpdate.mutate({
-                projectId,
-                approveId: Number(docId),
-                request: newApprove,
-            });
+            if (docType === "approve") {
+                approveUpdate.mutate({
+                    projectId,
+                    approveId: Number(docId),
+                    request: newApprove,
+                });
+            } else if (docType === "minute") {
+            }
         }
     };
 
@@ -170,9 +205,9 @@ export default function DocumentPage() {
                     exit={backToProjectPage}
                 />
 
-                {/* Paper */}
                 <div className="flex-1 p-8">
-                    <div className="flex justify-center">
+                    <div className="flex justify-center gap-10">
+                        {/* Paper */}
                         <div
                             className="bg-white w-full max-w-[720px] min-h-[1020px] px-16 py-8 rounded-sm transition-opacity duration-200"
                             style={{
@@ -184,7 +219,6 @@ export default function DocumentPage() {
                             <div className="print-area">
                                 {currentDoc == "minute" && (
                                     <MinuteForm
-                                        projectInfo={projectInfo}
                                         projectName={
                                             projectInfo
                                                 ? projectInfo.projectTitle
@@ -192,11 +226,38 @@ export default function DocumentPage() {
                                         }
                                         form={form}
                                         setForm={setForm}
+                                        openAttendanceModal={openModal}
                                     />
                                 )}
-                                {currentDoc === "approve" && <ApproveForm />}
+                                {currentDoc === "approve" && (
+                                    <ApproveForm
+                                        approve={approveDetail}
+                                        newApprove={newApprove}
+                                        setNewApprove={setNewApprove}
+                                    />
+                                )}
                             </div>
                         </div>
+
+                        {/* Attendance Modal */}
+                        {docType === "minute" && isModalOpen && (
+                            <div className="w-[320px] shrink-0">
+                                <AttendanceModal
+                                    isOpen={isModalOpen}
+                                    onClose={closeModal}
+                                    onConfirm={handleSelectAttendees}
+                                    attendants={projectInfo?.proposalAttendant}
+                                    selectedNames={
+                                        form.minutesAttendants
+                                            ? form.minutesAttendants
+                                                  .split(", ")
+                                                  .map((n) => n.trim())
+                                            : []
+                                    }
+                                    selectedWriter={form.writer}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>
