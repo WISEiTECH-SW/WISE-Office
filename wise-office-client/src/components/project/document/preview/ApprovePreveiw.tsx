@@ -8,10 +8,10 @@ interface Props {
     approve?: ApproveDetailResponse;
 }
 export default function ApprovePreview({ projectId, approve }: Props) {
+    const router = useRouter();
     if (!approve) {
         return <BasePreview type="approve" />;
     }
-    const router = useRouter();
     return (
         <div className=" shadow-sm">
             <div className="flex flex-col p-4 md:pt-6">
