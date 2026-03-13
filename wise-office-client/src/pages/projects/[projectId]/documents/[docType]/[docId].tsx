@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import {
     ApproveUpdateRequest,
     DocType,
     MinutesCreateRequest,
     MinutesDetail,
 } from "@/types/document";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-import MinuteForm from "@/components/document/MinuteForm";
 import ApproveForm from "@/components/document/ApproveForm";
+import MinuteForm from "@/components/document/MinuteForm";
 
 import ActionBar from "@/components/document/ActionBar";
 import Sidebar from "@/components/document/side-bar/SideBar";
+import AttendanceModal from "@/components/modal/AttendanceModal";
 import { useMinutesMutation } from "@/hooks/doc/useMinutesMutation";
-import { useQueryClient } from "@tanstack/react-query";
-import { ProjectInfo } from "@/types/project";
 import {
     useApproveDetail,
     useApproveUpdate,
 } from "@/hooks/project/useDocuments";
-import AttendanceModal from "@/components/modal/AttendanceModal";
+import { ProjectInfo } from "@/types/project";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function DocumentPage() {
     const router = useRouter();
@@ -56,7 +56,7 @@ export default function DocumentPage() {
         typeof router.query.docId === "string" ? router.query.docId : 0,
     );
 
-    const isNew = docId === 0 ? true : false;
+    const isNew = docId === 0;
 
     /* ----- useState ----- */
     const [currentDoc, setCurrentDoc] = useState<DocType>("minute");
@@ -113,14 +113,27 @@ export default function DocumentPage() {
         router.isReady ? Number(docId) : undefined,
     );
     /* ----- mutation ----- */
-    const { createMinute } = useMinutesMutation();
+    const { createMinute, updateMinute } = useMinutesMutation();
     const approveUpdate = useApproveUpdate();
+
     /* ----- func ----- */
-    const selectDocType = (docType: DocType) => {
-        router.push(`/projects/${projectId}/documents/${docType}/${docId}`);
+    const selectDocType = (nextDocType: DocType) => {
+        router.push(`/projects/${projectId}/documents/${nextDocType}/${docId}`);
     };
 
-    const backToProjectPage = () => router.push(`/projects/${projectId}`);
+    const backToProjectPage = (selectedDoc?: {
+        type: "minute" | "approve" | "log";
+        id: number;
+    }) => {
+        if (!selectedDoc) {
+            router.push(`/projects/${projectId}`);
+            return;
+        }
+
+        router.push(
+            `/projects/${projectId}?selectedType=${selectedDoc.type}&selectedId=${selectedDoc.id}`,
+        );
+    };
 
     const saveDoc = () => {
         if (!router.isReady) return;
@@ -129,16 +142,34 @@ export default function DocumentPage() {
                 { projectId, newMinute: form },
                 { onSuccess: () => backToProjectPage() },
             );
-        } else {
-            // 수정로직
-            if (docType === "approve") {
-                approveUpdate.mutate({
+            return;
+        }
+
+        if (currentDoc === "minute") {
+            updateMinute(
+                {
                     projectId,
-                    approveId: Number(docId),
-                    request: newApprove,
-                });
-            } else if (docType === "minute") {
-            }
+                    minutesId: Number(docId),
+                    request: form,
+                },
+                {
+                    onSuccess: () =>
+                        backToProjectPage({
+                            type: "minute",
+                            id: Number(docId),
+                        }),
+                },
+            );
+            return;
+        }
+
+        if (docType === "approve") {
+            approveUpdate.mutate({
+                projectId,
+                approveId: Number(docId),
+                request: newApprove,
+            });
+        } else if (docType === "minute") {
         }
     };
 
@@ -169,16 +200,16 @@ export default function DocumentPage() {
             } = minuteDetail;
 
             setForm({
-                host,
-                minutesDate,
-                startTime,
-                endTime,
-                location,
-                purpose,
-                minutesAttendants,
-                instAttendants,
-                writer,
-                content, // 필드명 불일치, 서버 dto 수정 예정
+                host: host ?? "",
+                minutesDate: minutesDate ?? "",
+                startTime: startTime ?? "",
+                endTime: endTime ?? "",
+                location: location ?? "",
+                purpose: purpose ?? "",
+                minutesAttendants: minutesAttendants ?? "",
+                instAttendants: instAttendants ?? "",
+                writer: writer ?? "",
+                content: content ?? "",
             });
 
             setSavedTime("MM/DD HH:MM");
@@ -195,13 +226,6 @@ export default function DocumentPage() {
                     savedTime={savedTime}
                     isValid={isValid}
                     saveDoc={saveDoc}
-                    // 추후 수정
-                    // createApprove={() =>
-                    //     createApprove.mutate({
-                    //         projectId: Number(projectId),
-                    //         minutesId: Number(docId),
-                    //     })
-                    // }
                     exit={backToProjectPage}
                 />
 
@@ -217,7 +241,7 @@ export default function DocumentPage() {
                             }}
                         >
                             <div className="print-area">
-                                {currentDoc == "minute" && (
+                                {currentDoc === "minute" && (
                                     <MinuteForm
                                         projectName={
                                             projectInfo

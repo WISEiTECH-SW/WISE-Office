@@ -51,3 +51,28 @@ export async function getMinute(
 
     return res.data;
 }
+
+export async function updateMinute(
+    projectId: number,
+    minutesId: number,
+    minutesUpdateRequest: MinutesCreateRequest,
+): Promise<MinutesDetail> {
+    const res = await api.patch(
+        `/projects/${projectId}/minutes/${minutesId}`,
+        minutesUpdateRequest,
+    );
+
+    return res.data;
+}
+
+/**
+ * 특정 project의 특정 회의록 삭제 함수
+ * @param projectId 프로젝트 ID
+ * @param minutesId 회의록 ID
+ */
+export async function deleteMinute(
+    projectId: number,
+    minutesId: number,
+): Promise<void> {
+    await api.delete(`/projects/${projectId}/minutes/${minutesId}`);
+}
