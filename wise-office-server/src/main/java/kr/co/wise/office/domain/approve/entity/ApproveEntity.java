@@ -3,7 +3,6 @@ package kr.co.wise.office.domain.approve.entity;
 import jakarta.persistence.*;
 import kr.co.wise.office.api.dto.approve.ApproveUpdateRequest;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
-import kr.co.wise.office.util.DateUtil;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -74,8 +73,13 @@ public class ApproveEntity {
 
     public void updateApprove(ApproveUpdateRequest request) {
         this.reportNo = request.reportNo();
-        this.writeDate = LocalDate.parse(request.writtenAt(), DateUtil.writtenAtDateFormatter);
-        this.submitDate = LocalDate.parse(request.submitAt(), DateUtil.writtenAtDateFormatter);
         this.writer = request.writer();
     }
+
+    public void updateApprove(MinutesEntity minutes, LocalDate submitAt) {
+        this.writeDate = submitAt;
+        this.submitDate = submitAt;
+        this.writer = minutes.getWriter();
+    }
+
 }

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +48,19 @@ public class ApproveService {
     public ApproveEntity getApproveWithMinutes(long approveId) {
         return approveEntityRepository.findByApproveIdWithMinutes(approveId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_APPROVE));
+    }
+
+    public Optional<ApproveEntity> findByMinutesIdAndProjectId(long minutesId, long projectId) {
+        return approveEntityRepository.findByMinutesIdAndProjectId(minutesId, projectId);
+    }
+
+    public void deleteApprove(long projectId, long minutesId) {
+        Optional<ApproveEntity> approveEntity = approveEntityRepository.findByMinutesIdAndProjectId(minutesId, projectId);
+        // 생성된 품의서가 없다면 삭제 미진행
+        if (approveEntity.isEmpty()) {
+            return;
+        }
+        ApproveEntity approve = approveEntity.get();
+        approveEntityRepository.delete(approve);
     }
 }

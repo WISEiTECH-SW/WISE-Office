@@ -22,7 +22,7 @@ public record ApproveDetailResponse(
         @Schema(type = "string", description = "회의 일시") String minutesAt,
         @Schema(type = "string", description = "회의 목적") String minutesPurpose
 ) {
-    public static ApproveDetailResponse from(MinutesEntity minutesEntity, ApproveEntity approve) {
+    public static ApproveDetailResponse of(MinutesEntity minutesEntity, ApproveEntity approve) {
         return ApproveDetailResponse
                 .builder()
                 .approveId(approve.getId())

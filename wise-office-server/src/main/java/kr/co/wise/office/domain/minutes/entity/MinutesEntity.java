@@ -2,13 +2,16 @@ package kr.co.wise.office.domain.minutes.entity;
 
 import jakarta.persistence.*;
 import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
+import kr.co.wise.office.api.dto.minutes.MinutesUpdateRequest;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.approve.entity.ApproveEntity;
 import kr.co.wise.office.domain.minutesattendant.entity.MinutesAttendantEntity;
 import kr.co.wise.office.util.DateUtil;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.List;
 /**
  *  회의록 테이블
  */
+@Slf4j
 @Entity
 @Getter
 @Builder
@@ -80,6 +84,10 @@ public class MinutesEntity {
     @Column(name = "minutes_number")
     private String minutesNumber;
 
+    // 회의록 작성 시간
+    @Column(name =  "written_at", precision = 0)
+    private LocalDateTime writtenAt;
+
     @OneToMany(mappedBy = "minutesEntity")
     @Builder.Default
     private List<MinutesAttendantEntity> minutesAttendantEntities = new ArrayList<>();
@@ -123,6 +131,17 @@ public class MinutesEntity {
                 .build();
     }
 
+    public void update(MinutesUpdateRequest request) {
+        this.host = request.host();
+        this.minutesDate = request.minutesDate();
+        this.startTime = request.startTime();
+        this.endTime = request.endTime();
+        this.location = request.location();
+        this.purpose = request.purpose();
+        this.instAttendants = request.instAttendants();
+        this.writer = request.writer();
+        this.meetingContent = request.content();
+    }
 
     /**
      * 회의록 번호 만드는 메소드
@@ -133,5 +152,12 @@ public class MinutesEntity {
         String formattedNumber = String.format("%02d", id);
         return prefix + formattedDate + formattedNumber;
     }
+
+    @PrePersist
+    @PreUpdate
+    public void saveTime(){
+        this.writtenAt = LocalDateTime.now().withSecond(0).withNano(0);
+    }
+
 
 }
