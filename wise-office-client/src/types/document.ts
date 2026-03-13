@@ -43,6 +43,7 @@ export interface MinutesListResponse {
     minutesId: number;
     title: string;
     minutesAt: string;
+    writer: string;
 }
 
 export interface MinutesDetail {
