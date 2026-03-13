@@ -84,7 +84,6 @@ export default function MinutePreview() {
                 className="w-full border border-t-0 border-black p-4 text-sm leading-relaxed 
                         text-slate-800 resize-none overflow-hidden focus:outline-none rounded-b min-h-[340px]"
             />
-            {/* <ReadableCell colSpan={1} value={minutesInfo.meetingContent} /> */}
         </div>
     );
 }

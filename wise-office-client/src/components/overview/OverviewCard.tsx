@@ -58,7 +58,7 @@ export default function OverviewCard({ minutes, isApproval }: Props) {
             {/* 버튼 */}
             <div className="flex justify-between gap-2">
                 <PreviewButton minutesInfo={minutesInfo} />
-                <PrintButton />
+                <PrintButton minutesInfo={minutesInfo} />
             </div>
         </div>
     );

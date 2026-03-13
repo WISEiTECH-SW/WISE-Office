@@ -26,16 +26,21 @@ export default function Overview() {
             {isOpen && (
                 <div
                     onClick={onClose}
-                    className="fixed inset-0 bg-black/50 flex flex-col items-center justify-center z-1000 overflow-y-auto"
+                    className="fixed inset-0 bg-black/50 flex justify-center overflow-y-auto z-1000"
                 >
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        className="absolute translate-y-1/3 pb-24"
+                        className="absolute translate-y-1/6 pb-24"
                     >
                         <PreviewModal />
                     </div>
                 </div>
             )}
+
+            {/* print용 DOM (항상 존재하지만 화면에서는 숨김) */}
+            <div className="hidden print:block">
+                <PreviewModal />
+            </div>
         </div>
     );
 }

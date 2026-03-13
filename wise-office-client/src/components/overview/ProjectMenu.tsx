@@ -34,8 +34,6 @@ export default function ProjectMenu() {
         [groupByYear],
     );
 
-    console.log(groupByYear);
-
     return (
         <aside className="w-72">
             <ul>
