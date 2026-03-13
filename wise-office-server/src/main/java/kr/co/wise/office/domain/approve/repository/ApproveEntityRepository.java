@@ -29,7 +29,7 @@ public interface ApproveEntityRepository extends JpaRepository<ApproveEntity, Lo
             where m.id in :minutesIds
             order by a.writeDate desc, a.id desc
             """)
-    List<ApproveEntity> findByMinutesIdsAndWriteDateBetween(
+    List<ApproveEntity> findByMinutesIds(
             @Param("minutesIds") Collection<Long> minutesIds
     );
 

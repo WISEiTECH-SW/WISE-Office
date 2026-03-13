@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -29,12 +28,6 @@ public class OverviewController {
             @RequestParam(name = "year", required = false) Integer year,
             @RequestParam(name = "month", required = false) Integer month
     ) {
-        LocalDate today = LocalDate.now();
-        YearMonth yearMonth = YearMonth.of(
-                year == null ? today.getYear() : year,
-                month == null ? today.getMonthValue() : month
-        );
-
-        return ResponseEntity.ok(overviewServiceApi.getMonthlyDocuments(yearMonth));
+        return ResponseEntity.ok(overviewServiceApi.getMonthlyDocuments(year, month));
     }
 }

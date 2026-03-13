@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +31,18 @@ public class OverviewServiceApi {
     /**
      * 특정 월에 작성된 회의록 및 품의서 리스트 조회
      */
-    public List<MonthlyDocumentGroupResponse> getMonthlyDocuments(YearMonth yearMonth) {
+    public List<MonthlyDocumentGroupResponse> getMonthlyDocuments(Integer year, Integer month) {
+        // 조회 기간 계산
+        YearMonth yearMonth = YearMonth.now();
+
+        if (year != null && month != null) {
+            yearMonth = YearMonth.of(year, month);
+        }
+
         LocalDate start = yearMonth.atDay(1);
         LocalDate end = yearMonth.atEndOfMonth();
 
+        // 회의록, 품의서 조회
         List<MinutesEntity> targetMinutes = minutesEntityRepository.findMonthlyOverviewTargets(start, end);
         if (targetMinutes.isEmpty()) {
             return List.of();
@@ -50,7 +59,7 @@ public class OverviewServiceApi {
         Map<String, List<MonthlyDocumentPairResponse>> result = new HashMap<>();
         for (MinutesEntity minutes : targetMinutes) {
             String attendantsName = attendantsByMinutesId.getOrDefault(minutes.getId(), "");
-            MonthlyMinutesSummaryResponse minutesSummary =  MonthlyMinutesSummaryResponse.from(minutes, attendantsName);
+            MonthlyMinutesSummaryResponse minutesSummary = MonthlyMinutesSummaryResponse.from(minutes, attendantsName);
 
             ApproveEntity approve = approveByMinutesId.get(minutes.getId());
             MonthlyApproveSummaryResponse approveSummary = approve == null ? null : new MonthlyApproveSummaryResponse(approve.getReportNo(), approve.getId());
@@ -71,19 +80,11 @@ public class OverviewServiceApi {
      */
     private Map<Long, String> getAttendantsByMinutesId(List<Long> minutesIds) {
         List<MinutesAttendantNameProjection> attendantNames = minutesAttendantEntityRepository.findAttendantNamesByMinutesIds(minutesIds);
-        Map<Long,String> result = new HashMap<>();
-
-        for (MinutesAttendantNameProjection attendantName : attendantNames) {
-            long minutesId = attendantName.getMinutesId();
-            String name = attendantName.getCompanyName();
-            if (result.get(minutesId) == null) {
-                result.put(minutesId, name);
-            } else {
-                result.put(minutesId, result.get(minutesId) + "," + name);
-            }
-        }
-
-        return result;
+        return attendantNames.stream()
+                .collect(Collectors.groupingBy(
+                        MinutesAttendantNameProjection::getMinutesId,
+                        Collectors.mapping(MinutesAttendantNameProjection::getCompanyName, Collectors.joining(","))
+                ));
     }
 
     /**
@@ -92,7 +93,7 @@ public class OverviewServiceApi {
      * value : 회의록에서 생성된 품의서
      */
     private Map<Long, ApproveEntity> getApproveByMinutesId(List<Long> minutesIds) {
-        List<ApproveEntity> approves = approveEntityRepository.findByMinutesIdsAndWriteDateBetween(minutesIds);
+        List<ApproveEntity> approves = approveEntityRepository.findByMinutesIds(minutesIds);
         Map<Long, ApproveEntity> result = new HashMap<>();
         for (ApproveEntity approve : approves) {
             result.put(approve.getMinutesEntity().getId(), approve);
