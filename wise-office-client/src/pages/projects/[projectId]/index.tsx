@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -12,6 +13,11 @@ import { useLogDetail } from "@/hooks/project/useLogDetail";
 import { useCommentMutation } from "@/hooks/project/useCommentMutation";
 import { useLogMutation } from "@/hooks/project/useLogMutation";
 
+import { api } from "@/lib/clientApi";
+import {
+    getDocumentToastMessage,
+    toastMessage,
+} from "@/lib/common/toastMessage";
 import { LogModalState } from "@/types/log";
 import {
     DeleteModalState,
@@ -31,6 +37,7 @@ import LogPreview from "@/components/project/document/preview/LogPreview";
 import MinutePreview from "@/components/project/document/preview/MinutePreview";
 
 export default function ProjectById() {
+    const queryClient = useQueryClient();
     const router = useRouter();
     const { query } = router;
     const projectId = Number(query.projectId);
@@ -55,6 +62,7 @@ export default function ProjectById() {
     const [logModal, setLogModal] = useState<LogModalState>(null);
     const [deleteTarget, setDeleteTarget] = useState<DeleteModalState>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isMinuteDeleting, setIsMinuteDeleting] = useState(false);
 
     /* ----- query ----- */
     const { data: projectInfo } = useProjectDetail(projectId);
@@ -70,7 +78,8 @@ export default function ProjectById() {
     );
     const approveId =
         selectedDoc?.type === "approve" ? selectedDoc.id : undefined;
-    const { data } = useApproveDetail(projectId, approveId); // approve
+    const { data } = useApproveDetail(projectId, approveId);
+
     /* ----- mutation ----- */
     const { deleteLog, isLogLoading } = useLogMutation();
     const { deleteComment, isCommentLoading } = useCommentMutation();
@@ -111,7 +120,42 @@ export default function ProjectById() {
         }
     };
 
-    const handleConfirmDelete = () => {
+    const handleDeleteMinute = async (minutesId: number) => {
+        try {
+            setIsMinuteDeleting(true);
+            await api.delete(`/projects/${projectId}/minutes/${minutesId}`);
+
+            setSelectedDoc((current) => {
+                if (current?.type === "minute" && current.id === minutesId) {
+                    return { type: "minute", id: 0 };
+                }
+                return current;
+            });
+
+            setDeleteTarget(null);
+
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: ["minutes", projectId],
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ["approves", projectId],
+                }),
+            ]);
+
+            queryClient.removeQueries({
+                queryKey: ["minutes", projectId, minutesId],
+            });
+
+            toastMessage.success(getDocumentToastMessage("minute", "delete"));
+        } catch {
+            toastMessage.error("회의록 삭제에 실패했습니다.");
+        } finally {
+            setIsMinuteDeleting(false);
+        }
+    };
+
+    const handleConfirmDelete = async () => {
         if (!deleteTarget || !selectedDoc) return;
 
         switch (deleteTarget.type) {
@@ -130,8 +174,8 @@ export default function ProjectById() {
                 });
                 break;
             case "minute":
-                // 회의록 삭제 로직
-                break;
+                await handleDeleteMinute(deleteTarget.id);
+                return;
             // case "approve": break;
         }
 
@@ -232,7 +276,9 @@ export default function ProjectById() {
                     deleteTarget={deleteTarget}
                     onDelete={handleConfirmDelete}
                     onClose={() => setDeleteTarget(null)}
-                    isLoading={isCommentLoading || isLogLoading}
+                    isLoading={
+                        isCommentLoading || isLogLoading || isMinuteDeleting
+                    }
                 />
             )}
             {/* Project Update Modal */}
