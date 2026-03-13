@@ -3,8 +3,10 @@ import ApprovalSeal from "./ApprovalSeal";
 import { usePreviewStore } from "@/store/useOverviewStore";
 import { ReadableCell } from "./ReadableCell";
 
-export default function MinutePreview() {
+export default function MinuteDocument() {
     const { minutesInfo } = usePreviewStore();
+
+    console.log("000", minutesInfo);
 
     if (!minutesInfo) return null;
 

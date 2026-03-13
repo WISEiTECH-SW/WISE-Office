@@ -1,6 +1,6 @@
 import Buttonbar from "./Buttonbar";
 import { usePreviewStore } from "@/store/useOverviewStore";
-import MinutePreview from "@/components/document/MinutePreview";
+import MinuteDocument from "@/components/document/MinuteDocument";
 import { useEffect } from "react";
 
 const A4_WIDTH = 720;
@@ -28,7 +28,7 @@ export default function PreviewModal() {
             />
 
             <div className="print-area">
-                <MinutePreview />
+                <MinuteDocument />
             </div>
 
             <Buttonbar
