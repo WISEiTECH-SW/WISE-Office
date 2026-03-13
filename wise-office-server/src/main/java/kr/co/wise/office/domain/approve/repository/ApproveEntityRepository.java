@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,18 @@ public interface ApproveEntityRepository extends JpaRepository<ApproveEntity, Lo
 
     @Query("select a from ApproveEntity a join fetch a.minutesEntity m where a.id = :approveId and m.project.id = :projectId")
     Optional<ApproveEntity> findByApproveIdAndProjectId(@Param("approveId") long approveId, @Param("projectId") long projectId);
+
+
+    @Query("""
+            select a
+            from ApproveEntity a
+            join fetch a.minutesEntity m
+            where m.id in :minutesIds
+            order by a.writeDate desc, a.id desc
+            """)
+    List<ApproveEntity> findByMinutesIds(
+            @Param("minutesIds") Collection<Long> minutesIds
+    );
 
     @Query("select a from ApproveEntity a join a.minutesEntity m join m.project p where m.id = :minutesId and p.id = :projectId")
     Optional<ApproveEntity> findByMinutesIdAndProjectId(@Param("minutesId") long minutesId, @Param("projectId") long projectId);
