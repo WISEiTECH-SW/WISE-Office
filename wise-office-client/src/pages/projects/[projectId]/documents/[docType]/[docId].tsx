@@ -232,7 +232,7 @@ export default function DocumentPage() {
                     <div className="flex justify-center gap-10">
                         {/* Paper */}
                         <div
-                            className="bg-white w-full max-w-[720px] min-h-[1020px] px-16 py-8 rounded-sm transition-opacity duration-200"
+                            className="bg-white w-full max-w-[720px] min-h-[1020px] rounded-sm transition-opacity duration-200"
                             style={{
                                 opacity: isFading ? 0 : 1,
                                 boxShadow:
