@@ -59,7 +59,6 @@ export default function SelectProjectMembers({
 
             {/* 편성 인원 */}
             <CompanyMemberSelector
-                isMinute={false}
                 companyMembers={companyMembers}
                 selectedCompanyMembers={selectedCompanyMembers}
                 companyMemberSearchText={companyMemberSearchText}

@@ -170,14 +170,18 @@ export default function MinuteForm({
                     </tr>
                     <tr>
                         <LabelCell label="작 성 자" />
-                        <EditableCell
-                            placeholder="작성자 이름을 입력하세요"
+                        <td
                             colSpan={4}
-                            value={form.writer}
-                            onChange={(v) =>
-                                setForm((prev) => ({ ...prev, writer: v }))
-                            }
-                        />
+                            className="border border-black px-[10px] py-2 text-[13.5px]"
+                        >
+                            {form.writer ? (
+                                <span>{form.writer}</span>
+                            ) : (
+                                <span className="text-gray-400 italic">
+                                    우측 리스트에서 작성자를 선택하세요
+                                </span>
+                            )}
+                        </td>
                     </tr>
                     <tr className="h-4"></tr>
                 </tbody>

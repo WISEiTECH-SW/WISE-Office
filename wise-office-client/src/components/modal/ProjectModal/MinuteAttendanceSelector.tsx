@@ -7,14 +7,18 @@ interface Props {
     companyMemberSearchText: string;
     setSelectedCompanyMembers: React.Dispatch<React.SetStateAction<Member[]>>;
     setCompanyMemberSearchText: React.Dispatch<React.SetStateAction<string>>;
+    writer: Member | null;
+    handleWriterChange: (member: Member) => void;
 }
 
-export default function CompanyMemberSelector({
+export default function MinuteAttendanceSelector({
     companyMembers,
     selectedCompanyMembers,
     companyMemberSearchText,
     setSelectedCompanyMembers,
     setCompanyMemberSearchText,
+    writer,
+    handleWriterChange,
 }: Props) {
     const filteredCompanyMembers = companyMembers.filter(
         (m) =>
@@ -38,22 +42,8 @@ export default function CompanyMemberSelector({
         }
     };
     return (
-        <div className="grid grid-cols-2 gap-4">
-            {/* 편성인원 - 좌측 */}
-            <div>
-                <h3 className="font-semibold mb-2">편성 인원</h3>
-
-                {/* 선택된 편성 인원 */}
-                <div className="border border-gray-300 rounded-md h-40 mb-3 p-2 overflow-y-auto">
-                    {selectedCompanyMembers.map((member) => (
-                        <div key={member.memberId}>
-                            {member.name} {member.rank}
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* 편성인원 - 우측 */}
+        <div className="gap-4">
+            {/* 편성인원 */}
             <div>
                 <h3 className="font-semibold mb-2">편성 인원 검색</h3>
                 <input
@@ -81,6 +71,39 @@ export default function CompanyMemberSelector({
                         </label>
                     ))}
                 </div>
+            </div>
+            {/* 작성자 선택 */}
+            <div className="mt-5">
+                <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
+                    작성자 선택
+                </label>
+                {selectedCompanyMembers.length === 0 ? (
+                    <p className="text-sm font-light text-gray-500 italic">
+                        참석자를 먼저 선택해주세요.
+                    </p>
+                ) : (
+                    <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-3 mx-1 shadow-inner">
+                        {selectedCompanyMembers.map((member) => (
+                            <label
+                                key={member.memberId}
+                                className="flex items-center gap-3 mb-2 cursor-pointer text-gray-800"
+                            >
+                                <input
+                                    type="radio"
+                                    name="manager"
+                                    checked={
+                                        writer?.memberId === member.memberId
+                                    }
+                                    onChange={() => handleWriterChange(member)}
+                                    className="cursor-pointer"
+                                />
+                                <span>
+                                    {member.name} {member.rank}
+                                </span>
+                            </label>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
