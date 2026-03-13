@@ -51,9 +51,14 @@ public class ProposalAttendantService {
                 .collect(Collectors.toSet());
 
         // 삭제 대상
-        nowAttendants.stream()
+//        nowAttendants.stream()
+//                .filter(a -> !newIds.contains(a.getCompanyMember().getId()))
+//                .forEach(ProposalAttendantEntity::leaveProject);
+        List<ProposalAttendantEntity> deleteTargets = nowAttendants.stream()
                 .filter(a -> !newIds.contains(a.getCompanyMember().getId()))
-                .forEach(ProposalAttendantEntity::leaveProject);
+                .toList();
+
+        proposalAttendantEntityRepository.deleteAll(deleteTargets);
 
         // 추가 대상 (리스트로 수집)
         List<ProposalAttendantEntity> newAttendants = newMembers.stream()

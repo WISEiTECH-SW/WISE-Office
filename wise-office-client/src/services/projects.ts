@@ -65,6 +65,7 @@ export async function postProject(data: CreateProject) {
  * @returns ProjectInfo 객체 또는 undefined
  */
 export async function updateProject(data: CreateProject, projectId: number) {
+    console.log(data);
     return await api
         .patch(`/v2/projects/${projectId}`, data)
         .then((res) => res.data);
