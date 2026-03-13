@@ -2,13 +2,16 @@ import { ApproveDetailResponse } from "@/types/document";
 import Image from "next/image";
 import BasePreview from "./BasePreview";
 import Button from "@/components/common/Button";
+import { useRouter } from "next/router";
 interface Props {
+    projectId: number;
     approve?: ApproveDetailResponse;
 }
-export default function ApprovePreview({ approve }: Props) {
+export default function ApprovePreview({ projectId, approve }: Props) {
     if (!approve) {
         return <BasePreview type="approve" />;
     }
+    const router = useRouter();
     return (
         <div className=" shadow-sm">
             <div className="flex flex-col p-4 md:pt-6">
@@ -16,12 +19,18 @@ export default function ApprovePreview({ approve }: Props) {
                 <div className="flex flex-row gap-4">
                     <Button
                         label="출력하기"
-                        onClick={() => {}}
+                        onClick={() => {
+                            window.print();
+                        }}
                         variant="secondary"
                     />
                     <Button
                         label="수정하기"
-                        onClick={() => {}}
+                        onClick={() => {
+                            router.push(
+                                `/projects/${projectId}/documents/approve/${approve.approveId}`,
+                            );
+                        }}
                         variant="primary"
                     />
                 </div>

@@ -15,7 +15,10 @@ import Sidebar from "@/components/document/side-bar/SideBar";
 import { useMinutesMutation } from "@/hooks/doc/useMinutesMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { ProjectInfo } from "@/types/project";
-import { useApproveUpdate } from "@/hooks/project/useDocuments";
+import {
+    useApproveDetail,
+    useApproveUpdate,
+} from "@/hooks/project/useDocuments";
 
 export default function DocumentPage() {
     const router = useRouter();
@@ -50,24 +53,25 @@ export default function DocumentPage() {
         content: "",
     });
 
-    const [newApprove] = useState<ApproveUpdateRequest>({
+    const [newApprove, setNewApprove] = useState<ApproveUpdateRequest>({
         reportNo: "",
-        writtenAt: "",
-        submitAt: "",
         writer: "",
     });
 
     const isValid =
-        form.host.trim() !== "" &&
-        form.minutesDate.trim() !== "" &&
-        form.startTime.trim() !== "" &&
-        form.endTime.trim() !== "" &&
-        form.location.trim() !== "" &&
-        form.purpose.trim() !== "" &&
-        form.minutesAttendants.trim() !== "" &&
-        form.instAttendants.trim() !== "" &&
-        form.writer.trim() !== "" &&
-        form.content.trim() !== "";
+        docType === "minute"
+            ? form.host.trim() !== "" &&
+              form.minutesDate.trim() !== "" &&
+              form.startTime.trim() !== "" &&
+              form.endTime.trim() !== "" &&
+              form.location.trim() !== "" &&
+              form.purpose.trim() !== "" &&
+              form.minutesAttendants.trim() !== "" &&
+              form.instAttendants.trim() !== "" &&
+              form.writer.trim() !== "" &&
+              form.content.trim() !== ""
+            : newApprove.reportNo.trim() !== "" &&
+              newApprove.writer.trim() !== "";
 
     /* ----- query ----- */
     const queryClient = useQueryClient();
@@ -80,7 +84,10 @@ export default function DocumentPage() {
         projectId,
         docType === "minute" ? docId : null,
     ]);
-
+    const { data: approveDetail } = useApproveDetail(
+        router.isReady ? Number(projectId) : undefined,
+        router.isReady ? Number(docId) : undefined,
+    );
     /* ----- mutation ----- */
     const { createMinute } = useMinutesMutation();
     const approveUpdate = useApproveUpdate();
@@ -92,6 +99,7 @@ export default function DocumentPage() {
     const backToProjectPage = () => router.push(`/projects/${projectId}`);
 
     const saveDoc = () => {
+        if (!router.isReady) return;
         if (isNew) {
             createMinute(
                 { projectId, newMinute: form },
@@ -99,11 +107,14 @@ export default function DocumentPage() {
             );
         } else {
             // 수정로직
-            approveUpdate.mutate({
-                projectId,
-                approveId: Number(docId),
-                request: newApprove,
-            });
+            if (docType === "approve") {
+                console.log(newApprove);
+                approveUpdate.mutate({
+                    projectId,
+                    approveId: Number(docId),
+                    request: newApprove,
+                });
+            }
         }
     };
 
@@ -194,7 +205,13 @@ export default function DocumentPage() {
                                         setForm={setForm}
                                     />
                                 )}
-                                {currentDoc === "approve" && <ApproveForm />}
+                                {currentDoc === "approve" && (
+                                    <ApproveForm
+                                        approve={approveDetail}
+                                        newApprove={newApprove}
+                                        setNewApprove={setNewApprove}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 
 import { getLogList } from "@/services/logs";
@@ -69,8 +69,11 @@ export const useApproveDetail = (projectId?: number, approveId?: number) =>
     });
 
 /** 품의서 수정 */
-export const useApproveUpdate = () =>
-    useMutation({
+export const useApproveUpdate = () => {
+    const queryClient = useQueryClient();
+    const router = useRouter();
+
+    return useMutation({
         mutationFn: ({
             projectId,
             approveId,
@@ -80,4 +83,21 @@ export const useApproveUpdate = () =>
             approveId: number;
             request: ApproveUpdateRequest;
         }) => updateApprove(projectId, approveId, request),
+
+        onSuccess: (_, variables) => {
+            const { projectId, approveId } = variables;
+
+            queryClient.invalidateQueries({
+                queryKey: ["approveDetail", projectId, approveId],
+            });
+
+            router.push({
+                pathname: `/projects/${projectId}`,
+                query: {
+                    type: "approve",
+                    docId: approveId,
+                },
+            });
+        },
     });
+};
