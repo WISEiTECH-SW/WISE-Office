@@ -4,7 +4,6 @@ import MinuteDocument from "@/components/document/MinuteDocument";
 import { useEffect } from "react";
 
 const A4_WIDTH = 720;
-const A4_HEIGHT = 1020;
 
 export default function PreviewModal() {
     const { onClose } = usePreviewStore();
