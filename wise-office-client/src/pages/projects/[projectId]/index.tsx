@@ -1,34 +1,34 @@
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
+import { useMinutesDetail } from "@/hooks/doc/useMinutesDetail";
 import {
-    useProjectDetail,
-    useDocumentLists,
     useApproveDetail,
+    useDocumentLists,
+    useProjectDetail,
 } from "@/hooks/project/useDocuments";
 import { useLogDetail } from "@/hooks/project/useLogDetail";
-import { useMinutesDetail } from "@/hooks/doc/useMinutesDetail";
 
-import { useLogMutation } from "@/hooks/project/useLogMutation";
 import { useCommentMutation } from "@/hooks/project/useCommentMutation";
+import { useLogMutation } from "@/hooks/project/useLogMutation";
 
+import { LogModalState } from "@/types/log";
 import {
     DeleteModalState,
     DocumentType,
     SelectedDocument,
 } from "@/types/project";
-import { LogModalState } from "@/types/log";
 
-import ProjectInfoContainer from "@/components/project/info/ProjectInfoContainer";
-import DocumentSidebar from "@/components/project/document/DocumentSidebar";
+import { DeleteModal, LogWriteModal, ProjectModal } from "@/components/modal";
 import AttendantList from "@/components/project/attendant/AttendantList";
-import { LogWriteModal, DeleteModal, ProjectModal } from "@/components/modal";
+import DocumentSidebar from "@/components/project/document/DocumentSidebar";
+import ProjectInfoContainer from "@/components/project/info/ProjectInfoContainer";
 import { useProjectMutation } from "@/hooks/project/useProjectMutation";
 
+import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
 import BasePreview from "@/components/project/document/preview/BasePreview";
 import LogPreview from "@/components/project/document/preview/LogPreview";
 import MinutePreview from "@/components/project/document/preview/MinutePreview";
-import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
 
 export default function ProjectById() {
     const router = useRouter();
@@ -79,6 +79,14 @@ export default function ProjectById() {
     /* ----- func ----- */
     const openDocumentEditor = (docType: string, docId: number) => {
         router.push(`/projects/${projectId}/documents/${docType}/${docId}`);
+    };
+
+    const handleSelectApprove = (approveId: number) => {
+        setSelectedDoc({ type: "approve", id: approveId });
+    };
+
+    const handleSelectMinute = (minutesId: number) => {
+        setSelectedDoc({ type: "minute", id: minutesId });
     };
 
     const handleWrite = (type: DocumentType) => {
@@ -182,6 +190,7 @@ export default function ProjectById() {
                                         isAttending={projectInfo.attending}
                                         onEdit={openDocumentEditor}
                                         onDelete={setDeleteTarget}
+                                        onSelectApprove={handleSelectApprove}
                                     />
                                 );
                             case "approve":
@@ -189,6 +198,7 @@ export default function ProjectById() {
                                     <ApprovePreview
                                         projectId={projectId}
                                         approve={data}
+                                        onSelectMinute={handleSelectMinute}
                                     />
                                 );
                             default:

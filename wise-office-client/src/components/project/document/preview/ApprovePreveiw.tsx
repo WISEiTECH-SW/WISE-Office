@@ -1,22 +1,35 @@
+import Button from "@/components/common/Button";
 import { ApproveDetailResponse } from "@/types/document";
 import Image from "next/image";
 import BasePreview from "./BasePreview";
-import Button from "@/components/common/Button";
+
 import { useRouter } from "next/router";
 interface Props {
     projectId: number;
     approve?: ApproveDetailResponse;
+    onSelectMinute: (minutesId: number) => void;
 }
-export default function ApprovePreview({ projectId, approve }: Props) {
+
+export default function ApprovePreview({
+    projectId,
+    approve,
+    onSelectMinute,
+}: Props) {
     const router = useRouter();
     if (!approve) {
         return <BasePreview type="approve" />;
     }
+
     return (
         <div className=" shadow-sm">
             <div className="flex flex-col p-4 md:pt-6">
                 {/* 버튼 */}
                 <div className="flex flex-row gap-4">
+                    <Button
+                        label="회의록 조회"
+                        onClick={() => onSelectMinute(approve.minutesId)}
+                        variant="primary"
+                    />
                     <Button
                         label="출력하기"
                         onClick={() => {
@@ -126,11 +139,8 @@ export default function ApprovePreview({ projectId, approve }: Props) {
                     {/* 리스트 */}
                     <ol className="mt-6 space-y-2 pl-16 text-black-600 list-decimal text-[15px]">
                         <li>사업명 :{approve.businessName}</li>
-
                         <li>과제명 :{approve.title}</li>
-
                         <li>전담기관 :{approve.institution}</li>
-
                         <li>회의 일시 :{approve.minutesAt}</li>
                     </ol>
 
