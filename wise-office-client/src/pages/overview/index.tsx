@@ -8,7 +8,7 @@ import { useOverviewStore, usePreviewStore } from "@/store/useOverviewStore";
 
 export default function Overview() {
     const { optionIndex, projectInfo } = useOverviewStore();
-    const { isOpen } = usePreviewStore();
+    const { isOpen, onClose } = usePreviewStore();
 
     return (
         <div className="min-h-screen flex mx-24 my-16 gap-16">
@@ -23,7 +23,19 @@ export default function Overview() {
                     <MonthOverviewList />
                 )}
             </div>
-            {isOpen && <PreviewModal />}
+            {isOpen && (
+                <div
+                    onClick={onClose}
+                    className="fixed inset-0 bg-black/50 flex flex-col items-center justify-center z-1000 overflow-y-auto"
+                >
+                    <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="absolute translate-y-1/3 pb-24"
+                    >
+                        <PreviewModal />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

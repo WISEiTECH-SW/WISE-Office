@@ -12,9 +12,7 @@ interface Props {
 
 export default function OverviewCard({ minutes, isApproval }: Props) {
     const { projectInfo } = useOverviewStore();
-    const [minutesInfo, setMinutesInfo] = useState<MinutesInfo>();
-
-    console.log(minutes);
+    const [minutesInfo, setMinutesInfo] = useState<MinutesInfo | null>(null);
 
     useEffect(() => {
         if (!projectInfo.projectId || !minutes?.minutesId) return;
@@ -59,7 +57,7 @@ export default function OverviewCard({ minutes, isApproval }: Props) {
 
             {/* 버튼 */}
             <div className="flex justify-between gap-2">
-                <PreviewButton />
+                <PreviewButton minutesInfo={minutesInfo} />
                 <PrintButton />
             </div>
         </div>

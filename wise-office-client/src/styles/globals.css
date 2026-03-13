@@ -74,10 +74,7 @@ a {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
         margin: 0 !important;
-        padding: 30mm 20mm 30mm 20mm !important; /* 상 우 하 좌 */
         overflow: hidden !important;
         box-sizing: border-box !important;
     }
