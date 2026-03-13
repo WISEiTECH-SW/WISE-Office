@@ -169,7 +169,6 @@ export default function DocumentPage() {
                 approveId: Number(docId),
                 request: newApprove,
             });
-        } else if (docType === "minute") {
         }
     };
 
