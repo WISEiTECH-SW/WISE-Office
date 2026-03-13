@@ -21,7 +21,7 @@ export default function ApprovePreview({
     }
 
     return (
-        <div className=" shadow-sm">
+        <div className="bg-white rounded-lg shadow-sm">
             <div className="flex flex-col p-4 md:pt-6">
                 {/* 버튼 */}
                 <div className="flex flex-row gap-4">
@@ -153,6 +153,7 @@ export default function ApprovePreview({
                             <li>과제명 :{approve.title}</li>
                             <li>전담기관 :{approve.institution}</li>
                             <li>회의 일시 :{approve.minutesAt}</li>
+                            <li>회의 목적 :{approve.minutesPurpose}</li>
                         </ol>
 
                         {/* 끝 */}

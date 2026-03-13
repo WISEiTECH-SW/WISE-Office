@@ -28,7 +28,7 @@ export default function ApproveForm({
         }));
     };
     return (
-        <div className="max-w-[718px] w-full mx-auto px-6 box-border">
+        <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[92px] pb-[120px] flex flex-col">
             {/* 제목 */}
             <div className="flex flex-col items-center mt-6">
                 <div className="inline-block relative">
@@ -44,7 +44,7 @@ export default function ApproveForm({
                 </div>
             </div>
             {/* 회색 바 */}
-            <div className="w-full h-[20px] bg-[#E1E1E1] mt-6 mb-2" />
+            <div className="w-full h-[20px] bg-[#E1E1E1] border-[10px] border-[#E1E1E1] mt-6 mb-2"></div>
 
             {/* 상단 정보 */}
             <div className="pl-4">
@@ -129,9 +129,11 @@ export default function ApproveForm({
 
                 <li>과제명 : {approve?.title}</li>
 
-                <li>전담기관 :{approve?.institution}</li>
+                <li>전담기관 : {approve?.institution}</li>
 
                 <li>회의 일시 : {approve?.minutesAt}</li>
+
+                <li>회의 목적 : {approve?.minutesPurpose}</li>
             </ol>
 
             {/* 끝 */}
