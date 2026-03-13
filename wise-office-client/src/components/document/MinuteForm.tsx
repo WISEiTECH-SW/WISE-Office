@@ -4,12 +4,10 @@ import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
 import ApprovalSeal from "./ApprovalSeal";
 import { MinutesCreateRequest } from "@/types/document";
-import { ProjectInfo } from "@/types/project";
 import { formatMeetingDate, formatMeetingTime } from "@/utils/dateToString";
 import DateTimeModal from "../modal/DateTimeModal";
 
 interface MinuteFormProps {
-    projectInfo: ProjectInfo | undefined;
     form: MinutesCreateRequest;
     setForm: React.Dispatch<React.SetStateAction<MinutesCreateRequest>>;
     projectName: string;
@@ -17,7 +15,6 @@ interface MinuteFormProps {
 }
 
 export default function MinuteForm({
-    projectInfo,
     form,
     setForm,
     projectName,
@@ -130,19 +127,45 @@ export default function MinuteForm({
                         <LabelCell label="참 석 자" />
                         <td
                             colSpan={4}
-                            onClick={openAttendanceModal}
-                            className="border border-black px-[10px] py-2 align-middle text-[13.5px]
-                                min-h-[32px] cursor-pointer transition-colors
-                                hover:bg-blue-50 active:bg-gray-200    
-                                text-left text-gray-700  "
+                            className="border border-black px-[10px] py-2 text-[13.5px]"
                         >
-                            {form.instAttendants ? (
-                                <span>{form.instAttendants}</span>
-                            ) : (
-                                <span className="text-gray-400 italic">
-                                    우측 리스트에서 참석자를 선택하세요
-                                </span>
-                            )}
+                            <div className="flex flex-col gap-2">
+                                {/* 외부기관 참석자 */}
+                                <input
+                                    type="text"
+                                    placeholder="기관명: 참석자1, 참석자2,... 와 같이 외부기관 참석자를 입력해 주세요."
+                                    value={form.instAttendants}
+                                    onChange={(e) =>
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            instAttendants: e.target.value,
+                                        }))
+                                    }
+                                    className="w-full outline-none text-[13.5px] placeholder-gray-400"
+                                />
+
+                                {/* 내부 참석자 */}
+                                <div
+                                    onClick={openAttendanceModal}
+                                    className="cursor-pointer hover:bg-blue-50 px-1 py-[2px]"
+                                >
+                                    {form.minutesAttendants ? (
+                                        <span>
+                                            <span className="font-medium">
+                                                위세아이텍:
+                                            </span>{" "}
+                                            {form.minutesAttendants}
+                                        </span>
+                                    ) : (
+                                        <span className="text-gray-400 italic">
+                                            <span className="font-medium text-gray-600">
+                                                위세아이텍:
+                                            </span>{" "}
+                                            우측 리스트에서 참석자를 선택하세요
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     <tr>

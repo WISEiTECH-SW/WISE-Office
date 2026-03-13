@@ -42,7 +42,6 @@ export default function DocumentPage() {
         setForm((prev) => ({
             ...prev,
             minutesAttendants: selectAttendance,
-            instAttendants: selectAttendance,
         }));
 
         closeModal();
@@ -219,7 +218,6 @@ export default function DocumentPage() {
                             <div className="print-area">
                                 {currentDoc == "minute" && (
                                     <MinuteForm
-                                        projectInfo={projectInfo}
                                         projectName={
                                             projectInfo
                                                 ? projectInfo.projectTitle
