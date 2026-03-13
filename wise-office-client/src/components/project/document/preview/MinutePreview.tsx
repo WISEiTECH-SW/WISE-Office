@@ -34,7 +34,7 @@ export default function MinutePreview({
                 title: projectTitle,
             });
         }
-    }, [minuteDetail]);
+    }, [minuteDetail, projectTitle, setMinutesInfo]);
 
     if (!minuteDetail) {
         return <BasePreview type="minute" />;

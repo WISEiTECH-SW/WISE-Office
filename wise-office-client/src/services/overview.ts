@@ -14,5 +14,5 @@ export async function getMinutesInfo(
         `/projects/${projectId}/minutes/${minutesId}`,
     );
 
-    return data ?? [];
+    return data;
 }

@@ -8,6 +8,8 @@ export default function MinuteDocument() {
 
     if (!minutesInfo) return null;
 
+    console.log(minutesInfo);
+
     return (
         <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[92px] pb-[120px] flex flex-col">
             {/* 결제 란 */}
@@ -75,7 +77,7 @@ export default function MinuteDocument() {
                         <ReadableCell
                             colSpan={3}
                             value={minutesInfo.minutesAttendants}
-                            style={"text-start"}
+                            textAlign={"text-start"}
                         />
                     </tr>
                     <tr>
@@ -83,7 +85,7 @@ export default function MinuteDocument() {
                         <ReadableCell
                             colSpan={3}
                             value={minutesInfo.writer}
-                            style={"text-start"}
+                            textAlign={"text-start"}
                         />
                     </tr>
                     <tr className="h-4"></tr>
@@ -94,7 +96,8 @@ export default function MinuteDocument() {
                 회 의 내 용
             </div>
             <textarea
-                value={minutesInfo.meetingContent}
+                value={minutesInfo.content}
+                readOnly
                 className="w-full border border-t-0 border-black p-4 text-sm leading-relaxed 
                         text-slate-800 resize-none overflow-hidden focus:outline-none rounded-b flex-1"
             />

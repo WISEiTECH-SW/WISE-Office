@@ -59,7 +59,7 @@ export default function ProjectMenu() {
 
                         {openYear.includes(menu.year) && (
                             <ul className="ml-10 cursor-pointer">
-                                {menu.projects.slice().map((item) => (
+                                {menu.projects.map((item) => (
                                     <li
                                         key={item.projectId}
                                         className={`px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium ${item.projectId === projectInfo.projectId && menu.year === year ? "bg-gray-100 font-medium" : ""}`}

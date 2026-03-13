@@ -23,7 +23,7 @@ export interface MinutesInfo {
     minutesAttendants: string;
     instAttendants: string;
     writer: string;
-    meetingContent: string;
+    content: string;
 }
 
 export interface MinutesCreateRequest {
