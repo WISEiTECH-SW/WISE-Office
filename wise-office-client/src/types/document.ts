@@ -56,7 +56,7 @@ export interface MinutesDetail {
     minutesAttendants: string;
     instAttendants: string;
     writer: string;
-    meetingContent: string;
+    content: string;
 }
 
 export interface Approval {

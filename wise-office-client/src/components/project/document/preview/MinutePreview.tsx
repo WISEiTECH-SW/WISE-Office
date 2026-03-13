@@ -32,7 +32,6 @@ export default function MinutePreview({
             setMinutesInfo({
                 ...minuteDetail,
                 title: projectTitle,
-                content: minuteDetail.meetingContent,
             });
         }
     }, [minuteDetail, projectTitle, setMinutesInfo]);

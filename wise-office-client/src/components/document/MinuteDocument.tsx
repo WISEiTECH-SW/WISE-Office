@@ -8,8 +8,6 @@ export default function MinuteDocument() {
 
     if (!minutesInfo) return null;
 
-    console.log(minutesInfo);
-
     return (
         <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[92px] pb-[120px] flex flex-col">
             {/* 결제 란 */}
