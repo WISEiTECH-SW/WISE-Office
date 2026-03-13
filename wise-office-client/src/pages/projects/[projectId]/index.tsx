@@ -1,34 +1,35 @@
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
+import { useMinutesDetail } from "@/hooks/doc/useMinutesDetail";
 import {
-    useProjectDetail,
-    useDocumentLists,
     useApproveDetail,
+    useDocumentLists,
+    useProjectDetail,
 } from "@/hooks/project/useDocuments";
 import { useLogDetail } from "@/hooks/project/useLogDetail";
-import { useMinutesDetail } from "@/hooks/doc/useMinutesDetail";
 
-import { useLogMutation } from "@/hooks/project/useLogMutation";
 import { useCommentMutation } from "@/hooks/project/useCommentMutation";
-
+import { useLogMutation } from "@/hooks/project/useLogMutation";
+import { LogModalState } from "@/types/log";
 import {
     DeleteModalState,
     DocumentType,
     SelectedDocument,
 } from "@/types/project";
-import { LogModalState } from "@/types/log";
+
+import { DeleteModal, LogWriteModal, ProjectModal } from "@/components/modal";
+import AttendantList from "@/components/project/attendant/AttendantList";
+import DocumentSidebar from "@/components/project/document/DocumentSidebar";
+import { useMinutesMutation } from "@/hooks/doc/useMinutesMutation";
 
 import ProjectInfoContainer from "@/components/project/info/ProjectInfoContainer";
-import DocumentSidebar from "@/components/project/document/DocumentSidebar";
-import AttendantList from "@/components/project/attendant/AttendantList";
-import { LogWriteModal, DeleteModal, ProjectModal } from "@/components/modal";
 import { useProjectMutation } from "@/hooks/project/useProjectMutation";
 
+import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
 import BasePreview from "@/components/project/document/preview/BasePreview";
 import LogPreview from "@/components/project/document/preview/LogPreview";
 import MinutePreview from "@/components/project/document/preview/MinutePreview";
-import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
 
 export default function ProjectById() {
     const router = useRouter();
@@ -56,8 +57,30 @@ export default function ProjectById() {
     const [deleteTarget, setDeleteTarget] = useState<DeleteModalState>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
 
+    useEffect(() => {
+        if (!router.isReady) return;
+
+        const selectedType =
+            typeof query.selectedType === "string" ? query.selectedType : null;
+        const selectedId =
+            typeof query.selectedId === "string"
+                ? Number(query.selectedId)
+                : null;
+
+        if (
+            (selectedType === "log" ||
+                selectedType === "minute" ||
+                selectedType === "approve") &&
+            selectedId !== null &&
+            !Number.isNaN(selectedId)
+        ) {
+            setSelectedDoc({ type: selectedType, id: selectedId });
+        }
+    }, [router.isReady, query.selectedType, query.selectedId]);
+
     /* ----- query ----- */
-    const { data: projectInfo } = useProjectDetail(projectId);
+    const { data: projectInfo, isLoading: isProjectLoading } =
+        useProjectDetail(projectId);
     const { logs, minutes, approves } = useDocumentLists(projectId);
 
     const { log, comments } = useLogDetail(
@@ -70,15 +93,25 @@ export default function ProjectById() {
     );
     const approveId =
         selectedDoc?.type === "approve" ? selectedDoc.id : undefined;
-    const { data } = useApproveDetail(projectId, approveId); // approve
+    const { data } = useApproveDetail(projectId, approveId);
+
     /* ----- mutation ----- */
     const { deleteLog, isLogLoading } = useLogMutation();
     const { deleteComment, isCommentLoading } = useCommentMutation();
+    const { deleteMinute, isMinuteDeleting } = useMinutesMutation();
     const { deleteProject } = useProjectMutation();
 
     /* ----- func ----- */
     const openDocumentEditor = (docType: string, docId: number) => {
         router.push(`/projects/${projectId}/documents/${docType}/${docId}`);
+    };
+
+    const handleSelectApprove = (approveId: number) => {
+        setSelectedDoc({ type: "approve", id: approveId });
+    };
+
+    const handleSelectMinute = (minutesId: number) => {
+        setSelectedDoc({ type: "minute", id: minutesId });
     };
 
     const handleWrite = (type: DocumentType) => {
@@ -103,6 +136,27 @@ export default function ProjectById() {
         }
     };
 
+    const handleDeleteMinute = (minutesId: number) => {
+        deleteMinute(
+            { projectId, minutesId },
+            {
+                onSuccess: () => {
+                    setSelectedDoc((current) => {
+                        if (
+                            current?.type === "minute" &&
+                            current.id === minutesId
+                        ) {
+                            return { type: "minute", id: 0 };
+                        }
+                        return current;
+                    });
+
+                    setDeleteTarget(null);
+                },
+            },
+        );
+    };
+
     const handleConfirmDelete = () => {
         if (!deleteTarget || !selectedDoc) return;
 
@@ -122,8 +176,8 @@ export default function ProjectById() {
                 });
                 break;
             case "minute":
-                // 회의록 삭제 로직
-                break;
+                handleDeleteMinute(deleteTarget.id);
+                return;
             // case "approve": break;
         }
 
@@ -131,7 +185,42 @@ export default function ProjectById() {
     };
 
     /* ----- page ----- */
-    if (!projectInfo) return <div>!!No Project!!</div>;
+    if (!router.isReady || isProjectLoading) {
+        return (
+            <div className="md:px-6">
+                <div className="min-h-[60vh] flex items-center justify-center">
+                    <div className="bg-white rounded-2xl shadow-sm px-10 py-12 flex flex-col items-center gap-4">
+                        <div className="w-12 h-12 rounded-full border-4 border-gray-200 border-t-blue-500 animate-spin" />
+                        <div className="text-center">
+                            <p className="text-base font-semibold text-gray-800">
+                                프로젝트 불러오는 중
+                            </p>
+                            <p className="text-sm text-gray-500 mt-1">
+                                문서와 참여자 정보를 준비하고 있습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!projectInfo) {
+        return (
+            <div className="md:px-6">
+                <div className="min-h-[60vh] flex items-center justify-center">
+                    <div className="bg-white rounded-2xl shadow-sm px-10 py-12 text-center">
+                        <p className="text-lg font-semibold text-gray-800">
+                            프로젝트를 찾을 수 없습니다.
+                        </p>
+                        <p className="text-sm text-gray-500 mt-2">
+                            접근 권한이 없거나 삭제된 프로젝트입니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="md:px-6">
@@ -182,6 +271,7 @@ export default function ProjectById() {
                                         isAttending={projectInfo.attending}
                                         onEdit={openDocumentEditor}
                                         onDelete={setDeleteTarget}
+                                        onSelectApprove={handleSelectApprove}
                                     />
                                 );
                             case "approve":
@@ -189,6 +279,7 @@ export default function ProjectById() {
                                     <ApprovePreview
                                         projectId={projectId}
                                         approve={data}
+                                        onSelectMinute={handleSelectMinute}
                                     />
                                 );
                             default:
@@ -222,7 +313,9 @@ export default function ProjectById() {
                     deleteTarget={deleteTarget}
                     onDelete={handleConfirmDelete}
                     onClose={() => setDeleteTarget(null)}
-                    isLoading={isCommentLoading || isLogLoading}
+                    isLoading={
+                        isCommentLoading || isLogLoading || isMinuteDeleting
+                    }
                 />
             )}
             {/* Project Update Modal */}

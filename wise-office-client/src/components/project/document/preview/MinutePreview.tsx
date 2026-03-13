@@ -1,11 +1,11 @@
-import { MinutesDetail } from "@/types/document";
-import BasePreview from "./BasePreview";
 import Button from "@/components/common/Button";
-import { DeleteModalState } from "@/types/project";
-import { useApproveCreation } from "@/hooks/project/useDocuments";
 import MinuteDocument from "@/components/document/MinuteDocument";
+import { useApproveCreation } from "@/hooks/project/useDocuments";
 import { usePreviewStore } from "@/store/useOverviewStore";
+import { MinutesDetail } from "@/types/document";
+import { DeleteModalState } from "@/types/project";
 import { useEffect } from "react";
+import BasePreview from "./BasePreview";
 
 interface MinutePreviewProps {
     projectId: number;
@@ -14,7 +14,12 @@ interface MinutePreviewProps {
     isAttending: boolean;
     onEdit: (docType: string, docId: number) => void;
     onDelete: (deleteTarget: DeleteModalState) => void;
+    onSelectApprove: (approveId: number) => void;
 }
+
+type MinuteDetailWithApproveId = MinutesDetail & {
+    approveId?: number | null;
+};
 
 export default function MinutePreview({
     projectId,
@@ -23,8 +28,12 @@ export default function MinutePreview({
     isAttending,
     onEdit,
     onDelete,
+    onSelectApprove,
 }: MinutePreviewProps) {
     const createApprove = useApproveCreation();
+    const approveId = (minuteDetail as MinuteDetailWithApproveId | undefined)
+        ?.approveId;
+
     const { setMinutesInfo } = usePreviewStore();
 
     useEffect(() => {
@@ -45,16 +54,24 @@ export default function MinutePreview({
             <div className="flex flex-col p-4 md:pt-6">
                 {isAttending && (
                     <div className="flex flex-row gap-4">
-                        <Button
-                            label="품의서 생성"
-                            onClick={() =>
-                                createApprove.mutate({
-                                    projectId: Number(projectId),
-                                    minutesId: minuteDetail.minutesId,
-                                })
-                            }
-                            variant="primary"
-                        />
+                        {approveId ? (
+                            <Button
+                                label="품의서 조회"
+                                onClick={() => onSelectApprove(approveId)}
+                                variant="primary"
+                            />
+                        ) : (
+                            <Button
+                                label="품의서 생성"
+                                onClick={() =>
+                                    createApprove.mutate({
+                                        projectId: Number(projectId),
+                                        minutesId: minuteDetail.minutesId,
+                                    })
+                                }
+                                variant="primary"
+                            />
+                        )}
                         <Button
                             label="출력하기"
                             onClick={() => {
