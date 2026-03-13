@@ -40,7 +40,7 @@ export default function AttendanceModal({
                     setSelectedCompanyMembers={setSelectedCompanyMembers}
                     setCompanyMemberSearchText={setCompanyMemberSearchText}
                 />
-                <div className="flex justify-end gap-2">
+                <div className="flex justify-end gap-2 mt-4">
                     <Button
                         label="확인"
                         variant="primary"

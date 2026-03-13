@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import {
     useProjectDetail,
     useDocumentLists,
+    useApproveDetail,
 } from "@/hooks/project/useDocuments";
 import { useLogDetail } from "@/hooks/project/useLogDetail";
 import { useMinutesDetail } from "@/hooks/doc/useMinutesDetail";
@@ -48,7 +49,7 @@ export default function ProjectById() {
 
     /* ----- query ----- */
     const { data: projectInfo } = useProjectDetail(projectId);
-    const { logs, minutes } = useDocumentLists(projectId);
+    const { logs, minutes, approves } = useDocumentLists(projectId);
 
     const { log, comments } = useLogDetail(
         projectId,
@@ -58,7 +59,9 @@ export default function ProjectById() {
         projectId,
         selectedDoc?.type === "minute" ? selectedDoc.id : null,
     );
-
+    const approveId =
+        selectedDoc?.type === "approve" ? selectedDoc.id : undefined;
+    const { data } = useApproveDetail(projectId, approveId); // approve
     /* ----- mutation ----- */
     const { deleteLog, isLogLoading } = useLogMutation();
     const { deleteComment, isCommentLoading } = useCommentMutation();
@@ -138,6 +141,7 @@ export default function ProjectById() {
                     docData={{
                         logList: logs.data ?? [],
                         minuteList: minutes.data ?? [],
+                        approveList: approves.data ?? [],
                     }}
                     selectedDoc={selectedDoc}
                     attending={projectInfo.attending}
@@ -171,12 +175,7 @@ export default function ProjectById() {
                                     />
                                 );
                             case "approve":
-                                return (
-                                    <ApprovePreview
-                                        projectId={projectId}
-                                        approveDetail={undefined}
-                                    />
-                                );
+                                return <ApprovePreview approve={data} />;
                             default:
                                 return <BasePreview type="log" />;
                         }

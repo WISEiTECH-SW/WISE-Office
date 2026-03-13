@@ -57,3 +57,52 @@ export interface Approval {
 }
 
 export type DocType = "minute" | "approve" | "trip";
+
+export interface ApproveCreateResonse {
+    approveId: number;
+    minutesId: number;
+    approveNo: string;
+    writtenAt: string;
+    writer: string;
+    submitAt: string;
+    businessName: string;
+    title: string;
+    institution: string;
+    minutesAt: string;
+    minutesPurpose: string;
+}
+
+export interface ApproveDetailResponse {
+    approveId: number;
+    minutesId: number; // 해당 품의서를 작성한 회의록 번호
+    approveNo: string; // 문서번호
+    writtenAt: string; // 작성일자
+    writer: string; //품의자
+    submitAt: string; // 접수일자
+    businessName: string; // 사업명
+    title: string; // 과제명
+    institution: string; // 전담기관
+    minutesAt: string; // 회의일자
+    minutesPurpose: string; // 회의목적
+}
+
+export interface ApproveUpdateResponse {
+    approveId: number;
+    reportNo: string; // 수정된 품의서 번호 (문서번호)
+    writtenAt: string; // 작성일자
+    writer: string; // 작성자
+    submitAt: string; // 접수일자
+}
+
+export interface ApproveUpdateRequest {
+    reportNo: string;
+    writtenAt: string;
+    submitAt: string;
+    writer: string;
+}
+
+export interface ApproveListResponse {
+    approveId: number;
+    title: string; // 문서번호
+    submitDate: string; // 접수일자
+}

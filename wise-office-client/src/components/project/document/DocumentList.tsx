@@ -1,12 +1,17 @@
 import { DocumentType, SelectedDocument } from "@/types/project";
 import { Log } from "@/types/log";
-import { MinutesListResponse } from "@/types/document";
+import { ApproveListResponse, MinutesListResponse } from "@/types/document";
 import LogItem from "./list-item/LogItem";
 import MinuteItem from "./list-item/MinuteItem";
+import ApproveItem from "./list-item/ApproveItem";
 
 interface DocumentListProps {
     selectedDoc: SelectedDocument | null;
-    docData: { logList: Log[]; minuteList: MinutesListResponse[] };
+    docData: {
+        logList: Log[];
+        minuteList: MinutesListResponse[];
+        approveList: ApproveListResponse[];
+    };
     onSelectDoc: (type: DocumentType, id: number) => void;
 }
 
@@ -62,17 +67,20 @@ export default function DocumentList({
                       )))}
 
             {selectedDoc?.type === "approve" &&
-                renderEmpty("작성된 품의서가 없습니다.")}
-
-            {/* {selectedDoc?.type === "approve" &&
-                (approveList.length === 0
+                (docData.approveList.length === 0
                     ? renderEmpty("작성된 품의서가 없습니다.")
-                    : approveList.map((approve) => (
-                          <ProjectApproveItem
+                    : docData.approveList.map((approve) => (
+                          <ApproveItem
                               key={approve.approveId}
                               approve={approve}
+                              isSelected={
+                                  selectedDoc
+                                      ? selectedDoc.id === approve.approveId
+                                      : false
+                              }
+                              onSelect={handleSelectDoc}
                           />
-                      )))} */}
+                      )))}
         </div>
     );
 }

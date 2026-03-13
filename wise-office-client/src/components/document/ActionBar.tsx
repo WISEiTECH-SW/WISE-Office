@@ -1,4 +1,4 @@
-import { Save, Printer, BadgePlus, OctagonX } from "lucide-react";
+import { Save, Printer, OctagonX } from "lucide-react";
 import Button from "../common/Button";
 
 interface ActionBarProps {
@@ -7,7 +7,6 @@ interface ActionBarProps {
     savedTime: string | null;
     isValid: boolean;
     saveDoc: () => void;
-    createApprove: () => void;
     exit: () => void;
 }
 
@@ -17,7 +16,6 @@ export default function ActionBar({
     savedTime,
     isValid,
     saveDoc,
-    createApprove,
     exit,
 }: ActionBarProps) {
     return (
@@ -49,13 +47,6 @@ export default function ActionBar({
                 onClick={() => window.print()}
                 variant="secondary"
                 icon={<Printer className="w-4 h-4" />}
-            />
-
-            <Button
-                label="품의서 생성"
-                onClick={createApprove}
-                variant="primary"
-                icon={<BadgePlus className="w-4 h-4" />}
             />
 
             <Button
