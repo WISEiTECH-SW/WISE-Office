@@ -19,7 +19,7 @@ export default function ApproveForm({
             reportNo: approve.approveNo ?? "",
             writer: approve.writer ?? "",
         });
-    }, [approve, setNewApprove]);
+    }, [approve]);
 
     const handleChange = (key: keyof typeof newApprove, value: string) => {
         setNewApprove((prev) => ({

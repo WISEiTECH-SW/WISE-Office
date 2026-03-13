@@ -132,7 +132,6 @@ export default function DocumentPage() {
         } else {
             // 수정로직
             if (docType === "approve") {
-                console.log(newApprove);
                 approveUpdate.mutate({
                     projectId,
                     approveId: Number(docId),
