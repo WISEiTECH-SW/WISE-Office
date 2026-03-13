@@ -2,6 +2,7 @@ import { Member } from "@/types/member";
 import React from "react";
 
 interface Props {
+    isMinute: boolean;
     companyMembers: Member[];
     selectedCompanyMembers: Member[];
     companyMemberSearchText: string;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function CompanyMemberSelector({
+    isMinute,
     companyMembers,
     selectedCompanyMembers,
     companyMemberSearchText,
@@ -38,20 +40,24 @@ export default function CompanyMemberSelector({
         }
     };
     return (
-        <div className="grid grid-cols-2 gap-4">
+        <div className={isMinute === false ? "grid grid-cols-2 gap-4" : ""}>
             {/* 편성인원 - 좌측 */}
-            <div>
-                <h3 className="font-semibold mb-2">편성 인원</h3>
+            {isMinute === false ? (
+                <div>
+                    <h3 className="font-semibold mb-2">편성 인원</h3>
 
-                {/* 선택된 편성 인원 */}
-                <div className="border border-gray-300 rounded-md h-40 mb-3 p-2 overflow-y-auto">
-                    {selectedCompanyMembers.map((member) => (
-                        <div key={member.memberId}>
-                            {member.name} {member.rank}
-                        </div>
-                    ))}
+                    {/* 선택된 편성 인원 */}
+                    <div className="border border-gray-300 rounded-md h-40 mb-3 p-2 overflow-y-auto">
+                        {selectedCompanyMembers.map((member) => (
+                            <div key={member.memberId}>
+                                {member.name} {member.rank}
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div></div>
+            )}
 
             {/* 편성인원 - 우측 */}
             <div>

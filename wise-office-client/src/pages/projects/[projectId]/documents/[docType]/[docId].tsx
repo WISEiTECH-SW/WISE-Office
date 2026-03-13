@@ -19,10 +19,34 @@ import {
     useApproveDetail,
     useApproveUpdate,
 } from "@/hooks/project/useDocuments";
+import AttendanceModal from "@/components/modal/AttendanceModal";
 
 export default function DocumentPage() {
     const router = useRouter();
     const { docType } = router.query;
+
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+    const [attendance, setAttendance] = useState<string | null>(null);
+    /* ---- func ---- */
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleSelectAttendees = (selectedList: string[]) => {
+        const selectAttendance = selectedList.join(", ");
+
+        setAttendance(selectAttendance);
+
+        setForm((prev) => ({
+            ...prev,
+            minutesAttendants: selectAttendance,
+            instAttendants: selectAttendance,
+        }));
+
+        closeModal();
+    };
 
     const projectId = Number(
         typeof router.query.projectId === "string" ? router.query.projectId : 0,
@@ -182,7 +206,7 @@ export default function DocumentPage() {
                 />
 
                 {/* Paper */}
-                <div className="flex-1 p-8">
+                <div className="flex-1 p-8 relative">
                     <div className="flex justify-center">
                         <div
                             className="bg-white w-full max-w-[720px] min-h-[1020px] px-16 py-8 rounded-sm transition-opacity duration-200"
@@ -203,6 +227,7 @@ export default function DocumentPage() {
                                         }
                                         form={form}
                                         setForm={setForm}
+                                        openAttendanceModal={openModal}
                                     />
                                 )}
                                 {currentDoc === "approve" && (
@@ -215,6 +240,23 @@ export default function DocumentPage() {
                             </div>
                         </div>
                     </div>
+                    {docType === "minute" && isModalOpen && (
+                        <div className="absolute right-10 top-10 w-[320px]">
+                            <AttendanceModal
+                                isOpen={isModalOpen}
+                                onClose={closeModal}
+                                onConfirm={handleSelectAttendees}
+                                attendants={projectInfo?.proposalAttendant}
+                                selectedNames={
+                                    form.instAttendants
+                                        ? form.instAttendants
+                                              .split(", ")
+                                              .map((n) => n.trim())
+                                        : []
+                                }
+                            />
+                        </div>
+                    )}
                 </div>
             </main>
 

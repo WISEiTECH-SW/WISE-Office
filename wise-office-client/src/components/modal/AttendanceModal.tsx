@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../common/Button";
 import CompanyMemberSelector from "./ProjectModal/CompanyMemberSelector";
 import { Member } from "@/types/member";
@@ -8,14 +8,25 @@ interface ModalProps {
     onClose: () => void;
     onConfirm: (data: string[]) => void;
     attendants: Member[] | undefined;
+    selectedNames: string[];
 }
 
 export default function AttendanceModal({
     onClose,
     onConfirm,
     attendants,
+    selectedNames,
 }: ModalProps) {
     // 모달 내부에서 임시로 선택 상태 관리
+    useEffect(() => {
+        if (!attendants) return;
+
+        const selected = attendants.filter((member) =>
+            selectedNames.includes(member.name),
+        );
+
+        setSelectedCompanyMembers(selected);
+    }, [attendants, selectedNames]);
     // 선택된 인원
     const [selectedCompanyMembers, setSelectedCompanyMembers] = useState<
         Member[]
@@ -31,9 +42,10 @@ export default function AttendanceModal({
         // onConfirm(names);
     };
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl w-[400px]">
+        <div className="flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-[240px]">
                 <CompanyMemberSelector
+                    isMinute={true}
                     companyMembers={attendants ?? []}
                     selectedCompanyMembers={selectedCompanyMembers}
                     companyMemberSearchText={companyMemberSearchText}

@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { EditableCell } from "./EditableCell";
 import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
-import AttendanceModal from "../modal/AttendanceModal";
 import ApprovalSeal from "./ApprovalSeal";
 import { MinutesCreateRequest } from "@/types/document";
 import { ProjectInfo } from "@/types/project";
@@ -14,6 +13,7 @@ interface MinuteFormProps {
     form: MinutesCreateRequest;
     setForm: React.Dispatch<React.SetStateAction<MinutesCreateRequest>>;
     projectName: string;
+    openAttendanceModal: () => void;
 }
 
 export default function MinuteForm({
@@ -21,37 +21,10 @@ export default function MinuteForm({
     form,
     setForm,
     projectName,
+    openAttendanceModal,
 }: MinuteFormProps) {
-    const [attendance, setAttendance] = useState<string | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isDateTimeModalOpen, setIsDateTimeModalOpen] =
         useState<boolean>(false);
-
-    /* ---- func ---- */
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => setIsModalOpen(false);
-
-    const handleSelectAttendees = (selectedList: string[]) => {
-        const selectAttendance = selectedList.join(", ");
-
-        setAttendance(selectAttendance);
-
-        setForm((prev) => ({
-            ...prev,
-            minutesAttendants: selectAttendance,
-            instAttendants: selectAttendance,
-        }));
-
-        closeModal();
-    };
-
-    /* ---- hook ---- */
-    useEffect(() => {
-        setAttendance(form.instAttendants);
-    }, [form]);
 
     return (
         <div className="items-center">
@@ -157,17 +130,17 @@ export default function MinuteForm({
                         <LabelCell label="참 석 자" />
                         <td
                             colSpan={4}
-                            onClick={openModal}
+                            onClick={openAttendanceModal}
                             className="border border-black px-[10px] py-2 align-middle text-[13.5px]
                                 min-h-[32px] cursor-pointer transition-colors
                                 hover:bg-blue-50 active:bg-gray-200    
                                 text-left text-gray-700  "
                         >
-                            {attendance ? (
-                                <span>{attendance}</span>
+                            {form.instAttendants ? (
+                                <span>{form.instAttendants}</span>
                             ) : (
                                 <span className="text-gray-400 italic">
-                                    참석자를 선택하세요
+                                    우측 리스트에서 참석자를 선택하세요
                                 </span>
                             )}
                         </td>
@@ -196,15 +169,6 @@ export default function MinuteForm({
                 value={form.content}
                 onChange={(v) => setForm((prev) => ({ ...prev, content: v }))}
             />
-
-            {isModalOpen && (
-                <AttendanceModal
-                    isOpen={isModalOpen}
-                    onClose={closeModal}
-                    onConfirm={handleSelectAttendees}
-                    attendants={projectInfo?.proposalAttendant}
-                />
-            )}
 
             {isDateTimeModalOpen && (
                 <DateTimeModal
