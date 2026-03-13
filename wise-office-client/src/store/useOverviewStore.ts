@@ -60,16 +60,21 @@ export const useProjectsGroupByYearStore = create<ProjectGroupByYearState>(
             if (!yearGroup || yearGroup.projects.length === 0) return;
 
             // 해당 연도의 최소 projectId
-            const maxProjectId = Math.min(
+            const minProjectId = Math.min(
                 ...yearGroup.projects.map((p) => p.projectId),
             );
 
-            const currentProjectInfo = useOverviewStore.getState().projectInfo;
+            const currentProject = yearGroup.projects.find(
+                (p) => p.projectId === minProjectId,
+            );
+
+            if (!currentProject) return;
+
             useOverviewStore.setState({
                 year: currentYear,
                 projectInfo: {
-                    ...currentProjectInfo,
-                    projectId: maxProjectId,
+                    projectId: currentProject.projectId,
+                    projectTitle: currentProject.projectTitle,
                 },
             });
         },

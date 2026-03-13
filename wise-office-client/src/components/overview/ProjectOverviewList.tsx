@@ -1,20 +1,31 @@
 import { useEffect, useState } from "react";
 import OverviewCard from "./OverviewCard";
 import { useOverviewStore } from "@/store/useOverviewStore";
-import { getMinutes } from "@/services/overview";
-import { MinutesList } from "@/types/document";
+import { getMinutes, getMinutesInfo } from "@/services/overview";
+import { MinutesInfo, MinutesList } from "@/types/document";
 
 export default function ProjectOverviewList() {
     const { year, projectInfo } = useOverviewStore();
-    const [minutesList, setMinutesList] = useState<MinutesList>();
+    const [minutesList, setMinutesList] = useState<MinutesList>([]);
+    const [minutesInfos, setMinutesInfos] = useState<MinutesInfo[]>([]);
 
     useEffect(() => {
         const fetchMinutes = async () => {
             const data = await getMinutes(projectInfo.projectId);
             setMinutesList(data);
+
+            const infos = await Promise.all(
+                data.map((m) =>
+                    getMinutesInfo(projectInfo.projectId, m.minutesId),
+                ),
+            );
+
+            setMinutesInfos(infos);
         };
 
-        fetchMinutes();
+        if (projectInfo.projectId) {
+            fetchMinutes();
+        }
     }, [projectInfo.projectId]);
 
     const filteredData =
@@ -35,6 +46,10 @@ export default function ProjectOverviewList() {
         };
     }).filter((m) => m.data.length > 0);
 
+    if (!minutesList.length || !minutesInfos.length) {
+        return null;
+    }
+
     return (
         <div className="flex flex-col gap-10">
             <p className="text-2xl font-bold">{projectInfo.projectTitle}</p>
@@ -45,26 +60,32 @@ export default function ProjectOverviewList() {
                     <div key={month} className="flex flex-col gap-4 pr-16">
                         <p className="text-lg font-semibold">{month}월</p>
 
-                        {data.map((minutes, index) => (
-                            <div
-                                key={minutes.minutesId}
-                                className={`flex flex-col gap-3 ${
-                                    index !== data.length - 1
-                                        ? "pb-4 border-b border-gray-200"
-                                        : ""
-                                }`}
-                            >
-                                <OverviewCard
-                                    key={`${minutes.minutesId}-minutes`}
-                                    minutes={minutes}
-                                />
-                                <OverviewCard
-                                    key={`${minutes.minutesId}-approval`}
-                                    minutes={minutes}
-                                    isApproval={true}
-                                />
-                            </div>
-                        ))}
+                        {data.map((minutes, index) => {
+                            const minutesInfo = minutesInfos.find(
+                                (info) => info.minutesId === minutes.minutesId,
+                            );
+
+                            return (
+                                <div
+                                    key={minutes.minutesId}
+                                    className={`flex flex-col gap-3 ${
+                                        index !== data.length - 1
+                                            ? "pb-4 border-b border-gray-200"
+                                            : ""
+                                    }`}
+                                >
+                                    <OverviewCard
+                                        minutes={minutes}
+                                        minutesInfo={minutesInfo}
+                                    />
+                                    <OverviewCard
+                                        minutes={minutes}
+                                        minutesInfo={minutesInfo}
+                                        isApproval={true}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                 ))}
         </div>
