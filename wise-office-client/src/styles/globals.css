@@ -74,6 +74,11 @@ a {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
         margin: 0 !important;
         overflow: hidden !important;
         box-sizing: border-box !important;

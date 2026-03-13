@@ -5,6 +5,7 @@ import ProjectOverviewList from "@/components/overview/ProjectOverviewList";
 import MonthOverviewList from "@/components/overview/MonthOverviewList";
 import PreviewModal from "@/components/modal/PreviewModal";
 import { useOverviewStore, usePreviewStore } from "@/store/useOverviewStore";
+import MinuteDocument from "@/components/document/MinuteDocument";
 
 export default function Overview() {
     const { optionIndex, projectInfo } = useOverviewStore();
@@ -23,6 +24,7 @@ export default function Overview() {
                     <MonthOverviewList />
                 )}
             </div>
+
             {isOpen && (
                 <div
                     onClick={onClose}
@@ -37,9 +39,9 @@ export default function Overview() {
                 </div>
             )}
 
-            {/* print용 DOM (항상 존재하지만 화면에서는 숨김) */}
-            <div className="hidden print:block">
-                <PreviewModal />
+            {/* 프린트 전용 - 화면에서는 숨김, 항상 DOM에 존재 */}
+            <div className="print-area hidden print:block">
+                <MinuteDocument />
             </div>
         </div>
     );

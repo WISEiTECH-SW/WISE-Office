@@ -27,9 +27,7 @@ export default function PreviewModal() {
                 onClose={onClose}
             />
 
-            <div className="print-area">
-                <MinuteDocument />
-            </div>
+            <MinuteDocument />
 
             <Buttonbar
                 key="buttonbar-bottom"

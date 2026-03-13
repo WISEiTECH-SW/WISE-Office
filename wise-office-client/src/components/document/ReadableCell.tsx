@@ -1,18 +1,16 @@
 interface ReadableCellProps {
     colSpan: number;
     value: string;
+    style?: string;
 }
 
-export function ReadableCell({ colSpan = 1, value }: ReadableCellProps) {
+export function ReadableCell({ colSpan = 1, value, style }: ReadableCellProps) {
     return (
-        <td colSpan={colSpan} className={`border border-black p-2`}>
-            <div className="flex items-center w-full">
-                <textarea
-                    value={value}
-                    rows={1}
-                    className={`w-full resize-none bg-transparent font-medium focus:outline-none leading-snug py-2`}
-                />
-            </div>
+        <td
+            colSpan={colSpan}
+            className={`border border-black px-2 ${style ? "text-start" : "text-center"}`}
+        >
+            <p className="font-normal leading-snug">{value}</p>
         </td>
     );
 }

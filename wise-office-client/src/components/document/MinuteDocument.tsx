@@ -6,12 +6,10 @@ import { ReadableCell } from "./ReadableCell";
 export default function MinuteDocument() {
     const { minutesInfo } = usePreviewStore();
 
-    console.log("000", minutesInfo);
-
     if (!minutesInfo) return null;
 
     return (
-        <div className="bg-white w-[720px] by-whiteitems-center p-12">
+        <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[92px] pb-[120px] flex flex-col">
             {/* 결제 란 */}
             <ApprovalSeal />
 
@@ -19,7 +17,9 @@ export default function MinuteDocument() {
             <div className="text-center font-serif font-bold text-2xl tracking-[12px] mb-1 text-black">
                 회 의 록
             </div>
+
             <div className="w-3/5 mx-auto h-1 bg-gradient-to-r from-black via-white to-black mb-6" />
+
             {/* 상세사항 */}
             <table className="w-full border-collapse">
                 <colgroup>
@@ -42,14 +42,21 @@ export default function MinuteDocument() {
 
                 <tbody>
                     <tr>
-                        <LabelCell label="회의 날짜" />
-                        <ReadableCell
-                            colSpan={1}
-                            value={minutesInfo.minutesDate}
-                        />
+                        <LabelCell label="회의 일시" />
                         <ReadableCell
                             colSpan={2}
-                            value={`${minutesInfo.startTime}~${minutesInfo.endTime}`}
+                            value={new Date(
+                                minutesInfo.minutesDate,
+                            ).toLocaleDateString("ko-KR", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                weekday: "long",
+                            })}
+                        />
+                        <ReadableCell
+                            colSpan={1}
+                            value={`${minutesInfo.startTime} ~ ${minutesInfo.endTime}`}
                         />
                     </tr>
                     <tr>
@@ -63,16 +70,21 @@ export default function MinuteDocument() {
                         <LabelCell label="회의 목적" />
                         <ReadableCell colSpan={3} value={minutesInfo.purpose} />
                     </tr>
-                    <tr>
+                    <tr style={{ height: "120px" }}>
                         <LabelCell label="참 석 자" />
                         <ReadableCell
                             colSpan={3}
                             value={minutesInfo.minutesAttendants}
+                            style={"text-start"}
                         />
                     </tr>
                     <tr>
                         <LabelCell label="작 성 자" />
-                        <ReadableCell colSpan={3} value={minutesInfo.writer} />
+                        <ReadableCell
+                            colSpan={3}
+                            value={minutesInfo.writer}
+                            style={"text-start"}
+                        />
                     </tr>
                     <tr className="h-4"></tr>
                 </tbody>
@@ -84,7 +96,7 @@ export default function MinuteDocument() {
             <textarea
                 value={minutesInfo.meetingContent}
                 className="w-full border border-t-0 border-black p-4 text-sm leading-relaxed 
-                        text-slate-800 resize-none overflow-hidden focus:outline-none rounded-b min-h-[340px]"
+                        text-slate-800 resize-none overflow-hidden focus:outline-none rounded-b flex-1"
             />
         </div>
     );

@@ -82,7 +82,9 @@ export default function MinutePreview({
                     </div>
                 )}
 
-                <MinuteDocument />
+                <div className="print-area flex justify-center ">
+                    <MinuteDocument />
+                </div>
             </div>
         </div>
     );

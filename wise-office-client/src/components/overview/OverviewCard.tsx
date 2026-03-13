@@ -26,7 +26,7 @@ export default function OverviewCard({
                 </div>
 
                 <div className="grid grid-cols-2 flex-1 min-w-0 gap-6">
-                    <div className="col-span-1 flex justify-center">
+                    <div className="col-span-1 flex justify-center items-center">
                         {/* 문서번호 */}
                         {isApproval && minutes?.minutesId
                             ? `품의서 · ${minutes?.title}`
