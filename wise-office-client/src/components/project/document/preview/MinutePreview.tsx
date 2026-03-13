@@ -3,9 +3,13 @@ import BasePreview from "./BasePreview";
 import Button from "@/components/common/Button";
 import { DeleteModalState } from "@/types/project";
 import { useApproveCreation } from "@/hooks/project/useDocuments";
+import MinuteDocument from "@/components/document/MinuteDocument";
+import { usePreviewStore } from "@/store/useOverviewStore";
+import { useEffect } from "react";
 
 interface MinutePreviewProps {
     projectId: number;
+    projectTitle: string;
     minuteDetail: MinutesDetail | undefined;
     isAttending: boolean;
     onEdit: (docType: string, docId: number) => void;
@@ -14,15 +18,28 @@ interface MinutePreviewProps {
 
 export default function MinutePreview({
     projectId,
+    projectTitle,
     minuteDetail,
     isAttending,
     onEdit,
     onDelete,
 }: MinutePreviewProps) {
     const createApprove = useApproveCreation();
+    const { setMinutesInfo } = usePreviewStore();
+
+    useEffect(() => {
+        if (minuteDetail) {
+            setMinutesInfo({
+                ...minuteDetail,
+                title: projectTitle,
+            });
+        }
+    }, [minuteDetail, projectTitle, setMinutesInfo]);
+
     if (!minuteDetail) {
         return <BasePreview type="minute" />;
     }
+
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <div className="flex flex-col p-4 md:pt-6">
@@ -65,22 +82,8 @@ export default function MinutePreview({
                     </div>
                 )}
 
-                <div>
-                    <h2>회의록</h2>
-                    <div>프로젝트 ID : {projectId} </div>
-                    {/* minuteDetail 정보 */}
-                    <table>
-                        <tbody>
-                            {Object.entries(minuteDetail).map(
-                                ([key, value]) => (
-                                    <tr key={key}>
-                                        <td>{key}</td>
-                                        <td>{value}</td>
-                                    </tr>
-                                ),
-                            )}
-                        </tbody>
-                    </table>
+                <div className="print-area flex justify-center ">
+                    <MinuteDocument />
                 </div>
             </div>
         </div>

@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.Comparator;
 
 @Service
 @AllArgsConstructor
@@ -105,44 +106,45 @@ public class ProjectService {
     }
 
    @Transactional(readOnly = true)
-public List<ProjectGroupByYearResponse> getProjectsGroupByYear() {
-    final int MAX_YEAR_RANGE = 100; // 안전 범위 제한
+    public List<ProjectGroupByYearResponse> getProjectsGroupByYear() {
+        final int MAX_YEAR_RANGE = 100; // 안전 범위 제한
 
-    return projectRepository.findAllOrderByYearAndPk()
-            .stream()
-            .flatMap(project -> {
-                if (project.getStartYear() == null || project.getEndYear() == null) {
-                    return Stream.empty();
-                }
+        return projectRepository.findAllOrderByYearAndPk()
+                .stream()
+                .flatMap(project -> {
+                    if (project.getStartYear() == null || project.getEndYear() == null) {
+                        return Stream.empty();
+                    }
 
-                int start = project.getStartYear().getYear();
-                int end = project.getEndYear().getYear();
+                    int start = project.getStartYear().getYear();
+                    int end = project.getEndYear().getYear();
 
-                if (start > end) {
-                    return Stream.empty();
-                }
+                    if (start > end) {
+                        return Stream.empty();
+                    }
 
-                if (end - start > MAX_YEAR_RANGE) {
-                    end = start + MAX_YEAR_RANGE;
-                }
+                    if (end - start > MAX_YEAR_RANGE) {
+                        end = start + MAX_YEAR_RANGE;
+                    }
 
-                return IntStream.rangeClosed(start, end)
-                        .mapToObj(year -> Map.entry(year, project));
-            })
-            .collect(Collectors.groupingBy(
-                    Map.Entry::getKey,
-                    Collectors.mapping(Map.Entry::getValue, Collectors.toList())
-            ))
-            .entrySet()
-            .stream()
-            .sorted(Map.Entry.<Integer, List<ProjectEntity>>comparingByKey().reversed())
-            .map(entry -> new ProjectGroupByYearResponse(
-                    entry.getKey(),
-                    entry.getValue()
-                            .stream()
-                            .map(ProjectGroupByYearResponse.ProjectItem::new)
-                            .toList()
-            ))
-            .toList();
-}
+                    return IntStream.rangeClosed(start, end)
+                            .mapToObj(year -> Map.entry(year, project));
+                })
+                .collect(Collectors.groupingBy(
+                        Map.Entry::getKey,
+                        Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+                ))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<Integer, List<ProjectEntity>>comparingByKey().reversed())
+                .map(entry -> new ProjectGroupByYearResponse(
+                        entry.getKey(),
+                       entry.getValue()
+                        .stream()
+                        .sorted(Comparator.comparingLong(ProjectEntity::getId))
+                        .map(ProjectGroupByYearResponse.ProjectItem::new)
+                        .toList()
+                ))
+                .toList();
+    }
 }

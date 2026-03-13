@@ -31,11 +31,19 @@ export default function MonthOverviewList() {
                     >
                         <OverviewCard
                             key={`${minutes.minutes_pk}-minutes`}
-                            minutes={minutes}
+                            minutes={{
+                                minutesId: minutes.minutes_pk,
+                                title: minutes.title,
+                                minutesAt: minutes.minutes_date.toISOString(),
+                            }}
                         />
                         <OverviewCard
                             key={`${minutes.minutes_pk}-approval`}
-                            minutes={minutes}
+                            minutes={{
+                                minutesId: minutes.minutes_pk,
+                                title: minutes.title,
+                                minutesAt: minutes.minutes_date.toISOString(),
+                            }}
                             isApproval={true}
                         />
                     </div>

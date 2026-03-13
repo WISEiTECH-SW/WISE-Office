@@ -6,9 +6,8 @@ import {
 } from "@/store/useOverviewStore";
 
 export default function ProjectMenu() {
-    const { year, projectId, setYear, setProjectId } = useOverviewStore();
+    const { year, projectInfo, setYear, setProjectInfo } = useOverviewStore();
     const { groupByYear, fetchGroupByYear } = useProjectsGroupByYearStore();
-
     const [openYear, setOpenYear] = useState<number[]>([]);
 
     useEffect(() => {
@@ -63,9 +62,12 @@ export default function ProjectMenu() {
                                 {menu.projects.map((item) => (
                                     <li
                                         key={item.projectId}
-                                        className={`px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium ${item.projectId === projectId && menu.year === year ? "bg-gray-100 font-medium" : ""}`}
+                                        className={`px-3 py-1 mb-1 text-sm rounded-md hover:bg-gray-100 hover:font-medium ${item.projectId === projectInfo.projectId && menu.year === year ? "bg-gray-100 font-medium" : ""}`}
                                         onClick={() => {
-                                            setProjectId(item.projectId);
+                                            setProjectInfo({
+                                                projectId: item.projectId,
+                                                projectTitle: item.projectTitle,
+                                            });
                                             setYear(menu.year);
                                         }}
                                     >

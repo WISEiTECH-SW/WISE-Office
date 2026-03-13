@@ -165,7 +165,7 @@ export default function DocumentPage() {
                 minutesAttendants,
                 instAttendants,
                 writer,
-                meetingContent,
+                content,
             } = minuteDetail;
 
             setForm({
@@ -178,7 +178,7 @@ export default function DocumentPage() {
                 minutesAttendants,
                 instAttendants,
                 writer,
-                content: meetingContent, // 필드명 불일치, 서버 dto 수정 예정
+                content, // 필드명 불일치, 서버 dto 수정 예정
             });
 
             setSavedTime("MM/DD HH:MM");

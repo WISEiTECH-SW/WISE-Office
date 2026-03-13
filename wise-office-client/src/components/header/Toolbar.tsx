@@ -4,7 +4,7 @@ import { Calculator, File, LayoutListIcon } from "lucide-react";
 
 const toolbarLinks = [
     { href: "/", Icon: LayoutListIcon, label: "프로젝트 현황" },
-    { href: "/overview", Icon: File, label: "전체 품의서" },
+    { href: "/overview", Icon: File, label: "문서 현황" },
     { href: "/leave-calculator", Icon: Calculator, label: "연차계산기" },
 ];
 

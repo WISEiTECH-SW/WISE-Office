@@ -1,17 +1,29 @@
 export interface Minutes {
     minutes_pk: number;
     project_pk: number;
+}
+
+export interface MinutesItem {
+    minutesId: number;
+    title: string;
+    minutesAt: string;
+}
+
+export type MinutesList = MinutesItem[];
+
+export interface MinutesInfo {
+    minutesId: number;
     title: string;
     host: string;
-    minutes_date: Date;
+    minutesDate: string;
+    startTime: string;
+    endTime: string;
     location: string;
     purpose: string;
+    minutesAttendants: string;
+    instAttendants: string;
     writer: string;
-    meeting_content: string;
-    inst_attendants: string[];
-    start_time: string;
-    end_time: string;
-    minutes_number: string;
+    content: string;
 }
 
 export interface MinutesCreateRequest {
@@ -44,7 +56,7 @@ export interface MinutesDetail {
     minutesAttendants: string;
     instAttendants: string;
     writer: string;
-    meetingContent: string;
+    content: string;
 }
 
 export interface Approval {

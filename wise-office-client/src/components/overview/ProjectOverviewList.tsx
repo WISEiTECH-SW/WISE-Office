@@ -1,33 +1,58 @@
-import { useOverviewStore } from "@/store/useOverviewStore";
+import { useEffect, useState } from "react";
 import OverviewCard from "./OverviewCard";
-import { MINUTES, projectNames } from "@/lib/data/overview";
+import { useOverviewStore } from "@/store/useOverviewStore";
+import { getMinutes, getMinutesInfo } from "@/services/overview";
+import { MinutesInfo, MinutesList } from "@/types/document";
 
 export default function ProjectOverviewList() {
-    const { year, projectId } = useOverviewStore();
+    const { year, projectInfo } = useOverviewStore();
+    const [minutesList, setMinutesList] = useState<MinutesList>([]);
+    const [minutesInfos, setMinutesInfos] = useState<MinutesInfo[]>([]);
 
-    const projectName = projectNames.find(
-        (m) => m.project_pk === projectId,
-    )?.title;
+    useEffect(() => {
+        const fetchMinutes = async () => {
+            const data = await getMinutes(projectInfo.projectId);
+            setMinutesList(data);
 
-    const filteredData = MINUTES.filter(
-        (m) =>
-            m.project_pk === projectId && m.minutes_date.getFullYear() === year,
-    );
+            const infos = await Promise.all(
+                data.map((m) =>
+                    getMinutesInfo(projectInfo.projectId, m.minutesId),
+                ),
+            );
+
+            setMinutesInfos(infos);
+        };
+
+        if (projectInfo.projectId) {
+            fetchMinutes();
+        }
+    }, [projectInfo.projectId]);
+
+    const filteredData =
+        minutesList?.filter(
+            (m) => new Date(m.minutesAt).getFullYear() === year,
+        ) ?? [];
 
     const groupedByMonth = Array.from({ length: 12 }, (_, i) => {
-        const month = i + 1;
+        const month = i;
+
+        const data = filteredData.filter(
+            (m) => new Date(m.minutesAt).getMonth() === month,
+        );
 
         return {
-            month,
-            data: filteredData.filter(
-                (m) => m.minutes_date.getMonth() + 1 === month,
-            ),
+            month: month + 1,
+            data,
         };
     }).filter((m) => m.data.length > 0);
 
+    if (!minutesList.length || !minutesInfos.length) {
+        return null;
+    }
+
     return (
         <div className="flex flex-col gap-10">
-            <p className="text-2xl font-bold">{projectName}</p>
+            <p className="text-2xl font-bold">{projectInfo.projectTitle}</p>
 
             {groupedByMonth
                 .sort((a, b) => a.month - b.month)
@@ -35,26 +60,32 @@ export default function ProjectOverviewList() {
                     <div key={month} className="flex flex-col gap-4 pr-16">
                         <p className="text-lg font-semibold">{month}월</p>
 
-                        {data.map((minutes, index) => (
-                            <div
-                                key={minutes.minutes_pk}
-                                className={`flex flex-col gap-3 ${
-                                    index !== data.length - 1
-                                        ? "pb-4 border-b border-gray-200"
-                                        : ""
-                                }`}
-                            >
-                                <OverviewCard
-                                    key={`${minutes.minutes_pk}-minutes`}
-                                    minutes={minutes}
-                                />
-                                <OverviewCard
-                                    key={`${minutes.minutes_pk}-approval`}
-                                    minutes={minutes}
-                                    isApproval={true}
-                                />
-                            </div>
-                        ))}
+                        {data.map((minutes, index) => {
+                            const minutesInfo = minutesInfos.find(
+                                (info) => info.minutesId === minutes.minutesId,
+                            );
+
+                            return (
+                                <div
+                                    key={minutes.minutesId}
+                                    className={`flex flex-col gap-3 ${
+                                        index !== data.length - 1
+                                            ? "pb-4 border-b border-gray-200"
+                                            : ""
+                                    }`}
+                                >
+                                    <OverviewCard
+                                        minutes={minutes}
+                                        minutesInfo={minutesInfo}
+                                    />
+                                    <OverviewCard
+                                        minutes={minutes}
+                                        minutesInfo={minutesInfo}
+                                        isApproval={true}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                 ))}
         </div>

@@ -177,6 +177,7 @@ export default function ProjectById() {
                                 return (
                                     <MinutePreview
                                         projectId={projectId}
+                                        projectTitle={projectInfo.projectTitle}
                                         minuteDetail={minute}
                                         isAttending={projectInfo.attending}
                                         onEdit={openDocumentEditor}
