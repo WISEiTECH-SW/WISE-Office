@@ -34,7 +34,7 @@ export default function OverviewCard({
                     </div>
                     {/* 참석자 명단 */}
                     <div className="col-span-1 text-xs flex items-center">
-                        {minutesInfo?.instAttendants}
+                        {minutesInfo?.minutesAttendants}
                     </div>
                 </div>
             </div>

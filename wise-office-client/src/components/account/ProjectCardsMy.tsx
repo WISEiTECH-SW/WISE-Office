@@ -94,7 +94,7 @@ function ProjectListCard({ project }: Props) {
                         </span>
                         <div className="flex items-center gap-2">
                             <span className="text-sm text-gray-700 font-medium">
-                                {project.managerName.name}
+                                {project.managerName}
                             </span>
                         </div>
                     </div>
