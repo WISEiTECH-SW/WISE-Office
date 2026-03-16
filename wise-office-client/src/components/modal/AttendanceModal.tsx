@@ -34,7 +34,7 @@ export default function AttendanceModal({
         );
 
         setWriter(foundWriter ?? null);
-    }, [attendants, selectedNames, selectedWriter]);
+    }, [attendants]);
 
     // 선택된 인원
     const [selectedCompanyMembers, setSelectedCompanyMembers] = useState<
