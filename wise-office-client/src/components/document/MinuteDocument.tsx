@@ -74,7 +74,13 @@ export default function MinuteDocument() {
                         <LabelCell label="참 석 자" />
                         <ReadableCell
                             colSpan={3}
-                            value={`위세아이텍 : ${minutesInfo.minutesAttendants}\n${minutesInfo.instAttendants}`}
+                            // value={`위세아이텍 : ${minutesInfo.minutesAttendants}\n${minutesInfo.instAttendants}`}
+                            value={[
+                                `위세아이텍 : ${minutesInfo.minutesAttendants}`,
+                                minutesInfo.instAttendants,
+                            ]
+                                .filter(Boolean)
+                                .join("\n")}
                             textAlign="text-start"
                             preWrap={true}
                         />
