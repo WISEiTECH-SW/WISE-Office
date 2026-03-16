@@ -8,7 +8,7 @@ export interface Project {
     start: Date;
     end: Date;
     currentYear: number;
-    managerName: ProjectAttendant;
+    managerName: string;
     attendant: string[];
     proposalAttendant: string[];
 }

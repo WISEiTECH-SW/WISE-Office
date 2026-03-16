@@ -60,7 +60,7 @@ public class ApproveEntity {
     }
 
     public static ApproveEntity from(MinutesEntity minutesEntity, LocalDate submitDate) {
-        String reportNo = minutesEntity.getTitle().replace("WISEMM", "WISEBM");
+        String reportNo = createApproveNumber(minutesEntity, submitDate);
         return ApproveEntity.builder()
                 .reportNo(reportNo)
                 .submitDate(submitDate)
@@ -69,6 +69,12 @@ public class ApproveEntity {
                 .minutesEntity(minutesEntity)
                 .writer(minutesEntity.getWriter())
                 .build();
+    }
+
+    private static String createApproveNumber(MinutesEntity minutesEntity, LocalDate submitDate) {
+        int number = Integer.parseInt(minutesEntity.getTitle().substring(minutesEntity.getTitle().length() - 1));
+        String reportNo = String.format("WISEBM%d-%02d%02d%02d", submitDate.getYear(), submitDate.getMonthValue(), submitDate.getDayOfMonth(), number);
+        return reportNo;
     }
 
     public void updateApprove(ApproveUpdateRequest request) {
