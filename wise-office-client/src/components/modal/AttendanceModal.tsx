@@ -22,34 +22,31 @@ export default function AttendanceModal({
     selectedNames,
     selectedWriter,
 }: ModalProps) {
+    // 선택된 인원
+    const [selectedCompanyMembers, setSelectedCompanyMembers] = useState<
+        Member[]
+    >([]);
+    const [companyMemberSearchText, setCompanyMemberSearchText] = useState("");
+    const [writer, setWriter] = useState<Member | null>(null);
+
     // 모달 내부에서 임시로 선택 상태 관리
+
     useEffect(() => {
         if (!attendants || !possibleAttendants) return;
-        const selected = attendants.filter((member) =>
+
+        // 기존에 선택되어 있던 멤버들 찾기 (수정 모드 대응)
+        const initialSelected = attendants.filter((member) =>
             selectedNames.includes(member.name),
         );
 
-        const possibleMap = new Map(
-            possibleAttendants.map((p) => [Number(p.memberId), p.canAttend]),
-        );
-        setSelectedCompanyMembers(selected);
-
+        // 작성자 찾기
         const foundWriter = attendants.find(
             (member) => member.name === selectedWriter,
         );
 
+        setSelectedCompanyMembers(initialSelected);
         setWriter(foundWriter ?? null);
-        // 선택된 멤버 중, '참석 불가' 판정을 받은 멤버만 필터링
-        setSelectedCompanyMembers((prev) =>
-            prev.filter(
-                (member) => possibleMap.get(Number(member.memberId)) !== false,
-            ),
-        );
-
-        if (writer && possibleMap.get(Number(writer.memberId)) === false) {
-            setWriter(null);
-        }
-    }, [possibleAttendants]);
+    }, [possibleAttendants, attendants, selectedNames, selectedWriter]);
 
     // 참여 가능여부
     const possibleMap = new Map<number, boolean>(
@@ -58,24 +55,20 @@ export default function AttendanceModal({
 
     const enrichedMembers: MemberWithDisabled[] = (attendants ?? []).map(
         (member) => {
-            const canAttend = possibleMap.get(Number(member.memberId));
+            const canAttend = possibleMap.get(member.memberId);
+
+            const isAlreadySelected = selectedNames.includes(member.name);
 
             return {
                 ...member,
                 disabled:
                     possibleAttendants !== undefined
-                        ? canAttend === false
+                        ? canAttend === false && !isAlreadySelected
                         : false,
             };
         },
     );
-    console.log("possibleAttendants", possibleAttendants);
-    console.log("enrichedMembers", enrichedMembers);
-    // 선택된 인원
-    const [selectedCompanyMembers, setSelectedCompanyMembers] = useState<
-        Member[]
-    >([]);
-    const [companyMemberSearchText, setCompanyMemberSearchText] = useState("");
+
     const handleConfirm = () => {
         const names = selectedCompanyMembers.map((member) => `${member.name}`);
         onConfirm({
@@ -83,7 +76,6 @@ export default function AttendanceModal({
             writer: writer?.name ?? "",
         });
     };
-    const [writer, setWriter] = useState<Member | null>(null);
 
     const handleWriterChange = (member: Member) => {
         setWriter(member);
