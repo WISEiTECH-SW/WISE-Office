@@ -1,6 +1,6 @@
-import { LabelCell } from "./LabelCell";
-import ApprovalSeal from "./ApprovalSeal";
 import { usePreviewStore } from "@/store/useOverviewStore";
+import ApprovalSeal from "./ApprovalSeal";
+import { LabelCell } from "./LabelCell";
 import { ReadableCell } from "./ReadableCell";
 
 export default function MinuteDocument() {
@@ -74,8 +74,15 @@ export default function MinuteDocument() {
                         <LabelCell label="참 석 자" />
                         <ReadableCell
                             colSpan={3}
-                            value={minutesInfo.minutesAttendants}
-                            textAlign={"text-start"}
+                            // value={`위세아이텍 : ${minutesInfo.minutesAttendants}\n${minutesInfo.instAttendants}`}
+                            value={[
+                                `위세아이텍 : ${minutesInfo.minutesAttendants}`,
+                                minutesInfo.instAttendants,
+                            ]
+                                .filter(Boolean)
+                                .join("\n")}
+                            textAlign="text-start"
+                            preWrap={true}
                         />
                     </tr>
                     <tr>
