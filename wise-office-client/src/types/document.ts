@@ -118,3 +118,9 @@ export interface ApproveListResponse {
     title: string; // 문서번호
     submitDate: string; // 접수일자
 }
+
+export interface PossibleAttendantsResponse {
+    memberId: number;
+    name: string;
+    canAttend: boolean;
+}

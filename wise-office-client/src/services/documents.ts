@@ -4,6 +4,7 @@ import {
     ApproveDetailResponse,
     ApproveUpdateRequest,
     ApproveUpdateResponse,
+    PossibleAttendantsResponse,
 } from "@/types/document";
 
 /**
@@ -57,5 +58,22 @@ export async function updateApprove(
  */
 export async function getApproveList(projectId: number) {
     const res = await api.get(`projects/${projectId}/approves`);
+    return res.data;
+}
+
+/**
+ * minute 작성에 참여할 수 있는 멤버와 해당 날짜에 참여 가능 여부를 조회하는 함수
+ * @param projectId 해당 프로젝트의 ID, minutesDate 회의록을 작성할 날짜
+ * @returns PossibleAttendantsResponse 객체
+ */
+export async function getPossibleAttendantsList(
+    projectId: number,
+    minutesDate: string,
+): Promise<PossibleAttendantsResponse[]> {
+    const res = await api.get(`/projects/${projectId}/attendants`, {
+        params: {
+            "minutes-date": minutesDate,
+        },
+    });
     return res.data;
 }

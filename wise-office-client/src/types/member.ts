@@ -18,3 +18,7 @@ export interface GroupedMember {
     members: Member[];
     companyMembers: Member[];
 }
+
+export type MemberWithDisabled = Member & {
+    disabled?: boolean;
+};

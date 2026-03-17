@@ -1,8 +1,8 @@
-import { Member } from "@/types/member";
+import { Member, MemberWithDisabled } from "@/types/member";
 import React from "react";
 
 interface Props {
-    companyMembers: Member[];
+    companyMembers: MemberWithDisabled[];
     selectedCompanyMembers: Member[];
     companyMemberSearchText: string;
     setSelectedCompanyMembers: React.Dispatch<React.SetStateAction<Member[]>>;
@@ -26,7 +26,9 @@ export default function MinuteAttendanceSelector({
             m.rank.includes(companyMemberSearchText),
     );
     // 편성 인원 선택
-    const toggleCompanyMember = (member: Member) => {
+    const toggleCompanyMember = (member: MemberWithDisabled) => {
+        if (member.disabled) return;
+
         const exists = selectedCompanyMembers.find(
             (m) => m.memberId === member.memberId,
         );
@@ -58,7 +60,14 @@ export default function MinuteAttendanceSelector({
                     {filteredCompanyMembers.map((member) => (
                         <label
                             key={member.memberId}
-                            className="flex items-center gap-2 px-3 py-2"
+                            className={`flex items-center gap-2 px-3 py-2 ${
+                                member.disabled
+                                    ? "opacity-50 cursor-not-allowed pointer-events-none"
+                                    : "cursor-pointer hover:bg-gray-50"
+                            }`}
+                            onClick={(e) => {
+                                if (member.disabled) e.preventDefault();
+                            }}
                         >
                             <input
                                 type="checkbox"
@@ -66,6 +75,7 @@ export default function MinuteAttendanceSelector({
                                     (m) => m.memberId === member.memberId,
                                 )}
                                 onChange={() => toggleCompanyMember(member)}
+                                disabled={member.disabled}
                             />
                             {member.name} {member.rank}
                         </label>
