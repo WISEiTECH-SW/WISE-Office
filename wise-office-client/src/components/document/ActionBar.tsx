@@ -45,7 +45,7 @@ export default function ActionBar({
             <Button
                 label="출력"
                 onClick={() => window.print()}
-                variant="secondary"
+                variant="primary"
                 icon={<Printer className="w-4 h-4" />}
             />
 

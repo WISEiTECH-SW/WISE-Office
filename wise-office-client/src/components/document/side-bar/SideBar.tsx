@@ -5,10 +5,15 @@ import { NotepadText, ClipboardCheck, BriefcaseBusiness } from "lucide-react";
 
 interface SideBarProps {
     currentDoc: DocType;
+    isNew: boolean;
     selectDoc: (docType: DocType) => void;
 }
 
-export default function Sidebar({ currentDoc, selectDoc }: SideBarProps) {
+export default function Sidebar({
+    currentDoc,
+    isNew,
+    selectDoc,
+}: SideBarProps) {
     const isActive = (type: DocType): boolean => {
         return type === currentDoc;
     };
@@ -23,6 +28,7 @@ export default function Sidebar({ currentDoc, selectDoc }: SideBarProps) {
                 label="회의록"
                 icon={<NotepadText />}
                 isActive={isActive("minute")}
+                isDisabled={false}
                 onClick={() => selectDoc("minute")}
             />
 
@@ -30,6 +36,7 @@ export default function Sidebar({ currentDoc, selectDoc }: SideBarProps) {
                 label="품의서"
                 icon={<ClipboardCheck />}
                 isActive={isActive("approve")}
+                isDisabled={isNew}
                 onClick={() => selectDoc("approve")}
             />
 
@@ -37,6 +44,7 @@ export default function Sidebar({ currentDoc, selectDoc }: SideBarProps) {
                 label="출장복명서"
                 icon={<BriefcaseBusiness />}
                 isActive={isActive("trip")}
+                isDisabled={true}
                 onClick={() => selectDoc("trip")}
             />
 
@@ -47,13 +55,14 @@ export default function Sidebar({ currentDoc, selectDoc }: SideBarProps) {
                     사용 안내
                 </p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                    셀을 클릭해 내용을 직접 입력하세요.
+                    셀을 클릭해 셀 안에 내용을 직접 입력하세요.
                 </p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
+                    좌측의{" "}
                     <span className="text-blue-500 font-medium">
-                        품의서 생성
+                        편성 인원 검색
                     </span>{" "}
-                    버튼으로 현재 문서 기반의 품의서를 빠르게 만들 수 있습니다.
+                    을 사용해서 참석자와 작성자를 선택하세요.
                 </p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                     <span className="text-blue-500 font-medium">출력</span> 시
