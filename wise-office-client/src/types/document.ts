@@ -122,6 +122,5 @@ export interface ApproveListResponse {
 export interface PossibleAttendantsResponse {
     memberId: number;
     name: string;
-    rank: string;
     canAttend: boolean;
 }

@@ -71,18 +71,10 @@ export default function MinuteAttendanceSelector({
                         >
                             <input
                                 type="checkbox"
-                                checked={
-                                    selectedCompanyMembers.some(
-                                        (m) => m.memberId === member.memberId,
-                                    ) && !member.disabled
-                                }
-                                onChange={(e) => {
-                                    if (member.disabled) {
-                                        e.preventDefault();
-                                        return;
-                                    }
-                                    toggleCompanyMember(member);
-                                }}
+                                checked={selectedCompanyMembers.some(
+                                    (m) => m.memberId === member.memberId,
+                                )}
+                                onChange={() => toggleCompanyMember(member)}
                                 disabled={member.disabled}
                             />
                             {member.name} {member.rank}
