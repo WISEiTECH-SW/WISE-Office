@@ -1,10 +1,10 @@
 import { DocumentType, SelectedDocument } from "@/types/project";
 import { Log } from "@/types/log";
-
 import DocumentTabs from "./DocumentTabs";
 import DocumentList from "./DocumentList";
-import DocumentWriteButton from "./DocumentWriteButton";
 import { ApproveListResponse, MinutesListResponse } from "@/types/document";
+import Button from "@/components/common/Button";
+import { Pen } from "lucide-react";
 
 interface DocumentSidebarProps {
     docData: {
@@ -43,7 +43,7 @@ export default function DocumentSidebar({
 
     return (
         <div className="order-2 md:order-1 md:col-span-3 mb-6">
-            <div className="md:min-h-52 bg-white rounded-lg shadow-sm">
+            <div className="md:min-h-52 bg-white rounded-lg shadow-sm mb-4">
                 <DocumentTabs
                     activeDocType={selectedDoc ? selectedDoc.type : "log"}
                     onChangeTab={selectTab}
@@ -57,7 +57,13 @@ export default function DocumentSidebar({
             </div>
 
             {attending && selectedDoc?.type != "approve" && (
-                <DocumentWriteButton label={"작성하기"} onClick={handleWrite} />
+                <Button
+                    label="작성하기"
+                    onClick={handleWrite}
+                    variant="primary"
+                    icon={<Pen className="w-4 h-4" />}
+                    isFull={true}
+                />
             )}
         </div>
     );

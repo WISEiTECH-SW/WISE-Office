@@ -26,38 +26,15 @@ export default function DocumentPage() {
     const router = useRouter();
     const { docType } = router.query;
 
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
-    /* ---- func ---- */
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => setIsModalOpen(false);
-
-    const handleSelectAttendees = (data: {
-        attendants: string[];
-        writer: string;
-    }) => {
-        const selectAttendance = data.attendants.join(", ");
-
-        setForm((prev) => ({
-            ...prev,
-            minutesAttendants: selectAttendance,
-            writer: data.writer,
-        }));
-
-        closeModal();
-    };
-
     const projectId = Number(
         typeof router.query.projectId === "string" ? router.query.projectId : 0,
     );
-
     const docId = Number(
         typeof router.query.docId === "string" ? router.query.docId : 0,
     );
-
     const isNew = docId === 0;
+
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
 
     /* ----- useState ----- */
     const [currentDoc, setCurrentDoc] = useState<DocType>("minute");
@@ -123,8 +100,33 @@ export default function DocumentPage() {
     const approveUpdate = useApproveUpdate();
 
     /* ----- func ----- */
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
+    const handleSelectAttendees = (data: {
+        attendants: string[];
+        writer: string;
+    }) => {
+        const selectAttendance = data.attendants.join(", ");
+
+        setForm((prev) => ({
+            ...prev,
+            minutesAttendants: selectAttendance,
+            writer: data.writer,
+        }));
+
+        closeModal();
+    };
+
     const selectDocType = (nextDocType: DocType) => {
-        router.push(`/projects/${projectId}/documents/${nextDocType}/${docId}`);
+        const nextDocId =
+            currentDoc === "minute"
+                ? minuteDetail?.approveId
+                : approveDetail?.minutesId;
+
+        router.push(
+            `/projects/${projectId}/documents/${nextDocType}/${nextDocId}`,
+        );
     };
 
     const backToProjectPage = (selectedDoc?: {
@@ -238,12 +240,8 @@ export default function DocumentPage() {
                     <div className="flex justify-center gap-10">
                         {/* Paper */}
                         <div
-                            className="bg-white w-full max-w-[720px] min-h-[1020px] rounded-sm transition-opacity duration-200"
-                            style={{
-                                opacity: isFading ? 0 : 1,
-                                boxShadow:
-                                    "0 2px 8px rgba(30,64,175,0.08), 0 8px 32px rgba(30,64,175,0.10), 0 0 0 1px rgba(30,64,175,0.06)",
-                            }}
+                            className={`bg-white w-full max-w-[720px] min-h-[1020px] rounded-sm transition-opacity duration-200 shadow-xl
+                                ${isFading ? "opacity-0" : "opacity-100"} `}
                         >
                             <div className="print-area">
                                 {currentDoc === "minute" && (
@@ -293,7 +291,11 @@ export default function DocumentPage() {
             </main>
 
             {/* Right Sidebar */}
-            <Sidebar currentDoc={currentDoc} selectDoc={selectDocType} />
+            <Sidebar
+                currentDoc={currentDoc}
+                isNew={isNew || !minuteDetail?.approveId}
+                selectDoc={selectDocType}
+            />
         </div>
     );
 }

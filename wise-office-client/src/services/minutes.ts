@@ -1,6 +1,5 @@
 import { api } from "@/lib/clientApi";
 import {
-    Minutes,
     MinutesCreateRequest,
     MinutesDetail,
     MinutesListResponse,
@@ -15,7 +14,7 @@ import {
 export async function createMinute(
     projectId: number,
     minutesCreateRequest: MinutesCreateRequest,
-): Promise<Minutes[]> {
+): Promise<MinutesDetail> {
     const res = await api.post(
         `/projects/${projectId}/minutes`,
         minutesCreateRequest,
