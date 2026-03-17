@@ -30,6 +30,9 @@ export const usePossibleAttendantsList = (
         queryKey: ["possibleAttendants", projectId, minutesDate],
         queryFn: () => getPossibleAttendantsList(projectId, minutesDate),
         enabled: !!projectId && !!minutesDate,
+        staleTime: 0,
+        gcTime: 0,
+        refetchOnMount: "always",
     });
 
 /** 프로젝트 문서 목록 (로그 / 회의록) */

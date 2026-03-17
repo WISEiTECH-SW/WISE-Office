@@ -3,7 +3,6 @@ import {
     DocType,
     MinutesCreateRequest,
     MinutesDetail,
-    PossibleAttendantsResponse,
 } from "@/types/document";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
