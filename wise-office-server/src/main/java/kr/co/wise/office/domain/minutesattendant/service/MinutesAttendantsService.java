@@ -54,9 +54,8 @@ public class MinutesAttendantsService {
         attendantEntityRepository.saveAll(minutesAttendants);
     }
 
-    public List<MinutesAttendantEntity> findByProposalAndMinutesDate(List<ProposalAttendantEntity> attendants,
-                                                                     LocalDate minutesDate) {
-        return attendantEntityRepository.findByProposalAndMinutesDate(attendants, minutesDate);
+    public Set<Long> findOverlappingMembers(LocalDate minutesDate) {
+        return attendantEntityRepository.findOverlappingMembers(minutesDate);
     }
 
     public void updateMinutesAttendants(MinutesEntity minutes, String minutesAttendants, String writer, long projectId) {
