@@ -8,6 +8,7 @@ import {
     createApprove,
     getApproveDetail,
     getApproveList,
+    getPossibleAttendantsList,
     updateApprove,
 } from "@/services/documents";
 
@@ -18,6 +19,17 @@ export const useProjectDetail = (projectId: number) =>
     useQuery({
         queryKey: ["project", projectId],
         queryFn: () => getProjectById(projectId),
+    });
+
+/** 회의록 참여자별 가능여부 조회 */
+export const usePossibleAttendantsList = (
+    projectId: number,
+    minutesDate: string,
+) =>
+    useQuery({
+        queryKey: ["possibleAttendants", projectId, minutesDate],
+        queryFn: () => getPossibleAttendantsList(projectId, minutesDate),
+        enabled: !!projectId && !!minutesDate,
     });
 
 /** 프로젝트 문서 목록 (로그 / 회의록) */

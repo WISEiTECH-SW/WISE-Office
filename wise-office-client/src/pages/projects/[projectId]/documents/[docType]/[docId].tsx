@@ -3,6 +3,7 @@ import {
     DocType,
     MinutesCreateRequest,
     MinutesDetail,
+    PossibleAttendantsResponse,
 } from "@/types/document";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ import { useMinutesMutation } from "@/hooks/doc/useMinutesMutation";
 import {
     useApproveDetail,
     useApproveUpdate,
+    usePossibleAttendantsList,
 } from "@/hooks/project/useDocuments";
 import { ProjectInfo } from "@/types/project";
 import { useQueryClient } from "@tanstack/react-query";
@@ -112,6 +114,11 @@ export default function DocumentPage() {
         router.isReady ? Number(projectId) : undefined,
         router.isReady ? Number(docId) : undefined,
     );
+    const { data: possibleAttendants } = usePossibleAttendantsList(
+        projectId,
+        form.minutesDate,
+    );
+
     /* ----- mutation ----- */
     const { createMinute, updateMinute } = useMinutesMutation();
     const approveUpdate = useApproveUpdate();
@@ -163,7 +170,7 @@ export default function DocumentPage() {
             return;
         }
 
-        if (docType === "approve") {
+        if (currentDoc === "approve") {
             approveUpdate.mutate({
                 projectId,
                 approveId: Number(docId),
@@ -263,13 +270,14 @@ export default function DocumentPage() {
                         </div>
 
                         {/* Attendance Modal */}
-                        {docType === "minute" && isModalOpen && (
+                        {currentDoc === "minute" && isModalOpen && (
                             <div className="w-[320px] shrink-0">
                                 <AttendanceModal
                                     isOpen={isModalOpen}
                                     onClose={closeModal}
                                     onConfirm={handleSelectAttendees}
                                     attendants={projectInfo?.proposalAttendant}
+                                    possibleAttendants={possibleAttendants}
                                     selectedNames={
                                         form.minutesAttendants
                                             ? form.minutesAttendants
