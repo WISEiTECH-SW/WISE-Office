@@ -76,8 +76,8 @@ export default function MinuteDocument() {
                             colSpan={3}
                             // value={`위세아이텍 : ${minutesInfo.minutesAttendants}\n${minutesInfo.instAttendants}`}
                             value={[
-                                `위세아이텍 : ${minutesInfo.minutesAttendants}`,
                                 minutesInfo.instAttendants,
+                                `위세아이텍 : ${minutesInfo.minutesAttendants}`,
                             ]
                                 .filter(Boolean)
                                 .join("\n")}

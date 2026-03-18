@@ -131,8 +131,7 @@ export default function MinuteForm({
                         >
                             <div className="flex flex-col gap-2">
                                 {/* 외부기관 참석자 */}
-                                <input
-                                    type="text"
+                                <textarea
                                     placeholder="기관명: 참석자1, 참석자2,... 와 같이 외부기관 참석자를 입력해 주세요."
                                     value={form.instAttendants}
                                     onChange={(e) =>
