@@ -7,7 +7,6 @@ import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.service.MemberService;
-import kr.co.wise.office.domain.minutesattendant.entity.MinutesAttendantEntity;
 import kr.co.wise.office.domain.minutesattendant.service.MinutesAttendantsService;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,13 +44,10 @@ public class ProposalAttendantsServiceApi {
         List<ProposalAttendantEntity> proposalAttendants = proposalAttendantsService.findByProjectId(projectId);
 
         // 회의 생성 당일날 다른 회의에 참석 중인 리스트 조회
-        List<MinutesAttendantEntity> busyAttendants = minutesAttendantsService.findByProposalAndMinutesDate(proposalAttendants, minutesDate);
-
-        // 금일 다른 회의에 참석중인 사람들의 id
-        Set<Long> busyIds = busyAttendants.stream().map(m -> m.getProposalAttendantEntity().getId()).collect(Collectors.toSet());
+        Set<Long> busyAttendants = minutesAttendantsService.findOverlappingMembers(minutesDate);
 
         List<PossibleAttendantsResponse> statusList = proposalAttendants.stream().map(pa -> {
-            boolean canAttend = !busyIds.contains(pa.getId());
+            boolean canAttend = !busyAttendants.contains(pa.getCompanyMember().getId());
             return new PossibleAttendantsResponse(pa.getCompanyMember().getId(),pa.getCompanyMember().getName(), canAttend);
         }).toList();
 
