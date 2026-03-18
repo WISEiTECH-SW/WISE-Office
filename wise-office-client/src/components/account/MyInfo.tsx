@@ -36,6 +36,7 @@ export default function MyInfo({
                 >
                     <option value={"주임"}>주임</option>
                     <option value={"선임"}>선임</option>
+                    <option value={"책임"}>책임</option>
                     <option value={"수석"}>수석</option>
                     <option value={"팀장"}>팀장</option>
                 </select>

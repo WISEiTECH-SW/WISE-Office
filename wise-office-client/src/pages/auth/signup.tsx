@@ -16,7 +16,7 @@ import {
     handleSummitSignUpForm,
 } from "@/hooks/handleSignup";
 
-const RANK = ["직급을 선택해 주세요", "주임", "선임", "팀장", "수석"];
+const RANK = ["직급을 선택해 주세요", "주임", "선임", "책임", "수석", "팀장"];
 const TEAM = ["소속을 선택해 주세요", "연구기획 1팀", "연구기획 2팀"];
 
 export default function Signup() {
