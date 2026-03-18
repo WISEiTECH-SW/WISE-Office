@@ -15,9 +15,10 @@ import {
     handleCodeVerify,
     handleSummitSignUpForm,
 } from "@/hooks/handleSignup";
+import { RANKS, TEAMS } from "@/constants/organization";
 
-const RANK = ["직급을 선택해 주세요", "주임", "선임", "팀장", "수석"];
-const TEAM = ["소속을 선택해 주세요", "연구기획 1팀", "연구기획 2팀"];
+const RANK = ["직급을 선택해 주세요", ...RANKS];
+const TEAM = ["소속을 선택해 주세요", ...TEAMS];
 
 export default function Signup() {
     const router = useRouter();
