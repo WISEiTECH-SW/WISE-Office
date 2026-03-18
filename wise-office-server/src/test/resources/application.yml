@@ -54,7 +54,7 @@ domain:
   email: wise.co.kr
 
 image:
-  dir: C:/myVolumes/images
+  dir: ./build/test-images
   prefix: http://localhost:8080/images/
 
 holiday:

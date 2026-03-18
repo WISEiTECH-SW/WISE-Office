@@ -16,8 +16,8 @@ public interface MinutesAttendantEntityRepository extends JpaRepository<MinutesA
     @Query("select distinct cm.id from MinutesAttendantEntity m " +
             "join m.minutesEntity mm " +
             "join m.proposalAttendantEntity p " +
-            "join m.proposalAttendantEntity.companyMember cm " +
-            "where m.minutesEntity.minutesDate = :minutesDate")
+            "join p.companyMember cm " +
+            "where mm.minutesDate = :minutesDate")
     Set<Long> findOverlappingMembers(
             @Param("minutesDate")LocalDate minutesDate
     );
