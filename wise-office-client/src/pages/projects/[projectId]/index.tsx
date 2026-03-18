@@ -277,8 +277,9 @@ export default function ProjectById() {
                             case "approve":
                                 return (
                                     <ApprovePreview
-                                        projectId={projectId}
                                         approve={data}
+                                        isAttending={projectInfo.attending}
+                                        onEdit={openDocumentEditor}
                                         onSelectMinute={handleSelectMinute}
                                     />
                                 );

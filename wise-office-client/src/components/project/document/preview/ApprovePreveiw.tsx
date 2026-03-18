@@ -2,55 +2,55 @@ import Button from "@/components/common/Button";
 import { ApproveDetailResponse } from "@/types/document";
 import Image from "next/image";
 import BasePreview from "./BasePreview";
+import { Edit, Printer, FileSearch } from "lucide-react";
 
-import { useRouter } from "next/router";
 interface Props {
-    projectId: number;
     approve?: ApproveDetailResponse;
+    isAttending: boolean;
+    onEdit: (docType: string, docId: number) => void;
     onSelectMinute: (minutesId: number) => void;
 }
 
 export default function ApprovePreview({
-    projectId,
     approve,
+    isAttending,
+    onEdit,
     onSelectMinute,
 }: Props) {
-    const router = useRouter();
     if (!approve) {
         return <BasePreview type="approve" />;
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-sm">
-            <div className="flex flex-col p-4 md:pt-6">
-                {/* 버튼 */}
-                <div className="flex flex-row gap-4">
+        <div className="rounded-lg shadow-sm">
+            {isAttending && (
+                <div className="flex rounded-t-lg flex-row gap-4 p-4 bg-white/80">
                     <Button
                         label="회의록 조회"
                         onClick={() => onSelectMinute(approve.minutesId)}
                         variant="primary"
+                        icon={<FileSearch className="w-4 h-4" />}
                     />
                     <Button
-                        label="출력하기"
+                        label="출력"
                         onClick={() => {
                             window.print();
                         }}
-                        variant="secondary"
+                        variant="primary"
+                        icon={<Printer className="w-4 h-4" />}
                     />
                     <Button
-                        label="수정하기"
-                        onClick={() => {
-                            router.push(
-                                `/projects/${projectId}/documents/approve/${approve.approveId}`,
-                            );
-                        }}
-                        variant="primary"
+                        label="수정"
+                        onClick={() => onEdit("approve", approve.approveId)}
+                        variant="secondary"
+                        icon={<Edit className="h-4 w-4" />}
                     />
                 </div>
-
+            )}
+            <div className="p-4 rounded-b-lg bg-blue-50">
                 {/* 품의서 */}
                 <div className="print-area">
-                    <div className="max-w-[718px] w-full mx-auto p-12 box-border bg-white rounded-lg mt-6">
+                    <div className="max-w-[718px] w-full mx-auto p-12 box-border bg-white">
                         {/* 제목 */}
                         <div className="flex flex-col items-center mt-6">
                             <div className="inline-block relative">

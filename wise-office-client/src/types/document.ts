@@ -48,8 +48,8 @@ export interface MinutesListResponse {
 
 export interface MinutesDetail {
     minutesId: number;
-    approveId?: number | null;
-    title?: string;
+    approveId: number | null;
+    title: string;
     host: string;
     minutesDate: string;
     startTime: string;
@@ -60,7 +60,7 @@ export interface MinutesDetail {
     instAttendants: string;
     writer: string;
     content: string;
-    writtenAt?: string;
+    writtenAt: string;
 }
 
 export interface Approval {

@@ -3,6 +3,7 @@ interface ButtonProps {
     onClick: () => void;
     variant: "primary" | "secondary" | "danger";
     icon?: React.ReactNode;
+    isFull?: boolean;
     isLoading?: boolean;
     disabled?: boolean;
 }
@@ -12,6 +13,7 @@ export default function Button({
     onClick,
     variant,
     icon,
+    isFull = false,
     isLoading = false,
     disabled = false,
 }: ButtonProps) {
@@ -21,6 +23,8 @@ export default function Button({
         danger: "bg-red-400 hover:bg-red-500 disabled:bg-red-300",
     };
 
+    const wideStyle = isFull ? "w-full" : "";
+
     return (
         <button
             onClick={onClick}
@@ -29,7 +33,7 @@ export default function Button({
         flex items-center justify-center gap-2
         px-4 py-2 text-white text-sm rounded-md transition-colors
         cursor-pointer disabled:cursor-not-allowed
-        ${variantStyles[variant]}
+        ${variantStyles[variant]}  ${wideStyle}
         `}
         >
             {!isLoading && icon && <span className="w-4 h-4">{icon}</span>}

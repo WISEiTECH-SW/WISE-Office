@@ -6,6 +6,7 @@ import { MinutesDetail } from "@/types/document";
 import { DeleteModalState } from "@/types/project";
 import { useEffect } from "react";
 import BasePreview from "./BasePreview";
+import { Edit, Printer, Trash2, FileSearch, FilePlus2 } from "lucide-react";
 
 interface MinutePreviewProps {
     projectId: number;
@@ -50,56 +51,58 @@ export default function MinutePreview({
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-sm">
-            <div className="flex flex-col p-4 md:pt-6">
-                {isAttending && (
-                    <div className="flex flex-row gap-4">
-                        {approveId ? (
-                            <Button
-                                label="품의서 조회"
-                                onClick={() => onSelectApprove(approveId)}
-                                variant="primary"
-                            />
-                        ) : (
-                            <Button
-                                label="품의서 생성"
-                                onClick={() =>
-                                    createApprove.mutate({
-                                        projectId: Number(projectId),
-                                        minutesId: minuteDetail.minutesId,
-                                    })
-                                }
-                                variant="primary"
-                            />
-                        )}
+        <div className="rounded-lg shadow-sm">
+            {isAttending && (
+                <div className="flex rounded-t-lg flex-row gap-4 p-4 bg-white/80">
+                    {approveId ? (
                         <Button
-                            label="출력하기"
-                            onClick={() => {
-                                window.print();
-                            }}
-                            variant="secondary"
-                        />
-                        <Button
-                            label="수정하기"
-                            onClick={() =>
-                                onEdit("minute", minuteDetail.minutesId)
-                            }
+                            label="품의서 조회"
+                            onClick={() => onSelectApprove(approveId)}
                             variant="primary"
+                            icon={<FileSearch className="w-4 h-4" />}
                         />
+                    ) : (
                         <Button
-                            label="삭제하기"
+                            label="품의서 생성"
                             onClick={() =>
-                                onDelete({
-                                    type: "minute",
-                                    id: minuteDetail.minutesId,
+                                createApprove.mutate({
+                                    projectId: Number(projectId),
+                                    minutesId: minuteDetail.minutesId,
                                 })
                             }
-                            variant="danger"
+                            variant="primary"
+                            icon={<FilePlus2 className="w-4 h-4" />}
                         />
-                    </div>
-                )}
-
-                <div className="print-area flex justify-center ">
+                    )}
+                    <Button
+                        label="출력"
+                        onClick={() => {
+                            window.print();
+                        }}
+                        variant="primary"
+                        icon={<Printer className="w-4 h-4" />}
+                    />
+                    <Button
+                        label="수정"
+                        onClick={() => onEdit("minute", minuteDetail.minutesId)}
+                        variant="secondary"
+                        icon={<Edit className="h-4 w-4" />}
+                    />
+                    <Button
+                        label="삭제"
+                        onClick={() =>
+                            onDelete({
+                                type: "minute",
+                                id: minuteDetail.minutesId,
+                            })
+                        }
+                        variant="danger"
+                        icon={<Trash2 className="h-4 w-4" />}
+                    />
+                </div>
+            )}
+            <div className="p-4 rounded-b-lg bg-blue-50">
+                <div className="print-area">
                     <MinuteDocument />
                 </div>
             </div>
