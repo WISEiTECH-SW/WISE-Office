@@ -74,7 +74,6 @@ export default function MinuteDocument() {
                         <LabelCell label="참 석 자" />
                         <ReadableCell
                             colSpan={3}
-                            // value={`위세아이텍 : ${minutesInfo.minutesAttendants}\n${minutesInfo.instAttendants}`}
                             value={[
                                 minutesInfo.instAttendants,
                                 `위세아이텍 : ${minutesInfo.minutesAttendants}`,
