@@ -1,0 +1,69 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+    defer-datasource-initialization: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            authorization-grant-type: authorization_code
+            redirect-uri: "testtestes/login/oauth2/code/{testsetes}"
+            scope: profile
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: testtest
+    password: testtest
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          timeout: 5000
+          connectiontimeout: 5000
+  servlet:
+    multipart:
+      max-file-size: 5MB
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+
+jwt:
+  secret: thisisfortestjwtjwtjwtjwtjwtjwtjwtjwt
+  expiration: 360000
+
+domain:
+  email: wise.co.kr
+
+image:
+  dir: C:/myVolumes/images
+  prefix: http://localhost:8080/images/
+
+holiday:
+  api:
+    key: test-key
+
+member:
+  init-path: init/memberList.txt
+
+front:
+  url: testtest
+  port: 3000
