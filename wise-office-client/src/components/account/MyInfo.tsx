@@ -1,3 +1,5 @@
+import { RANKS } from "@/constants/organization";
+
 interface UserProfileProps {
     team: string;
     rank: string;
@@ -34,11 +36,11 @@ export default function MyInfo({
                     value={rank ? rank : ""}
                     onChange={(e) => setRank(String(e.target.value))}
                 >
-                    <option value={"주임"}>주임</option>
-                    <option value={"선임"}>선임</option>
-                    <option value={"책임"}>책임</option>
-                    <option value={"수석"}>수석</option>
-                    <option value={"팀장"}>팀장</option>
+                    {RANKS.map((rankOption) => (
+                        <option key={rankOption} value={rankOption}>
+                            {rankOption}
+                        </option>
+                    ))}
                 </select>
             </div>
         </div>
