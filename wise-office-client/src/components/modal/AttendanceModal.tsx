@@ -30,7 +30,6 @@ export default function AttendanceModal({
     const [writer, setWriter] = useState<Member | null>(null);
 
     // 모달 내부에서 임시로 선택 상태 관리
-
     useEffect(() => {
         if (!attendants || !possibleAttendants) return;
 
@@ -69,6 +68,19 @@ export default function AttendanceModal({
         },
     );
 
+    // 참석자 작성자 동기화
+    useEffect(() => {
+        if (!writer) return;
+
+        const stillExists = selectedCompanyMembers.some(
+            (member) => member.memberId === writer.memberId,
+        );
+
+        if (!stillExists) {
+            setWriter(null);
+        }
+    }, [selectedCompanyMembers, writer]);
+
     const handleConfirm = () => {
         const names = selectedCompanyMembers.map((member) => `${member.name}`);
         onConfirm({
@@ -97,6 +109,7 @@ export default function AttendanceModal({
                         label="확인"
                         variant="primary"
                         onClick={() => handleConfirm()}
+                        disabled={!writer}
                     />
                     <Button
                         label="취소"
