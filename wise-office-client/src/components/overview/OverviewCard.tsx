@@ -34,7 +34,11 @@ export default function OverviewCard({
                     </div>
                     {/* 참석자 명단 */}
                     <div className="col-span-1 text-xs flex items-center">
-                        {minutesInfo?.minutesAttendants}
+                        {minutesInfo?.minutesAttendants?.length
+                            ? minutesInfo.minutesAttendants
+                                  .map((m) => `${m.name} ${m.rank}`)
+                                  .join(", ")
+                            : ""}
                     </div>
                 </div>
             </div>

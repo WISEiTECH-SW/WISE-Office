@@ -8,8 +8,6 @@ interface ModalProps {
     onClose: () => void;
     onConfirm: (data: { attendants: number[]; writer: number }) => void;
     possibleAttendants: PossibleAttendantsResponse[] | undefined;
-    // selectedNames: string[];
-    // selectedWriter: string;
     selectedIds: number[];
     selectedWriterId: number;
     setAttendantsNameAndRank: React.Dispatch<React.SetStateAction<string>>;

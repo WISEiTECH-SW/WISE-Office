@@ -111,8 +111,6 @@ export default function DocumentPage() {
         attendants: number[];
         writer: number;
     }) => {
-        // const selectAttendance = data.attendants.join(" " + ", ");
-
         setForm((prev) => ({
             ...prev,
             minutesAttendants: data.attendants,
@@ -217,7 +215,6 @@ export default function DocumentPage() {
                 endTime: endTime ?? "",
                 location: location ?? "",
                 purpose: purpose ?? "",
-                // minutesAttendants: minutesAttendants ?? [],
                 minutesAttendants: minutesAttendants
                     ? minutesAttendants.map((m) => m.memberId)
                     : [],
