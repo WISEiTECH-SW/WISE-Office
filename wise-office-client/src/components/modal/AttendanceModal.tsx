@@ -31,33 +31,6 @@ export default function AttendanceModal({
     const [writer, setWriter] = useState<PossibleAttendantsResponse | null>(
         null,
     );
-
-    // 모달 내부에서 임시로 선택 상태 관리
-    // useEffect(() => {
-    //     if (!possibleAttendants) return;
-
-    //     // 이미 선택된 상태면 초기화하지 않음
-    //     // if (selectedCompanyMembers.length > 0) return;
-    //     if (selectedCompanyMembers.length > 0 && possibleAttendants.length > 0)
-    //         return;
-
-    //     // const initialSelected = possibleAttendants.filter((member) =>
-    //     //     selectedNames.includes(member.name),
-    //     // );
-    //     const initialSelected = possibleAttendants.filter((member) =>
-    //         selectedIds.includes(member.memberId),
-    //     );
-
-    //     // const foundWriter = possibleAttendants.find(
-    //     //     (member) => member.name === selectedWriter,
-    //     // );
-    //     const foundWriter = possibleAttendants.find(
-    //         (member) => member.memberId === selectedWriterId,
-    //     );
-
-    //     setSelectedCompanyMembers(initialSelected);
-    //     setWriter(foundWriter ?? null);
-    // }, [possibleAttendants]);
     useEffect(() => {
         if (!possibleAttendants) return;
 
@@ -108,7 +81,6 @@ export default function AttendanceModal({
         );
         setAttendantsNameAndRank(names.join(" " + ", "));
         onConfirm({
-            // attendants: names,
             attendants: selectedCompanyMembers.map((m) => m.memberId),
             writer: writer?.memberId ?? 0,
         });

@@ -48,7 +48,7 @@ public class ProposalAttendantsServiceApi {
 
         List<PossibleAttendantsResponse> statusList = proposalAttendants.stream().map(pa -> {
             boolean canAttend = !busyAttendants.contains(pa.getCompanyMember().getId());
-            return new PossibleAttendantsResponse(pa.getCompanyMember().getId(),pa.getCompanyMember().getName(), pa.getCompanyMember().getRank(), canAttend);
+            return new PossibleAttendantsResponse(pa.getId(),pa.getCompanyMember().getName(), pa.getCompanyMember().getRank(), canAttend);
         }).toList();
 
         return statusList;

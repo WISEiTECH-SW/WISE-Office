@@ -20,9 +20,9 @@ export interface MinutesInfo {
     endTime: string;
     location: string;
     purpose: string;
-    minutesAttendants: string;
+    minutesAttendants: MinutesAttendantsInfo[];
     instAttendants: string;
-    writer: string;
+    writer: MinutesAttendantsInfo;
     content: string;
 }
 
@@ -33,10 +33,8 @@ export interface MinutesCreateRequest {
     minutesDate: string;
     startTime: string;
     endTime: string;
-    // minutesAttendants: string;
     minutesAttendants: number[];
     instAttendants: string;
-    // writer: string;
     writer: number;
     content: string;
 }
@@ -58,15 +56,14 @@ export interface MinutesDetail {
     endTime: string;
     location: string;
     purpose: string;
-    // minutesAttendants: number[];
-    minutesAttendants: minutesAttendant[];
+    minutesAttendants: MinutesAttendantsInfo[];
     instAttendants: string;
-    writer: minutesAttendant;
+    writer: MinutesAttendantsInfo;
     content: string;
     writtenAt: string;
 }
 
-export interface minutesAttendant {
+export interface MinutesAttendantsInfo {
     memberId: number;
     name: string;
     rank: string;

@@ -58,7 +58,6 @@ export default function DocumentPage() {
     // 회의록 기입용 사내 참석자 이름 + 직급
     const [attendantsNameAndRank, setAttendantsNameAndRank] =
         useState<string>("");
-    const [writerName, setWriterName] = useState("");
 
     const [newApprove, setNewApprove] = useState<ApproveUpdateRequest>({
         reportNo: "",
@@ -293,13 +292,6 @@ export default function DocumentPage() {
                                     onClose={closeModal}
                                     onConfirm={handleSelectAttendees}
                                     possibleAttendants={possibleAttendants}
-                                    // selectedNames={
-                                    // form.minutesAttendants
-                                    //     ? form.minutesAttendants
-                                    //           .split(", ")
-                                    //           .map((n) => n.trim())
-                                    //     : []
-                                    // selectedWriter={form.writer}
                                     selectedIds={form.minutesAttendants}
                                     selectedWriterId={form.writer}
                                     setAttendantsNameAndRank={

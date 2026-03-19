@@ -76,7 +76,11 @@ export default function MinuteDocument() {
                             colSpan={3}
                             value={[
                                 minutesInfo.instAttendants,
-                                `위세아이텍 : ${minutesInfo.minutesAttendants}`,
+                                minutesInfo.minutesAttendants?.length
+                                    ? `위세아이텍 : ${minutesInfo.minutesAttendants
+                                          .map((m) => `${m.name} ${m.rank}`)
+                                          .join(", ")}`
+                                    : "",
                             ]
                                 .filter(Boolean)
                                 .join("\n")}
@@ -88,7 +92,11 @@ export default function MinuteDocument() {
                         <LabelCell label="작 성 자" />
                         <ReadableCell
                             colSpan={3}
-                            value={minutesInfo.writer}
+                            value={
+                                minutesInfo.writer
+                                    ? `${minutesInfo.writer.name} ${minutesInfo.writer.rank}`
+                                    : ""
+                            }
                             textAlign={"text-start"}
                         />
                     </tr>
