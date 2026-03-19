@@ -3,7 +3,10 @@ import { EditableCell } from "./EditableCell";
 import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
 import ApprovalSeal from "./ApprovalSeal";
-import { MinutesCreateRequest } from "@/types/document";
+import {
+    MinutesCreateRequest,
+    PossibleAttendantsResponse,
+} from "@/types/document";
 import { formatMeetingDate, formatMeetingTime } from "@/utils/dateToString";
 import DateTimeModal from "../modal/DateTimeModal";
 
@@ -12,6 +15,8 @@ interface MinuteFormProps {
     setForm: React.Dispatch<React.SetStateAction<MinutesCreateRequest>>;
     projectName: string;
     openAttendanceModal: () => void;
+    attendantsNameAndRank: string;
+    possibleAttendants?: PossibleAttendantsResponse[];
 }
 
 export default function MinuteForm({
@@ -19,9 +24,14 @@ export default function MinuteForm({
     setForm,
     projectName,
     openAttendanceModal,
+    attendantsNameAndRank,
+    possibleAttendants,
 }: MinuteFormProps) {
     const [isDateTimeModalOpen, setIsDateTimeModalOpen] =
         useState<boolean>(false);
+    const writerInfo = possibleAttendants?.find(
+        (m) => m.memberId === form.writer,
+    );
 
     return (
         <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[80px] pb-[120px] flex flex-col">
@@ -148,12 +158,13 @@ export default function MinuteForm({
                                     onClick={openAttendanceModal}
                                     className="cursor-pointer hover:bg-blue-50 px-1 py-[2px]"
                                 >
-                                    {form.minutesAttendants ? (
+                                    {form.minutesAttendants.length > 0 ? (
                                         <span>
                                             <span className="font-medium">
                                                 위세아이텍:
                                             </span>{" "}
-                                            {form.minutesAttendants}
+                                            {/* {form.minutesAttendants} */}
+                                            {attendantsNameAndRank}
                                         </span>
                                     ) : (
                                         <span className="text-gray-400 italic">
@@ -174,7 +185,11 @@ export default function MinuteForm({
                             className="border border-black px-[10px] py-2 text-[13.5px]"
                         >
                             {form.writer ? (
-                                <span>{form.writer}</span>
+                                <span>
+                                    {writerInfo
+                                        ? `${writerInfo.name} ${writerInfo.rank}`
+                                        : ""}
+                                </span>
                             ) : (
                                 <span className="text-gray-400 italic">
                                     우측 리스트에서 작성자를 선택하세요

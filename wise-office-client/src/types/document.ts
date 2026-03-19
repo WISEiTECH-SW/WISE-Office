@@ -33,9 +33,11 @@ export interface MinutesCreateRequest {
     minutesDate: string;
     startTime: string;
     endTime: string;
-    minutesAttendants: string;
+    // minutesAttendants: string;
+    minutesAttendants: number[];
     instAttendants: string;
-    writer: string;
+    // writer: string;
+    writer: number;
     content: string;
 }
 
@@ -56,11 +58,18 @@ export interface MinutesDetail {
     endTime: string;
     location: string;
     purpose: string;
-    minutesAttendants: string;
+    // minutesAttendants: number[];
+    minutesAttendants: minutesAttendant[];
     instAttendants: string;
-    writer: string;
+    writer: minutesAttendant;
     content: string;
     writtenAt: string;
+}
+
+export interface minutesAttendant {
+    memberId: number;
+    name: string;
+    rank: string;
 }
 
 export interface Approval {
@@ -122,5 +131,6 @@ export interface ApproveListResponse {
 export interface PossibleAttendantsResponse {
     memberId: number;
     name: string;
+    rank: string;
     canAttend: boolean;
 }

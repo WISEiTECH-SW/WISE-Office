@@ -49,11 +49,16 @@ export default function DocumentPage() {
         endTime: "",
         location: "",
         purpose: "",
-        minutesAttendants: "",
+        minutesAttendants: [], // memberId 리스트
         instAttendants: "",
-        writer: "",
+        writer: 0,
         content: "",
     });
+
+    // 회의록 기입용 사내 참석자 이름 + 직급
+    const [attendantsNameAndRank, setAttendantsNameAndRank] =
+        useState<string>("");
+    const [writerName, setWriterName] = useState("");
 
     const [newApprove, setNewApprove] = useState<ApproveUpdateRequest>({
         reportNo: "",
@@ -68,9 +73,9 @@ export default function DocumentPage() {
               (form.endTime ?? "").trim() !== "" &&
               (form.location ?? "").trim() !== "" &&
               (form.purpose ?? "").trim() !== "" &&
-              (form.minutesAttendants ?? "").trim() !== "" &&
+              form.minutesAttendants.length > 0 &&
               (form.instAttendants ?? "").trim() !== "" &&
-              (form.writer ?? "").trim() !== "" &&
+              form.writer !== 0 &&
               (form.content ?? "").trim() !== ""
             : (newApprove.reportNo ?? "").trim() !== "" &&
               (newApprove.writer ?? "").trim() !== "";
@@ -104,14 +109,14 @@ export default function DocumentPage() {
     const closeModal = () => setIsModalOpen(false);
 
     const handleSelectAttendees = (data: {
-        attendants: string[];
-        writer: string;
+        attendants: number[];
+        writer: number;
     }) => {
-        const selectAttendance = data.attendants.join(", ");
+        // const selectAttendance = data.attendants.join(" " + ", ");
 
         setForm((prev) => ({
             ...prev,
-            minutesAttendants: selectAttendance,
+            minutesAttendants: data.attendants,
             writer: data.writer,
         }));
 
@@ -213,11 +218,21 @@ export default function DocumentPage() {
                 endTime: endTime ?? "",
                 location: location ?? "",
                 purpose: purpose ?? "",
-                minutesAttendants: minutesAttendants ?? "",
+                // minutesAttendants: minutesAttendants ?? [],
+                minutesAttendants: minutesAttendants
+                    ? minutesAttendants.map((m) => m.memberId)
+                    : [],
                 instAttendants: instAttendants ?? "",
-                writer: writer ?? "",
+                writer: writer ? writer.memberId : 0,
                 content: content ?? "",
             });
+            setAttendantsNameAndRank(
+                minutesAttendants
+                    ? minutesAttendants
+                          .map((m) => `${m.name} ${m.rank}`)
+                          .join(", ")
+                    : "",
+            );
 
             setSavedTime("MM/DD HH:MM");
         }
@@ -254,6 +269,10 @@ export default function DocumentPage() {
                                         form={form}
                                         setForm={setForm}
                                         openAttendanceModal={openModal}
+                                        attendantsNameAndRank={
+                                            attendantsNameAndRank
+                                        }
+                                        possibleAttendants={possibleAttendants}
                                     />
                                 )}
                                 {currentDoc === "approve" && (
@@ -273,16 +292,19 @@ export default function DocumentPage() {
                                     isOpen={isModalOpen}
                                     onClose={closeModal}
                                     onConfirm={handleSelectAttendees}
-                                    attendants={projectInfo?.proposalAttendant}
                                     possibleAttendants={possibleAttendants}
-                                    selectedNames={
-                                        form.minutesAttendants
-                                            ? form.minutesAttendants
-                                                  .split(", ")
-                                                  .map((n) => n.trim())
-                                            : []
+                                    // selectedNames={
+                                    // form.minutesAttendants
+                                    //     ? form.minutesAttendants
+                                    //           .split(", ")
+                                    //           .map((n) => n.trim())
+                                    //     : []
+                                    // selectedWriter={form.writer}
+                                    selectedIds={form.minutesAttendants}
+                                    selectedWriterId={form.writer}
+                                    setAttendantsNameAndRank={
+                                        setAttendantsNameAndRank
                                     }
-                                    selectedWriter={form.writer}
                                 />
                             </div>
                         )}
