@@ -24,4 +24,13 @@ public class ProposalAttendantsService {
         return proposalAttendantEntityRepository.findWriterInfo(writerProposalAttendantId, projectId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.REJECT_CREATE_MINUTES));
     }
+
+    public List<ProposalAttendantEntity> findWriterInfos(List<Long> proposalIds, long projectId) {
+        List<ProposalAttendantEntity> writerInfos = proposalAttendantEntityRepository.findWriterInfos(proposalIds, projectId);
+        if (writerInfos.isEmpty()) {
+            throw new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT);
+        }
+        return writerInfos;
+    }
+
 }

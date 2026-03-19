@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,20 @@ public class MinutesService {
             long projectId
     ) {
         List<MinutesEntity> minutesEntities = minutesEntityRepository.findByProjectIdOrderByIdDesc(projectId);
-        return minutesEntities.stream().map(MinutesListResponse::of).toList();
+        List<Long> proposalAttendantId = minutesEntities.stream().map(a -> Long.parseLong(a.getWriter())).toList();
+        List<ProposalAttendantEntity> writerInfos = proposalAttendantsService.findWriterInfos(proposalAttendantId, projectId);
+
+        List<MinutesListResponse> result = new ArrayList<>();
+        for (MinutesEntity minutesEntity : minutesEntities) {
+            Long writerId = Long.parseLong(minutesEntity.getWriter());
+            for (ProposalAttendantEntity writerInfo : writerInfos) {
+                if (writerId.equals(writerInfo.getId())) {
+                    result.add(MinutesListResponse.from(minutesEntity, writerInfo.getCompanyMember()));
+                }
+            }
+        }
+
+        return result;
     }
 
     @Transactional

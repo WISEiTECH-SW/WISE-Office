@@ -28,4 +28,9 @@ public interface ProposalAttendantEntityRepository extends JpaRepository<Proposa
     @Query("select p from ProposalAttendantEntity p join fetch p.companyMember where p.id = :id and p.project.id = :projectId")
     Optional<ProposalAttendantEntity> findWriterInfo(@Param("id") long writerProposalAttendantId,
                                                      @Param("projectId") long projectId);
+
+    @Query("select p from ProposalAttendantEntity p join fetch p.companyMember where p.id in :proposalIds and p.project.id = :projectId")
+    List<ProposalAttendantEntity> findWriterInfos(@Param("proposalIds") List<Long> proposalIds,
+                                                  @Param("projectId") long projectId);
+
 }
