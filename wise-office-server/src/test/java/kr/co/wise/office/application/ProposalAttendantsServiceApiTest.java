@@ -52,7 +52,7 @@ class ProposalAttendantsServiceApiTest extends BaseTestEntity {
         ProposalAttendantEntity gilDongAttend = saveProposalAttendant(targetProject, gildong);
         ProposalAttendantEntity minSuAttend = saveProposalAttendant(targetProject, minsu);
 
-        MinutesEntity minutes = saveMinutes(targetProject, minutesDate);
+        MinutesEntity minutes = saveMinutes(targetProject, minutesDate, List.of(gildong.getId(), minSuAttend.getId()), gilDongAttend);
         saveMinutesAttendants(minutes, gilDongAttend);
 
         em.flush();
@@ -93,7 +93,7 @@ class ProposalAttendantsServiceApiTest extends BaseTestEntity {
 
         ProjectEntity anotherProject = saveProject("프로젝트2222");
         ProposalAttendantEntity minsuAnthoerProjectAttend = saveProposalAttendant(anotherProject, minsu);
-        MinutesEntity sameDateMinutes = saveMinutes(anotherProject, minutesDate);
+        MinutesEntity sameDateMinutes = saveMinutes(anotherProject, minutesDate, List.of(minsuAnthoerProjectAttend.getId()), minsuAnthoerProjectAttend);
         saveMinutesAttendants(sameDateMinutes, minsuAnthoerProjectAttend);
 
         em.flush();
@@ -148,7 +148,7 @@ class ProposalAttendantsServiceApiTest extends BaseTestEntity {
                 .build());
     }
 
-    private MinutesEntity saveMinutes(ProjectEntity project, LocalDate minutesDate) {
+    private MinutesEntity saveMinutes(ProjectEntity project, LocalDate minutesDate, List<Long> attendantsId, ProposalAttendantEntity writer) {
         return minutesEntityRepository.save(MinutesEntity.from(
                 new MinutesCreateRequest(
                         "주관",
@@ -157,13 +157,13 @@ class ProposalAttendantsServiceApiTest extends BaseTestEntity {
                         minutesDate,
                         LocalTime.of(10, 0),
                         LocalTime.of(11, 0),
-                        "",
+                        attendantsId,
                         "이재용",
-                        "작성자",
+                        writer.getId(),
                         "콘텐츠"
                 ),
                 project,
-                minutesEntityRepository.countByMinutesDate(minutesDate) + 1L
+                minutesEntityRepository.countByMinutesDate(minutesDate, project.getId()) + 1L
         ));
     }
 

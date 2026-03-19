@@ -22,14 +22,14 @@ public record ApproveCreateResponse(
         @Schema(type = "string", description = "회의 일시") String minutesAt,
         @Schema(type = "string", description = "회의 목적") String minutesPurpose
 ) {
-    public static ApproveCreateResponse of(MinutesEntity minutesEntity, ApproveEntity approve) {
+    public static ApproveCreateResponse of(MinutesEntity minutesEntity, ApproveEntity approve, String writer) {
         return ApproveCreateResponse
                 .builder()
                 .approveId(approve.getId())
                 .minutesId(minutesEntity.getId())
                 .approveNo(approve.getReportNo())
                 .writtenAt(approve.getWriteDate().format(writtenAtDateFormatter))
-                .writer(minutesEntity.getWriter())
+                .writer(writer)
                 .submitAt(approve.getSubmitDate().format(writtenAtDateFormatter))
                 .businessName(minutesEntity.getProject().getBusinessName())
                 .title(minutesEntity.getProject().getTitle())

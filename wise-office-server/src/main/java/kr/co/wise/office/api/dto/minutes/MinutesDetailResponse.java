@@ -7,6 +7,7 @@ import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public record MinutesDetailResponse(
         @Schema(type = "string", description = "저장된 회의록 ID") long minutesId,
@@ -21,15 +22,16 @@ public record MinutesDetailResponse(
         LocalTime endTime,
         @Schema(type = "string", description = "회의장소") String location,
         @Schema(type = "string", description = "회의목적") String purpose,
-        @Schema(type = "string", description = "사내 참석자 (ex) 이름,이름,이름 형태의 문자열 값으로 전달)") String minutesAttendants,
+        @Schema(type = "회의 참석자 정보") List<MinutesAttendantsInfo> minutesAttendants,
         @Schema(type = "string", description = "외부 참석자, 형식 X") String instAttendants,
-        @Schema(type = "string", description = "작성자") String writer,
+        @Schema(type = "작성자 정보", description = "작성자") MinutesAttendantsInfo writer,
         @Schema(type = "string", description = "회의 내용") String content,
         @Schema(type = "string", description = "회의록 작성 시간") @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime writtenAt
         ){
 
-    public static MinutesDetailResponse from(MinutesEntity minutes, String minutesAttendants, Long approveId) {
+    public static MinutesDetailResponse from(MinutesEntity minutes, List<MinutesAttendantsInfo> minutesAttendants, Long approveId,
+                                             MinutesAttendantsInfo writer) {
         return new MinutesDetailResponse(
                 minutes.getId(),
                 approveId,
@@ -42,7 +44,7 @@ public record MinutesDetailResponse(
                 minutes.getPurpose(),
                 minutesAttendants,
                 minutes.getInstAttendants(),
-                minutes.getWriter(),
+                writer,
                 minutes.getMeetingContent(),
                 minutes.getWrittenAt()
         );

@@ -1,10 +1,7 @@
 package kr.co.wise.office.application;
 
 import kr.co.wise.office.aop.CheckProjectAuth;
-import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
-import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
-import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
-import kr.co.wise.office.api.dto.minutes.MinutesUpdateRequest;
+import kr.co.wise.office.api.dto.minutes.*;
 import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.approve.entity.ApproveEntity;
@@ -12,16 +9,15 @@ import kr.co.wise.office.domain.approve.service.ApproveService;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.service.MinutesService;
 import kr.co.wise.office.domain.minutesattendant.service.MinutesAttendantsService;
+import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
 import kr.co.wise.office.external.hoilday.dto.HolidayCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +31,8 @@ public class MinutesServiceApi {
 
     private final HolidayCalculator holidayCalculator;
 
+    private final ProposalAttendantsService proposalAttendantsService;
+
     public List<MinutesListResponse> getMinutesBriefInfo(
             long projectId,
             String loginUserEmail
@@ -47,15 +45,16 @@ public class MinutesServiceApi {
     public MinutesDetailResponse createMinutes(long projectId, String loginUserEmail, MinutesCreateRequest request) {
         // 회의록 작성 번호 확인 => 마지막 회의 번호 + 1
         ProjectEntity project = projectService.findById(projectId);
-        long currentMinutesNumber = minutesService.countByMinutesDate(request.minutesDate()) + 1;
+        long currentMinutesNumber = minutesService.countByMinutesDate(request.minutesDate(), projectId) + 1;
+        ProposalAttendantEntity writerInfo = proposalAttendantsService.findWriterInfo(request.writer(), projectId);
+
         MinutesEntity minutes = minutesService.createMinutes(project, request, currentMinutesNumber);
 
         // 회의 참석자 등록
-        List<String> attendantNames = new ArrayList<>(Arrays.stream(request.minutesAttendants().split(",")).map(String::trim).toList());
-        attendantNames.add(request.writer()); // 회의록 작성자도 추가
-        minutesAttendantsService.createMinutesAttendants(request, projectId, minutes);
+        List<Long> proposalAttendantsIds = removeDuplicateWriter(request.minutesAttendants(), writerInfo);
+        List<MinutesAttendantsInfo> minutesAttendantNames = minutesAttendantsService.createMinutesAttendants(proposalAttendantsIds, projectId, minutes);
 
-        return MinutesDetailResponse.from(minutes, request.minutesAttendants(), null);
+        return MinutesDetailResponse.from(minutes, minutesAttendantNames, null, MinutesAttendantsInfo.of(writerInfo, writerInfo.getCompanyMember()));
     }
 
     @Transactional(readOnly = true)
@@ -71,24 +70,26 @@ public class MinutesServiceApi {
     public MinutesDetailResponse updateMinutes(long projectId, String loginUserEmail, long minutesId, MinutesUpdateRequest request) {
         // 회의록 수정
         MinutesEntity minutes = minutesService.getMinutesInfoWithProject(minutesId, projectId);
-        minutes.update(request);
+        long updateCurrentMinutesNumber = minutesService.countByMinutesDate(request.minutesDate(), projectId) + 1;
+        ProposalAttendantEntity writerInfo = proposalAttendantsService.findWriterInfo(request.writer(), projectId);
+        minutes.update(request, updateCurrentMinutesNumber);
 
-        // 참여 인력 수정
-        minutesAttendantsService.updateMinutesAttendants(minutes, request.minutesAttendants(), request.writer(),  projectId);
+        // 작성자의 참석자 중복 방지를 위해 set으로 정제 (list와 writerId가 둘 다 존재하는 경우)
+        List<Long> proposalAttendantIds = removeDuplicateWriter(request.minutesAttendants(), writerInfo);
+        List<MinutesAttendantsInfo> minutesAttendantsInfos = minutesAttendantsService.updateMinutesAttendants(minutes, proposalAttendantIds, projectId);
 
         // 품의서 수정
         Optional<ApproveEntity> approveEntity = approveService.findByMinutesIdAndProjectId(minutesId, projectId);
         if (approveEntity.isEmpty()) {
-            return MinutesDetailResponse.from(minutes, request.minutesAttendants(), null);
+            return MinutesDetailResponse.from(minutes, minutesAttendantsInfos, null, MinutesAttendantsInfo.of(writerInfo, writerInfo.getCompanyMember()));
         }
 
         ApproveEntity approve = approveEntity.get();
         LocalDate changeApproveWrittenDate = holidayCalculator.calculateSubmitDate(request.minutesDate());
-        approve.updateApprove(minutes, changeApproveWrittenDate);
+        approve.updateApprove(minutes, changeApproveWrittenDate, writerInfo);
 
-        return MinutesDetailResponse.from(minutes, request.minutesAttendants(), approve.getId());
+        return MinutesDetailResponse.from(minutes, minutesAttendantsInfos, approve.getId(), MinutesAttendantsInfo.of(writerInfo, writerInfo.getCompanyMember()));
     }
-
 
     @CheckProjectAuth
     @Transactional
@@ -100,4 +101,11 @@ public class MinutesServiceApi {
         //회의록 삭제
         minutesService.deleteMinutes(projectId, minutesId);
     }
+
+    private static List<Long> removeDuplicateWriter(List<Long> proposalAttendantIds, ProposalAttendantEntity writerInfo) {
+        Set<Long> proposalAttendantsIdsSet = new HashSet<>(proposalAttendantIds);
+        proposalAttendantsIdsSet.add(writerInfo.getId());
+        return new ArrayList<>(proposalAttendantsIdsSet);
+    }
+
 }

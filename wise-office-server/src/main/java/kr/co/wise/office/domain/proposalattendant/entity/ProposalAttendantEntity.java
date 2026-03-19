@@ -9,6 +9,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 제안서 기반 편성 인원 테이블
@@ -55,6 +56,21 @@ public class ProposalAttendantEntity {
 
     public void leaveProject(){
         this.exitDate = LocalDate.now();
+    }
+
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProposalAttendantEntity)) return false;
+
+        ProposalAttendantEntity that = (ProposalAttendantEntity) o;
+
+        return id != null && Objects.equals(id, that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 
 }

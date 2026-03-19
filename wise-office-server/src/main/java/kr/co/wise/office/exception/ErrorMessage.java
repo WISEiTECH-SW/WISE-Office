@@ -14,9 +14,11 @@ public enum ErrorMessage {
 
     REJECT_MODIFYING_PROJECT(HttpStatus.UNAUTHORIZED, "프로젝트 수정/삭제 권한이 없습니다."),
     REJECT_MODIFYING_LOG(HttpStatus.UNAUTHORIZED, "로그 수정/삭제 권한이 없습니다."),
-    REJECT_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "불가능한 프로필 이미지 형식입니다."),
     REJECT_MODIFYING_COMMENT(HttpStatus.UNAUTHORIZED, "댓글 수정/삭제 권한이 없습니다."),
     REJECT_CREATE_MINUTES(HttpStatus.BAD_REQUEST, "제안서상 참여하지 않은 사원이 회의록에 포함되었습니다."),
+    REJECT_MODIFYING_MINUTES(HttpStatus.BAD_REQUEST, "회의록을 수정할 수 없습니다."),
+    REJECT_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "불가능한 프로필 이미지 형식입니다."),
+
 
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다."),
     INVALID_MEMBER(HttpStatus.UNAUTHORIZED, "이메일 혹은 비밀번호를 잘못 입력했습니다."),
@@ -25,7 +27,8 @@ public enum ErrorMessage {
     AlREADY_SIGNUP_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다. 다른 이메일을 이용하세요."),
     ALREADY_CREATE_APPROVE(HttpStatus.BAD_REQUEST, "이미 품의서가 생성되어있습니다."),
 
-    REPEATED_CALL(HttpStatus.BAD_REQUEST, "잠시 뒤에 다시 요청해 주세요.");
+    REPEATED_CALL(HttpStatus.BAD_REQUEST, "잠시 뒤에 다시 요청해 주세요."),
+    ;
 
     private HttpStatus status;
     private String message;

@@ -1,7 +1,6 @@
 package kr.co.wise.office.domain.minutesattendant.service;
 
-import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
-import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
+import kr.co.wise.office.api.dto.minutes.MinutesAttendantsInfo;
 import kr.co.wise.office.domain.companymember.repository.CompanyMemberEntityRepository;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutesattendant.entity.MinutesAttendantEntity;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,19 +29,13 @@ public class MinutesAttendantsService {
 
     private final ProposalAttendantEntityRepository proposalAttendantEntityRepository;
 
-
     // TODO : 동명이인 처리 필요 => 클라이언트에서는 뒤의 알파벳 빼고 보여주기?
-    public void createMinutesAttendants(MinutesCreateRequest request, long projectId, MinutesEntity minutes) {
-        List<String> attendantNames = splitAttendantsName(request.minutesAttendants(), request.writer());
-
-        // 사원명 조회
-        List<CompanyMemberEntity> companyMembers = companyMemberEntityRepository.findByNameIn(attendantNames);
-
+    // 리턴 값 : "이름 직급, 이름 직급" 형태로 반환
+    public List<MinutesAttendantsInfo> createMinutesAttendants(List<Long> proposalAttendantsIds, long projectId, MinutesEntity minutes) {
         // 제안서상 참여자 리스트 조회
-        List<ProposalAttendantEntity> proposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberInAndProjectId(companyMembers, projectId);
+        List<ProposalAttendantEntity> proposalAttendants = proposalAttendantEntityRepository.findByProposalAttendantIdInAndProjectId(proposalAttendantsIds, projectId);
 
-        // 제안서상 참여하지 않은 사람을 회의에 등록하는 경우 에러 처리
-        if (companyMembers.size() != proposalAttendants.size()) {
+        if (proposalAttendants.size() != proposalAttendantsIds.size()) {
             throw new ApplicationRuntimeException(ErrorMessage.REJECT_CREATE_MINUTES);
         }
 
@@ -52,42 +44,48 @@ public class MinutesAttendantsService {
                 .map(attendant -> new MinutesAttendantEntity(attendant, minutes))
                 .collect(Collectors.toList());
         attendantEntityRepository.saveAll(minutesAttendants);
+
+
+        return proposalAttendants.stream()
+                .map(p -> MinutesAttendantsInfo.of(p, p.getCompanyMember()))
+                .toList();
     }
 
     public Set<Long> findOverlappingMembers(LocalDate minutesDate) {
         return attendantEntityRepository.findOverlappingMembers(minutesDate);
     }
 
-    public void updateMinutesAttendants(MinutesEntity minutes, String minutesAttendants, String writer, long projectId) {
+    public List<MinutesAttendantsInfo> updateMinutesAttendants(MinutesEntity minutes, List<Long> proposalAttendantIds, long projectId) {
         // 업데이트할 참석 인원 명단 조회
-        Set<CompanyMemberEntity> updateMemberEntities = new HashSet<>(companyMemberEntityRepository.findByNameIn(splitAttendantsName(minutesAttendants, writer)));
-        List<ProposalAttendantEntity> proposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberInAndProjectId(updateMemberEntities, projectId);
+        List<ProposalAttendantEntity> targetProposalAttendants = proposalAttendantEntityRepository.findByProposalAttendantIdInAndProjectId(proposalAttendantIds, projectId);
 
-        // 수정할 인원이 현재 제안서에 포함되어있는지 확인
-        if (updateMemberEntities.size() != proposalAttendants.size()) {
-            throw new ApplicationRuntimeException(ErrorMessage.REJECT_CREATE_MINUTES);
+        if (proposalAttendantIds.size() != targetProposalAttendants.size()) {
+            throw new ApplicationRuntimeException(ErrorMessage.REJECT_MODIFYING_MINUTES);
         }
 
-        // 현재 참석 중인 인원 명단
-        List<MinutesAttendantEntity> nowAttendants = attendantEntityRepository.findAttendantsByMinutesId(minutes.getId());
-        Set<CompanyMemberEntity> nowAttendantsName = nowAttendants.stream().map(m -> m.getProposalAttendantEntity().getCompanyMember())
-                .collect(Collectors.toSet());
+        // 기존에 참석 중인 인원 명단 조회
+        List<MinutesAttendantEntity> currentAttendants = attendantEntityRepository.findAttendantsByMinutesId(minutes.getId());
+        Set<ProposalAttendantEntity> currentProposals = currentAttendants.stream().map(m -> m.getProposalAttendantEntity()).collect(Collectors.toSet());
 
-        // 회의 참여에서 제외되는 인원 계산
-        Set<CompanyMemberEntity> removeAttendantsSet = new HashSet<>(nowAttendantsName);
-        removeAttendantsSet.removeAll(updateMemberEntities);
-        Set<MinutesAttendantEntity> remove = nowAttendants.stream()
-                .filter(n -> removeAttendantsSet.contains(n.getProposalAttendantEntity().getCompanyMember()))
-                .collect(Collectors.toSet());
+        // 회의 참여에서 제외되는 인원 계산 : (현재 명단) - (새로운 명단)
+        List<MinutesAttendantEntity> remove = currentAttendants
+                .stream()
+                .filter(attedant ->!targetProposalAttendants.contains(attedant.getProposalAttendantEntity()))
+                .toList();
 
-        // 회의 참여에 추가되는 인원 계산
-        Set<CompanyMemberEntity> addMembers = new HashSet<>(updateMemberEntities);
-        addMembers.removeAll(nowAttendantsName);
-        List<ProposalAttendantEntity> newAttendants = proposalAttendantEntityRepository.findByCompanyMemberInAndProjectId(addMembers, projectId);
-        List<MinutesAttendantEntity> add = newAttendants.stream().map(a -> new MinutesAttendantEntity(a, minutes)).toList();
+        // 추가 대상 계산 : (새로운 명단) - (현재 명단)
+        List<MinutesAttendantEntity> add = targetProposalAttendants
+                .stream()
+                .filter(a -> !currentProposals.contains(a))
+                .map(p -> new MinutesAttendantEntity(p, minutes))
+                .toList();
 
         if(!remove.isEmpty()) attendantEntityRepository.deleteAll(remove);
         if(!add.isEmpty()) attendantEntityRepository.saveAll(add);
+
+        return targetProposalAttendants.stream()
+                .map(p -> MinutesAttendantsInfo.of(p, p.getCompanyMember()))
+                .toList();
     }
 
     /**
