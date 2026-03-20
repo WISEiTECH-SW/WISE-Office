@@ -70,7 +70,9 @@ public class ProposalAttendantEntity {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        if(id == null) return 0;
+
+        return Objects.hash(id);
     }
 
 }
