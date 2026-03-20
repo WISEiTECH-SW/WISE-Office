@@ -57,8 +57,25 @@ export default function ProjectModal({
         tab,
         setTab,
     });
+    const isLoading = mode === "update" && !projectTitle;
 
-    return (
+    return isLoading ? (
+        <div className="md:px-6">
+            <div className="min-h-[60vh] flex items-center justify-center">
+                <div className="bg-white rounded-2xl shadow-sm px-10 py-12 flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 rounded-full border-4 border-gray-200 border-t-blue-500 animate-spin" />
+                    <div className="text-center">
+                        <p className="text-base font-semibold text-gray-800">
+                            프로젝트 불러오는 중
+                        </p>
+                        <p className="text-sm text-gray-500 mt-1">
+                            프로젝트 정보를 준비하고 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ) : (
         <div className="Overlay fixed inset-0 bg-opacity-40 flex justify-center items-center z-50 p-6">
             <div
                 ref={modalRef}
