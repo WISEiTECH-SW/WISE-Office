@@ -1,6 +1,7 @@
 package kr.co.wise.office.api.dto.minutes;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 
 public record MinutesListResponse(
@@ -10,9 +11,9 @@ public record MinutesListResponse(
          @Schema(description = "작성자", example = "홍길동") String writer
 ) {
 
-    public static MinutesListResponse of(MinutesEntity minutes) {
+    public static MinutesListResponse from(MinutesEntity minutes, CompanyMemberEntity companyMember) {
         return new MinutesListResponse(minutes.getId(), minutes.getTitle(), minutes.getMinutesDate().toString(),
-                minutes.getWriter());
+                companyMember.getName() + " " + companyMember.getRank());
     }
 
 }

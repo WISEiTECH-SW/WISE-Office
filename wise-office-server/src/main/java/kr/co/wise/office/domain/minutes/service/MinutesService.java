@@ -1,5 +1,6 @@
 package kr.co.wise.office.domain.minutes.service;
 
+import kr.co.wise.office.api.dto.minutes.MinutesAttendantsInfo;
 import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
 import kr.co.wise.office.api.dto.minutes.MinutesDetailResponse;
 import kr.co.wise.office.api.dto.minutes.MinutesListResponse;
@@ -9,6 +10,9 @@ import kr.co.wise.office.domain.approve.repository.ApproveEntityRepository;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.repository.MinutesEntityRepository;
 import kr.co.wise.office.domain.minutesattendant.repository.MinutesAttendantEntityRepository;
+import kr.co.wise.office.domain.minutesattendant.repository.MinutesAttendantEntityRepository.MinutesAttendantsInfoProjection;
+import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,11 +35,26 @@ public class MinutesService {
 
     private final ApproveEntityRepository approveEntityRepository;
 
+    private final ProposalAttendantsService proposalAttendantsService;
+
     public List<MinutesListResponse> getMinutesBriefInfo(
             long projectId
     ) {
         List<MinutesEntity> minutesEntities = minutesEntityRepository.findByProjectIdOrderByIdDesc(projectId);
-        return minutesEntities.stream().map(MinutesListResponse::of).toList();
+        List<Long> proposalAttendantId = minutesEntities.stream().map(a -> Long.parseLong(a.getWriter())).toList();
+        List<ProposalAttendantEntity> writerInfos = proposalAttendantsService.findWriterInfos(proposalAttendantId, projectId);
+
+        List<MinutesListResponse> result = new ArrayList<>();
+        for (MinutesEntity minutesEntity : minutesEntities) {
+            Long writerId = Long.parseLong(minutesEntity.getWriter());
+            for (ProposalAttendantEntity writerInfo : writerInfos) {
+                if (writerId.equals(writerInfo.getId())) {
+                    result.add(MinutesListResponse.from(minutesEntity, writerInfo.getCompanyMember()));
+                }
+            }
+        }
+
+        return result;
     }
 
     @Transactional
@@ -46,20 +66,24 @@ public class MinutesService {
     /**
      * 회의록 작성 일자에 작성된 회의록 개수를 반환
      */
-    public long countByMinutesDate(LocalDate writeDate) {
-        return minutesEntityRepository.countByMinutesDate(writeDate);
+    public long countByMinutesDate(LocalDate writeDate, long projectId) {
+        return minutesEntityRepository.countByMinutesDate(writeDate, projectId);
     }
 
     public MinutesDetailResponse getMinutesDetailInfo(long minutesId, long projectId) {
         MinutesEntity minutesEntity = minutesEntityRepository.findByIdWithProject(minutesId, projectId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES));
 
+        ProposalAttendantEntity writerInfo = proposalAttendantsService.findWriterInfo(Long.parseLong(minutesEntity.getWriter()), projectId);
+
         Optional<ApproveEntity> approveEntity = approveEntityRepository.findByMinutesIdAndProjectId(minutesId, projectId);
         Long approveId = approveEntity.isPresent() ? approveEntity.get().getId() : null;
 
-        List<String> membersName = minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutesId);
+        List<MinutesAttendantsInfoProjection> attendantsInfoProjections = minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutesId);
+        List<MinutesAttendantsInfo> minutesAttendantsInfos = attendantsInfoProjections.stream()
+                .map(MinutesAttendantsInfo::from).toList();
 
-        return MinutesDetailResponse.from(minutesEntity, String.join(", ", membersName), approveId);
+        return MinutesDetailResponse.from(minutesEntity, minutesAttendantsInfos, approveId, MinutesAttendantsInfo.of(writerInfo, writerInfo.getCompanyMember()));
     }
 
     public MinutesEntity getMinutesInfoWithProject(long minutesId, long projectId) {

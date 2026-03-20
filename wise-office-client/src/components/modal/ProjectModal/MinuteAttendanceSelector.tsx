@@ -1,14 +1,16 @@
-import { Member, MemberWithDisabled } from "@/types/member";
+import { PossibleAttendantsResponse } from "@/types/document";
 import React from "react";
 
 interface Props {
-    companyMembers: MemberWithDisabled[];
-    selectedCompanyMembers: Member[];
+    companyMembers: PossibleAttendantsResponse[];
+    selectedCompanyMembers: PossibleAttendantsResponse[];
     companyMemberSearchText: string;
-    setSelectedCompanyMembers: React.Dispatch<React.SetStateAction<Member[]>>;
+    setSelectedCompanyMembers: React.Dispatch<
+        React.SetStateAction<PossibleAttendantsResponse[]>
+    >;
     setCompanyMemberSearchText: React.Dispatch<React.SetStateAction<string>>;
-    writer: Member | null;
-    handleWriterChange: (member: Member) => void;
+    writer: PossibleAttendantsResponse | null;
+    handleWriterChange: (member: PossibleAttendantsResponse) => void;
 }
 
 export default function MinuteAttendanceSelector({
@@ -26,13 +28,12 @@ export default function MinuteAttendanceSelector({
             m.rank.includes(companyMemberSearchText),
     );
     // 편성 인원 선택
-    const toggleCompanyMember = (member: MemberWithDisabled) => {
-        if (member.disabled) return;
-
+    const toggleCompanyMember = (member: PossibleAttendantsResponse) => {
         const exists = selectedCompanyMembers.find(
             (m) => m.memberId === member.memberId,
         );
 
+        if (!member.canAttend && !exists) return;
         if (exists) {
             setSelectedCompanyMembers(
                 selectedCompanyMembers.filter(
@@ -43,6 +44,7 @@ export default function MinuteAttendanceSelector({
             setSelectedCompanyMembers([...selectedCompanyMembers, member]);
         }
     };
+
     return (
         <div className="gap-4">
             {/* 편성인원 */}
@@ -57,29 +59,34 @@ export default function MinuteAttendanceSelector({
                 />
 
                 <div className="border border-gray-300 rounded-md max-h-52 overflow-y-auto">
-                    {filteredCompanyMembers.map((member) => (
-                        <label
-                            key={member.memberId}
-                            className={`flex items-center gap-2 px-3 py-2 ${
-                                member.disabled
-                                    ? "opacity-50 cursor-not-allowed pointer-events-none"
-                                    : "cursor-pointer hover:bg-gray-50"
-                            }`}
-                            onClick={(e) => {
-                                if (member.disabled) e.preventDefault();
-                            }}
-                        >
-                            <input
-                                type="checkbox"
-                                checked={selectedCompanyMembers.some(
-                                    (m) => m.memberId === member.memberId,
-                                )}
-                                onChange={() => toggleCompanyMember(member)}
-                                disabled={member.disabled}
-                            />
-                            {member.name} {member.rank}
-                        </label>
-                    ))}
+                    {filteredCompanyMembers.map((member) => {
+                        const isSelected = selectedCompanyMembers.some(
+                            (m) => m.memberId === member.memberId,
+                        );
+                        return (
+                            <label
+                                key={member.memberId}
+                                className={`flex items-center gap-2 px-3 py-2 ${
+                                    !member.canAttend && !isSelected
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : "cursor-pointer hover:bg-gray-50"
+                                }`}
+                                onClick={(e) => {
+                                    if (!member.canAttend) e.preventDefault();
+                                }}
+                            >
+                                <input
+                                    type="checkbox"
+                                    checked={selectedCompanyMembers.some(
+                                        (m) => m.memberId === member.memberId,
+                                    )}
+                                    onChange={() => toggleCompanyMember(member)}
+                                    disabled={!member.canAttend && !isSelected}
+                                />
+                                {member.name} {member.rank}
+                            </label>
+                        );
+                    })}
                 </div>
             </div>
             {/* 작성자 선택 */}

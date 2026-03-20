@@ -3,6 +3,7 @@ package kr.co.wise.office.domain.approve.entity;
 import jakarta.persistence.*;
 import kr.co.wise.office.api.dto.approve.ApproveUpdateRequest;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
+import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -59,7 +60,7 @@ public class ApproveEntity {
         this.minutesDepartment = minutesDepartment;
     }
 
-    public static ApproveEntity from(MinutesEntity minutesEntity, LocalDate submitDate) {
+    public static ApproveEntity from(MinutesEntity minutesEntity, LocalDate submitDate, String writerName) {
         String reportNo = createApproveNumber(minutesEntity, submitDate);
         return ApproveEntity.builder()
                 .reportNo(reportNo)
@@ -67,7 +68,7 @@ public class ApproveEntity {
                 .writeDate(submitDate)
                 .minutesDepartment("연구기획")
                 .minutesEntity(minutesEntity)
-                .writer(minutesEntity.getWriter())
+                .writer(writerName)
                 .build();
     }
 
@@ -82,10 +83,11 @@ public class ApproveEntity {
         this.writer = request.writer();
     }
 
-    public void updateApprove(MinutesEntity minutes, LocalDate submitAt) {
+    public void updateApprove(MinutesEntity minutes, LocalDate submitAt, ProposalAttendantEntity writerInfo) {
+        this.reportNo = createApproveNumber(minutes, submitAt);
         this.writeDate = submitAt;
         this.submitDate = submitAt;
-        this.writer = minutes.getWriter();
+        this.writer = writerInfo.getCompanyMember().getName(); //직급 제외
     }
 
 }

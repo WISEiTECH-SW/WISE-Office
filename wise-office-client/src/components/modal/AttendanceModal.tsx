@@ -1,109 +1,129 @@
 import { useEffect, useState } from "react";
 import Button from "../common/Button";
-import { Member, MemberWithDisabled } from "@/types/member";
 import MinuteAttendanceSelector from "./ProjectModal/MinuteAttendanceSelector";
 import { PossibleAttendantsResponse } from "@/types/document";
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onConfirm: (data: { attendants: string[]; writer: string }) => void;
-    attendants: Member[] | undefined;
+    onConfirm: (data: { attendants: number[]; writer: number }) => void;
     possibleAttendants: PossibleAttendantsResponse[] | undefined;
-    selectedNames: string[];
-    selectedWriter: string;
+    selectedIds: number[];
+    selectedWriterId: number;
+    setAttendantsNameAndRank: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function AttendanceModal({
     onClose,
     onConfirm,
-    attendants,
     possibleAttendants,
-    selectedNames,
-    selectedWriter,
+    selectedIds,
+    selectedWriterId,
+    setAttendantsNameAndRank,
 }: ModalProps) {
     // 선택된 인원
     const [selectedCompanyMembers, setSelectedCompanyMembers] = useState<
-        Member[]
+        PossibleAttendantsResponse[]
     >([]);
     const [companyMemberSearchText, setCompanyMemberSearchText] = useState("");
-    const [writer, setWriter] = useState<Member | null>(null);
-
-    // 모달 내부에서 임시로 선택 상태 관리
-
+    const [writer, setWriter] = useState<PossibleAttendantsResponse | null>(
+        null,
+    );
     useEffect(() => {
-        if (!attendants || !possibleAttendants) return;
+        if (!possibleAttendants) return;
 
-        // 기존에 선택되어 있던 멤버들 찾기 (수정 모드 대응)
-        const initialSelected = attendants.filter((member) =>
-            selectedNames.includes(member.name),
+        const initialSelected = possibleAttendants.filter((member) =>
+            selectedIds.includes(member.memberId),
         );
 
-        // 작성자 찾기
-        const foundWriter = attendants.find(
-            (member) => member.name === selectedWriter,
+        const foundWriter = possibleAttendants.find(
+            (member) => member.memberId === selectedWriterId,
         );
 
         setSelectedCompanyMembers(initialSelected);
         setWriter(foundWriter ?? null);
-    }, [possibleAttendants, attendants, selectedNames, selectedWriter]);
+    }, [possibleAttendants, selectedIds, selectedWriterId]);
 
     // 참여 가능여부
-    const possibleMap = new Map<number, boolean>(
-        possibleAttendants?.map((p) => [Number(p.memberId), p.canAttend]),
-    );
+    const enrichedMembers: PossibleAttendantsResponse[] = (
+        possibleAttendants ?? []
+    ).map((member) => {
+        const isAlreadySelected = selectedCompanyMembers.some(
+            (m) => m.memberId === member.memberId,
+        );
 
-    const enrichedMembers: MemberWithDisabled[] = (attendants ?? []).map(
-        (member) => {
-            const canAttend = possibleMap.get(member.memberId);
+        return {
+            ...member,
+            disabled: member.canAttend === false && !isAlreadySelected,
+        };
+    });
 
-            const isAlreadySelected = selectedNames.includes(member.name);
+    // 참석자 작성자 동기화
+    useEffect(() => {
+        if (!writer) return;
 
-            return {
-                ...member,
-                disabled:
-                    possibleAttendants !== undefined
-                        ? canAttend === false && !isAlreadySelected
-                        : false,
-            };
-        },
-    );
+        const stillExists = selectedCompanyMembers.some(
+            (member) => member.memberId === writer.memberId,
+        );
+
+        if (!stillExists) {
+            setWriter(null);
+        }
+    }, [selectedCompanyMembers, writer]);
 
     const handleConfirm = () => {
-        const names = selectedCompanyMembers.map((member) => `${member.name}`);
+        if (!writer) return;
+        // 회의록 기입용 사내 참석자 이름 + 직급
+        const names = selectedCompanyMembers.map(
+            (member) => `${member.name} ${member.rank}`,
+        );
+        setAttendantsNameAndRank(names.join(" " + ", "));
         onConfirm({
-            attendants: names,
-            writer: writer?.name ?? "",
+            attendants: selectedCompanyMembers.map((m) => m.memberId),
+            writer: writer?.memberId ?? 0,
         });
     };
 
-    const handleWriterChange = (member: Member) => {
+    const handleWriterChange = (member: PossibleAttendantsResponse) => {
         setWriter(member);
     };
     return (
         <div className="flex items-center justify-center">
             <div className="bg-white p-6 rounded-lg shadow-xl w-[240px]">
-                <MinuteAttendanceSelector
-                    companyMembers={enrichedMembers ?? []}
-                    selectedCompanyMembers={selectedCompanyMembers}
-                    companyMemberSearchText={companyMemberSearchText}
-                    setSelectedCompanyMembers={setSelectedCompanyMembers}
-                    setCompanyMemberSearchText={setCompanyMemberSearchText}
-                    writer={writer}
-                    handleWriterChange={handleWriterChange}
-                />
-                <div className="flex justify-end gap-2 mt-4">
-                    <Button
-                        label="확인"
-                        variant="primary"
-                        onClick={() => handleConfirm()}
-                    />
-                    <Button
-                        label="취소"
-                        variant="secondary"
-                        onClick={onClose}
-                    />
-                </div>
+                {!possibleAttendants ? (
+                    <div className="text-sm text-gray-500 text-center py-10">
+                        회의 날짜를 먼저 선택해 주세요.
+                    </div>
+                ) : (
+                    <>
+                        <MinuteAttendanceSelector
+                            companyMembers={enrichedMembers ?? []}
+                            selectedCompanyMembers={selectedCompanyMembers}
+                            companyMemberSearchText={companyMemberSearchText}
+                            setSelectedCompanyMembers={
+                                setSelectedCompanyMembers
+                            }
+                            setCompanyMemberSearchText={
+                                setCompanyMemberSearchText
+                            }
+                            writer={writer}
+                            handleWriterChange={handleWriterChange}
+                        />
+                        <div className="flex justify-end gap-2 mt-4">
+                            <Button
+                                label="확인"
+                                variant="primary"
+                                onClick={() => handleConfirm()}
+                                disabled={!writer}
+                            />
+                            <Button
+                                label="취소"
+                                variant="secondary"
+                                onClick={onClose}
+                            />
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

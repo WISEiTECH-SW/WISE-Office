@@ -22,8 +22,18 @@ public interface MinutesAttendantEntityRepository extends JpaRepository<MinutesA
             @Param("minutesDate")LocalDate minutesDate
     );
 
-    @Query("select c.name from MinutesAttendantEntity m join m.proposalAttendantEntity p join p.companyMember c where m.minutesEntity.id = :minutesId")
-    List<String> findMemberNamesByMinutesId(@Param("minutesId") long minutesId);
+    @Query("select p.id as memberId, c.name as name, c.rank as rank " +
+            "from MinutesAttendantEntity m " +
+            "join m.proposalAttendantEntity p " +
+            "join p.companyMember c " +
+            "where m.minutesEntity.id = :minutesId")
+    List<MinutesAttendantsInfoProjection> findMemberNamesByMinutesId(@Param("minutesId") long minutesId);
+
+    interface MinutesAttendantsInfoProjection {
+        Long getMemberId();
+        String getName();
+        String getRank();
+    }
 
     @Query("""
             select m.minutesEntity.id as minutesId, c.name as companyName

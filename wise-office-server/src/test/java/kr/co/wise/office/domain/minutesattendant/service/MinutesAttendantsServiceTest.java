@@ -1,6 +1,7 @@
 package kr.co.wise.office.domain.minutesattendant.service;
 
 import jakarta.persistence.EntityManager;
+import kr.co.wise.office.api.dto.minutes.MinutesAttendantsInfo;
 import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.Project.repository.ProjectRepository;
@@ -28,8 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @Import(MinutesAttendantsService.class)
@@ -111,9 +111,9 @@ class MinutesAttendantsServiceTest {
                         BASE_DATE.plusDays(1),
                         LocalTime.of(10, 0),
                         LocalTime.of(11, 0),
-                        firstAttendant.getName() + ", " + secondAttendant.getName(),
+                        List.of(firstProposal.getId(), secondProposal.getId()),
                         "외부 참석자",
-                        writer.getName(),
+                        writerProposal.getId(),
                         "기존 회의 내용"
                 ),
                 project,
@@ -139,22 +139,28 @@ class MinutesAttendantsServiceTest {
         // when
         minutesAttendantsService.updateMinutesAttendants(
                 targetMinutes,
-                "작성자, 참석자2, 참석자3",
-                "작성자",
+                List.of(firstProposal.getId(), thirdProposal.getId(), writerProposal.getId()),
                 project.getId()
         );
         em.flush();
         em.clear();
 
         // then
-        List<String> updatedNames = minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutes.getId());
-        List<MinutesAttendantEntity> updatedEntities = minutesAttendantEntityRepository.findAttendantsByMinutesId(minutes.getId());
+        List<MinutesAttendantsInfo> updateAttendantInfos = getUpdateAttendantInfos();
 
-        assertThat(updatedNames).containsExactlyInAnyOrder("작성자", "참석자2", "참석자3");
-        assertThat(updatedEntities).hasSize(3);
-        assertThat(updatedEntities)
-                .extracting(entity -> entity.getProposalAttendantEntity().getCompanyMember().getName())
-                .containsExactlyInAnyOrder("작성자", "참석자2", "참석자3");
+        assertThat(updateAttendantInfos).hasSize(3);
+        assertThat(updateAttendantInfos).containsExactlyInAnyOrder(
+                new MinutesAttendantsInfo(firstProposal.getId(), firstAttendant.getName(), firstAttendant.getRank()),
+                new MinutesAttendantsInfo(thirdProposal.getId(), thirdAttendant.getName(), thirdAttendant.getRank()),
+                new MinutesAttendantsInfo(writerProposal.getId(), writer.getName(), writer.getRank())
+        );
+    }
+
+    private List<MinutesAttendantsInfo> getUpdateAttendantInfos() {
+        return minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutes.getId())
+                .stream()
+                .map(MinutesAttendantsInfo::from)
+                .toList();
     }
 
     @Test
@@ -166,17 +172,20 @@ class MinutesAttendantsServiceTest {
         // when
         minutesAttendantsService.updateMinutesAttendants(
                 targetMinutes,
-                "참석자1, 참석자2",
-                "작성자",
+                List.of(firstProposal.getId(), secondProposal.getId(), writerProposal.getId()),
                 project.getId()
         );
         em.flush();
         em.clear();
 
         // then
-        List<String> updatedNames = minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutes.getId());
-        assertThat(updatedNames).containsExactlyInAnyOrder("작성자", "참석자1", "참석자2");
-        assertThat(updatedNames).hasSize(3);
+        List<MinutesAttendantsInfo> updateAttendantInfos = getUpdateAttendantInfos();
+        assertThat(updateAttendantInfos).hasSize(3);
+        assertThat(updateAttendantInfos).containsExactlyInAnyOrder(
+                new MinutesAttendantsInfo(firstProposal.getId(), firstAttendant.getName(), firstAttendant.getRank()),
+                new MinutesAttendantsInfo(secondProposal.getId(), secondAttendant.getName(), secondAttendant.getRank()),
+                new MinutesAttendantsInfo(writerProposal.getId(), writer.getName(), writer.getRank())
+        );
     }
 
     @Test
@@ -188,21 +197,23 @@ class MinutesAttendantsServiceTest {
         // when & then
         assertThatThrownBy(() -> minutesAttendantsService.updateMinutesAttendants(
                 targetMinutes,
-                firstAttendant.getName() + ", " + invalidAttendant.getName(),
-                writer.getName(),
+                List.of(firstProposal.getId(), 999999L),
                 project.getId()
-        ))
-                .isInstanceOf(ApplicationRuntimeException.class)
+        )).isInstanceOf(ApplicationRuntimeException.class)
                 .extracting("errorMessage")
                 .extracting("message")
-                .isEqualTo(ErrorMessage.REJECT_CREATE_MINUTES.getMessage());
+                .isEqualTo(ErrorMessage.REJECT_MODIFYING_MINUTES.getMessage());
 
         em.flush();
         em.clear();
 
-        List<String> namesAfterFailure = minutesAttendantEntityRepository.findMemberNamesByMinutesId(minutes.getId());
-        assertThat(namesAfterFailure).containsExactlyInAnyOrder("작성자", "참석자1", "참석자2");
-        assertThat(namesAfterFailure).hasSize(3);
+        List<MinutesAttendantsInfo> failAttendantsInfo = getUpdateAttendantInfos();
+        assertThat(failAttendantsInfo).hasSize(3);
+        assertThat(failAttendantsInfo).containsExactlyInAnyOrder(
+                new MinutesAttendantsInfo(firstProposal.getId(), firstAttendant.getName(), firstAttendant.getRank()),
+                new MinutesAttendantsInfo(secondProposal.getId(), secondAttendant.getName(), secondAttendant.getRank()),
+                new MinutesAttendantsInfo(writerProposal.getId(), writer.getName(), writer.getRank())
+        );
     }
 
     private CompanyMemberEntity saveCompanyMember(String name) {

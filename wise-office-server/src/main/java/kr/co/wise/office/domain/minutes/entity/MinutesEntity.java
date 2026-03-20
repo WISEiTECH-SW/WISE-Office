@@ -125,13 +125,14 @@ public class MinutesEntity {
                 .location(request.location())
                 .purpose(request.purpose())
                 .instAttendants(request.instAttendants())
-                .writer(request.writer())
+                .writer(String.valueOf(request.writer()))
                 .meetingContent(request.content())
                 .project(project)
                 .build();
     }
 
-    public void update(MinutesUpdateRequest request) {
+    public void update(MinutesUpdateRequest request, long updateCurrentNumber) {
+        this.title = createMinutesNumber(updateCurrentNumber, request.minutesDate());
         this.host = request.host();
         this.minutesDate = request.minutesDate();
         this.startTime = request.startTime();
@@ -139,7 +140,7 @@ public class MinutesEntity {
         this.location = request.location();
         this.purpose = request.purpose();
         this.instAttendants = request.instAttendants();
-        this.writer = request.writer();
+        this.writer = String.valueOf(request.writer());
         this.meetingContent = request.content();
     }
 

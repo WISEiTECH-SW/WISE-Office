@@ -15,7 +15,9 @@ public interface MinutesEntityRepository extends JpaRepository<MinutesEntity, Lo
 
     List<MinutesEntity> findByProjectIdOrderByIdDesc(long projectId);
 
-    int countByMinutesDate(LocalDate minutesDate);
+    @Query("select count(m) from MinutesEntity m where m.minutesDate = :minutesDate and m.project.id = :projectId")
+    int countByMinutesDate(@Param("minutesDate") LocalDate minutesDate,
+                           @Param("projectId") long projectId);
 
     @Query("select m from MinutesEntity m join fetch m.project p where m.id = :minutesId and p.id = :projectId")
     Optional<MinutesEntity> findByIdWithProject(@Param("minutesId") long minutesId, @Param("projectId") long projectId);
