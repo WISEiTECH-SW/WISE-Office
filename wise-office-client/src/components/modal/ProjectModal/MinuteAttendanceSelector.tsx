@@ -103,7 +103,7 @@ export default function MinuteAttendanceSelector({
                         {selectedCompanyMembers.map((member) => (
                             <label
                                 key={member.memberId}
-                                className="flex items-center gap-3 mb-2 cursor-pointer text-gray-800 cursor-pointer"
+                                className="flex items-center gap-3 mb-2 cursor-pointer text-gray-800"
                             >
                                 <input
                                     type="radio"
