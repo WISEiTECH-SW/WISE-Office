@@ -103,7 +103,7 @@ export default function MinuteAttendanceSelector({
                         {selectedCompanyMembers.map((member) => (
                             <label
                                 key={member.memberId}
-                                className="flex items-center gap-3 mb-2 cursor-pointer text-gray-800"
+                                className="flex items-center gap-3 mb-2 cursor-pointer text-gray-800 cursor-pointer"
                             >
                                 <input
                                     type="radio"
@@ -112,7 +112,6 @@ export default function MinuteAttendanceSelector({
                                         writer?.memberId === member.memberId
                                     }
                                     onChange={() => handleWriterChange(member)}
-                                    className="cursor-pointer"
                                 />
                                 <span>
                                     {member.name} {member.rank}

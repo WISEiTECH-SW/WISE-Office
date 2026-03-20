@@ -65,18 +65,23 @@ export default function ProjectModal({
                 ref={modalRef}
                 className="bg-white rounded-xl shadow-xl w-full max-w-[64rem] h-[76vh] flex flex-col relative"
             >
-                {/* 닫기 버튼 */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-5 right-5 text-gray-400 hover:text-gray-800 font-bold text-2xl cursor-pointer"
-                    aria-label="Close modal"
-                    type="button"
-                >
-                    x
-                </button>
+                {/* 헤더 모달 이름 + 닫기 버튼 */}
+                <div className="relative px-8 pt-6 pb-4">
+                    <button
+                        onClick={onClose}
+                        className="absolute top-3 right-3 w-12 h-12 flex items-center justify-center
+                       rounded-full text-gray-600 hover:bg-gray-100"
+                    >
+                        ✕
+                    </button>
+
+                    <h2 className="text-center text-2xl font-extrabold">
+                        {mode === "create" ? "프로젝트 생성" : "프로젝트 수정"}
+                    </h2>
+                </div>
 
                 {/* 스크롤 영역 */}
-                <div className="flex-1 overflow-auto p-8">
+                <div className="flex-1 overflow-auto custom-scroll px-8 pb-8">
                     {isLoading ? (
                         <div className="md:px-6">
                             <div className="min-h-[60vh] flex items-center justify-center">
@@ -96,11 +101,6 @@ export default function ProjectModal({
                     ) : (
                         <>
                             {/* 제목 */}
-                            <h2 className="text-center text-2xl font-extrabold mb-6 text-gray-900">
-                                {mode === "create"
-                                    ? "프로젝트 생성"
-                                    : "프로젝트 수정"}
-                            </h2>
 
                             {/* 탭 */}
                             <div className="w-full flex justify-center mb-6">
@@ -156,19 +156,19 @@ export default function ProjectModal({
                             )}
                         </>
                     )}
-                </div>
 
-                {!isLoading && (
-                    <div className="p-4 flex justify-center">
-                        <button
-                            className="px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer"
-                            onClick={handleSubmit}
-                            type="button"
-                        >
-                            {mode === "create" ? "생성 완료" : "수정 완료"}
-                        </button>
-                    </div>
-                )}
+                    {!isLoading && (
+                        <div className="p-4 flex justify-center">
+                            <button
+                                className="px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                                onClick={handleSubmit}
+                                type="button"
+                            >
+                                {mode === "create" ? "생성 완료" : "수정 완료"}
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

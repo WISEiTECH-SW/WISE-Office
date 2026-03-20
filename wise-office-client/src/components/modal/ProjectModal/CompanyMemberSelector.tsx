@@ -70,7 +70,7 @@ export default function CompanyMemberSelector({
                     className="border border-gray-300 w-full px-3 py-2 rounded-md mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
 
-                <div className="border border-gray-300 rounded-md max-h-52 overflow-y-auto">
+                <div className="border border-gray-300 rounded-md max-h-52 overflow-y-auto custom-scroll">
                     {filteredCompanyMembers.map((member) => (
                         <label
                             key={member.memberId}
