@@ -103,6 +103,14 @@ const LoginPage = () => {
                             </span>
                         </Link>
                     </p>
+                    <p className="text-gray-600">
+                        비밀번호를 잊으셨나요?{" "}
+                        <Link href="/auth/find-password">
+                            <span className="font-medium text-indigo-600 cursor-pointer hover:text-indigo-500">
+                                비밀번호 찾기
+                            </span>
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>

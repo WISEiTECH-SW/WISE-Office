@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,22 +20,31 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EmailService {
 
     private final JavaMailSender mailSender;
-    private final ConcurrentHashMap<String, String> verificationRepository = new ConcurrentHashMap<>();
+    private final Map<String, String> verificationRepository = new ConcurrentHashMap<>();
+    private final Map<String, String> verified = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, LocalDateTime> repeatBlocker = new ConcurrentHashMap<>();
     private final String title = "WISE-Backoffice 이메일 인증 번호";
     private final String NOT_FOUND = "NOTFOUND";
 
-    private static final int BLOCK_DURATION_SECOND = 60; // 중복 요청수
+    private static final int BLOCK_DURATION_SECOND = 60; // 중복 요청 방지 시간
 
     public void sendCode(String email) {
-        String title = "WISE-Backoffice 이메일 인증 번호";
+        sendEmailWithCode(email, "[WISE-BackOffice] 회원가입 인증번호", "인증 번호 : ");
+    }
+
+    public void findPasswordCode(String email) {
+        sendEmailWithCode(email, "[WISE-BackOffice] 로그인 비밀번호 찾기", "인증 번호 : ");
+    }
+
+    private void sendEmailWithCode(String email, String title, String contentPrefix) {
         validationRepeat(email);
         String code = createCode();
         verificationRepository.put(email, code);
+
         try {
-            mailSender.send(createMessage(email, title, code));
+            mailSender.send(createMessage(email, title, contentPrefix + code));
         } catch (RuntimeException e) {
-            log.info("EmailService.sendEmail exception : {}, {}, {}", email, title, code);
+            log.error("EmailService.findPasswordCode exception : {}, {}, {}, {}", email, title, code, e.getMessage());
             throw new ApplicationRuntimeException(ErrorMessage.INTERNAL_ERROR);
         }
     }
@@ -42,14 +52,23 @@ public class EmailService {
     public EmailVerificationResult verificationCode(String email, String code) {
         String savedCode = verificationRepository.getOrDefault(email, NOT_FOUND);
         if (savedCode.equals(NOT_FOUND) || !savedCode.equals(code)) {
-            log.debug("EmailService.verificationCode exception : {}, {}, {}",
-                    email, savedCode, code);
+            log.error("EmailService.verificationCode exception : {}, {}, {}", email, savedCode, code);
             return EmailVerificationResult.of(false);
         }
         verificationRepository.remove(email);
-        return EmailVerificationResult.of(true);
+        String successToken = createCode();
+        verified.put(successToken, email);
+        return EmailVerificationResult.from(true, successToken);
     }
 
+    public String verificationSuccessToken(String token) {
+        if (verified.get(token) == null) {
+            throw new ApplicationRuntimeException(ErrorMessage.REJECT_REQUEST);
+        }
+        String email = verified.get(token);
+        verified.remove(token);
+        return email;
+    }
 
     private void validationRepeat(String email) {
         LocalDateTime nowAttemptTime = LocalDateTime.now();
@@ -63,7 +82,6 @@ public class EmailService {
         });
     }
 
-
     private SimpleMailMessage createMessage(String targetEmail, String title, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(targetEmail);
@@ -71,7 +89,6 @@ public class EmailService {
         message.setText(code);
         return message;
     }
-
 
     private String createCode() {
         int length = 6;

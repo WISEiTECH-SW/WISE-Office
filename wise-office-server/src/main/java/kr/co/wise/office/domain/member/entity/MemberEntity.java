@@ -85,4 +85,8 @@ public class MemberEntity {
     public boolean isAdmin(){
         return this.roleType == MemberRoleType.MASTER;
     }
+
+    public void updatePassword(String changePassword) {
+        this.password = changePassword;
+    }
 }

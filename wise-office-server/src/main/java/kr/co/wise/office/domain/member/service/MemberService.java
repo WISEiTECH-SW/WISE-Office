@@ -43,6 +43,16 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     private final PasswordEncoder passwordEncoder;
     private final CompanyMemberEntityRepository companyMemberEntityRepository;
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        MemberEntity member = memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(ErrorMessage.NOT_FOUND_MEMBER.getMessage()));
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRoleType().name())
+                .build();
+    }
+
     @Transactional
     public void signUp(SignupRequest request, String imagePath) {
         if (memberRepository.findByEmail(request.email()).isPresent()) {
@@ -152,7 +162,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     public MemberGroupedResponse searchAllMemberInfo(String loginUserEmail) {
         List<MemberEntity> members = memberRepository.findAll();
         List<CompanyMemberEntity> cMembers = companyMemberEntityRepository.findAll();
-        
+
         List<MemberListResponse> projectMembers = members.stream().map(MemberListResponse::loadMemberInfo).toList();
         List<MemberListResponse> companyMembers = cMembers.stream().map(MemberListResponse::convertCompanyMembertoMember).toList();
         MemberGroupedResponse res = new MemberGroupedResponse(projectMembers, companyMembers);
@@ -189,24 +199,10 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
         });
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        MemberEntity member = memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(ErrorMessage.NOT_FOUND_MEMBER.getMessage()));
-        return User.builder()
-                .username(member.getEmail())
-                .password(member.getPassword())
-                .roles(member.getRoleType().name())
-                .build();
-    }
-
     @Transactional(readOnly = true)
     public HireDateResponse getHireDate(String loginUserEmail) {
         MemberEntity member = findUserWithEmail(loginUserEmail);
         return new HireDateResponse(member.getHireDate());
-    }
-
-    private MemberEntity findUserWithEmail(String loginUserEmail) {
-        return memberRepository.findByEmail(loginUserEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
     }
 
     @Transactional
@@ -215,5 +211,26 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
         member.updateHireDate(request.hireDate());
         memberRepository.save(member);
         return new HireDateResponse(request.hireDate());
+    }
+
+    @Transactional(readOnly = true)
+    public void checkSignUp(String email) {
+        memberRepository.findByEmail(email).orElseThrow(() ->
+                new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER)
+        );
+    }
+
+    private MemberEntity findUserWithEmail(String loginUserEmail) {
+        return memberRepository.findByEmail(loginUserEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+    }
+
+    @Transactional
+    public void changePassword(String email, String password, String passwordCheck) {
+        if (!password.equals(passwordCheck)) {
+            throw new ApplicationRuntimeException(ErrorMessage.REJECT_PASSWORD_CHANGE);
+        }
+
+        MemberEntity changeMember = findUserWithEmail(email);
+        changeMember.updatePassword(passwordEncoder.encode(password));
     }
 }

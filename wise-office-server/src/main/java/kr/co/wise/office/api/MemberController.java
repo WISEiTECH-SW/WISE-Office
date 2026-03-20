@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @Tag(name = "member", description = "회원 조회 관련 API 입니다.")
 @RestController
@@ -179,6 +178,42 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/email/find-password")
+    @Operation(summary = "비밀번호 찾기")
+    public ResponseEntity<Void> findPassword(
+            @Parameter(description = "사용할 이메일") @RequestBody VerificationCodeCreationRequest request
+    ) {
+        validateEmail(request.email());
+        //기존에 가입한 계정인지 검사
+        memberService.checkSignUp(request.email());
+
+        emailService.findPasswordCode(request.email());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/email/find-password/verification")
+    @Operation(summary = "비밀번호 찾기 검증")
+    public ResponseEntity<EmailVerificationResult> findPasswordVerification(
+            @Parameter(description = "인증 요청한 email") @NotBlank(message = "{email.blank}") @Email(message = "{login.email}")
+            @Valid @RequestParam("email") String email,
+            @Parameter(description = "전달받은 code 6자리") @NotBlank(message = "{notBlank}")  @Valid @RequestParam("code") String code
+    ) {
+        validateEmail(email);
+        memberService.checkSignUp(email);
+        EmailVerificationResult emailVerificationResult = emailService.verificationCode(email, code);
+        return ResponseEntity.status(HttpStatus.OK).body(emailVerificationResult);
+    }
+
+    @PatchMapping("/email/find-password/verification")
+    @Operation(summary = "비밀번호 변경")
+    public ResponseEntity<Void> ChangePassword(
+            @Parameter(description = "비밀번호 변경 요청 DTO") @RequestBody ChangePasswordRequest request
+    ) {
+        String email = emailService.verificationSuccessToken(request.successToken());
+        memberService.changePassword(email, request.password(), request.passwordCheck());
+        return ResponseEntity.ok().build();
+    }
+
     private void validateEmail(String email) {
         if (allowDomain.equals("all")) {
             return;
@@ -188,4 +223,5 @@ public class MemberController {
             throw new ApplicationRuntimeException(ErrorMessage.FORBIDDEN_SIGNUP);
         }
     }
+
 }

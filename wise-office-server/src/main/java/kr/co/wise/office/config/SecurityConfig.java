@@ -93,7 +93,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**", "/login/oauth2/code/google", "/oauth2/**", "/health", "/swagger-ui/**",
                         "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v2/projects",
                         "/api/members/emails/verification", "/swagger-ui.html", "/api/v3/projects", "/api/v3/projects/groupByYear",
-                        "/images/**", "/github-action")
+                        "/images/**", "/github-action", "/api/members/email/find-password", "/api/members/email/find-password/verification",
+                        "/api/email/find-password/verification")
                 .permitAll()
                 .anyRequest().authenticated());
 

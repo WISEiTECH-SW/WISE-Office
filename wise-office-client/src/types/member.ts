@@ -18,3 +18,14 @@ export interface GroupedMember {
     members: Member[];
     companyMembers: Member[];
 }
+
+export type EmailVerificationResponse = {
+    verification: boolean;
+    successCode: string;
+};
+
+export type ChangePasswordForm = {
+    successToken: string;
+    password: string;
+    passwordCheck: string;
+};
