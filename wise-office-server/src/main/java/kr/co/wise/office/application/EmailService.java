@@ -21,7 +21,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final Map<String, String> verificationRepository = new ConcurrentHashMap<>();
-    private final Map<String, String> verified = new ConcurrentHashMap<>();
+    private final Map<String, String> verifiedEmail = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, LocalDateTime> repeatBlocker = new ConcurrentHashMap<>();
     private final String title = "WISE-Backoffice 이메일 인증 번호";
     private final String NOT_FOUND = "NOTFOUND";
@@ -57,17 +57,15 @@ public class EmailService {
         }
         verificationRepository.remove(email);
         String successToken = createCode();
-        verified.put(successToken, email);
+        verifiedEmail.put(successToken, email);
         return EmailVerificationResult.from(true, successToken);
     }
 
     public String verificationSuccessToken(String token) {
-        if (verified.get(token) == null) {
+        if (verifiedEmail.get(token) == null) {
             throw new ApplicationRuntimeException(ErrorMessage.REJECT_REQUEST);
         }
-        String email = verified.get(token);
-        verified.remove(token);
-        return email;
+        return verifiedEmail.remove(token);
     }
 
     private void validationRepeat(String email) {

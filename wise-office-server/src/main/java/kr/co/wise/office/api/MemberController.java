@@ -206,7 +206,7 @@ public class MemberController {
 
     @PatchMapping("/email/find-password/verification")
     @Operation(summary = "비밀번호 변경")
-    public ResponseEntity<Void> ChangePassword(
+    public ResponseEntity<Void> changePassword(
             @Parameter(description = "비밀번호 변경 요청 DTO") @RequestBody ChangePasswordRequest request
     ) {
         String email = emailService.verificationSuccessToken(request.successToken());
