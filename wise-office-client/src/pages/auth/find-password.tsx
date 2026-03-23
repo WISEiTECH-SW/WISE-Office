@@ -114,7 +114,9 @@ export default function FindPasswordPage() {
             await requestFindPasswordCode(email);
             setIsCodeInputVisible(true);
             startCooldown(REQUEST_COOLDOWN_SECONDS);
-            toastMessage.success("인증 코드를 발송했습니다.");
+            toastMessage.success(
+                "인증 코드를 발송했습니다. 인증 코드는 2분동안 유효합니다.",
+            );
         } catch (error) {
             toastMessage.error(
                 getErrorMessage(error, "인증 코드 발송에 실패했습니다."),
