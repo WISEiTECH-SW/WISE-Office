@@ -75,12 +75,12 @@ export default function MinuteDocument() {
                         <ReadableCell
                             colSpan={3}
                             value={[
-                                minutesInfo.instAttendants,
                                 minutesInfo.minutesAttendants?.length
                                     ? `위세아이텍 : ${minutesInfo.minutesAttendants
                                           .map((m) => `${m.name} ${m.rank}`)
                                           .join(", ")}`
                                     : "",
+                                minutesInfo.instAttendants,
                             ]
                                 .filter(Boolean)
                                 .join("\n")}

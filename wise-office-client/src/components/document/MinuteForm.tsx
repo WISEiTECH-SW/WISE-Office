@@ -140,6 +140,27 @@ export default function MinuteForm({
                             className="border border-black px-[10px] py-2 text-[13.5px]"
                         >
                             <div className="flex flex-col gap-2">
+                                {/* 내부 참석자 */}
+                                <div
+                                    onClick={openAttendanceModal}
+                                    className="cursor-pointer hover:bg-blue-50 px-1 py-[2px]"
+                                >
+                                    {form.minutesAttendants.length > 0 ? (
+                                        <span>
+                                            <span className="font-medium">
+                                                위세아이텍:
+                                            </span>{" "}
+                                            {attendantsNameAndRank}
+                                        </span>
+                                    ) : (
+                                        <span className="text-gray-400 italic">
+                                            <span className="font-medium text-gray-600">
+                                                위세아이텍:
+                                            </span>{" "}
+                                            우측 리스트에서 참석자를 선택하세요
+                                        </span>
+                                    )}
+                                </div>
                                 {/* 외부기관 참석자 */}
                                 <textarea
                                     placeholder="기관명: 참석자1, 참석자2,... 와 같이 외부기관 참석자를 입력해 주세요."
@@ -152,29 +173,6 @@ export default function MinuteForm({
                                     }
                                     className="w-full outline-none text-[13.5px] placeholder-gray-400"
                                 />
-
-                                {/* 내부 참석자 */}
-                                <div
-                                    onClick={openAttendanceModal}
-                                    className="cursor-pointer hover:bg-blue-50 px-1 py-[2px]"
-                                >
-                                    {form.minutesAttendants.length > 0 ? (
-                                        <span>
-                                            <span className="font-medium">
-                                                위세아이텍:
-                                            </span>{" "}
-                                            {/* {form.minutesAttendants} */}
-                                            {attendantsNameAndRank}
-                                        </span>
-                                    ) : (
-                                        <span className="text-gray-400 italic">
-                                            <span className="font-medium text-gray-600">
-                                                위세아이텍:
-                                            </span>{" "}
-                                            우측 리스트에서 참석자를 선택하세요
-                                        </span>
-                                    )}
-                                </div>
                             </div>
                         </td>
                     </tr>
