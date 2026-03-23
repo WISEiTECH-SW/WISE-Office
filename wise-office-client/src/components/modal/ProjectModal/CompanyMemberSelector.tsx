@@ -16,11 +16,13 @@ export default function CompanyMemberSelector({
     setSelectedCompanyMembers,
     setCompanyMemberSearchText,
 }: Props) {
-    const filteredCompanyMembers = companyMembers.filter(
-        (m) =>
-            m.name.includes(companyMemberSearchText) ||
-            m.rank.includes(companyMemberSearchText),
-    );
+    const filteredCompanyMembers = React.useMemo(() => {
+        return companyMembers.filter(
+            (m) =>
+                m.name.includes(companyMemberSearchText) ||
+                m.rank.includes(companyMemberSearchText),
+        );
+    }, [companyMembers, companyMemberSearchText]);
     // 편성 인원 선택
     const toggleCompanyMember = (member: Member) => {
         const exists = selectedCompanyMembers.find(
@@ -28,11 +30,15 @@ export default function CompanyMemberSelector({
         );
 
         if (exists) {
-            setSelectedCompanyMembers(
-                selectedCompanyMembers.filter(
-                    (m) => m.memberId !== member.memberId,
-                ),
-            );
+            setSelectedCompanyMembers((prev) => {
+                const exists = prev.find((m) => m.memberId === member.memberId);
+
+                if (exists) {
+                    return prev.filter((m) => m.memberId !== member.memberId);
+                } else {
+                    return [...prev, member];
+                }
+            });
         } else {
             setSelectedCompanyMembers([...selectedCompanyMembers, member]);
         }
@@ -41,7 +47,7 @@ export default function CompanyMemberSelector({
         <div className="grid grid-cols-2 gap-4">
             {/* 편성인원 - 좌측 */}
             <div>
-                <h3 className="font-semibold mb-2">편성 인원</h3>
+                <h3 className="font-semibold mb-2">편성 인원 리스트</h3>
 
                 {/* 선택된 편성 인원 */}
                 <div className="border border-gray-300 rounded-md h-40 mb-3 p-2 overflow-y-auto">
@@ -64,11 +70,11 @@ export default function CompanyMemberSelector({
                     className="border border-gray-300 w-full px-3 py-2 rounded-md mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
 
-                <div className="border border-gray-300 rounded-md max-h-52 overflow-y-auto">
+                <div className="border border-gray-300 rounded-md max-h-52 overflow-y-auto custom-scroll">
                     {filteredCompanyMembers.map((member) => (
                         <label
                             key={member.memberId}
-                            className="flex items-center gap-2 px-3 py-2"
+                            className="flex items-center gap-2 px-3 py-2 cursor-pointer"
                         >
                             <input
                                 type="checkbox"
