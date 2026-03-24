@@ -67,7 +67,8 @@ export default function MinuteForm({
             if (startNum >= endNum) {
                 // 시작이 종료보다 늦어지면 종료 시간 자동 조정 (한 시간 뒤)
                 const nextTimeIdx = timeOptions.indexOf(newString) + 2;
-                const autoEnd = timeOptions[nextTimeIdx] || "00:00";
+                const autoEnd =
+                    timeOptions[nextTimeIdx] || timeOptions[nextTimeIdx - 2];
 
                 setForm((prev) => ({
                     ...prev,
@@ -175,7 +176,7 @@ export default function MinuteForm({
                                         <option value="" disabled>
                                             --:--
                                         </option>
-                                        {timeOptions.slice(1).map((t) => (
+                                        {timeOptions.map((t) => (
                                             <option
                                                 key={`start-${t}`}
                                                 value={t}
@@ -209,7 +210,7 @@ export default function MinuteForm({
                                         <option value="" disabled>
                                             --:--
                                         </option>
-                                        {timeOptions.slice(1).map((t) => (
+                                        {timeOptions.map((t) => (
                                             <option key={`end-${t}`} value={t}>
                                                 {t}
                                             </option>
