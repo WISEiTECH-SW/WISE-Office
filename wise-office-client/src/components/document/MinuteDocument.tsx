@@ -43,21 +43,23 @@ export default function MinuteDocument() {
                 <tbody>
                     <tr>
                         <LabelCell label="회의 일시" />
-                        <ReadableCell
-                            colSpan={2}
-                            value={new Date(
-                                minutesInfo.minutesDate,
-                            ).toLocaleDateString("ko-KR", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                                weekday: "long",
-                            })}
-                        />
-                        <ReadableCell
-                            colSpan={1}
-                            value={`${minutesInfo.startTime} ~ ${minutesInfo.endTime}`}
-                        />
+                        <td colSpan={3} className="border border-black p-0">
+                            <div className="flex w-full h-full divide-x divide-black">
+                                <div className="flex-1 p-2 text-center">
+                                    {new Date(
+                                        minutesInfo.minutesDate,
+                                    ).toLocaleDateString("ko-KR", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                        weekday: "long",
+                                    })}
+                                </div>
+                                <div className="flex-1 p-2 text-center">
+                                    {`${minutesInfo.startTime} ~ ${minutesInfo.endTime}`}
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <LabelCell label="회의 장소" />
@@ -75,12 +77,12 @@ export default function MinuteDocument() {
                         <ReadableCell
                             colSpan={3}
                             value={[
-                                minutesInfo.instAttendants,
                                 minutesInfo.minutesAttendants?.length
                                     ? `위세아이텍 : ${minutesInfo.minutesAttendants
                                           .map((m) => `${m.name} ${m.rank}`)
                                           .join(", ")}`
                                     : "",
+                                minutesInfo.instAttendants,
                             ]
                                 .filter(Boolean)
                                 .join("\n")}

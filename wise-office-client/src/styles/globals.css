@@ -83,6 +83,13 @@ a {
         overflow: hidden !important;
         box-sizing: border-box !important;
     }
+    .screen-only {
+        display: none !important;
+    }
+
+    .print-only {
+        display: block !important;
+    }
 }
 
 /* 스크롤바 전체 */

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { EditableCell } from "./EditableCell";
 import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
@@ -7,8 +6,8 @@ import {
     MinutesCreateRequest,
     PossibleAttendantsResponse,
 } from "@/types/document";
-import { formatMeetingDate, formatMeetingTime } from "@/utils/dateToString";
-import DateTimeModal from "../modal/DateTimeModal";
+import { toastMessage } from "@/lib/common/toastMessage";
+import { useMemo } from "react";
 
 interface MinuteFormProps {
     form: MinutesCreateRequest;
@@ -27,11 +26,68 @@ export default function MinuteForm({
     attendantsNameAndRank,
     possibleAttendants,
 }: MinuteFormProps) {
-    const [isDateTimeModalOpen, setIsDateTimeModalOpen] =
-        useState<boolean>(false);
     const writerInfo = possibleAttendants?.find(
         (m) => m.memberId === form.writer,
     );
+
+    // 시간 비교용
+    const timeToMinutes = (time: string) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        return hours * 60 + minutes;
+    };
+    // 30분 단위 시간 옵션 생성
+    const timeOptions = useMemo(() => {
+        const options: string[] = [];
+        for (let i = 7; i < 22; i++) {
+            for (let j = 0; j < 60; j += 30) {
+                options.push(
+                    `${i.toString().padStart(2, "0")}:${j
+                        .toString()
+                        .padStart(2, "0")}`,
+                );
+            }
+        }
+        return options;
+    }, []);
+
+    // 회의 시작 유효성 검사
+    const handleTimeChange = (newString: string, isStartTime: boolean) => {
+        if (!newString) {
+            toastMessage.info("올바른 시간을 선택해 주세요.");
+            return;
+        }
+        const startNum = isStartTime
+            ? timeToMinutes(newString)
+            : timeToMinutes(form.startTime);
+        const endNum = isStartTime
+            ? timeToMinutes(form.endTime)
+            : timeToMinutes(newString);
+
+        if (isStartTime) {
+            if (startNum >= endNum) {
+                // 시작이 종료보다 늦어지면 종료 시간 자동 조정 (한 시간 뒤)
+                const nextTimeIdx = timeOptions.indexOf(newString) + 2;
+                const autoEnd =
+                    timeOptions[nextTimeIdx] || timeOptions[nextTimeIdx - 2];
+
+                setForm((prev) => ({
+                    ...prev,
+                    startTime: newString,
+                    endTime: autoEnd,
+                }));
+            } else {
+                setForm((prev) => ({ ...prev, startTime: newString }));
+            }
+        } else {
+            if (endNum <= startNum) {
+                toastMessage.error(
+                    "종료 시간은 시작 시간보다 이후여야 합니다.",
+                );
+            } else {
+                setForm((prev) => ({ ...prev, endTime: newString }));
+            }
+        }
+    };
 
     return (
         <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[80px] pb-[120px] flex flex-col">
@@ -79,37 +135,97 @@ export default function MinuteForm({
 
                 <tbody>
                     <tr>
-                        <LabelCell label="회의 날짜" />
-                        {form.minutesDate.trim() === "" ? (
-                            <td
-                                colSpan={4}
-                                className="border border-black p-2 text-gray-400 text-sm cursor-pointer"
-                                onClick={() => setIsDateTimeModalOpen(true)}
-                            >
-                                날짜, 시간 선택
-                            </td>
-                        ) : (
-                            <>
-                                <td
-                                    className="border border-black p-2 text-sm  text-center cursor-pointer"
-                                    colSpan={2}
-                                    onClick={() => setIsDateTimeModalOpen(true)}
-                                >
-                                    {formatMeetingDate(form.minutesDate)}
-                                </td>
+                        <LabelCell label="회의 일시" />
+                        {/* 날짜 */}
+                        <td colSpan={2} className="border border-black p-0">
+                            <input
+                                type="date"
+                                value={form.minutesDate}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        minutesDate: e.target.value,
+                                    }))
+                                }
+                                className="w-full h-full p-2 text-sm text-center outline-none cursor-pointer hover:bg-gray-50 bg-transparent screen-only"
+                            />
+                            {/* 출력용 */}
+                            <div className="hidden print:block w-full h-full p-2 text-sm text-center">
+                                {form.minutesDate}
+                            </div>
+                        </td>
+                        {/* 시간 */}
+                        <td colSpan={2} className="border border-black p-0">
+                            <div className="flex items-center gap-2 px-2 h-full">
+                                {/* 시작 시간 */}
+                                <div className="flex flex-col flex-1">
+                                    <span className="text-[11px] text-gray-500 text-center screen-only">
+                                        시작
+                                    </span>
+                                    <select
+                                        value={form.startTime || ""}
+                                        onChange={(e) =>
+                                            handleTimeChange(
+                                                e.target.value,
+                                                true,
+                                            )
+                                        }
+                                        className="w-full py-2 text-sm text-center border border-gray-300 rounded-md 
+                                                    bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 custom-scroll screen-only"
+                                    >
+                                        <option value="" disabled>
+                                            --:--
+                                        </option>
+                                        {timeOptions.map((t) => (
+                                            <option
+                                                key={`start-${t}`}
+                                                value={t}
+                                            >
+                                                {t}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
 
-                                <td
-                                    className="border border-black p-2  text-sm text-center cursor-pointer"
-                                    colSpan={2}
-                                    onClick={() => setIsDateTimeModalOpen(true)}
-                                >
-                                    {formatMeetingTime(
-                                        form.startTime,
-                                        form.endTime,
-                                    )}
-                                </td>
-                            </>
-                        )}
+                                <span className="text-gray-400 mt-4 screen-only">
+                                    ~
+                                </span>
+
+                                {/* 종료 시간 */}
+                                <div className="flex flex-col flex-1">
+                                    <span className="text-[11px] text-gray-500 text-center screen-only">
+                                        종료
+                                    </span>
+                                    <select
+                                        value={form.endTime || ""}
+                                        onChange={(e) =>
+                                            handleTimeChange(
+                                                e.target.value,
+                                                false,
+                                            )
+                                        }
+                                        className="w-full py-2 text-sm text-center border border-gray-300 rounded-md 
+                                                    bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 custom-scroll screen-only"
+                                    >
+                                        <option value="" disabled>
+                                            --:--
+                                        </option>
+                                        {timeOptions.map((t) => (
+                                            <option key={`end-${t}`} value={t}>
+                                                {t}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* 출력 UI */}
+                            <div className="hidden print:flex items-center justify-center h-full text-sm">
+                                {form.startTime && form.endTime
+                                    ? `${form.startTime} ~ ${form.endTime}`
+                                    : ""}
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <LabelCell label="회의 장소" />
@@ -140,19 +256,6 @@ export default function MinuteForm({
                             className="border border-black px-[10px] py-2 text-[13.5px]"
                         >
                             <div className="flex flex-col gap-2">
-                                {/* 외부기관 참석자 */}
-                                <textarea
-                                    placeholder="기관명: 참석자1, 참석자2,... 와 같이 외부기관 참석자를 입력해 주세요."
-                                    value={form.instAttendants}
-                                    onChange={(e) =>
-                                        setForm((prev) => ({
-                                            ...prev,
-                                            instAttendants: e.target.value,
-                                        }))
-                                    }
-                                    className="w-full outline-none text-[13.5px] placeholder-gray-400"
-                                />
-
                                 {/* 내부 참석자 */}
                                 <div
                                     onClick={openAttendanceModal}
@@ -160,10 +263,9 @@ export default function MinuteForm({
                                 >
                                     {form.minutesAttendants.length > 0 ? (
                                         <span>
-                                            <span className="font-medium">
+                                            <span className="text-[13.5px]">
                                                 위세아이텍:
                                             </span>{" "}
-                                            {/* {form.minutesAttendants} */}
                                             {attendantsNameAndRank}
                                         </span>
                                     ) : (
@@ -174,6 +276,21 @@ export default function MinuteForm({
                                             우측 리스트에서 참석자를 선택하세요
                                         </span>
                                     )}
+                                </div>
+                                {/* 외부기관 참석자 */}
+                                <textarea
+                                    placeholder="기관명: 참석자1, 참석자2,... 와 같이 외부기관 참석자를 입력해 주세요."
+                                    value={form.instAttendants}
+                                    onChange={(e) =>
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            instAttendants: e.target.value,
+                                        }))
+                                    }
+                                    className="w-full outline-none text-[13.5px] placeholder-gray-400 screen-only"
+                                />
+                                <div className="hidden print:block w-full h-full px-1 text-[13.5px]">
+                                    {form.instAttendants}
                                 </div>
                             </div>
                         </td>
@@ -210,24 +327,6 @@ export default function MinuteForm({
                 value={form.content}
                 onChange={(v) => setForm((prev) => ({ ...prev, content: v }))}
             />
-
-            {isDateTimeModalOpen && (
-                <DateTimeModal
-                    isOpen={isDateTimeModalOpen}
-                    onClose={() => setIsDateTimeModalOpen(false)}
-                    initialDate={form.minutesDate}
-                    initialStartTime={form.startTime}
-                    initialEndTime={form.endTime}
-                    onConfirm={(data) =>
-                        setForm((prev) => ({
-                            ...prev,
-                            minutesDate: data.minutesDate,
-                            startTime: data.startTime,
-                            endTime: data.endTime,
-                        }))
-                    }
-                />
-            )}
         </div>
     );
 }
