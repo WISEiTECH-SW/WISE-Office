@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { EditableCell } from "./EditableCell";
 import { LabelCell } from "./LabelCell";
 import { SectionBody } from "./SectionBody";
@@ -7,9 +6,8 @@ import {
     MinutesCreateRequest,
     PossibleAttendantsResponse,
 } from "@/types/document";
-import { formatMeetingDate, formatMeetingTime } from "@/utils/dateToString";
-import DateTimeModal from "../modal/DateTimeModal";
 import { toastMessage } from "@/lib/common/toastMessage";
+import { useMemo } from "react";
 
 interface MinuteFormProps {
     form: MinutesCreateRequest;
@@ -28,8 +26,6 @@ export default function MinuteForm({
     attendantsNameAndRank,
     possibleAttendants,
 }: MinuteFormProps) {
-    const [isDateTimeModalOpen, setIsDateTimeModalOpen] =
-        useState<boolean>(false);
     const writerInfo = possibleAttendants?.find(
         (m) => m.memberId === form.writer,
     );
@@ -40,27 +36,24 @@ export default function MinuteForm({
         return hours * 60 + minutes;
     };
     // 30분 단위 시간 옵션 생성
-    const generateTimeOptions = () => {
-        const options = ["-"];
-        // 임의 허용 시간: 오전 7시 ~ 오후 10시
+    const timeOptions = useMemo(() => {
+        const options: string[] = [];
         for (let i = 7; i < 22; i++) {
             for (let j = 0; j < 60; j += 30) {
-                const hour = i.toString().padStart(2, "0");
-                const minute = j.toString().padStart(2, "0");
-                options.push(`${hour}:${minute}`);
+                options.push(
+                    `${i.toString().padStart(2, "0")}:${j
+                        .toString()
+                        .padStart(2, "0")}`,
+                );
             }
         }
         return options;
-    };
-    const timeOptions = generateTimeOptions();
+    }, []);
 
     // 회의 시작 유효성 검사
     const handleTimeChange = (newString: string, isStartTime: boolean) => {
-        if (newString === "-") {
-            setForm((prev) => ({
-                ...prev,
-                [isStartTime ? "startTime" : "endTime"]: "-",
-            }));
+        if (!newString) {
+            toastMessage.info("올바른 시간을 선택해 주세요.");
             return;
         }
         const startNum = isStartTime
@@ -153,47 +146,83 @@ export default function MinuteForm({
                                         minutesDate: e.target.value,
                                     }))
                                 }
-                                className="w-full h-full p-2 text-sm text-center outline-none cursor-pointer hover:bg-gray-50 bg-transparent"
+                                className="w-full h-full p-2 text-sm text-center outline-none cursor-pointer hover:bg-gray-50 bg-transparent screen-only"
                             />
+                            {/* 출력용 */}
+                            <div className="hidden print:block w-full h-full p-2 text-sm text-center">
+                                {form.minutesDate}
+                            </div>
                         </td>
                         {/* 시간 */}
                         <td colSpan={2} className="border border-black p-0">
-                            <div className="flex items-center justify-center gap-1 px-2 h-full">
-                                <select
-                                    value={form.startTime}
-                                    onChange={(e) =>
-                                        // setForm((prev) => ({
-                                        //     ...prev,
-                                        //     startTime: e.target.value,
-                                        // }))
-                                        handleTimeChange(e.target.value, true)
-                                    }
-                                    className="appearance-none bg-transparent text-sm text-center outline-none cursor-pointer py-2 flex-1 min-w-0"
-                                >
-                                    {timeOptions.map((t) => (
-                                        <option key={`start-${t}`} value={t}>
-                                            {t}
+                            <div className="flex items-center gap-2 px-2 h-full">
+                                {/* 시작 시간 */}
+                                <div className="flex flex-col flex-1">
+                                    <span className="text-[11px] text-gray-500 text-center screen-only">
+                                        시작
+                                    </span>
+                                    <select
+                                        value={form.startTime || ""}
+                                        onChange={(e) =>
+                                            handleTimeChange(
+                                                e.target.value,
+                                                true,
+                                            )
+                                        }
+                                        className="w-full py-2 text-sm text-center border border-gray-300 rounded-md 
+                                                    bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 custom-scroll screen-only"
+                                    >
+                                        <option value="" disabled>
+                                            --:--
                                         </option>
-                                    ))}
-                                </select>
-                                <span className="text-sm flex-shrink-0">~</span>
-                                <select
-                                    value={form.endTime}
-                                    onChange={(e) =>
-                                        // setForm((prev) => ({
-                                        //     ...prev,
-                                        //     endTime: e.target.value,
-                                        // }))
-                                        handleTimeChange(e.target.value, false)
-                                    }
-                                    className="appearance-none bg-transparent text-sm text-center outline-none cursor-pointer py-2 flex-1 min-w-0"
-                                >
-                                    {timeOptions.map((t) => (
-                                        <option key={`end-${t}`} value={t}>
-                                            {t}
+                                        {timeOptions.slice(1).map((t) => (
+                                            <option
+                                                key={`start-${t}`}
+                                                value={t}
+                                            >
+                                                {t}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <span className="text-gray-400 mt-4 screen-only">
+                                    ~
+                                </span>
+
+                                {/* 종료 시간 */}
+                                <div className="flex flex-col flex-1">
+                                    <span className="text-[11px] text-gray-500 text-center screen-only">
+                                        종료
+                                    </span>
+                                    <select
+                                        value={form.endTime || ""}
+                                        onChange={(e) =>
+                                            handleTimeChange(
+                                                e.target.value,
+                                                false,
+                                            )
+                                        }
+                                        className="w-full py-2 text-sm text-center border border-gray-300 rounded-md 
+                                                    bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 custom-scroll screen-only"
+                                    >
+                                        <option value="" disabled>
+                                            --:--
                                         </option>
-                                    ))}
-                                </select>
+                                        {timeOptions.slice(1).map((t) => (
+                                            <option key={`end-${t}`} value={t}>
+                                                {t}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* 출력 UI */}
+                            <div className="hidden print:flex items-center justify-center h-full text-sm">
+                                {form.startTime && form.endTime
+                                    ? `${form.startTime} ~ ${form.endTime}`
+                                    : ""}
                             </div>
                         </td>
                     </tr>
@@ -294,24 +323,6 @@ export default function MinuteForm({
                 value={form.content}
                 onChange={(v) => setForm((prev) => ({ ...prev, content: v }))}
             />
-
-            {/* {isDateTimeModalOpen && (
-                <DateTimeModal
-                    isOpen={isDateTimeModalOpen}
-                    onClose={() => setIsDateTimeModalOpen(false)}
-                    initialDate={form.minutesDate}
-                    initialStartTime={form.startTime}
-                    initialEndTime={form.endTime}
-                    onConfirm={(data) =>
-                        setForm((prev) => ({
-                            ...prev,
-                            minutesDate: data.minutesDate,
-                            startTime: data.startTime,
-                            endTime: data.endTime,
-                        }))
-                    }
-                />
-            )} */}
         </div>
     );
 }
