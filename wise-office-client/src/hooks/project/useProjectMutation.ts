@@ -1,9 +1,5 @@
 import { toastMessage } from "@/lib/common/toastMessage";
-import {
-    deleteProjectApi,
-    postProject,
-    updateProject,
-} from "@/services/projects";
+import { deleteProject, postProject, updateProject } from "@/services/projects";
 import { CreateProject } from "@/types/project";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -51,7 +47,7 @@ export const useProjectMutation = () => {
 
     // DELETE
     const deleteMutation = useMutation({
-        mutationFn: (projectId: number) => deleteProjectApi(projectId),
+        mutationFn: (projectId: number) => deleteProject(projectId),
         onSuccess: (projectId: number) => {
             queryClient.invalidateQueries({
                 queryKey: ["project", projectId],

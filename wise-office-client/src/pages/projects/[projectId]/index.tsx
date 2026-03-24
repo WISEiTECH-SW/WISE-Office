@@ -104,12 +104,12 @@ export default function ProjectById() {
                 router.push("/");
                 break;
             case "log":
-                setSelectedDoc({ type: "log", id: 0 });
+                setSelectedDoc({ type: "log", id: null });
                 break;
             case "comment":
                 break;
             case "minute":
-                setSelectedDoc({ type: "minute", id: 0 });
+                setSelectedDoc({ type: "minute", id: null });
                 break;
             default:
                 break;

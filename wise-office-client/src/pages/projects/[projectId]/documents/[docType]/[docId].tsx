@@ -50,7 +50,7 @@ export default function DocumentPage() {
     const [attendantsNameAndRank, setAttendantsNameAndRank] =
         useState<string>("");
 
-    const [minuteForm, setminuteForm] = useState<MinutesCreateRequest>({
+    const [minuteForm, setMinuteForm] = useState<MinutesCreateRequest>({
         host: "",
         minutesDate: "",
         startTime: "",
@@ -116,7 +116,7 @@ export default function DocumentPage() {
         if (isNew) return;
 
         if (currentDoc === "minute" && minuteDetail.data) {
-            setminuteForm({
+            setMinuteForm({
                 host: minuteDetail.data.host,
                 location: minuteDetail.data.location,
                 purpose: minuteDetail.data.purpose,
@@ -172,7 +172,7 @@ export default function DocumentPage() {
         attendants: number[];
         writer: number;
     }) => {
-        setminuteForm((prev) => ({
+        setMinuteForm((prev) => ({
             ...prev,
             minutesAttendants: data.attendants,
             writer: data.writer,
@@ -204,7 +204,10 @@ export default function DocumentPage() {
     };
 
     /* ----- validation ----- */
-    const isMinuteFormValid = isFormComplete(minuteForm);
+    const isMinuteFormValid =
+        isFormComplete(minuteForm) &&
+        minuteForm.minutesAttendants.length > 0 &&
+        minuteForm.writer !== 0;
     const isApproveFormValid = isFormComplete(approveForm);
 
     const isLoading =
@@ -254,7 +257,7 @@ export default function DocumentPage() {
                                                 : ""
                                         }
                                         form={minuteForm}
-                                        setForm={setminuteForm}
+                                        setForm={setMinuteForm}
                                         openAttendanceModal={openModal}
                                         attendantsNameAndRank={
                                             attendantsNameAndRank
