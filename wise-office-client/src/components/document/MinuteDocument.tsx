@@ -86,7 +86,10 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                             value={[
                                 minuteDetail.minutesAttendants?.length
                                     ? `위세아이텍 : ${minuteDetail.minutesAttendants
-                                          .map((m) => `${m.name} ${m.rank}`)
+                                          .map(
+                                              (m) =>
+                                                  `${m.name.replace(/[A-Za-z]/g, "")} ${m.rank}`,
+                                          )
                                           .join(", ")}`
                                     : "",
                                 minuteDetail.instAttendants,
@@ -102,8 +105,8 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                         <ReadableCell
                             colSpan={3}
                             value={
-                                minuteDetail.writer
-                                    ? `${minuteDetail.writer.name} ${minuteDetail.writer.rank}`
+                                minutesInfo.writer
+                                    ? `${minutesInfo.writer.name} ${minutesInfo.writer.rank}`
                                     : ""
                             }
                             textAlign={"text-start"}

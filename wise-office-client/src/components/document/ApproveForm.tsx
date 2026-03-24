@@ -82,7 +82,7 @@ export default function ApproveForm({
                             <td className="py-1">품 의 자</td>
                             <td className="py-1">
                                 <input
-                                    value={form.writer}
+                                    value={form.writer.replace(/[A-Za-z]/g, "")}
                                     onChange={(e) =>
                                         handleChange("writer", e.target.value)
                                     }

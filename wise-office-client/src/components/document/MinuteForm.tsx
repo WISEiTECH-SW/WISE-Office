@@ -266,7 +266,10 @@ export default function MinuteForm({
                                             <span className="text-[13.5px]">
                                                 위세아이텍:
                                             </span>{" "}
-                                            {attendantsNameAndRank}
+                                            {attendantsNameAndRank.replace(
+                                                /[A-Za-z]/g,
+                                                "",
+                                            )}
                                         </span>
                                     ) : (
                                         <span className="text-gray-400 italic">
@@ -304,7 +307,7 @@ export default function MinuteForm({
                             {form.writer ? (
                                 <span>
                                     {writerInfo
-                                        ? `${writerInfo.name} ${writerInfo.rank}`
+                                        ? `${writerInfo.name.replace(/[A-Za-z]/g, "")} ${writerInfo.rank}`
                                         : ""}
                                 </span>
                             ) : (
