@@ -9,6 +9,7 @@ import {
 } from "@/types/document";
 import { formatMeetingDate, formatMeetingTime } from "@/utils/dateToString";
 import DateTimeModal from "../modal/DateTimeModal";
+import { toastMessage } from "@/lib/common/toastMessage";
 
 interface MinuteFormProps {
     form: MinutesCreateRequest;
@@ -32,6 +33,67 @@ export default function MinuteForm({
     const writerInfo = possibleAttendants?.find(
         (m) => m.memberId === form.writer,
     );
+
+    // 시간 비교용
+    const timeToMinutes = (time: string) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        return hours * 60 + minutes;
+    };
+    // 30분 단위 시간 옵션 생성
+    const generateTimeOptions = () => {
+        const options = ["-"];
+        // 임의 허용 시간: 오전 7시 ~ 오후 10시
+        for (let i = 7; i < 22; i++) {
+            for (let j = 0; j < 60; j += 30) {
+                const hour = i.toString().padStart(2, "0");
+                const minute = j.toString().padStart(2, "0");
+                options.push(`${hour}:${minute}`);
+            }
+        }
+        return options;
+    };
+    const timeOptions = generateTimeOptions();
+
+    // 회의 시작 유효성 검사
+    const handleTimeChange = (newString: string, isStartTime: boolean) => {
+        if (newString === "-") {
+            setForm((prev) => ({
+                ...prev,
+                [isStartTime ? "startTime" : "endTime"]: "-",
+            }));
+            return;
+        }
+        const startNum = isStartTime
+            ? timeToMinutes(newString)
+            : timeToMinutes(form.startTime);
+        const endNum = isStartTime
+            ? timeToMinutes(form.endTime)
+            : timeToMinutes(newString);
+
+        if (isStartTime) {
+            if (startNum >= endNum) {
+                // 시작이 종료보다 늦어지면 종료 시간 자동 조정 (한 시간 뒤)
+                const nextTimeIdx = timeOptions.indexOf(newString) + 2;
+                const autoEnd = timeOptions[nextTimeIdx] || "00:00";
+
+                setForm((prev) => ({
+                    ...prev,
+                    startTime: newString,
+                    endTime: autoEnd,
+                }));
+            } else {
+                setForm((prev) => ({ ...prev, startTime: newString }));
+            }
+        } else {
+            if (endNum <= startNum) {
+                toastMessage.error(
+                    "종료 시간은 시작 시간보다 이후여야 합니다.",
+                );
+            } else {
+                setForm((prev) => ({ ...prev, endTime: newString }));
+            }
+        }
+    };
 
     return (
         <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[80px] pb-[120px] flex flex-col">
@@ -79,37 +141,61 @@ export default function MinuteForm({
 
                 <tbody>
                     <tr>
-                        <LabelCell label="회의 날짜" />
-                        {form.minutesDate.trim() === "" ? (
-                            <td
-                                colSpan={4}
-                                className="border border-black p-2 text-gray-400 text-sm cursor-pointer"
-                                onClick={() => setIsDateTimeModalOpen(true)}
-                            >
-                                날짜, 시간 선택
-                            </td>
-                        ) : (
-                            <>
-                                <td
-                                    className="border border-black p-2 text-sm  text-center cursor-pointer"
-                                    colSpan={2}
-                                    onClick={() => setIsDateTimeModalOpen(true)}
+                        <LabelCell label="회의 일시" />
+                        {/* 날짜 */}
+                        <td colSpan={2} className="border border-black p-0">
+                            <input
+                                type="date"
+                                value={form.minutesDate}
+                                onChange={(e) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        minutesDate: e.target.value,
+                                    }))
+                                }
+                                className="w-full h-full p-2 text-sm text-center outline-none cursor-pointer hover:bg-gray-50 bg-transparent"
+                            />
+                        </td>
+                        {/* 시간 */}
+                        <td colSpan={2} className="border border-black p-0">
+                            <div className="flex items-center justify-center gap-1 px-2 h-full">
+                                <select
+                                    value={form.startTime}
+                                    onChange={(e) =>
+                                        // setForm((prev) => ({
+                                        //     ...prev,
+                                        //     startTime: e.target.value,
+                                        // }))
+                                        handleTimeChange(e.target.value, true)
+                                    }
+                                    className="appearance-none bg-transparent text-sm text-center outline-none cursor-pointer py-2 flex-1 min-w-0"
                                 >
-                                    {formatMeetingDate(form.minutesDate)}
-                                </td>
-
-                                <td
-                                    className="border border-black p-2  text-sm text-center cursor-pointer"
-                                    colSpan={2}
-                                    onClick={() => setIsDateTimeModalOpen(true)}
+                                    {timeOptions.map((t) => (
+                                        <option key={`start-${t}`} value={t}>
+                                            {t}
+                                        </option>
+                                    ))}
+                                </select>
+                                <span className="text-sm flex-shrink-0">~</span>
+                                <select
+                                    value={form.endTime}
+                                    onChange={(e) =>
+                                        // setForm((prev) => ({
+                                        //     ...prev,
+                                        //     endTime: e.target.value,
+                                        // }))
+                                        handleTimeChange(e.target.value, false)
+                                    }
+                                    className="appearance-none bg-transparent text-sm text-center outline-none cursor-pointer py-2 flex-1 min-w-0"
                                 >
-                                    {formatMeetingTime(
-                                        form.startTime,
-                                        form.endTime,
-                                    )}
-                                </td>
-                            </>
-                        )}
+                                    {timeOptions.map((t) => (
+                                        <option key={`end-${t}`} value={t}>
+                                            {t}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <LabelCell label="회의 장소" />
@@ -209,7 +295,7 @@ export default function MinuteForm({
                 onChange={(v) => setForm((prev) => ({ ...prev, content: v }))}
             />
 
-            {isDateTimeModalOpen && (
+            {/* {isDateTimeModalOpen && (
                 <DateTimeModal
                     isOpen={isDateTimeModalOpen}
                     onClose={() => setIsDateTimeModalOpen(false)}
@@ -225,7 +311,7 @@ export default function MinuteForm({
                         }))
                     }
                 />
-            )}
+            )} */}
         </div>
     );
 }
