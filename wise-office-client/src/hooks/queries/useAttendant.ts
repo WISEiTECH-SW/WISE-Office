@@ -7,7 +7,7 @@ export const usePossibleAttendants = (
     minutesDate?: string,
 ) => {
     return useQuery({
-        queryKey: queryKeys.possibleAttendants(projectId, minutesDate!),
+        queryKey: queryKeys.possibleAttendants(projectId, minutesDate),
         queryFn: () => getPossibleAttendantsList(projectId, minutesDate!),
         enabled: !!minutesDate,
     });

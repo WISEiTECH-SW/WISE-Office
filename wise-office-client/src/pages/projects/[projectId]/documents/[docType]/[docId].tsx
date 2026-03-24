@@ -46,6 +46,10 @@ export default function DocumentPage() {
     const [isFading] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
 
+    // 회의록 기입용 사내 참석자 이름 + 직급
+    const [attendantsNameAndRank, setAttendantsNameAndRank] =
+        useState<string>("");
+
     const [minuteForm, setminuteForm] = useState<MinutesCreateRequest>({
         host: "",
         minutesDate: "",
@@ -58,10 +62,6 @@ export default function DocumentPage() {
         writer: 0,
         content: "",
     });
-
-    // 회의록 기입용 사내 참석자 이름 + 직급
-    const [attendantsNameAndRank, setAttendantsNameAndRank] =
-        useState<string>("");
 
     const [approveForm, setApproveForm] = useState<ApproveUpdateRequest>({
         reportNo: "",
@@ -77,7 +77,7 @@ export default function DocumentPage() {
 
     const possibleAttendants = usePossibleAttendants(
         projectId,
-        docType === "minute" ? minuteDetail.data?.minutesDate : undefined,
+        docType === "minute" ? minuteForm.minutesDate : undefined,
     );
 
     const approveDetail = useApproveDetail(
@@ -123,11 +123,21 @@ export default function DocumentPage() {
                 minutesDate: minuteDetail.data.minutesDate,
                 startTime: minuteDetail.data.startTime,
                 endTime: minuteDetail.data.endTime,
-                minutesAttendants: minuteDetail.data.minutesAttendants,
+                minutesAttendants: minuteDetail.data.minutesAttendants.map(
+                    (attendant) => attendant.memberId,
+                ),
                 instAttendants: minuteDetail.data.instAttendants,
-                writer: minuteDetail.data.writer,
+                writer: minuteDetail.data.writer.memberId,
                 content: minuteDetail.data.content,
             });
+
+            setAttendantsNameAndRank(
+                minuteDetail.data.minutesAttendants
+                    ? minuteDetail.data.minutesAttendants
+                          .map((m) => `${m.name} ${m.rank}`)
+                          .join(", ")
+                    : "",
+            );
         }
 
         if (currentDoc === "approve" && approveDetail.data) {
@@ -162,8 +172,6 @@ export default function DocumentPage() {
         attendants: number[];
         writer: number;
     }) => {
-        const selectAttendance = data.attendants.join(", ");
-
         setminuteForm((prev) => ({
             ...prev,
             minutesAttendants: data.attendants,
@@ -251,7 +259,9 @@ export default function DocumentPage() {
                                         attendantsNameAndRank={
                                             attendantsNameAndRank
                                         }
-                                        possibleAttendants={possibleAttendants}
+                                        possibleAttendants={
+                                            possibleAttendants.data
+                                        }
                                     />
                                 )}
                                 {currentDoc === "approve" &&
@@ -269,18 +279,14 @@ export default function DocumentPage() {
                         {currentDoc === "minute" && isModalOpen && (
                             <div className="w-[320px] shrink-0">
                                 <AttendanceModal
-                                    onClose={closeModal}
-                                    onConfirm={handleSelectAttendees}
                                     selectedIds={minuteForm.minutesAttendants}
                                     selectedWriterId={minuteForm.writer}
+                                    possibleAttendants={possibleAttendants.data}
+                                    isLoading={possibleAttendants.isLoading}
+                                    onClose={closeModal}
+                                    onConfirm={handleSelectAttendees}
                                     setAttendantsNameAndRank={
                                         setAttendantsNameAndRank
-                                    }
-                                    attendants={
-                                        projectDetail.data.proposalAttendant
-                                    }
-                                    possibleAttendants={
-                                        possibleAttendants.data ?? []
                                     }
                                 />
                             </div>

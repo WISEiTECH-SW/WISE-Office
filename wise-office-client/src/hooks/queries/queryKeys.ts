@@ -28,7 +28,7 @@ export const queryKeys = {
         [...queryKeys.approves(projectId), approveId] as const,
 
     //참여자
-    possibleAttendants: (projectId: number, minutesDate: string) =>
+    possibleAttendants: (projectId: number, minutesDate?: string) =>
         [
             ...queryKeys.projectDetail(projectId),
             "possibleAttendants",

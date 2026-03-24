@@ -56,6 +56,12 @@ export const useMinuteMutation = () => {
             createMinute(projectId, newMinute),
         onSuccess: (data, variables) => {
             invalidate(variables.projectId);
+            queryClient.invalidateQueries({
+                queryKey: queryKeys.possibleAttendants(
+                    variables.projectId,
+                    data.minutesDate,
+                ),
+            });
             setReturnTargetDoc({
                 type: "minute",
                 id: data.minutesId,
