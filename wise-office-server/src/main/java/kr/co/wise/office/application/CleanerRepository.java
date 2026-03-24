@@ -51,9 +51,14 @@ public class CleanerRepository<T> {
 
     public T get(String key) {
         ExpireValue<T> expireValue = repository.get(key);
-        if (expireValue == null || expireValue.isExpired()) {
+        if (expireValue == null) {
             return null;
         }
+        if (expireValue.isExpired()) {
+            repository.remove(key, expireValue);
+            return null;
+        }
+
         return expireValue.value;
     }
 
