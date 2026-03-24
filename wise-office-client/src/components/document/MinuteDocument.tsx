@@ -18,7 +18,7 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
             <ApprovalSeal />
 
             {/* 제목 */}
-            <div className="text-center font-serif font-bold text-2xl tracking-[12px] mb-1 text-black">
+            <div className="text-center font-bold text-2xl tracking-[12px] mb-1 text-black">
                 회 의 록
             </div>
 
