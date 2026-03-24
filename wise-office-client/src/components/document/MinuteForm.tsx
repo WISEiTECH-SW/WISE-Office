@@ -263,7 +263,7 @@ export default function MinuteForm({
                                 >
                                     {form.minutesAttendants.length > 0 ? (
                                         <span>
-                                            <span className="font-medium">
+                                            <span className="text-[13.5px]">
                                                 위세아이텍:
                                             </span>{" "}
                                             {attendantsNameAndRank}
@@ -287,8 +287,11 @@ export default function MinuteForm({
                                             instAttendants: e.target.value,
                                         }))
                                     }
-                                    className="w-full outline-none text-[13.5px] placeholder-gray-400"
+                                    className="w-full outline-none text-[13.5px] placeholder-gray-400 screen-only"
                                 />
+                                <div className="hidden print:block w-full h-full px-1 text-[13.5px]">
+                                    {form.instAttendants}
+                                </div>
                             </div>
                         </td>
                     </tr>
