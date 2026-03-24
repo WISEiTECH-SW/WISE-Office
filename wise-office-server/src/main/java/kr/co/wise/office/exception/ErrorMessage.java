@@ -18,6 +18,8 @@ public enum ErrorMessage {
     REJECT_CREATE_MINUTES(HttpStatus.BAD_REQUEST, "제안서상 참여하지 않은 사원이 회의록에 포함되었습니다."),
     REJECT_MODIFYING_MINUTES(HttpStatus.BAD_REQUEST, "회의록을 수정할 수 없습니다."),
     REJECT_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "불가능한 프로필 이미지 형식입니다."),
+    REJECT_REQUEST(HttpStatus.BAD_REQUEST, "불가능한 요청입니다."),
+    REJECT_PASSWORD_CHANGE(HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
 
 
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러입니다."),

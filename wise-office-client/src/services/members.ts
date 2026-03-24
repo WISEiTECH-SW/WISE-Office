@@ -1,5 +1,10 @@
 import { api } from "@/lib/clientApi";
-import { GroupedMember, SignupForm } from "@/types/member";
+import {
+    ChangePasswordForm,
+    EmailVerificationResponse,
+    GroupedMember,
+    SignupForm,
+} from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
 
 type loginForm = {
@@ -80,4 +85,31 @@ export async function verifyCode(
         },
     });
     return res.data["verification"];
+}
+
+// 비밀번호 변경을 위한 코드 요청
+export async function requestFindPasswordCode(req: string): Promise<void> {
+    await api.post("/members/email/find-password", { email: req });
+}
+
+// 코드 검증
+export async function verifyFindPasswordCode(
+    inputEmail: string,
+    inputCode: string,
+): Promise<EmailVerificationResponse> {
+    const { data } = await api.get<EmailVerificationResponse>(
+        "/members/email/find-password/verification",
+        {
+            params: {
+                email: inputEmail,
+                code: inputCode,
+            },
+        },
+    );
+    return data;
+}
+
+// 비밀번호 변경 요청
+export async function changePassword(req: ChangePasswordForm): Promise<void> {
+    await api.patch("/members/email/find-password/verification", req);
 }
