@@ -1,25 +1,25 @@
-import Button from "@/components/common/Button";
+import Button from "@/components/ui/Button";
 import { ApproveDetailResponse } from "@/types/document";
 import Image from "next/image";
-import BasePreview from "./BasePreview";
 import { Edit, Printer, FileSearch } from "lucide-react";
+import { SelectedDocument } from "@/types/project";
 
 interface Props {
-    approve?: ApproveDetailResponse;
+    approve: ApproveDetailResponse;
     isAttending: boolean;
-    onEdit: (docType: string, docId: number) => void;
-    onSelectMinute: (minutesId: number) => void;
+    onEdit: () => void;
+    onRelate: (doc: SelectedDocument) => void;
 }
 
 export default function ApprovePreview({
     approve,
     isAttending,
     onEdit,
-    onSelectMinute,
+    onRelate,
 }: Props) {
-    if (!approve) {
-        return <BasePreview type="approve" />;
-    }
+    const handleClickMinute = () => {
+        onRelate({ type: "minute", id: approve.minutesId });
+    };
 
     return (
         <div className="rounded-lg shadow-sm">
@@ -27,7 +27,7 @@ export default function ApprovePreview({
                 <div className="flex rounded-t-lg flex-row gap-4 p-4 bg-white/80">
                     <Button
                         label="회의록 조회"
-                        onClick={() => onSelectMinute(approve.minutesId)}
+                        onClick={handleClickMinute}
                         variant="primary"
                         icon={<FileSearch className="w-4 h-4" />}
                     />
@@ -41,7 +41,7 @@ export default function ApprovePreview({
                     />
                     <Button
                         label="수정"
-                        onClick={() => onEdit("approve", approve.approveId)}
+                        onClick={onEdit}
                         variant="secondary"
                         icon={<Edit className="h-4 w-4" />}
                     />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
-import Button from "@/components/common/Button";
+import Button from "@/components/ui/Button";
 
 interface CommentInputProps {
     onAdd: (commentInput: string) => void;

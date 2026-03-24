@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import Button from "../common/Button";
+import Button from "../ui/Button";
+import { Member, MemberWithDisabled } from "@/types/member";
 import MinuteAttendanceSelector from "./ProjectModal/MinuteAttendanceSelector";
 import { PossibleAttendantsResponse } from "@/types/document";
 
 interface ModalProps {
-    isOpen: boolean;
+    attendants: Member[];
+    possibleAttendants: PossibleAttendantsResponse[];
+    selectedNames: string[];
+    selectedWriter: string;
     onClose: () => void;
     onConfirm: (data: { attendants: number[]; writer: number }) => void;
-    possibleAttendants: PossibleAttendantsResponse[] | undefined;
     selectedIds: number[];
     selectedWriterId: number;
     setAttendantsNameAndRank: React.Dispatch<React.SetStateAction<string>>;
@@ -16,6 +19,7 @@ interface ModalProps {
 export default function AttendanceModal({
     onClose,
     onConfirm,
+    attendants,
     possibleAttendants,
     selectedIds,
     selectedWriterId,

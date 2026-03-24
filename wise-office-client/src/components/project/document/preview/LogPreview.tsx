@@ -1,16 +1,15 @@
 import { LogDetail } from "@/types/log";
 import { Comment } from "@/types/comment";
 import { DeleteModalState } from "@/types/project";
-import Button from "@/components/common/Button";
+import Button from "@/components/ui/Button";
 import ProfileImage from "@/components/header/ProfileImage";
 import CommentList from "../comment/CommentList";
-import BasePreview from "./BasePreview";
 import { formatDateTime } from "@/lib/common/util";
 import { Edit, Trash2 } from "lucide-react";
 
 interface LogPreviewProps {
     projectId: number;
-    logDetail: LogDetail | undefined;
+    logDetail: LogDetail;
     commentsList: Comment[] | undefined;
     isAttending: boolean;
     onEdit: () => void;
@@ -25,9 +24,6 @@ export default function LogPreview({
     onEdit,
     onDelete,
 }: LogPreviewProps) {
-    if (!logDetail) {
-        return <BasePreview type="log" />;
-    }
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <div className="flex flex-col pt-6 md:pt-6">

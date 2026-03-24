@@ -1,12 +1,20 @@
 import { useEffect, useRef } from "react";
-import { DeleteModalState, DeleteModalType } from "@/types/project";
-import Button from "../common/Button";
+import { DeleteModalType } from "@/types/project";
+import Button from "../ui/Button";
+import {
+    useProjectMutation,
+    useLogMutation,
+    useCommentMutation,
+    useMinuteMutation,
+} from "@/hooks/queries";
 
 interface DeleteModalProps {
-    deleteTarget: DeleteModalState;
-    onDelete: () => void;
+    projectId: number;
+    logId?: number;
+    deleteTargetType: DeleteModalType;
+    deleteTargetId: number;
     onClose: () => void;
-    isLoading?: boolean;
+    onDeleteSuccess: (type: DeleteModalType) => void;
 }
 
 const messageMap: Record<
@@ -21,11 +29,14 @@ const messageMap: Record<
 };
 
 export default function DeleteModal({
-    deleteTarget,
-    onDelete,
+    projectId,
+    logId,
+    deleteTargetType,
+    deleteTargetId,
     onClose,
-    isLoading = false,
+    onDeleteSuccess,
 }: DeleteModalProps) {
+    // 외부 클릭 종료 로직
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -43,9 +54,51 @@ export default function DeleteModal({
             document.removeEventListener("mousedown", handleClickOutside);
     }, [onClose]);
 
-    if (!deleteTarget) return null;
+    // 비즈니스
+    const { target, particle } = messageMap[deleteTargetType];
 
-    const { target, particle } = messageMap[deleteTarget.type];
+    const { deleteProject, isProjectPending } = useProjectMutation();
+    const { deleteLog, isLogPending } = useLogMutation();
+    const { deleteComment, isCommentPending } = useCommentMutation();
+    const { deleteMinute, isMinutePending } = useMinuteMutation();
+
+    const option = (type: DeleteModalType) => {
+        return {
+            onSuccess: () => {
+                onDeleteSuccess(type);
+            },
+        };
+    };
+
+    const handleDelete = () => {
+        switch (deleteTargetType) {
+            case "project":
+                deleteProject(deleteTargetId, option("project"));
+                break;
+            case "log":
+                deleteLog({ projectId, logId: deleteTargetId }, option("log"));
+                break;
+            case "comment":
+                if (!logId) break;
+
+                deleteComment(
+                    { projectId, logId, commentId: deleteTargetId },
+                    option("comment"),
+                );
+                break;
+            case "minute":
+                deleteMinute(
+                    { projectId, minutesId: deleteTargetId },
+                    option("minute"),
+                );
+                break;
+            default:
+                break;
+        }
+    };
+
+    const isLoading =
+        isProjectPending || isLogPending || isCommentPending || isMinutePending;
 
     return (
         <div className="Overlay fixed inset-0 bg-[rgba(43,43,43,0.1)] bg-opacity-40 flex justify-center items-center z-50">
@@ -71,7 +124,7 @@ export default function DeleteModal({
                     />
                     <Button
                         label="삭제"
-                        onClick={onDelete}
+                        onClick={handleDelete}
                         variant="primary"
                         isLoading={isLoading}
                     />
