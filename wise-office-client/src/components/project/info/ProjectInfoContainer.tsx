@@ -1,7 +1,7 @@
 import type { ProjectInfo } from "@/types/project";
 
 import ProjectInfoItem from "./ProjectInfoItem";
-import Button from "@/components/common/Button";
+import Button from "@/components/ui/Button";
 
 import {
     Calendar,

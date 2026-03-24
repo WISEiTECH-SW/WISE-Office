@@ -10,6 +10,7 @@ export default function BasePreview({ type }: BasePreviewProps) {
         log: "로그를",
         minute: "회의록을",
         approve: "품의서를",
+        trip: "출장복명서를",
     };
 
     return (

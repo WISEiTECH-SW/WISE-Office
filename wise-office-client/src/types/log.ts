@@ -24,5 +24,5 @@ export interface LogInput {
 
 export type LogModalState =
     | { type: "CREATE" }
-    | { type: "EDIT"; data: LogInput }
+    | { type: "EDIT"; id: number }
     | null;

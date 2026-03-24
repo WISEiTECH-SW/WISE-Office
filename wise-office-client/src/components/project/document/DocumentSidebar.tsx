@@ -3,7 +3,7 @@ import { Log } from "@/types/log";
 import DocumentTabs from "./DocumentTabs";
 import DocumentList from "./DocumentList";
 import { ApproveListResponse, MinutesListResponse } from "@/types/document";
-import Button from "@/components/common/Button";
+import Button from "@/components/ui/Button";
 import { Pen } from "lucide-react";
 
 interface DocumentSidebarProps {
@@ -12,7 +12,7 @@ interface DocumentSidebarProps {
         minuteList: MinutesListResponse[];
         approveList: ApproveListResponse[];
     };
-    selectedDoc: SelectedDocument | null;
+    selectedDoc: SelectedDocument;
     attending: boolean;
     setSelectedDoc: (document: SelectedDocument) => void;
     onWrite: (type: DocumentType) => void;
@@ -26,7 +26,7 @@ export default function DocumentSidebar({
     onWrite,
 }: DocumentSidebarProps) {
     const selectTab = (tab: DocumentType) => {
-        setSelectedDoc({ type: tab, id: 0 });
+        setSelectedDoc({ type: tab, id: null });
     };
 
     const selectDoc = (type: DocumentType, id: number) => {
@@ -34,7 +34,7 @@ export default function DocumentSidebar({
     };
 
     const handleWrite = () => {
-        if (selectedDoc?.type === "minute") {
+        if (selectedDoc.type === "minute") {
             onWrite("minute");
         } else {
             onWrite("log");
@@ -45,7 +45,7 @@ export default function DocumentSidebar({
         <div className="order-2 md:order-1 md:col-span-3 mb-6">
             <div className="md:min-h-52 bg-white rounded-lg shadow-sm mb-4">
                 <DocumentTabs
-                    activeDocType={selectedDoc ? selectedDoc.type : "log"}
+                    activeDocType={selectedDoc.type}
                     onChangeTab={selectTab}
                 />
 

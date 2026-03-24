@@ -1,26 +1,29 @@
-import { DocType } from "@/types/document";
 import SidebarItem from "./SideBarItem";
 
 import { NotepadText, ClipboardCheck, BriefcaseBusiness } from "lucide-react";
+import { DocumentType } from "@/types/project";
 
 interface SideBarProps {
-    currentDoc: DocType;
+    currentDoc: DocumentType;
     isNew: boolean;
-    selectDoc: (docType: DocType) => void;
+    isApproveExist: boolean;
+    selectDoc: (docType: DocumentType) => void;
 }
 
 export default function Sidebar({
     currentDoc,
     isNew,
+    isApproveExist,
     selectDoc,
 }: SideBarProps) {
-    const isActive = (type: DocType): boolean => {
-        return type === currentDoc;
-    };
+    const isActive = (type: DocumentType): boolean => type === currentDoc;
+
+    const isApprovable = (): boolean =>
+        isNew || (currentDoc === "minute" && !isApproveExist);
 
     return (
-        <aside className="print:hidden w-52 shrink-0 bg-white border-l border-blue-100 flex flex-col py-6 px-3 gap-0.5 overflow-y-auto">
-            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest px-3 mb-3">
+        <aside className="print:hidden w-52 shrink-0 bg-white border-l border-blue-100 flex flex-col py-6 px-3 gap-1 overflow-y-auto">
+            <p className="text-xs font-bold text-blue-400 uppercase tracking-widest px-3 mb-3">
                 문서 종류
             </p>
 
@@ -36,7 +39,7 @@ export default function Sidebar({
                 label="품의서"
                 icon={<ClipboardCheck />}
                 isActive={isActive("approve")}
-                isDisabled={isNew}
+                isDisabled={isApprovable()}
                 onClick={() => selectDoc("approve")}
             />
 
@@ -50,10 +53,8 @@ export default function Sidebar({
 
             <div className="border-t border-blue-100 my-3 mx-2" />
 
-            <div className="px-3 space-y-2.5">
-                <p className="text-[11px] font-semibold text-blue-700">
-                    사용 안내
-                </p>
+            <div className="px-3 space-y-3">
+                <p className="text-xs font-semibold text-blue-700">사용 안내</p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                     셀을 클릭해 셀 안에 내용을 직접 입력하세요.
                 </p>

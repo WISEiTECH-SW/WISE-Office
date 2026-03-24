@@ -1,79 +1,51 @@
-import Button from "@/components/common/Button";
-import MinuteDocument from "@/components/document/MinuteDocument";
-import { useApproveCreation } from "@/hooks/project/useDocuments";
-import { usePreviewStore } from "@/store/useOverviewStore";
+import { DeleteModalState, SelectedDocument } from "@/types/project";
 import { MinutesDetail } from "@/types/document";
-import { DeleteModalState } from "@/types/project";
-import { useEffect } from "react";
-import BasePreview from "./BasePreview";
 import { Edit, Printer, Trash2, FileSearch, FilePlus2 } from "lucide-react";
 
+import Button from "@/components/ui/Button";
+import MinuteDocument from "@/components/document/MinuteDocument";
+
 interface MinutePreviewProps {
-    projectId: number;
-    projectTitle: string;
-    minuteDetail: MinutesDetail | undefined;
+    minuteDetail: MinutesDetail;
     isAttending: boolean;
-    onEdit: (docType: string, docId: number) => void;
+    onEdit: () => void;
     onDelete: (deleteTarget: DeleteModalState) => void;
-    onSelectApprove: (approveId: number) => void;
+    onRelate: (doc: SelectedDocument) => void;
+    createApprove: () => void;
 }
 
-type MinuteDetailWithApproveId = MinutesDetail & {
-    approveId?: number | null;
-};
-
 export default function MinutePreview({
-    projectId,
-    projectTitle,
     minuteDetail,
     isAttending,
     onEdit,
     onDelete,
-    onSelectApprove,
+    onRelate,
+    createApprove,
 }: MinutePreviewProps) {
-    const createApprove = useApproveCreation();
-    const approveId = (minuteDetail as MinuteDetailWithApproveId | undefined)
-        ?.approveId;
+    const haveApprove = minuteDetail.approveId !== null;
 
-    const { setMinutesInfo } = usePreviewStore();
-
-    useEffect(() => {
-        if (minuteDetail) {
-            setMinutesInfo({
-                ...minuteDetail,
-                title: projectTitle,
-            });
-        }
-    }, [minuteDetail, projectTitle, setMinutesInfo]);
-
-    if (!minuteDetail) {
-        return <BasePreview type="minute" />;
-    }
+    const handleClickApprove = () => {
+        if (haveApprove)
+            onRelate({ type: "approve", id: minuteDetail.approveId! });
+        else createApprove();
+    };
 
     return (
         <div className="rounded-lg shadow-sm">
             {isAttending && (
                 <div className="flex rounded-t-lg flex-row gap-4 p-4 bg-white/80">
-                    {approveId ? (
-                        <Button
-                            label="품의서 조회"
-                            onClick={() => onSelectApprove(approveId)}
-                            variant="primary"
-                            icon={<FileSearch className="w-4 h-4" />}
-                        />
-                    ) : (
-                        <Button
-                            label="품의서 생성"
-                            onClick={() =>
-                                createApprove.mutate({
-                                    projectId: Number(projectId),
-                                    minutesId: minuteDetail.minutesId,
-                                })
-                            }
-                            variant="primary"
-                            icon={<FilePlus2 className="w-4 h-4" />}
-                        />
-                    )}
+                    <Button
+                        label={haveApprove ? "품의서 조회" : "품의서 생성"}
+                        onClick={handleClickApprove}
+                        variant="primary"
+                        icon={
+                            haveApprove ? (
+                                <FileSearch className="w-4 h-4" />
+                            ) : (
+                                <FilePlus2 className="w-4 h-4" />
+                            )
+                        }
+                    />
                     <Button
                         label="출력"
                         onClick={() => {
@@ -84,7 +56,7 @@ export default function MinutePreview({
                     />
                     <Button
                         label="수정"
-                        onClick={() => onEdit("minute", minuteDetail.minutesId)}
+                        onClick={onEdit}
                         variant="secondary"
                         icon={<Edit className="h-4 w-4" />}
                     />
@@ -103,7 +75,7 @@ export default function MinutePreview({
             )}
             <div className="p-4 rounded-b-lg bg-blue-50">
                 <div className="print-area">
-                    <MinuteDocument />
+                    <MinuteDocument minuteDetail={minuteDetail} />
                 </div>
             </div>
         </div>

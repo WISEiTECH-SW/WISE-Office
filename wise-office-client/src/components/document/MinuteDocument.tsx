@@ -1,12 +1,16 @@
-import { usePreviewStore } from "@/store/useOverviewStore";
+import { MinutesDetail, MinutesInfo } from "@/types/document";
+
 import ApprovalSeal from "./ApprovalSeal";
 import { LabelCell } from "./LabelCell";
 import { ReadableCell } from "./ReadableCell";
+import ErrorIndicator from "../ui/ErrorIndicator";
 
-export default function MinuteDocument() {
-    const { minutesInfo } = usePreviewStore();
+interface MinuteDocumentProps {
+    minuteDetail: MinutesDetail | MinutesInfo | null;
+}
 
-    if (!minutesInfo) return null;
+export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
+    if (!minuteDetail) return <ErrorIndicator />;
 
     return (
         <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[80px] pb-[120px] flex flex-col">
@@ -31,11 +35,11 @@ export default function MinuteDocument() {
                 <tbody>
                     <tr>
                         <LabelCell label="과제명" />
-                        <ReadableCell colSpan={3} value={minutesInfo.title} />
+                        <ReadableCell colSpan={3} value={minuteDetail.title} />
                     </tr>
                     <tr>
                         <LabelCell label="회의주관기관" />
-                        <ReadableCell colSpan={3} value={minutesInfo.host} />
+                        <ReadableCell colSpan={3} value={minuteDetail.host} />
                     </tr>
                     <tr className="h-4"></tr>
                 </tbody>
@@ -47,7 +51,7 @@ export default function MinuteDocument() {
                             <div className="flex w-full h-full divide-x divide-black">
                                 <div className="flex-1 p-2 text-center">
                                     {new Date(
-                                        minutesInfo.minutesDate,
+                                        minuteDetail.minutesDate,
                                     ).toLocaleDateString("ko-KR", {
                                         year: "numeric",
                                         month: "long",
@@ -56,7 +60,7 @@ export default function MinuteDocument() {
                                     })}
                                 </div>
                                 <div className="flex-1 p-2 text-center">
-                                    {`${minutesInfo.startTime} ~ ${minutesInfo.endTime}`}
+                                    {`${minuteDetail.startTime} ~ ${minuteDetail.endTime}`}
                                 </div>
                             </div>
                         </td>
@@ -65,24 +69,27 @@ export default function MinuteDocument() {
                         <LabelCell label="회의 장소" />
                         <ReadableCell
                             colSpan={3}
-                            value={minutesInfo.location}
+                            value={minuteDetail.location}
                         />
                     </tr>
                     <tr>
                         <LabelCell label="회의 목적" />
-                        <ReadableCell colSpan={3} value={minutesInfo.purpose} />
+                        <ReadableCell
+                            colSpan={3}
+                            value={minuteDetail.purpose}
+                        />
                     </tr>
                     <tr style={{ height: "120px" }}>
                         <LabelCell label="참 석 자" />
                         <ReadableCell
                             colSpan={3}
                             value={[
-                                minutesInfo.minutesAttendants?.length
-                                    ? `위세아이텍 : ${minutesInfo.minutesAttendants
+                                minuteDetail.minutesAttendants?.length
+                                    ? `위세아이텍 : ${minuteDetail.minutesAttendants
                                           .map((m) => `${m.name} ${m.rank}`)
                                           .join(", ")}`
                                     : "",
-                                minutesInfo.instAttendants,
+                                minuteDetail.instAttendants,
                             ]
                                 .filter(Boolean)
                                 .join("\n")}
@@ -95,8 +102,8 @@ export default function MinuteDocument() {
                         <ReadableCell
                             colSpan={3}
                             value={
-                                minutesInfo.writer
-                                    ? `${minutesInfo.writer.name} ${minutesInfo.writer.rank}`
+                                minuteDetail.writer
+                                    ? `${minuteDetail.writer.name} ${minuteDetail.writer.rank}`
                                     : ""
                             }
                             textAlign={"text-start"}
@@ -110,7 +117,7 @@ export default function MinuteDocument() {
                 회 의 내 용
             </div>
             <textarea
-                value={minutesInfo.content}
+                value={minuteDetail.content}
                 readOnly
                 className="w-full border border-t-0 border-black p-4 text-sm leading-relaxed 
                         text-slate-800 resize-none overflow-hidden focus:outline-none rounded-b flex-1"

@@ -1,19 +1,10 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-import { useMinutesDetail } from "@/hooks/doc/useMinutesDetail";
-import {
-    useApproveDetail,
-    useDocumentLists,
-    useProjectDetail,
-} from "@/hooks/project/useDocuments";
-import { useLogDetail } from "@/hooks/project/useLogDetail";
-
-import { useCommentMutation } from "@/hooks/project/useCommentMutation";
-import { useLogMutation } from "@/hooks/project/useLogMutation";
 import { LogModalState } from "@/types/log";
 import {
     DeleteModalState,
+    DeleteModalType,
     DocumentType,
     SelectedDocument,
 } from "@/types/project";
@@ -21,105 +12,63 @@ import {
 import { DeleteModal, LogWriteModal, ProjectModal } from "@/components/modal";
 import AttendantList from "@/components/project/attendant/AttendantList";
 import DocumentSidebar from "@/components/project/document/DocumentSidebar";
-import { useMinutesMutation } from "@/hooks/doc/useMinutesMutation";
-
 import ProjectInfoContainer from "@/components/project/info/ProjectInfoContainer";
-import { useProjectMutation } from "@/hooks/project/useProjectMutation";
+import PreviewContainer from "@/components/project/document/preview/PreviewContainer";
+import LoadingIndicator from "@/components/ui/LoadingIndicator";
+import ErrorIndicator from "@/components/ui/ErrorIndicator";
 
-import ApprovePreview from "@/components/project/document/preview/ApprovePreveiw";
-import BasePreview from "@/components/project/document/preview/BasePreview";
-import LogPreview from "@/components/project/document/preview/LogPreview";
-import MinutePreview from "@/components/project/document/preview/MinutePreview";
+import { useReturnTargetDocStore } from "@/store/useReturnTargetDoc";
+
+import {
+    useLogs,
+    useMinutes,
+    useApproves,
+    useProjectDetail,
+} from "@/hooks/queries";
 
 export default function ProjectById() {
     const router = useRouter();
     const { query } = router;
     const projectId = Number(query.projectId);
 
-    /* ----- useState ----- */
-    // document
-    // { type: DocumentType; id: number }
-    const [selectedDoc, setSelectedDoc] = useState<SelectedDocument | null>(
-        null,
-    );
-    useEffect(() => {
-        const { type, docId } = router.query;
+    const { returnTargetDoc, setReturnTargetDoc } = useReturnTargetDocStore();
 
-        if (type && docId) {
-            setSelectedDoc({
-                type: type as DocumentType,
-                id: Number(docId),
-            });
-        }
-    }, [router.query]);
-    // modal
-    const [logModal, setLogModal] = useState<LogModalState>(null);
-    const [deleteTarget, setDeleteTarget] = useState<DeleteModalState>(null);
+    /* ----- useState ----- */
+    const [selectedDoc, setSelectedDoc] = useState<SelectedDocument>({
+        type: "log",
+        id: null,
+    });
+    const [logModalState, setLogModalState] = useState<LogModalState>(null);
+    const [deleteModalState, setDeleteModalState] =
+        useState<DeleteModalState>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
 
+    /* -----query ----- */
+    const logs = useLogs(projectId);
+    const minutes = useMinutes(projectId);
+    const approves = useApproves(projectId);
+
+    const projectDetail = useProjectDetail(projectId);
+
+    /* ----- hook ----- */
     useEffect(() => {
-        if (!router.isReady) return;
-
-        const selectedType =
-            typeof query.selectedType === "string" ? query.selectedType : null;
-        const selectedId =
-            typeof query.selectedId === "string"
-                ? Number(query.selectedId)
-                : null;
-
-        if (
-            (selectedType === "log" ||
-                selectedType === "minute" ||
-                selectedType === "approve") &&
-            selectedId !== null &&
-            !Number.isNaN(selectedId)
-        ) {
-            setSelectedDoc({ type: selectedType, id: selectedId });
+        if (returnTargetDoc) {
+            setSelectedDoc(returnTargetDoc);
         }
-    }, [router.isReady, query.selectedType, query.selectedId]);
-
-    /* ----- query ----- */
-    const { data: projectInfo, isLoading: isProjectLoading } =
-        useProjectDetail(projectId);
-    const { logs, minutes, approves } = useDocumentLists(projectId);
-
-    const { log, comments } = useLogDetail(
-        projectId,
-        selectedDoc?.type === "log" ? selectedDoc.id : null,
-    );
-    const { minute } = useMinutesDetail(
-        projectId,
-        selectedDoc?.type === "minute" ? selectedDoc.id : null,
-    );
-    const approveId =
-        selectedDoc?.type === "approve" ? selectedDoc.id : undefined;
-    const { data } = useApproveDetail(projectId, approveId);
-
-    /* ----- mutation ----- */
-    const { deleteLog, isLogLoading } = useLogMutation();
-    const { deleteComment, isCommentLoading } = useCommentMutation();
-    const { deleteMinute, isMinuteDeleting } = useMinutesMutation();
-    const { deleteProject } = useProjectMutation();
+    }, [returnTargetDoc]);
 
     /* ----- func ----- */
     const openDocumentEditor = (docType: string, docId: number) => {
         router.push(`/projects/${projectId}/documents/${docType}/${docId}`);
     };
 
-    const handleSelectApprove = (approveId: number) => {
-        setSelectedDoc({ type: "approve", id: approveId });
-    };
-
-    const handleSelectMinute = (minutesId: number) => {
-        setSelectedDoc({ type: "minute", id: minutesId });
-    };
-
-    const handleWrite = (type: DocumentType) => {
+    const handleCreate = (type: DocumentType) => {
         switch (type) {
             case "log":
-                setLogModal({ type: "CREATE" });
+                setLogModalState({ type: "CREATE" });
                 break;
             case "minute":
+                setReturnTargetDoc({ type: "minute", id: selectedDoc.id });
                 openDocumentEditor("minute", 0);
                 break;
             default:
@@ -127,110 +76,61 @@ export default function ProjectById() {
         }
     };
 
-    const setEditLog = () => {
-        if (log) {
-            setLogModal({
-                type: "EDIT",
-                data: { title: log.title, content: log.content },
-            });
-        }
-    };
+    const handleEdit = (target: SelectedDocument) => {
+        if (!target.id) return;
 
-    const handleDeleteMinute = (minutesId: number) => {
-        deleteMinute(
-            { projectId, minutesId },
-            {
-                onSuccess: () => {
-                    setSelectedDoc((current) => {
-                        if (
-                            current?.type === "minute" &&
-                            current.id === minutesId
-                        ) {
-                            return { type: "minute", id: 0 };
-                        }
-                        return current;
-                    });
-
-                    setDeleteTarget(null);
-                },
-            },
-        );
-    };
-
-    const handleConfirmDelete = () => {
-        if (!deleteTarget || !selectedDoc) return;
-
-        switch (deleteTarget.type) {
-            case "project":
-                deleteProject(projectId);
-                break;
+        switch (target.type) {
             case "log":
-                deleteLog({ projectId, logId: deleteTarget.id });
-                setSelectedDoc(null);
-                break;
-            case "comment":
-                deleteComment({
-                    projectId,
-                    logId: selectedDoc.id,
-                    commentId: deleteTarget.id,
-                });
+                setLogModalState({ type: "EDIT", id: target.id });
                 break;
             case "minute":
-                handleDeleteMinute(deleteTarget.id);
-                return;
-            // case "approve": break;
+                setReturnTargetDoc({ type: "minute", id: target.id });
+                openDocumentEditor("minute", target.id);
+                break;
+            case "approve":
+                setReturnTargetDoc({ type: "approve", id: target.id });
+                openDocumentEditor("approve", target.id);
+                break;
+            default:
+                break;
         }
+    };
 
-        setDeleteTarget(null);
+    const handleDeleteSuccess = (type: DeleteModalType) => {
+        setDeleteModalState(null);
+
+        switch (type) {
+            case "project":
+                router.push("/");
+                break;
+            case "log":
+                setSelectedDoc({ type: "log", id: null });
+                break;
+            case "comment":
+                break;
+            case "minute":
+                setSelectedDoc({ type: "minute", id: null });
+                break;
+            default:
+                break;
+        }
     };
 
     /* ----- page ----- */
-    if (!router.isReady || isProjectLoading) {
-        return (
-            <div className="md:px-6">
-                <div className="min-h-[60vh] flex items-center justify-center">
-                    <div className="bg-white rounded-2xl shadow-sm px-10 py-12 flex flex-col items-center gap-4">
-                        <div className="w-12 h-12 rounded-full border-4 border-gray-200 border-t-blue-500 animate-spin" />
-                        <div className="text-center">
-                            <p className="text-base font-semibold text-gray-800">
-                                프로젝트 불러오는 중
-                            </p>
-                            <p className="text-sm text-gray-500 mt-1">
-                                문서와 참여자 정보를 준비하고 있습니다.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    if (!router.isReady || projectDetail.isLoading)
+        return <LoadingIndicator type="project" />;
 
-    if (!projectInfo) {
-        return (
-            <div className="md:px-6">
-                <div className="min-h-[60vh] flex items-center justify-center">
-                    <div className="bg-white rounded-2xl shadow-sm px-10 py-12 text-center">
-                        <p className="text-lg font-semibold text-gray-800">
-                            프로젝트를 찾을 수 없습니다.
-                        </p>
-                        <p className="text-sm text-gray-500 mt-2">
-                            접근 권한이 없거나 삭제된 프로젝트입니다.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    if (!projectDetail.data) return <ErrorIndicator />;
 
     return (
         <div className="md:px-6">
             <ProjectInfoContainer
-                projectInfo={projectInfo}
+                projectInfo={projectDetail.data}
                 onEdit={() => {
                     setIsEditOpen(true);
                 }}
                 onDelete={() => {
-                    setDeleteTarget({ type: "project", id: projectId });
+                    setDeleteModalState({ type: "project", id: projectId });
                 }}
             />
             <div className="flex flex-col md:grid md:grid-cols-12 md:gap-6 mb-10">
@@ -242,88 +142,64 @@ export default function ProjectById() {
                         approveList: approves.data ?? [],
                     }}
                     selectedDoc={selectedDoc}
-                    attending={projectInfo.attending}
+                    attending={projectDetail.data.attending}
                     setSelectedDoc={setSelectedDoc}
-                    onWrite={handleWrite}
+                    onWrite={handleCreate}
                 />
                 {/*Center - Doc Preview*/}
-                <div className="order-3 md:col-span-6 mb-6">
-                    {(() => {
-                        switch (selectedDoc?.type) {
-                            case "log":
-                                return (
-                                    <LogPreview
-                                        projectId={projectId}
-                                        logDetail={log}
-                                        commentsList={comments}
-                                        isAttending={projectInfo.attending}
-                                        onEdit={setEditLog}
-                                        onDelete={setDeleteTarget}
-                                    />
-                                );
 
-                            case "minute":
-                                return (
-                                    <MinutePreview
-                                        projectId={projectId}
-                                        projectTitle={projectInfo.projectTitle}
-                                        minuteDetail={minute}
-                                        isAttending={projectInfo.attending}
-                                        onEdit={openDocumentEditor}
-                                        onDelete={setDeleteTarget}
-                                        onSelectApprove={handleSelectApprove}
-                                    />
-                                );
-                            case "approve":
-                                return (
-                                    <ApprovePreview
-                                        approve={data}
-                                        isAttending={projectInfo.attending}
-                                        onEdit={openDocumentEditor}
-                                        onSelectMinute={handleSelectMinute}
-                                    />
-                                );
-                            default:
-                                return <BasePreview type="log" />;
-                        }
-                    })()}
+                <div className="order-3 md:col-span-6 mb-6">
+                    <PreviewContainer
+                        projectId={projectId}
+                        selectedDoc={selectedDoc}
+                        isAttending={projectDetail.data.attending}
+                        onEdit={handleEdit}
+                        onDelete={setDeleteModalState}
+                        setSelectedDoc={setSelectedDoc}
+                    />
                 </div>
                 {/*Right Side - Attendant List*/}
                 <div className="order-1 md:order-3 md:col-span-3 mb-6">
                     <AttendantList
-                        pm={projectInfo.managerName}
-                        attendants={projectInfo.attendant}
-                        proposalAttendant={projectInfo.proposalAttendant}
+                        pm={projectDetail.data.managerName}
+                        attendants={projectDetail.data.attendant}
+                        proposalAttendant={projectDetail.data.proposalAttendant}
                     />
                 </div>
             </div>
             {/* Modal */}
-            {logModal && (
+            {logModalState && (
                 <LogWriteModal
                     projectId={projectId}
-                    logId={selectedDoc ? selectedDoc.id : null}
-                    initialData={
-                        logModal.type === "EDIT" ? logModal.data : null
+                    mode={logModalState.type}
+                    logId={
+                        logModalState.type === "EDIT"
+                            ? logModalState.id
+                            : undefined
                     }
-                    onClose={() => setLogModal(null)}
+                    onClose={() => setLogModalState(null)}
                     setSelectedDoc={setSelectedDoc}
                 />
             )}
-            {deleteTarget && (
+            {deleteModalState && (
                 <DeleteModal
-                    deleteTarget={deleteTarget}
-                    onDelete={handleConfirmDelete}
-                    onClose={() => setDeleteTarget(null)}
-                    isLoading={
-                        isCommentLoading || isLogLoading || isMinuteDeleting
+                    projectId={projectId}
+                    logId={
+                        deleteModalState.type === "comment" && selectedDoc.id
+                            ? selectedDoc.id
+                            : undefined
                     }
+                    deleteTargetType={deleteModalState.type}
+                    deleteTargetId={deleteModalState.id}
+                    onClose={() => setDeleteModalState(null)}
+                    onDeleteSuccess={handleDeleteSuccess}
                 />
             )}
             {/* Project Update Modal */}
-            {isEditOpen && projectInfo.projectId && (
+            {isEditOpen && projectDetail.data.projectId && (
                 <ProjectModal
                     mode={"update"}
-                    projectId={projectInfo.projectId}
+                    projectId={projectDetail.data.projectId}
                     onClose={() => setIsEditOpen(false)}
                 />
             )}

@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
-import Button from "../common/Button";
-import MinuteAttendanceSelector from "./ProjectModal/MinuteAttendanceSelector";
 import { PossibleAttendantsResponse } from "@/types/document";
+import MinuteAttendanceSelector from "./ProjectModal/MinuteAttendanceSelector";
+import LoadingIndicator from "../ui/LoadingIndicator";
+import Button from "../ui/Button";
 
 interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onConfirm: (data: { attendants: number[]; writer: number }) => void;
-    possibleAttendants: PossibleAttendantsResponse[] | undefined;
     selectedIds: number[];
     selectedWriterId: number;
+    possibleAttendants?: PossibleAttendantsResponse[];
+    isLoading: boolean;
+    onClose: () => void;
+    onConfirm: (data: { attendants: number[]; writer: number }) => void;
     setAttendantsNameAndRank: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function AttendanceModal({
-    onClose,
-    onConfirm,
-    possibleAttendants,
     selectedIds,
     selectedWriterId,
+    possibleAttendants,
+    isLoading,
+    onClose,
+    onConfirm,
     setAttendantsNameAndRank,
 }: ModalProps) {
     // 선택된 인원
@@ -29,20 +31,6 @@ export default function AttendanceModal({
     const [writer, setWriter] = useState<PossibleAttendantsResponse | null>(
         null,
     );
-    useEffect(() => {
-        if (!possibleAttendants) return;
-
-        const initialSelected = possibleAttendants.filter((member) =>
-            selectedIds.includes(member.memberId),
-        );
-
-        const foundWriter = possibleAttendants.find(
-            (member) => member.memberId === selectedWriterId,
-        );
-
-        setSelectedCompanyMembers(initialSelected);
-        setWriter(foundWriter ?? null);
-    }, [possibleAttendants, selectedIds, selectedWriterId]);
 
     // 참여 가능여부
     const enrichedMembers: PossibleAttendantsResponse[] = (
@@ -58,6 +46,22 @@ export default function AttendanceModal({
         };
     });
 
+    /* ------ hook ----- */
+    useEffect(() => {
+        if (!possibleAttendants) return;
+
+        const initialSelected = possibleAttendants.filter((member) =>
+            selectedIds.includes(member.memberId),
+        );
+
+        const foundWriter = possibleAttendants.find(
+            (member) => member.memberId === selectedWriterId,
+        );
+
+        setSelectedCompanyMembers(initialSelected);
+        setWriter(foundWriter ?? null);
+    }, [possibleAttendants, selectedIds, selectedWriterId]);
+
     // 참석자 작성자 동기화
     useEffect(() => {
         if (!writer) return;
@@ -71,6 +75,7 @@ export default function AttendanceModal({
         }
     }, [selectedCompanyMembers, writer]);
 
+    /* ------ func ----- */
     const handleConfirm = () => {
         if (!writer) return;
         // 회의록 기입용 사내 참석자 이름 + 직급
@@ -87,6 +92,10 @@ export default function AttendanceModal({
     const handleWriterChange = (member: PossibleAttendantsResponse) => {
         setWriter(member);
     };
+
+    /* ------ ui ----- */
+    if (isLoading) return <LoadingIndicator type="minute" />;
+
     return (
         <div className="flex items-center justify-center">
             <div className="bg-white p-6 rounded-lg shadow-xl w-[240px]">

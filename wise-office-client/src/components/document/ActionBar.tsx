@@ -1,9 +1,9 @@
 import { Save, Printer, OctagonX } from "lucide-react";
-import Button from "../common/Button";
+import Button from "../ui/Button";
 
 interface ActionBarProps {
     isNew: boolean;
-    lastSaved: boolean;
+    isAutoSaved: boolean;
     savedTime: string | null;
     isValid: boolean;
     saveDoc: () => void;
@@ -12,7 +12,7 @@ interface ActionBarProps {
 
 export default function ActionBar({
     isNew,
-    lastSaved,
+    isAutoSaved,
     savedTime,
     isValid,
     saveDoc,
@@ -24,11 +24,11 @@ export default function ActionBar({
                 <span
                     className="w-2 h-2 rounded-full inline-block transition-colors duration-300 animate-pulse"
                     style={{
-                        backgroundColor: lastSaved ? "#34d399" : "#fbbf24",
+                        backgroundColor: isAutoSaved ? "#34d399" : "#fbbf24",
                     }}
                 />
                 <span className="text-xs text-slate-500">
-                    {lastSaved ? "자동 저장 중" : "자동 저장 불가"}
+                    {isAutoSaved ? "자동 저장 중" : "자동 저장 불가"}
                 </span>
             </div>
 

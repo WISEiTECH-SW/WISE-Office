@@ -7,6 +7,7 @@ const A4_WIDTH = 720;
 
 export default function PreviewModal() {
     const { onClose } = usePreviewStore();
+    const { minutesInfo } = usePreviewStore();
 
     useEffect(() => {
         const original = document.body.style.overflow;
@@ -26,7 +27,7 @@ export default function PreviewModal() {
                 onClose={onClose}
             />
 
-            <MinuteDocument />
+            <MinuteDocument minuteDetail={minutesInfo} />
 
             <Buttonbar
                 key="buttonbar-bottom"

@@ -75,7 +75,7 @@ export async function updateProject(data: CreateProject, projectId: number) {
  * @param projectId 삭제할 프로젝트의 ID
  * @returns ProjectInfo 객체 또는 undefined
  */
-export async function deleteProjectApi(projectId: number) {
+export async function deleteProject(projectId: number) {
     return await api
         .delete(`/v2/projects/${projectId}`)
         .then((res) => res.data);

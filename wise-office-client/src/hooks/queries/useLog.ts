@@ -1,10 +1,14 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createLog, patchLog, deleteLog } from "@/services/logs";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "./queryKeys";
 import { LogInput } from "@/types/log";
 import {
-    toastMessage,
-    getDocumentToastMessage,
-} from "@/lib/common/toastMessage";
+    getLogDetail,
+    getLogList,
+    createLog,
+    patchLog,
+    deleteLog,
+} from "@/services/logs";
+import { toastMessage } from "@/lib/common/toastMessage";
 
 interface CreateLogParams {
     projectId: number;
@@ -22,40 +26,51 @@ interface DeleteLogParams {
     logId: number;
 }
 
+export const useLogs = (projectId: number) => {
+    return useQuery({
+        queryKey: queryKeys.logs(projectId),
+        queryFn: () => getLogList(projectId),
+    });
+};
+
+export const useLogDetail = (projectId: number, logId?: number) => {
+    return useQuery({
+        queryKey: queryKeys.logDetail(projectId, logId!),
+        queryFn: () => getLogDetail(projectId, logId!),
+        enabled: !!logId,
+    });
+};
+
 export const useLogMutation = () => {
     const queryClient = useQueryClient();
 
-    const invalidateLogs = (projectId: number) => {
-        queryClient.invalidateQueries({ queryKey: ["logs", projectId] });
-    };
+    const invalidate = (projectId: number) =>
+        queryClient.invalidateQueries({ queryKey: queryKeys.logs(projectId) });
 
-    // CREATE
     const createMutation = useMutation({
         mutationFn: ({ projectId, logInput }: CreateLogParams) =>
             createLog(projectId, logInput),
         onSuccess: (_, variables) => {
-            invalidateLogs(variables.projectId);
-            toastMessage.success(getDocumentToastMessage("log", "create"));
+            invalidate(variables.projectId);
+            toastMessage.successDoc("log", "create");
         },
     });
 
-    // UPDATE
     const updateMutation = useMutation({
         mutationFn: ({ projectId, logId, logInput }: UpdateLogParams) =>
             patchLog(projectId, logId, logInput),
         onSuccess: (_, variables) => {
-            invalidateLogs(variables.projectId);
-            toastMessage.success(getDocumentToastMessage("log", "update"));
+            invalidate(variables.projectId);
+            toastMessage.successDoc("log", "update");
         },
     });
 
-    //DELETE
     const deleteMutation = useMutation({
         mutationFn: ({ projectId, logId }: DeleteLogParams) =>
-            deleteLog(projectId, logId!),
+            deleteLog(projectId, logId),
         onSuccess: (_, variables) => {
-            invalidateLogs(variables.projectId);
-            toastMessage.success(getDocumentToastMessage("log", "delete"));
+            invalidate(variables.projectId);
+            toastMessage.successDoc("log", "delete");
         },
     });
 
@@ -63,7 +78,8 @@ export const useLogMutation = () => {
         createLog: createMutation.mutate,
         updateLog: updateMutation.mutate,
         deleteLog: deleteMutation.mutate,
-        isLogLoading:
+
+        isLogPending:
             createMutation.isPending ||
             updateMutation.isPending ||
             deleteMutation.isPending,

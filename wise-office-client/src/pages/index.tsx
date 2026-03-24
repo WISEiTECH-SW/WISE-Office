@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useProjects } from "@/store/useProjects";
 import { useEffect, useState } from "react";
 import ProjectModal from "@/components/modal/ProjectModal/ProjectModal";
+import { useReturnTargetDocStore } from "@/store/useReturnTargetDoc";
 
 export default function Home() {
     const projects = useProjects((s) => s.projects);
@@ -14,6 +15,11 @@ export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const offset = 6;
+    const { clearReturnTargetDoc } = useReturnTargetDocStore();
+
+    useEffect(() => {
+        clearReturnTargetDoc();
+    }, [clearReturnTargetDoc]);
 
     useEffect(() => {
         (async () => {

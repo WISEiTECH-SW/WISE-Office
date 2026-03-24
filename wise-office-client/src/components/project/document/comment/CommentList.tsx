@@ -1,7 +1,7 @@
-import { useCommentMutation } from "@/hooks/project/useCommentMutation";
-
 import { DeleteModalState } from "@/types/project";
 import { Comment } from "@/types/comment";
+
+import { useCommentMutation } from "@/hooks/queries";
 
 import CommentInput from "./CommentInput";
 import CommentListItem from "./CommentListItem";
@@ -22,7 +22,7 @@ export default function ProjectCommentList({
     commentList,
     onDelete,
 }: CommentListProps) {
-    const { createComment, isCommentLoading } = useCommentMutation();
+    const { createComment, isCommentPending } = useCommentMutation();
 
     const handleAddComment = (commentInput: string) => {
         createComment({ projectId, logId, commentInput });
@@ -40,7 +40,7 @@ export default function ProjectCommentList({
             {isAttending && (
                 <CommentInput
                     onAdd={handleAddComment}
-                    isCommentLoading={isCommentLoading}
+                    isCommentLoading={isCommentPending}
                 />
             )}
             <div className="space-y-4 flex-col w-full">

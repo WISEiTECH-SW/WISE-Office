@@ -6,7 +6,7 @@ import MinuteItem from "./list-item/MinuteItem";
 import ApproveItem from "./list-item/ApproveItem";
 
 interface DocumentListProps {
-    selectedDoc: SelectedDocument | null;
+    selectedDoc: SelectedDocument;
     docData: {
         logList: Log[];
         minuteList: MinutesListResponse[];
@@ -23,7 +23,7 @@ export default function DocumentList({
     const renderEmpty = (text: string) => (
         <div className="flex flex-1 items-center justify-center py-4 md:py-10">
             <p className="text-gray-400 text-sm md:text-base font-medium">
-                {text}
+                {`작성된 ${text} 없습니다.`}
             </p>
         </div>
     );
@@ -34,50 +34,38 @@ export default function DocumentList({
 
     return (
         <div className="md:max-h-85 flex flex-nowrap pb-1 overflow-x-auto md:flex-col scrollbar-auto-hide">
-            {(selectedDoc?.type === "log" || !selectedDoc) &&
+            {selectedDoc.type === "log" &&
                 (docData.logList.length === 0
-                    ? renderEmpty("작성된 로그가 없습니다.")
+                    ? renderEmpty("로그가")
                     : docData.logList.map((log) => (
                           <LogItem
                               key={log.logId}
                               log={log}
-                              isSelected={
-                                  selectedDoc
-                                      ? selectedDoc.id === log.logId
-                                      : false
-                              }
+                              isSelected={selectedDoc.id === log.logId}
                               onSelect={handleSelectDoc}
                           />
                       )))}
 
-            {selectedDoc?.type === "minute" &&
+            {selectedDoc.type === "minute" &&
                 (docData.minuteList.length === 0
-                    ? renderEmpty("작성된 회의록이 없습니다.")
+                    ? renderEmpty("회의록이")
                     : docData.minuteList.map((minute) => (
                           <MinuteItem
                               key={minute.minutesId}
                               minute={minute}
-                              isSelected={
-                                  selectedDoc
-                                      ? selectedDoc.id === minute.minutesId
-                                      : false
-                              }
+                              isSelected={selectedDoc.id === minute.minutesId}
                               onSelect={handleSelectDoc}
                           />
                       )))}
 
-            {selectedDoc?.type === "approve" &&
+            {selectedDoc.type === "approve" &&
                 (docData.approveList.length === 0
-                    ? renderEmpty("작성된 품의서가 없습니다.")
+                    ? renderEmpty("품의서가")
                     : docData.approveList.map((approve) => (
                           <ApproveItem
                               key={approve.approveId}
                               approve={approve}
-                              isSelected={
-                                  selectedDoc
-                                      ? selectedDoc.id === approve.approveId
-                                      : false
-                              }
+                              isSelected={selectedDoc.id === approve.approveId}
                               onSelect={handleSelectDoc}
                           />
                       )))}

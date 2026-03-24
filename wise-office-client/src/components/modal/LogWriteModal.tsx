@@ -1,39 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, FileText } from "lucide-react";
 
 import type { LogInput } from "@/types/log";
 import { SelectedDocument } from "@/types/project";
 
-import { useLogMutation } from "@/hooks/project/useLogMutation";
-import Button from "../common/Button";
+import { useLogDetail, useLogMutation } from "@/hooks/queries";
+
+import Button from "../ui/Button";
+import LoadingIndicator from "../ui/LoadingIndicator";
 
 interface LogWriteModalProps {
     projectId: number;
-    logId: number | null;
-    initialData: LogInput | null;
+    mode: "CREATE" | "EDIT";
+    logId?: number;
     onClose: () => void;
     setSelectedDoc: (doc: SelectedDocument) => void;
 }
 export default function LogWriteModal({
     projectId,
+    mode,
     logId,
-    initialData,
     onClose,
     setSelectedDoc,
 }: LogWriteModalProps) {
-    const isEditMode = !!initialData;
+    const isEditMode = mode === "EDIT";
 
-    const [logInput, setLogInput] = useState<LogInput>({
-        title: initialData?.title ?? "",
-        content: initialData?.content ?? "",
+    const { data, isLoading } = useLogDetail(projectId, logId);
+    const { createLog, updateLog, isLogPending } = useLogMutation();
+
+    const [form, setForm] = useState<LogInput>({
+        title: "",
+        content: "",
     });
 
-    const { createLog, updateLog, isLogLoading } = useLogMutation();
+    useEffect(() => {
+        if (isEditMode && data) {
+            setForm({
+                title: data.title,
+                content: data.content,
+            });
+        }
+    }, [isEditMode, data]);
 
     const handleSubmit = () => {
-        if (isEditMode && initialData && logId) {
+        if (isEditMode && logId) {
             updateLog(
-                { projectId, logId, logInput },
+                { projectId, logId, logInput: form },
                 {
                     onSuccess: () => {
                         onClose();
@@ -42,7 +54,7 @@ export default function LogWriteModal({
             );
         } else {
             createLog(
-                { projectId, logInput },
+                { projectId, logInput: form },
                 {
                     onSuccess: (data) => {
                         onClose();
@@ -52,6 +64,8 @@ export default function LogWriteModal({
             );
         }
     };
+
+    if (isEditMode && isLoading) return <LoadingIndicator type="log" />;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -82,10 +96,10 @@ export default function LogWriteModal({
                         </label>
                         <input
                             type="text"
-                            value={logInput.title}
+                            value={form.title}
                             onChange={(e) =>
-                                setLogInput({
-                                    ...logInput,
+                                setForm({
+                                    ...form,
                                     title: e.target.value,
                                 })
                             }
@@ -100,10 +114,10 @@ export default function LogWriteModal({
                             내용
                         </label>
                         <textarea
-                            value={logInput.content}
+                            value={form.content}
                             onChange={(e) =>
-                                setLogInput({
-                                    ...logInput,
+                                setForm({
+                                    ...form,
                                     content: e.target.value,
                                 })
                             }
@@ -119,16 +133,14 @@ export default function LogWriteModal({
                         label={isEditMode ? "수정" : "작성"}
                         onClick={handleSubmit}
                         variant="primary"
-                        isLoading={isLogLoading}
-                        disabled={
-                            !logInput.title.trim() || !logInput.content.trim()
-                        }
+                        isLoading={isLogPending}
+                        disabled={!form.title.trim() || !form.content.trim()}
                     />
                     <Button
                         label="취소"
                         onClick={onClose}
                         variant="secondary"
-                        isLoading={isLogLoading}
+                        isLoading={isLogPending}
                     />
                 </div>
             </div>
