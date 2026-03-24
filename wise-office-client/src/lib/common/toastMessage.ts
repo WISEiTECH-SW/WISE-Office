@@ -20,6 +20,17 @@ export const toastMessage = {
     info(msg: string, opts?: ToastOptions) {
         return toast(msg, { ...DEFAULT, type: "info", ...opts });
     },
+    successDoc(
+        docType: DeleteModalType,
+        action: ActionType,
+        opts?: ToastOptions,
+    ) {
+        return toast(`${docTypeLabel[docType]} ${actionLabel[action]}`, {
+            ...DEFAULT,
+            type: "success",
+            ...opts,
+        });
+    },
 };
 
 const docTypeLabel: Record<DeleteModalType, string> = {
@@ -34,11 +45,4 @@ const actionLabel: Record<ActionType, string> = {
     create: "생성되었습니다.",
     update: "수정되었습니다.",
     delete: "삭제되었습니다.",
-};
-
-export const getDocumentToastMessage = (
-    docType: DeleteModalType,
-    action: ActionType,
-) => {
-    return `${docTypeLabel[docType]} ${actionLabel[action]}`;
 };

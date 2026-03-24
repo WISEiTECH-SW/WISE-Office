@@ -57,9 +57,9 @@ export interface ProjectGroupByYear {
     projects: ProjectItem[];
 }
 
-export type DocumentType = "log" | "minute" | "approve";
+export type DocumentType = "log" | "minute" | "approve" | "trip";
 
-export type SelectedDocument = { type: DocumentType; id: number };
+export type SelectedDocument = { type: DocumentType; id: number | null };
 
 export type DeleteModalType =
     | "project"

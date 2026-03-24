@@ -1,32 +1,24 @@
 import { ApproveDetailResponse, ApproveUpdateRequest } from "@/types/document";
 import Image from "next/image";
-import React, { useEffect } from "react";
+
 interface ApproveFormProps {
-    approve: ApproveDetailResponse | undefined;
-    newApprove: ApproveUpdateRequest;
-    setNewApprove: React.Dispatch<React.SetStateAction<ApproveUpdateRequest>>;
+    approveDetail: ApproveDetailResponse;
+    form: ApproveUpdateRequest;
+    setForm: React.Dispatch<React.SetStateAction<ApproveUpdateRequest>>;
 }
 
 export default function ApproveForm({
-    approve,
-    newApprove,
-    setNewApprove,
+    approveDetail,
+    form,
+    setForm,
 }: ApproveFormProps) {
-    useEffect(() => {
-        if (!approve) return;
-
-        setNewApprove({
-            reportNo: approve.approveNo ?? "",
-            writer: approve.writer ?? "",
-        });
-    }, [approve, setNewApprove]);
-
-    const handleChange = (key: keyof typeof newApprove, value: string) => {
-        setNewApprove((prev) => ({
+    const handleChange = (key: keyof typeof form, value: string) => {
+        setForm((prev) => ({
             ...prev,
             [key]: value,
         }));
     };
+
     return (
         <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[92px] pb-[120px] flex flex-col">
             {/* 제목 */}
@@ -61,7 +53,7 @@ export default function ApproveForm({
                             <td>문서번호</td>
                             <td>
                                 <input
-                                    value={newApprove.reportNo}
+                                    value={form.reportNo}
                                     onChange={(e) =>
                                         handleChange("reportNo", e.target.value)
                                     }
@@ -74,7 +66,7 @@ export default function ApproveForm({
                         </tr>
                         <tr>
                             <td className="py-1">작성일자</td>
-                            <td className="py-1">{approve?.writtenAt}</td>
+                            <td className="py-1">{approveDetail.writtenAt}</td>
                             <td className="py-1"></td>
                             <td className="py-1 text-center">과제책임자</td>
                             <td className="py-1"></td>
@@ -90,7 +82,7 @@ export default function ApproveForm({
                             <td className="py-1">품 의 자</td>
                             <td className="py-1">
                                 <input
-                                    value={newApprove.writer}
+                                    value={form.writer}
                                     onChange={(e) =>
                                         handleChange("writer", e.target.value)
                                     }
@@ -100,7 +92,7 @@ export default function ApproveForm({
                             <td className="py-1 text-right">접 수</td>
                             <td className="py-1 text-center">일 자</td>
                             <td className="py-1 text-center">
-                                {approve?.submitAt}
+                                {approveDetail.submitAt}
                             </td>
                         </tr>
                     </tbody>
@@ -113,27 +105,27 @@ export default function ApproveForm({
                     제 목:
                 </span>
                 <span className="font-semibold text-black-600">
-                    {approve?.title} 회의비 지출의 건
+                    {approveDetail.title} 회의비 지출의 건
                 </span>
             </div>
 
             {/* 설명 */}
             <p className="mt-6 pl-5 pr-5 text-black-600 leading-7 text-[15px]">
-                {approve?.title} 관련하여 아래와 같이 회의비를 지출하고자 하오니
-                검토 후 승인 부탁드립니다.
+                {approveDetail.title} 관련하여 아래와 같이 회의비를 지출하고자
+                하오니 검토 후 승인 부탁드립니다.
             </p>
 
             {/* 리스트 */}
             <ol className="mt-6 space-y-2 pl-18 text-black-600 list-decimal text-[15px]">
-                <li>사업명 : {approve?.businessName}</li>
+                <li>사업명 : {approveDetail.businessName}</li>
 
-                <li>과제명 : {approve?.title}</li>
+                <li>과제명 : {approveDetail.title}</li>
 
-                <li>전담기관 : {approve?.institution}</li>
+                <li>전담기관 : {approveDetail.institution}</li>
 
-                <li>회의 일시 : {approve?.minutesAt}</li>
+                <li>회의 일시 : {approveDetail.minutesAt}</li>
 
-                <li>회의 목적 : {approve?.minutesPurpose}</li>
+                <li>회의 목적 : {approveDetail.minutesPurpose}</li>
             </ol>
 
             {/* 끝 */}

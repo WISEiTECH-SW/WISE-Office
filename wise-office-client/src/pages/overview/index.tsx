@@ -10,6 +10,7 @@ import MinuteDocument from "@/components/document/MinuteDocument";
 export default function Overview() {
     const { optionIndex, projectInfo } = useOverviewStore();
     const { isOpen, onClose } = usePreviewStore();
+    const { minutesInfo } = usePreviewStore();
 
     return (
         <div className="min-h-screen flex mx-24 my-16 gap-16">
@@ -41,7 +42,7 @@ export default function Overview() {
 
             {/* 프린트 전용 - 화면에서는 숨김, 항상 DOM에 존재 */}
             <div className="print-area hidden print:block">
-                <MinuteDocument />
+                <MinuteDocument minuteDetail={minutesInfo} />
             </div>
         </div>
     );

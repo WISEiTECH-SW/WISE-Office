@@ -10,18 +10,18 @@ import { toastMessage } from "@/lib/common/toastMessage";
 import { useMemo } from "react";
 
 interface MinuteFormProps {
+    projectName: string;
     form: MinutesCreateRequest;
     setForm: React.Dispatch<React.SetStateAction<MinutesCreateRequest>>;
-    projectName: string;
     openAttendanceModal: () => void;
     attendantsNameAndRank: string;
     possibleAttendants?: PossibleAttendantsResponse[];
 }
 
 export default function MinuteForm({
+    projectName,
     form,
     setForm,
-    projectName,
     openAttendanceModal,
     attendantsNameAndRank,
     possibleAttendants,
