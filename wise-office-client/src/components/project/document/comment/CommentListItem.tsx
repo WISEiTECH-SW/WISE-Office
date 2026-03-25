@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Comment } from "@/types/comment";
 import { XCircle } from "lucide-react";
 import { formatDateTime } from "@/lib/common/util";
