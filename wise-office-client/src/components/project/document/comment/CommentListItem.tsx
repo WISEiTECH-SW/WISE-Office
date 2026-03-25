@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Comment } from "@/types/comment";
 import { XCircle } from "lucide-react";
 import { formatDateTime } from "@/lib/common/util";
+import ProfileImage from "@/components/header/ProfileImage";
 
 interface CommentListItemProps {
     comment: Comment;
@@ -14,18 +15,9 @@ export default function CommentListItem({
 }: CommentListItemProps) {
     return (
         <div className="flex gap-3 items-baseline">
-            <Image
-                src={
-                    comment.imageUrl
-                        ? comment.imageUrl
-                        : "/assets/default_profile.jpg"
-                }
-                alt="profile image"
-                width={32}
-                height={32}
-                className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center"
-            />
-
+            <div className="relative w-10 h-10 shrink-0">
+                <ProfileImage imageUrl={comment.imageUrl} />
+            </div>
             <div className="flex flex-col flex-grow bg-gray-50 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-1">
                     <span className="font-medium text-sm text-gray-800">
