@@ -26,7 +26,7 @@ export function EditableCell({
                         autoResizeTextarea(e);
                         onChange(e.target.value);
                     }}
-                    className={`w-full resize-none text-sm focus:outline-none leading-snug py-2 outline-none ${editableClass}`}
+                    className={`w-full resize-none text-sm leading-snug py-2 outline-none ${editableClass}`}
                 />
             </div>
         </td>

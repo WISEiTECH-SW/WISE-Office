@@ -20,7 +20,7 @@ export default function ApproveForm({
     };
     // 수정 가능한 영역 공통 css
     const editableClass =
-        "border border-blue-200 print:border-none hover:bg-blue-100 focus:bg-white focus:ring-2 focus:ring-blue-400 transition print:bg-transparent print";
+        "border border-blue-200 print:border-none hover:bg-blue-100 focus:bg-white focus:ring-2 focus:ring-blue-400 transition print:bg-transparent";
 
     return (
         <div className="bg-white w-full max-w-[720px] min-h-[1020px] h-full px-[80px] pt-[92px] pb-[120px] flex flex-col">
@@ -89,7 +89,7 @@ export default function ApproveForm({
                                     onChange={(e) =>
                                         handleChange("writer", e.target.value)
                                     }
-                                    className={`w-full outline-nonen ${editableClass}`}
+                                    className={`w-full outline-none ${editableClass}`}
                                 />
                             </td>
                             <td className="py-1 text-right">접 수</td>
