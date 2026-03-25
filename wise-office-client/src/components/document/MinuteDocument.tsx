@@ -105,8 +105,8 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                         <ReadableCell
                             colSpan={3}
                             value={
-                                minutesInfo.writer
-                                    ? `${minutesInfo.writer.name} ${minutesInfo.writer.rank}`
+                                minuteDetail.writer
+                                    ? `${minuteDetail.writer.name.replace(/[A-Za-z]/g, "")} ${minuteDetail.writer.rank}`
                                     : ""
                             }
                             textAlign={"text-start"}
