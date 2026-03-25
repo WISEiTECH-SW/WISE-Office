@@ -18,7 +18,7 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
             <ApprovalSeal />
 
             {/* 제목 */}
-            <div className="text-center font-serif font-bold text-2xl tracking-[12px] mb-1 text-black">
+            <div className="text-center font-bold text-2xl tracking-[12px] mb-1 text-black">
                 회 의 록
             </div>
 
@@ -49,7 +49,7 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                         <LabelCell label="회의 일시" />
                         <td colSpan={3} className="border border-black p-0">
                             <div className="flex w-full h-full divide-x divide-black">
-                                <div className="flex-1 p-2 text-center">
+                                <div className="flex-1 text-center">
                                     {new Date(
                                         minuteDetail.minutesDate,
                                     ).toLocaleDateString("ko-KR", {
@@ -59,7 +59,7 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                                         weekday: "long",
                                     })}
                                 </div>
-                                <div className="flex-1 p-2 text-center">
+                                <div className="flex-1 text-center">
                                     {`${minuteDetail.startTime} ~ ${minuteDetail.endTime}`}
                                 </div>
                             </div>
@@ -86,7 +86,10 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                             value={[
                                 minuteDetail.minutesAttendants?.length
                                     ? `위세아이텍 : ${minuteDetail.minutesAttendants
-                                          .map((m) => `${m.name} ${m.rank}`)
+                                          .map(
+                                              (m) =>
+                                                  `${m.name.replace(/[A-Za-z]/g, "")} ${m.rank}`,
+                                          )
                                           .join(", ")}`
                                     : "",
                                 minuteDetail.instAttendants,
@@ -103,7 +106,7 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                             colSpan={3}
                             value={
                                 minuteDetail.writer
-                                    ? `${minuteDetail.writer.name} ${minuteDetail.writer.rank}`
+                                    ? `${minuteDetail.writer.name.replace(/[A-Za-z]/g, "")} ${minuteDetail.writer.rank}`
                                     : ""
                             }
                             textAlign={"text-start"}

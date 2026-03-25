@@ -30,6 +30,9 @@ export default function MinuteForm({
         (m) => m.memberId === form.writer,
     );
 
+    // 수정 가능한 영역 공통 css
+    const editableClass =
+        "hover:bg-blue-100 focus:bg-white focus:ring-2 focus:ring-blue-400 transition print:bg-transparent";
     // 시간 비교용
     const timeToMinutes = (time: string) => {
         const [hours, minutes] = time.split(":").map(Number);
@@ -117,6 +120,7 @@ export default function MinuteForm({
                             colSpan={4}
                             value={projectName}
                             onChange={() => {}}
+                            editableClass={editableClass}
                         />
                     </tr>
                     <tr>
@@ -128,6 +132,7 @@ export default function MinuteForm({
                             onChange={(v) =>
                                 setForm((prev) => ({ ...prev, host: v }))
                             }
+                            editableClass={editableClass}
                         />
                     </tr>
                     <tr className="h-4"></tr>
@@ -137,7 +142,16 @@ export default function MinuteForm({
                     <tr>
                         <LabelCell label="회의 일시" />
                         {/* 날짜 */}
-                        <td colSpan={2} className="border border-black p-0">
+                        <td
+                            colSpan={2}
+                            className={`border border-black p-0 print:bg-transparent ${editableClass}`}
+                            onClick={() => {
+                                const input = document.getElementById(
+                                    "date-input",
+                                ) as HTMLInputElement | null;
+                                input?.showPicker?.();
+                            }}
+                        >
                             <input
                                 type="date"
                                 value={form.minutesDate}
@@ -147,6 +161,10 @@ export default function MinuteForm({
                                         minutesDate: e.target.value,
                                     }))
                                 }
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.currentTarget.showPicker?.();
+                                }}
                                 className="w-full h-full p-2 text-sm text-center outline-none cursor-pointer hover:bg-gray-50 bg-transparent screen-only"
                             />
                             {/* 출력용 */}
@@ -170,8 +188,7 @@ export default function MinuteForm({
                                                 true,
                                             )
                                         }
-                                        className="w-full py-2 text-sm text-center border border-gray-300 rounded-md 
-                                                    bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 custom-scroll screen-only"
+                                        className={`w-full py-2 text-sm text-center border border-gray-300 rounded-md custom-scroll ${editableClass} cursor-pointer screen-only`}
                                     >
                                         <option value="" disabled>
                                             --:--
@@ -204,8 +221,7 @@ export default function MinuteForm({
                                                 false,
                                             )
                                         }
-                                        className="w-full py-2 text-sm text-center border border-gray-300 rounded-md 
-                                                    bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 custom-scroll screen-only"
+                                        className={`w-full py-2 text-sm text-center border border-gray-300 rounded-md custom-scroll ${editableClass} cursor-pointer screen-only`}
                                     >
                                         <option value="" disabled>
                                             --:--
@@ -236,6 +252,7 @@ export default function MinuteForm({
                             onChange={(v) =>
                                 setForm((prev) => ({ ...prev, location: v }))
                             }
+                            editableClass={editableClass}
                         />
                     </tr>
                     <tr>
@@ -247,6 +264,7 @@ export default function MinuteForm({
                             onChange={(v) =>
                                 setForm((prev) => ({ ...prev, purpose: v }))
                             }
+                            editableClass={editableClass}
                         />
                     </tr>
                     <tr>
@@ -259,14 +277,18 @@ export default function MinuteForm({
                                 {/* 내부 참석자 */}
                                 <div
                                     onClick={openAttendanceModal}
-                                    className="cursor-pointer hover:bg-blue-50 px-1 py-[2px]"
+                                    className={`w-full px-1 py-2 text-[13.5px]
+                                                ${editableClass} cursor-pointer`}
                                 >
                                     {form.minutesAttendants.length > 0 ? (
                                         <span>
                                             <span className="text-[13.5px]">
                                                 위세아이텍:
                                             </span>{" "}
-                                            {attendantsNameAndRank}
+                                            {attendantsNameAndRank.replace(
+                                                /[A-Za-z]/g,
+                                                "",
+                                            )}
                                         </span>
                                     ) : (
                                         <span className="text-gray-400 italic">
@@ -287,7 +309,7 @@ export default function MinuteForm({
                                             instAttendants: e.target.value,
                                         }))
                                     }
-                                    className="w-full outline-none text-[13.5px] placeholder-gray-400 screen-only"
+                                    className={`w-full outline-none text-[13.5px] placeholder-gray-400 screen-only ${editableClass}`}
                                 />
                                 <div className="hidden print:block w-full h-full px-1 text-[13.5px]">
                                     {form.instAttendants}
@@ -304,7 +326,7 @@ export default function MinuteForm({
                             {form.writer ? (
                                 <span>
                                     {writerInfo
-                                        ? `${writerInfo.name} ${writerInfo.rank}`
+                                        ? `${writerInfo.name.replace(/[A-Za-z]/g, "")} ${writerInfo.rank}`
                                         : ""}
                                 </span>
                             ) : (
@@ -323,7 +345,7 @@ export default function MinuteForm({
             </div>
             <SectionBody
                 placeholder="회의 내용을 입력하세요."
-                className="rounded-b min-h-[400px]"
+                className={`rounded-b min-h-[400px] print:bg-transparent ${editableClass}`}
                 value={form.content}
                 onChange={(v) => setForm((prev) => ({ ...prev, content: v }))}
             />

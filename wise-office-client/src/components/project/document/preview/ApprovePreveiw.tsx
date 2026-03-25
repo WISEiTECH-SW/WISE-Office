@@ -115,7 +115,10 @@ export default function ApprovePreview({
                                     <tr>
                                         <td className="py-1">품 의 자</td>
                                         <td className="py-1 w-full outline-none">
-                                            {approve.writer}
+                                            {approve.writer.replace(
+                                                /[A-Za-z]/g,
+                                                "",
+                                            )}
                                         </td>
                                         <td className="py-1 text-right">
                                             접 수
