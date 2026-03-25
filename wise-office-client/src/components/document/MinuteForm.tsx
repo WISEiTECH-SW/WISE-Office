@@ -145,6 +145,12 @@ export default function MinuteForm({
                         <td
                             colSpan={2}
                             className={`border border-black p-0 print:bg-transparent ${editableClass}`}
+                            onClick={() => {
+                                const input = document.getElementById(
+                                    "date-input",
+                                ) as HTMLInputElement | null;
+                                input?.showPicker?.();
+                            }}
                         >
                             <input
                                 type="date"
@@ -155,6 +161,10 @@ export default function MinuteForm({
                                         minutesDate: e.target.value,
                                     }))
                                 }
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.currentTarget.showPicker?.();
+                                }}
                                 className="w-full h-full p-2 text-sm text-center outline-none cursor-pointer hover:bg-gray-50 bg-transparent screen-only"
                             />
                             {/* 출력용 */}
