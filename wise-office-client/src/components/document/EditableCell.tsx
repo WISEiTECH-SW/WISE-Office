@@ -5,6 +5,7 @@ interface EditableCellProps {
     colSpan?: number;
     value: string;
     onChange: (value: string) => void;
+    editableClass?: string;
 }
 
 export function EditableCell({
@@ -12,6 +13,7 @@ export function EditableCell({
     colSpan = 1,
     value,
     onChange,
+    editableClass = "",
 }: EditableCellProps) {
     return (
         <td colSpan={colSpan} className="border border-black px-2">
@@ -24,7 +26,7 @@ export function EditableCell({
                         autoResizeTextarea(e);
                         onChange(e.target.value);
                     }}
-                    className="w-full resize-none bg-transparent text-sm focus:outline-none leading-snug py-2"
+                    className={`w-full resize-none text-sm focus:outline-none leading-snug py-2 outline-none ${editableClass}`}
                 />
             </div>
         </td>
