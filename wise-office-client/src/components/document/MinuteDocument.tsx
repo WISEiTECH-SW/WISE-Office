@@ -49,7 +49,7 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                         <LabelCell label="회의 일시" />
                         <td colSpan={3} className="border border-black p-0">
                             <div className="flex w-full h-full divide-x divide-black">
-                                <div className="flex-1 p-2 text-center">
+                                <div className="flex-1 text-center">
                                     {new Date(
                                         minuteDetail.minutesDate,
                                     ).toLocaleDateString("ko-KR", {
@@ -59,7 +59,7 @@ export default function MinuteDocument({ minuteDetail }: MinuteDocumentProps) {
                                         weekday: "long",
                                     })}
                                 </div>
-                                <div className="flex-1 p-2 text-center">
+                                <div className="flex-1 text-center">
                                     {`${minuteDetail.startTime} ~ ${minuteDetail.endTime}`}
                                 </div>
                             </div>
