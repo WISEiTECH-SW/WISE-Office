@@ -33,8 +33,8 @@ export default function LogWriteModal({
         content: "",
     });
 
-    const MAX_TITLE_LENTH = 50;
-    const MAX_CONTENT_LENTH = 1000;
+    const MAX_TITLE_LENGTH = 50;
+    const MAX_CONTENT_LENGTH = 500;
 
     useEffect(() => {
         if (isEditMode && data) {
@@ -48,7 +48,7 @@ export default function LogWriteModal({
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
 
-        if (value.length <= MAX_TITLE_LENTH) {
+        if (value.length <= MAX_TITLE_LENGTH) {
             setForm({ ...form, title: value });
         }
     };
@@ -114,7 +114,7 @@ export default function LogWriteModal({
                                 className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors"
                             />
                             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">
-                                {form.title.length}/{MAX_TITLE_LENTH}
+                                {form.title.length}/{MAX_TITLE_LENGTH}
                             </span>
                         </div>
                     </div>
@@ -128,17 +128,17 @@ export default function LogWriteModal({
                             <textarea
                                 value={form.content}
                                 maxLength={1000}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        content: e.target.value,
-                                    })
-                                }
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value.length <= MAX_CONTENT_LENGTH) {
+                                        setForm({ ...form, content: value });
+                                    }
+                                }}
                                 placeholder="내용을 입력하세요"
                                 className="w-full min-h-[200px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors resize-y"
                             />
                             <span className="mr-2 flex justify-end text-xs text-gray-500">
-                                {form.content.length}/{MAX_CONTENT_LENTH}
+                                {form.content.length}/{MAX_CONTENT_LENGTH}
                             </span>
                         </div>
                     </div>
