@@ -11,8 +11,8 @@ import {
 import BasePreview from "./BasePreview";
 import LogPreview from "./LogPreview";
 import MinutePreview from "./MinutePreview";
-import ApprovePreview from "./ApprovePreveiw";
 import LoadingIndicator from "@/components/ui/LoadingIndicator";
+import ApprovePreview from "./ApprovePreview";
 
 interface PreviewContainerProps {
     projectId: number;

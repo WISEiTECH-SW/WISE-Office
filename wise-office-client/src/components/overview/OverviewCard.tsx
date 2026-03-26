@@ -61,7 +61,11 @@ export default function OverviewCard({
 
             {/* 버튼 */}
             <div className="flex justify-between gap-2 shrink-0">
-                <PreviewButton minutesInfo={minutesInfo ?? null} />
+                {isApproval ? (
+                    <PreviewButton approveInfo={approve ?? null} />
+                ) : (
+                    <PreviewButton minutesInfo={minutesInfo ?? null} />
+                )}
                 <PrintButton minutesInfo={minutesInfo ?? null} />
             </div>
         </div>
