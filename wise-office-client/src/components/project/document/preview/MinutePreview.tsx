@@ -74,7 +74,7 @@ export default function MinutePreview({
                 </div>
             )}
             <div className="p-4 rounded-b-lg bg-blue-50">
-                <div className="print-area">
+                <div className="print-area flex justify-center">
                     <MinuteDocument minuteDetail={minuteDetail} />
                 </div>
             </div>
