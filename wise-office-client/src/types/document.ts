@@ -119,6 +119,8 @@ export interface ApproveUpdateRequest {
     writer: string;
 }
 
+export type ApproveList = ApproveListResponse[];
+
 export interface ApproveListResponse {
     approveId: number;
     title: string; // 문서번호
