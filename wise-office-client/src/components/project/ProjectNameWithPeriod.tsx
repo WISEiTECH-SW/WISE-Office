@@ -42,6 +42,19 @@ export default function ProjectNameWithPeriod({
     setContent,
     errors,
 }: ProjectNameWithPeriodProps) {
+    const MAX_TITLE_LENTH = 50;
+    const MAX_CONTENT_LENTH = 500;
+
+    const handleInputChange =
+        (setter: (value: string) => void) =>
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value;
+
+            if (value.length <= MAX_TITLE_LENTH) {
+                setter(value);
+            }
+        };
+
     return (
         <div className="grid grid-cols-2 gap-10 w-full">
             <div className="flex flex-col basis-1/5 overflow-y-auto pr-2">
@@ -50,13 +63,19 @@ export default function ProjectNameWithPeriod({
                     <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                         연구개발과제명
                     </label>
-                    <input
-                        type="text"
-                        value={projectTitle}
-                        onChange={(e) => setProjectTitle(e.target.value)}
-                        className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="과제명을 입력하세요"
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            value={projectTitle}
+                            onChange={handleInputChange(setProjectTitle)}
+                            className="border border-gray-300 rounded-md mx-1 px-3 pr-12 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="과제명을 입력하세요"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">
+                            {projectTitle.length}/{MAX_TITLE_LENTH}
+                        </span>
+                    </div>
+
                     <p className="h-2 ml-1 px-1 text-red-500 text-xs mt-1">
                         {errors.projectTitle}
                     </p>
@@ -67,13 +86,19 @@ export default function ProjectNameWithPeriod({
                         사업명 (사전품의서에 기입할 세부사업명, 총괄연구과제명
                         등)
                     </label>
-                    <input
-                        type="text"
-                        value={businessName}
-                        onChange={(e) => setBusinessName(e.target.value)}
-                        className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="사업명을 입력하세요."
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            value={businessName}
+                            onChange={handleInputChange(setBusinessName)}
+                            className="border border-gray-300 rounded-md mx-1 px-3 pr-12 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="사업명을 입력하세요."
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">
+                            {businessName.length}/{MAX_TITLE_LENTH}
+                        </span>
+                    </div>
+
                     <p className="h-2 ml-1 px-1 text-red-500 text-xs mt-1">
                         {errors.businessName}
                     </p>
@@ -83,13 +108,19 @@ export default function ProjectNameWithPeriod({
                     <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                         전담기관
                     </label>
-                    <input
-                        type="text"
-                        value={institution}
-                        onChange={(e) => setInstitution(e.target.value)}
-                        className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="전담기관을 입력하세요"
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            value={institution}
+                            onChange={handleInputChange(setInstitution)}
+                            className="border border-gray-300 rounded-md mx-1 px-3 pr-12 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="전담기관을 입력하세요"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">
+                            {institution.length}/{MAX_TITLE_LENTH}
+                        </span>
+                    </div>
+
                     <p className="h-2 ml-1 px-1 text-red-500 text-xs mt-1">
                         {errors.institution}
                     </p>
@@ -177,16 +208,22 @@ export default function ProjectNameWithPeriod({
                 </div>
 
                 {/* 내용/설명 입력 */}
-                <div className="mb-5 flex-shrink-0">
+                <div className="flex-shrink-0">
                     <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                         프로젝트 설명
                     </label>
-                    <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="프로젝트에 대한 설명을 입력하세요"
-                    />
+                    <div>
+                        <textarea
+                            value={content}
+                            maxLength={500}
+                            onChange={(e) => setContent(e.target.value)}
+                            className="border border-gray-300 rounded-md mx-1 px-3 py-2 w-full h-36 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="프로젝트에 대한 설명을 입력하세요"
+                        />
+                        <span className="mr-2 flex justify-end text-xs text-gray-500">
+                            {content.length}/{MAX_CONTENT_LENTH}
+                        </span>
+                    </div>
                     <p className="h-2 ml-1 px-1 text-red-500 text-xs">
                         {errors.content}
                     </p>

@@ -4,6 +4,8 @@ import SelectProjectMembers from "../../project/SelectProjectMembers";
 import ProjectNameWithPeriod from "../../project/ProjectNameWithPeriod";
 import Tab from "../../project/Tab";
 import { useProjectModal } from "@/hooks/useProjectModal";
+import { X } from "lucide-react";
+
 type ProjectModalProps = {
     mode: "create" | "update";
     projectId?: number; // update일 때만 필요
@@ -70,9 +72,9 @@ export default function ProjectModal({
                     <button
                         onClick={onClose}
                         className="absolute top-3 right-3 w-12 h-12 flex items-center justify-center
-                       rounded-full text-gray-600 hover:bg-gray-100"
+                       rounded-full text-gray-600 hover:bg-gray-100 cursor-pointer"
                     >
-                        ✕
+                        <X className="w-5 h-5 text-gray-500" />
                     </button>
 
                     <h2 className="text-center text-2xl font-extrabold">

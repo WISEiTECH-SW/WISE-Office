@@ -12,6 +12,7 @@ export default function CommentInput({
     isCommentLoading,
 }: CommentInputProps) {
     const [content, setContent] = useState("");
+    const MAX_COMMENT_LENTH = 250;
 
     const handleSubmit = () => {
         if (!content.trim() || isCommentLoading) return;
@@ -21,23 +22,20 @@ export default function CommentInput({
         setContent("");
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            handleSubmit();
-        }
-    };
-
     return (
         <div className="flex gap-3 mb-6">
             <div className="flex-1">
                 <textarea
                     value={content}
+                    maxLength={MAX_COMMENT_LENTH}
                     onChange={(e) => setContent(e.target.value)}
-                    onKeyDown={handleKeyDown}
                     placeholder="댓글을 입력하세요..."
                     className="w-full p-3 border border-gray-300 rounded-lg resize-none h-20 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors disabled:bg-gray-50"
                     disabled={isCommentLoading}
                 />
+                <span className="mr-2 flex justify-end text-xs text-gray-500">
+                    {content.length}/{MAX_COMMENT_LENTH}
+                </span>
                 <div className="flex justify-end mt-2">
                     <Button
                         label="댓글 작성"
