@@ -30,13 +30,11 @@ export default function OverviewCard({
                             ? approve.writtenAt
                             : minutes.minutesAt}
                     </p>
-                    <p>
-                        {!isApproval && (
-                            <p>
-                                {minutesInfo?.startTime}~{minutesInfo?.endTime}
-                            </p>
-                        )}
-                    </p>
+                    {!isApproval && (
+                        <p>
+                            {minutesInfo?.startTime}~{minutesInfo?.endTime}
+                        </p>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-2 flex-1 min-w-0 gap-6">
