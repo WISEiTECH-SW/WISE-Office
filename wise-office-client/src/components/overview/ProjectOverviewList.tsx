@@ -9,7 +9,6 @@ import {
 } from "@/services/overview";
 import {
     ApproveDetailResponse,
-    ApproveList,
     MinutesInfo,
     MinutesList,
 } from "@/types/document";
@@ -19,7 +18,6 @@ export default function ProjectOverviewList() {
     const [minutesList, setMinutesList] = useState<MinutesList>([]);
     const [minutesInfos, setMinutesInfos] = useState<MinutesInfo[]>([]);
 
-    // const [approveList, setApproveList] = useState<ApproveList>([]);
     const [approveInfos, setApproveInfo] = useState<ApproveDetailResponse[]>(
         [],
     );
@@ -40,7 +38,6 @@ export default function ProjectOverviewList() {
 
         const fetchApproves = async () => {
             const data = await getApproves(projectInfo.projectId);
-            // setApproveList(data);
 
             const infos = await Promise.all(
                 data.map((m) =>

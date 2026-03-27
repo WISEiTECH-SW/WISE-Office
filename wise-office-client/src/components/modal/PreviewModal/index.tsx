@@ -2,15 +2,13 @@ import Buttonbar from "./Buttonbar";
 import { usePreviewStore } from "@/store/useOverviewStore";
 import MinuteDocument from "@/components/document/MinuteDocument";
 import { useEffect } from "react";
-import ApprovePreview from "@/components/project/document/preview/ApprovePreview";
-import { ApproveDetailResponse, MinutesDetail } from "@/types/document";
+import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
 import ApproveDocument from "@/components/document/ApproveDocument";
 
 const A4_WIDTH = 720;
 
 export default function PreviewModal() {
     const { onClose, type, data } = usePreviewStore();
-
     useEffect(() => {
         const original = document.body.style.overflow;
         document.body.style.overflow = "hidden";
@@ -31,7 +29,7 @@ export default function PreviewModal() {
             />
 
             {type === "minutes" && (
-                <MinuteDocument minuteDetail={data as MinutesDetail} />
+                <MinuteDocument minuteDetail={data as MinutesInfo} />
             )}
             {type === "approve" && (
                 <ApproveDocument approve={data as ApproveDetailResponse} />

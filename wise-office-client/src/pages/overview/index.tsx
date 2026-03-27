@@ -6,11 +6,13 @@ import MonthOverviewList from "@/components/overview/MonthOverviewList";
 import PreviewModal from "@/components/modal/PreviewModal";
 import { useOverviewStore, usePreviewStore } from "@/store/useOverviewStore";
 import MinuteDocument from "@/components/document/MinuteDocument";
+import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
+import ApproveDocument from "@/components/document/ApproveDocument";
 
 export default function Overview() {
     const { optionIndex, projectInfo } = useOverviewStore();
     const { isOpen, onClose } = usePreviewStore();
-    const { minutesInfo } = usePreviewStore();
+    const { data, type } = usePreviewStore();
 
     return (
         <div className="min-h-screen flex mx-24 my-16 gap-16">
@@ -42,7 +44,12 @@ export default function Overview() {
 
             {/* 프린트 전용 - 화면에서는 숨김, 항상 DOM에 존재 */}
             <div className="print-area hidden print:block">
-                <MinuteDocument minuteDetail={minutesInfo} />
+                {type === "minutes" && (
+                    <MinuteDocument minuteDetail={data as MinutesInfo} />
+                )}
+                {type === "approve" && (
+                    <ApproveDocument approve={data as ApproveDetailResponse} />
+                )}
             </div>
         </div>
     );

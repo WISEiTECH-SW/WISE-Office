@@ -64,7 +64,11 @@ export default function OverviewCard({
                 ) : (
                     <PreviewButton minutesInfo={minutesInfo ?? null} />
                 )}
-                <PrintButton minutesInfo={minutesInfo ?? null} />
+                {isApproval ? (
+                    <PrintButton approveInfo={approve ?? null} />
+                ) : (
+                    <PrintButton minutesInfo={minutesInfo ?? null} />
+                )}
             </div>
         </div>
     );

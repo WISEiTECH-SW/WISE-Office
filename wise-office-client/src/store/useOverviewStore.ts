@@ -88,10 +88,8 @@ type PreviewState = {
     isOpen: boolean;
     type: PreviewType | null;
     data: MinutesInfo | ApproveDetailResponse | null;
-    // minutesInfo: MinutesInfo | null;
 
     setIsOpen: (isOpen: boolean) => void;
-    // setMinutesInfo: (minutesInfo: MinutesInfo) => void;
     setPreview: (
         type: PreviewType,
         data: MinutesInfo | ApproveDetailResponse,
@@ -104,11 +102,9 @@ type PreviewState = {
 export const usePreviewStore = create<PreviewState>((set) => ({
     isOpen: false,
     type: null,
-    // minutesInfo: null,
     data: null,
 
     setIsOpen: (isOpen) => set({ isOpen }),
-    // setMinutesInfo: (minutesInfo) => set({ minutesInfo }),
     setPreview: (type, data) => set({ type, data }),
 
     onOpen: () => set({ isOpen: true }),

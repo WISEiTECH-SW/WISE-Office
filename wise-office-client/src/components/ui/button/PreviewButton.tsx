@@ -9,14 +9,9 @@ export default function PreviewButton({
     minutesInfo?: MinutesInfo | null;
     approveInfo?: ApproveDetailResponse | null;
 }) {
-    // const { onOpen, setMinutesInfo } = usePreviewStore();
     const { onOpen, setPreview } = usePreviewStore();
 
     const handleClick = () => {
-        // if (!minutesInfo) return;
-        // setMinutesInfo(minutesInfo);
-        // onOpen();
-        // 회의록
         if (minutesInfo) {
             setPreview("minutes", minutesInfo);
             onOpen();
