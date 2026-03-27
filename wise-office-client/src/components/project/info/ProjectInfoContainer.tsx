@@ -40,7 +40,7 @@ export default function ProjectInfoContainer({
     const titleDuration = calculationDuration(projectInfo.start);
 
     return (
-        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-6 md:mt-6">
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-4 md:mb-6 md:mt-4">
             <div className="flex justify-between items-start mb-4">
                 <p className="text-lg md:text-2xl font-bold text-gray-800 break-words whitespace-normal">
                     {duration.state === "진행중" && `(${titleDuration})`}
@@ -87,7 +87,7 @@ export default function ProjectInfoContainer({
                     value={projectInfo.institution}
                 />
             </div>
-            <div className="grid md:grid-cols-4 gap-2 md:gap-6 mb-2 md:mb-6">
+            <div className="grid md:grid-cols-4 gap-2 md:gap-6">
                 <ProjectInfoItem
                     icon={<UserCheck className="w-5 h-5 md:w-6 md:h-6" />}
                     label="책임자"

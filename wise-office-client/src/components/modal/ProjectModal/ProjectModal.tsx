@@ -4,6 +4,8 @@ import SelectProjectMembers from "../../project/SelectProjectMembers";
 import ProjectNameWithPeriod from "../../project/ProjectNameWithPeriod";
 import Tab from "../../project/Tab";
 import { useProjectModal } from "@/hooks/useProjectModal";
+import { X } from "lucide-react";
+
 type ProjectModalProps = {
     mode: "create" | "update";
     projectId?: number; // update일 때만 필요
@@ -57,22 +59,22 @@ export default function ProjectModal({
         tab,
         setTab,
     });
-    const isLoading = mode === "update" && !projectTitle;
+    const isLoading = mode === "update" && !projectId;
 
     return (
         <div className="Overlay fixed inset-0 bg-opacity-40 flex justify-center items-center z-50 p-6">
             <div
                 ref={modalRef}
-                className="bg-white rounded-xl shadow-xl w-full max-w-[64rem] h-[76vh] flex flex-col relative"
+                className="bg-white rounded-xl shadow-xl w-full max-w-[64rem] flex flex-col relative pb-4"
             >
                 {/* 헤더 모달 이름 + 닫기 버튼 */}
                 <div className="relative px-8 pt-6 pb-4">
                     <button
                         onClick={onClose}
                         className="absolute top-3 right-3 w-12 h-12 flex items-center justify-center
-                       rounded-full text-gray-600 hover:bg-gray-100"
+                       rounded-full text-gray-600 hover:bg-gray-100 cursor-pointer"
                     >
-                        ✕
+                        <X className="w-5 h-5 text-gray-500" />
                     </button>
 
                     <h2 className="text-center text-2xl font-extrabold">
@@ -81,7 +83,7 @@ export default function ProjectModal({
                 </div>
 
                 {/* 스크롤 영역 */}
-                <div className="flex-1 overflow-auto custom-scroll px-8 pb-8">
+                <div className="flex-1 overflow-auto custom-scroll px-8">
                     {isLoading ? (
                         <div className="md:px-6">
                             <div className="min-h-[60vh] flex items-center justify-center">
@@ -100,8 +102,6 @@ export default function ProjectModal({
                         </div>
                     ) : (
                         <>
-                            {/* 제목 */}
-
                             {/* 탭 */}
                             <div className="w-full flex justify-center mb-6">
                                 <div className="w-2/3">
