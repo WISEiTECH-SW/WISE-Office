@@ -65,7 +65,8 @@ export default function ProjectModal({
         <div className="Overlay fixed inset-0 bg-opacity-40 flex justify-center items-center z-50 p-6">
             <div
                 ref={modalRef}
-                className="bg-white rounded-xl shadow-xl w-full max-w-[64rem] flex flex-col relative pb-4"
+                // className="bg-white rounded-xl shadow-xl w-full max-w-[64rem] flex flex-col relative pb-4"
+                className="bg-white rounded-xl shadow-xl w-full max-w-[64rem] h-[80vh] flex flex-col"
             >
                 {/* 헤더 모달 이름 + 닫기 버튼 */}
                 <div className="relative px-8 pt-6 pb-4">
@@ -83,10 +84,11 @@ export default function ProjectModal({
                 </div>
 
                 {/* 스크롤 영역 */}
+                {/* <div className="flex-1 overflow-auto custom-scroll px-8 min-h-[500px]"> */}
                 <div className="flex-1 overflow-auto custom-scroll px-8">
                     {isLoading ? (
                         <div className="md:px-6">
-                            <div className="min-h-[60vh] flex items-center justify-center">
+                            <div className="min-h-[300vh] flex items-center justify-center">
                                 <div className="bg-white rounded-2xl px-10 py-12 flex flex-col items-center gap-4">
                                     <div className="w-12 h-12 rounded-full border-4 border-gray-200 border-t-blue-500 animate-spin" />
                                     <div className="text-center">
@@ -156,19 +158,18 @@ export default function ProjectModal({
                             )}
                         </>
                     )}
-
-                    {!isLoading && (
-                        <div className="p-4 flex justify-center">
-                            <button
-                                className="px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer"
-                                onClick={handleSubmit}
-                                type="button"
-                            >
-                                {mode === "create" ? "생성 완료" : "수정 완료"}
-                            </button>
-                        </div>
-                    )}
                 </div>
+                {!isLoading && (
+                    <div className="flex justify-center pb-4">
+                        <button
+                            className="px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                            onClick={handleSubmit}
+                            type="button"
+                        >
+                            {mode === "create" ? "생성 완료" : "수정 완료"}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
