@@ -1,4 +1,5 @@
 import { autoResizeTextarea } from "@/utils/textArea";
+import { useEffect, useRef } from "react";
 
 interface EditableCellProps {
     placeholder: string;
@@ -15,10 +16,18 @@ export function EditableCell({
     onChange,
     editableClass = "",
 }: EditableCellProps) {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    useEffect(() => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    }, [value]);
     return (
         <td colSpan={colSpan} className="border border-black px-2">
             <div className="flex items-center w-full">
                 <textarea
+                    ref={textareaRef}
                     placeholder={placeholder}
                     value={value}
                     rows={1}
