@@ -51,7 +51,7 @@ export default function DocumentPage() {
         useState<string>("");
 
     const [minuteForm, setMinuteForm] = useState<MinutesCreateRequest>({
-        host: "",
+        host: "위세아이텍",
         minutesDate: "",
         startTime: "",
         endTime: "",
