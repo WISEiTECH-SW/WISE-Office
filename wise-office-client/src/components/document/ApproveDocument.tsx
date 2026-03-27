@@ -112,10 +112,9 @@ export default function ApproveDocument({ approve }: Prop) {
                     <Image
                         src="/wiseitechLogo.png"
                         alt="logo"
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        className="w-[140px] h-auto"
+                        width={140}
+                        height={50}
+                        className="h-auto"
                     />
                 </div>
             </div>

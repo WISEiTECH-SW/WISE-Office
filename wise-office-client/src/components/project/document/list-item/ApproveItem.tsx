@@ -2,7 +2,6 @@ import { ApproveListResponse } from "@/types/document";
 import { DocumentType } from "@/types/project";
 import dayjs from "dayjs";
 import { CalendarDays } from "lucide-react";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 
 interface ApproveItemProps {
     approve: ApproveListResponse;
@@ -16,7 +15,15 @@ export default function ApproveItem({
     onSelect,
 }: ApproveItemProps) {
     const handleDocSelect = () => onSelect("approve", approve.approveId);
-    dayjs.extend(customParseFormat);
+    const formatDate = (date: string) => {
+        const normalized = date
+            .replace("년", "-")
+            .replace("월", "-")
+            .replace("일", "")
+            .replace(/\s/g, "");
+
+        return dayjs(normalized).format("YYYY-MM-DD");
+    };
     return (
         <div
             onClick={handleDocSelect}
@@ -35,9 +42,7 @@ export default function ApproveItem({
             <div className="flex mt-2 justify-between">
                 <div className="flex items-center text-xs text-gray-500">
                     <CalendarDays className="w-3 h-3 mr-1" />
-                    {dayjs(approve.submitDate, "YYYY년 MM월 DD일").format(
-                        "YYYY-MM-DD",
-                    )}
+                    {formatDate(approve.submitDate)}
                 </div>
             </div>
         </div>
