@@ -9,7 +9,6 @@ import kr.co.wise.office.domain.attendant.service.AttendantService;
 import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.companymember.service.CompanyMemberService;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
-import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantService;
 import kr.co.wise.office.exception.ErrorMessage;
@@ -35,23 +34,22 @@ public class ProjectServiceApi {
 
     // 프로젝트 상세 페이지 접속시 반환되는 페이지
     @Transactional(readOnly = true)
-    public ProjectDetailResponse getDetailProjectV2(long projectId, String userEmail) {
+    public ProjectDetailResponse getDetailProject(long projectId, String userEmail) {
         // 현재 로그인한 유저 정보 조회
-        MemberEntity LoginUser = memberService.findByEmail(userEmail);
+        MemberEntity loginUser = memberService.findByEmail(userEmail);
 
         // 프로젝트 조회
-        ProjectDetailResponse response = projectService.searchProjectWithManagerV2(projectId);
+        ProjectDetailResponse response = projectService.searchProjectWithManager(projectId, userEmail);
 
         // 참여자 설정 및 수정 유무 확인
-        attendantService.getDetailAttendants(response, LoginUser);
-
+        attendantService.getDetailAttendants(response, loginUser);
 
         //이후 Log 및 Comment도 가져오는 로직 추가
         return response;
     }
 
     @Transactional
-    public ProjectCreateResponse createProjectV2(ProjectCreateRequest request, String userEmail) {
+    public ProjectCreateResponse createProject(ProjectCreateRequest request, String userEmail) {
         // 프로젝트 생성자 정보 조회
         MemberEntity creator = memberService.findByEmail(userEmail);
         // 매니저 정보 조회
@@ -128,15 +126,12 @@ public class ProjectServiceApi {
     }
 
     private void checkModifyPermission(MemberEntity loginUser, ProjectEntity project) {
-        boolean isAdmin = loginUser.getRoleType() == MemberRoleType.MASTER;
-
-        if(isAdmin) {
+        if(loginUser.isAdmin()) {
             return;
         }
 
         AttendantEntity attendant = attendantService.validateParticipatingProject(loginUser, project);
-        boolean isWorker = attendant.getRole() == AttendantRoleType.WORKER;
-        if (isWorker) {
+        if (attendant.hasRole(AttendantRoleType.WORKER)) {
             throw new UnAuthorizationException(ErrorMessage.REJECT_MODIFYING_PROJECT);
         }
     }

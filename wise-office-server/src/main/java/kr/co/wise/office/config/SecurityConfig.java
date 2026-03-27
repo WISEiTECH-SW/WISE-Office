@@ -91,8 +91,8 @@ public class SecurityConfig {
         // http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/login/oauth2/code/google", "/oauth2/**", "/health", "/swagger-ui/**",
-                        "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v2/projects",
-                        "/api/members/emails/verification", "/swagger-ui.html", "/api/v3/projects", "/api/v3/projects/groupByYear",
+                        "/v3/api-docs/**", "/api/members/signup", "/api/members/login", "/api/v1/projects",
+                        "/api/members/emails/verification", "/swagger-ui.html", "/api/v1/projects/groupByYear",
                         "/images/**", "/github-action", "/api/members/email/find-password", "/api/members/email/find-password/verification",
                         "/api/members/email/find-password/verification")
                 .permitAll()

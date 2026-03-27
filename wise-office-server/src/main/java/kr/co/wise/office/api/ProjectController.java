@@ -42,10 +42,9 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<ProjectCreateResponse> createProject(
             @Parameter(description = "생성할 프로젝트의 정보", required = true) @Valid @RequestBody ProjectCreateRequest request,
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser)
-            throws IllegalAccessException {
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(projectServiceApi.createProjectV2(request, loginUser.getName()));
+                .body(projectServiceApi.createProject(request, loginUser.getName()));
     }
 
     @Operation(summary = "프로젝트 상세 조회", description = "상세 프로젝트 내역을 조회합니다.")
@@ -57,7 +56,7 @@ public class ProjectController {
             @Parameter(description = "상세조회할 프로젝트 번호", required = true) @PathVariable("projectId") long projectId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(projectServiceApi.getDetailProjectV2(projectId, loginUser.getName()));
+                .body(projectServiceApi.getDetailProject(projectId, loginUser.getName()));
     }
 
     @Operation(summary = "프로젝트 수정", description = "프로젝트 정보를 수정합니다.")
@@ -69,14 +68,14 @@ public class ProjectController {
             @Parameter(description = "업데이트할 프로젝트 번호", required = true) @PathVariable("projectId") long projectId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "업데이트할 프로젝트 정보") @Valid @RequestBody ProjectUpdateRequest request) {
-        projectServiceApi.updateProject(projectId, loginUser.getName(), request);
+        ;
         return ResponseEntity.status(HttpStatus.OK)
-                .body(projectServiceApi.getDetailProjectV2(projectId, loginUser.getName()));
+                .body(projectServiceApi.updateProject(projectId, loginUser.getName(), request));
     }
 
     @Operation(summary = "프로젝트 삭제", description = "프로젝트 정보를 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "프로젝트 정보 수정 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ProjectDetailResponse.class))),
+            @ApiResponse(responseCode = "204", description = "프로젝트 정보 삭제 성공"),
     })
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Void> removeProject(
@@ -92,7 +91,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "200", description = "프로젝트 조회 성공. 프로젝트 리스트가 반환됩니다.",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = ProjectListResponse.class)))),
     })
-    public ResponseEntity<ProjectListResponseWithPaging> listAllProjectV2(@RequestParam(name = "page", defaultValue = "1") int page,
+    public ResponseEntity<ProjectListResponseWithPaging> listAllProject(@RequestParam(name = "page", defaultValue = "1") int page,
                                                                           @RequestParam(name = "offset", defaultValue = "6") int offset) {
 
         return ResponseEntity.status(HttpStatus.OK).body(projectServiceApi.getProjectInfoWithPaging(page-1, offset));

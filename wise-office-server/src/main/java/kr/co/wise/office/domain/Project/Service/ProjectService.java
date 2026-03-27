@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.Comparator;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -63,29 +63,18 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public ProjectDetailResponse searchProjectWithManager(long projectId, String currentUserEmail) {
+        if (currentUserEmail.equals("anonymousUser")) {
+            throw new UnAuthorizationException(ErrorMessage.NOT_FOUND_MEMBER);
+        }
+
         ProjectEntity projectWithManager = projectRepository.findProjectWithManager(projectId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_PROJECT));
 
         ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
 
-        if (currentUserEmail.equals("anonymousUser")) {
-            throw new UnAuthorizationException(ErrorMessage.NOT_FOUND_MEMBER);
-        }
-
         return response;
     }
-
-    @Transactional(readOnly = true)
-    public ProjectDetailResponse searchProjectWithManagerV2(long projectId) {
-        ProjectEntity projectWithManager = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_PROJECT));
-
-        ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
-
-        return response;
-    }
-
-
+    
     public ProjectEntity findById(long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_PROJECT));
     }
