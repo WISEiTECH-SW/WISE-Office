@@ -280,7 +280,7 @@ export default function DocumentPage() {
 
                         {/* Attendance Modal */}
                         {currentDoc === "minute" && isModalOpen && (
-                            <div className="w-[320px] shrink-0">
+                            <div className="w-[400px] shrink-0">
                                 <AttendanceModal
                                     selectedIds={minuteForm.minutesAttendants}
                                     selectedWriterId={minuteForm.writer}
