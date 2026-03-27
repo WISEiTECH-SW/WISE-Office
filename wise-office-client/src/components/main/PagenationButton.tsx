@@ -21,7 +21,7 @@ export default function PagenationButton({
 
     return (
         <button
-            className={`px-3 py-1 rounded-md text-sm font-medium cursor-pointer ${style}`}
+            className={`px-3 py-1 rounded-md text-sm font-medium border cursor-pointer ${style}`}
             disabled={isDisabled}
             onClick={onClick}
         >

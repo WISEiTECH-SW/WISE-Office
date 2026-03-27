@@ -57,7 +57,7 @@ export default function Home() {
         <section className="flex flex-col items-center gap-6 max-w-screen-lg mx-auto my-6">
             <ProjectProgressHeader
                 totalCount={totalCount}
-                isLogedIn={hasToken}
+                isLoggedIn={hasToken}
                 onClick={() => setIsModalOpen(true)}
             />
 

@@ -2,13 +2,13 @@ import AddProjectButton from "./AddProjectButton";
 
 interface ProjectProgressHeaderProps {
     totalCount: number;
-    isLogedIn: boolean;
+    isLoggedIn: boolean;
     onClick: () => void;
 }
 
 export default function ProjectProgressHeader({
     totalCount,
-    isLogedIn,
+    isLoggedIn,
     onClick,
 }: ProjectProgressHeaderProps) {
     return (
@@ -29,7 +29,7 @@ export default function ProjectProgressHeader({
                     </span>
                 </div>
             </div>
-            {isLogedIn && <AddProjectButton onClick={onClick} />}
+            {isLoggedIn && <AddProjectButton onClick={onClick} />}
         </div>
     );
 }
