@@ -65,7 +65,7 @@ export default function ProjectModal({
         <div className="Overlay fixed inset-0 bg-opacity-40 flex justify-center items-center z-50 p-6">
             <div
                 ref={modalRef}
-                className="bg-white rounded-xl shadow-xl w-full max-w-[64rem] flex flex-col relative pb-4"
+                className="bg-white rounded-xl shadow-xl w-full max-w-[64rem] h-[80vh] flex flex-col"
             >
                 {/* 헤더 모달 이름 + 닫기 버튼 */}
                 <div className="relative px-8 pt-6 pb-4">
@@ -156,19 +156,18 @@ export default function ProjectModal({
                             )}
                         </>
                     )}
-
-                    {!isLoading && (
-                        <div className="p-4 flex justify-center">
-                            <button
-                                className="px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer"
-                                onClick={handleSubmit}
-                                type="button"
-                            >
-                                {mode === "create" ? "생성 완료" : "수정 완료"}
-                            </button>
-                        </div>
-                    )}
                 </div>
+                {!isLoading && (
+                    <div className="flex justify-center pb-4">
+                        <button
+                            className="px-8 py-3 rounded-full text-white text-lg font-semibold transition bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                            onClick={handleSubmit}
+                            type="button"
+                        >
+                            {mode === "create" ? "생성 완료" : "수정 완료"}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

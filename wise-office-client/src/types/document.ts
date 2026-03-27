@@ -125,6 +125,7 @@ export interface ApproveListResponse {
     approveId: number;
     title: string; // 문서번호
     submitDate: string; // 접수일자
+    writer: string; // 작성자
 }
 
 export interface PossibleAttendantsResponse {
