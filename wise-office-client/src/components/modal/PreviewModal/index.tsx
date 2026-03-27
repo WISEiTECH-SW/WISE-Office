@@ -2,13 +2,13 @@ import Buttonbar from "./Buttonbar";
 import { usePreviewStore } from "@/store/useOverviewStore";
 import MinuteDocument from "@/components/document/MinuteDocument";
 import { useEffect } from "react";
+import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
+import ApproveDocument from "@/components/document/ApproveDocument";
 
 const A4_WIDTH = 720;
 
 export default function PreviewModal() {
-    const { onClose } = usePreviewStore();
-    const { minutesInfo } = usePreviewStore();
-
+    const { onClose, type, data } = usePreviewStore();
     useEffect(() => {
         const original = document.body.style.overflow;
         document.body.style.overflow = "hidden";
@@ -17,6 +17,7 @@ export default function PreviewModal() {
             document.body.style.overflow = original;
         };
     }, []);
+    if (!data) return null;
 
     return (
         <div>
@@ -27,7 +28,12 @@ export default function PreviewModal() {
                 onClose={onClose}
             />
 
-            <MinuteDocument minuteDetail={minutesInfo} />
+            {type === "minutes" && (
+                <MinuteDocument minuteDetail={data as MinutesInfo} />
+            )}
+            {type === "approve" && (
+                <ApproveDocument approve={data as ApproveDetailResponse} />
+            )}
 
             <Buttonbar
                 key="buttonbar-bottom"

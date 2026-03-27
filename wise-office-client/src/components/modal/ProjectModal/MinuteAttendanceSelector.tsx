@@ -46,7 +46,7 @@ export default function MinuteAttendanceSelector({
     };
 
     return (
-        <div className="gap-4">
+        <div className="gap-4 grid grid-cols-2">
             {/* 편성인원 */}
             <div>
                 <h3 className="font-semibold mb-2">편성 인원 검색</h3>
@@ -58,7 +58,7 @@ export default function MinuteAttendanceSelector({
                     className="border border-gray-300 w-full px-3 py-2 rounded-md mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
 
-                <div className="border border-gray-300 rounded-md max-h-52 overflow-y-auto custom-scroll">
+                <div className="border border-gray-300 rounded-md max-h-80 overflow-y-auto custom-scroll">
                     {filteredCompanyMembers.map((member) => {
                         const isSelected = selectedCompanyMembers.some(
                             (m) => m.memberId === member.memberId,
@@ -90,7 +90,7 @@ export default function MinuteAttendanceSelector({
                 </div>
             </div>
             {/* 작성자 선택 */}
-            <div className="mt-5">
+            <div className="mt-14">
                 <label className="block mx-1 mb-2 font-semibold text-gray-700 text-sm">
                     작성자 선택
                 </label>
@@ -99,7 +99,7 @@ export default function MinuteAttendanceSelector({
                         참석자를 먼저 선택해주세요.
                     </p>
                 ) : (
-                    <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-3 mx-1 shadow-inner custom-scroll">
+                    <div className="max-h-80 overflow-y-auto border border-gray-300 rounded-md p-3 mx-1 shadow-inner custom-scroll">
                         {selectedCompanyMembers.map((member) => (
                             <label
                                 key={member.memberId}

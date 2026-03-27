@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { ProjectGroupByYear } from "@/types/project";
 import { getProjectsGroupByYear } from "@/services/projects";
-import { MinutesInfo } from "@/types/document";
+import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
 
 type ProjectInfo = {
     projectId: number;
@@ -81,13 +81,19 @@ export const useProjectsGroupByYearStore = create<ProjectGroupByYearState>(
     }),
 );
 
+type PreviewType = "minutes" | "approve";
+
 // 미리보기 모달 상태
 type PreviewState = {
     isOpen: boolean;
-    minutesInfo: MinutesInfo | null;
+    type: PreviewType | null;
+    data: MinutesInfo | ApproveDetailResponse | null;
 
     setIsOpen: (isOpen: boolean) => void;
-    setMinutesInfo: (minutesInfo: MinutesInfo) => void;
+    setPreview: (
+        type: PreviewType,
+        data: MinutesInfo | ApproveDetailResponse,
+    ) => void;
 
     onOpen: () => void;
     onClose: () => void;
@@ -95,10 +101,11 @@ type PreviewState = {
 
 export const usePreviewStore = create<PreviewState>((set) => ({
     isOpen: false,
-    minutesInfo: null,
+    type: null,
+    data: null,
 
     setIsOpen: (isOpen) => set({ isOpen }),
-    setMinutesInfo: (minutesInfo) => set({ minutesInfo }),
+    setPreview: (type, data) => set({ type, data }),
 
     onOpen: () => set({ isOpen: true }),
     onClose: () => set({ isOpen: false }),

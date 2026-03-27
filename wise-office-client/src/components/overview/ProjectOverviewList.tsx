@@ -1,13 +1,26 @@
 import { useEffect, useState } from "react";
 import OverviewCard from "./OverviewCard";
 import { useOverviewStore } from "@/store/useOverviewStore";
-import { getMinutes, getMinutesInfo } from "@/services/overview";
-import { MinutesInfo, MinutesList } from "@/types/document";
+import {
+    getApproveInfo,
+    getApproves,
+    getMinutes,
+    getMinutesInfo,
+} from "@/services/overview";
+import {
+    ApproveDetailResponse,
+    MinutesInfo,
+    MinutesList,
+} from "@/types/document";
 
 export default function ProjectOverviewList() {
     const { year, projectInfo } = useOverviewStore();
     const [minutesList, setMinutesList] = useState<MinutesList>([]);
     const [minutesInfos, setMinutesInfos] = useState<MinutesInfo[]>([]);
+
+    const [approveInfos, setApproveInfo] = useState<ApproveDetailResponse[]>(
+        [],
+    );
 
     useEffect(() => {
         const fetchMinutes = async () => {
@@ -23,8 +36,21 @@ export default function ProjectOverviewList() {
             setMinutesInfos(infos);
         };
 
+        const fetchApproves = async () => {
+            const data = await getApproves(projectInfo.projectId);
+
+            const infos = await Promise.all(
+                data.map((m) =>
+                    getApproveInfo(projectInfo.projectId, m.approveId),
+                ),
+            );
+
+            setApproveInfo(infos);
+        };
+
         if (projectInfo.projectId) {
             fetchMinutes();
+            fetchApproves();
         }
     }, [projectInfo.projectId]);
 
@@ -64,6 +90,9 @@ export default function ProjectOverviewList() {
                             const minutesInfo = minutesInfos.find(
                                 (info) => info.minutesId === minutes.minutesId,
                             );
+                            const relatedApproves = approveInfos.filter(
+                                (a) => a.minutesId === minutes.minutesId,
+                            );
 
                             return (
                                 <div
@@ -74,15 +103,21 @@ export default function ProjectOverviewList() {
                                             : ""
                                     }`}
                                 >
+                                    {/* 회의록 */}
                                     <OverviewCard
                                         minutes={minutes}
                                         minutesInfo={minutesInfo}
                                     />
-                                    <OverviewCard
-                                        minutes={minutes}
-                                        minutesInfo={minutesInfo}
-                                        isApproval={true}
-                                    />
+                                    {/* 품의서 */}
+                                    {relatedApproves.map((approve) => (
+                                        <OverviewCard
+                                            key={approve.approveId}
+                                            minutes={minutes}
+                                            minutesInfo={minutesInfo}
+                                            approve={approve}
+                                            isApproval={true}
+                                        />
+                                    ))}
                                 </div>
                             );
                         })}

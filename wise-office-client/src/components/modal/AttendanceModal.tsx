@@ -98,7 +98,7 @@ export default function AttendanceModal({
 
     return (
         <div className="flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-xl w-[240px]">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-[400px]">
                 {!possibleAttendants ? (
                     <div className="text-sm text-gray-500 text-center py-10">
                         회의 날짜를 먼저 선택해 주세요.
