@@ -1,4 +1,4 @@
-import { autoResizeTextarea } from "@/utils/textArea";
+import { autoResizeTextarea, resizeTextarea } from "@/utils/textArea";
 import { useEffect, useRef } from "react";
 
 interface EditableCellProps {
@@ -19,8 +19,7 @@ export function EditableCell({
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     useEffect(() => {
         if (textareaRef.current) {
-            textareaRef.current.style.height = "auto";
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+            resizeTextarea(textareaRef.current);
         }
     }, [value]);
     return (
