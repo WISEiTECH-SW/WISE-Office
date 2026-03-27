@@ -1,10 +1,16 @@
-import AddProjectButton from "@/components/AddProjectButton";
-import ProjectListCard from "@/components/ProjectListCard";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProjects } from "@/store/useProjects";
-import { useEffect, useState } from "react";
-import ProjectModal from "@/components/modal/ProjectModal/ProjectModal";
 import { useReturnTargetDocStore } from "@/store/useReturnTargetDoc";
+
+import {
+    ProjectProgressHeader,
+    ProjectListCard,
+    PagenationButton,
+} from "@/components/main";
+import ProjectModal from "@/components/modal/ProjectModal/ProjectModal";
 
 export default function Home() {
     const projects = useProjects((s) => s.projects);
@@ -17,6 +23,9 @@ export default function Home() {
     const offset = 6;
     const { clearReturnTargetDoc } = useReturnTargetDocStore();
 
+    const router = useRouter();
+
+    /* ----- hook ----- */
     useEffect(() => {
         clearReturnTargetDoc();
     }, [clearReturnTargetDoc]);
@@ -34,89 +43,48 @@ export default function Home() {
         })();
     }, [currentPage, fetchProjects]);
 
+    /* ----- func ----- */
     const movePage = (page: number) => {
         if (page < 1 || page > totalPages) return;
         setCurrentPage(page);
     };
 
-    return (
-        <section className="flex flex-col items-center gap-6 md:gap-10 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
-            <div className="flex flex-col w-full">
-                <div>
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2 text-left">
-                        프로젝트 진행 현황
-                    </h2>
-                    <span className="inline-flex items-center gap-2 text-sm text-slate-700">
-                        {totalCount > 0 ? (
-                            <>
-                                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                <span>
-                                    {" "}
-                                    현재{" "}
-                                    <b className="text-slate-900">
-                                        {totalCount}
-                                    </b>
-                                    개 프로젝트 진행중
-                                </span>
-                            </>
-                        ) : (
-                            <>
-                                <span className="h-2 w-2 rounded-full bg-gray-400 " />{" "}
-                                -
-                            </>
-                        )}
-                    </span>
-                </div>
+    const goToProjectDetail = (projectId: number) => {
+        router.push(`/projects/${projectId}`);
+    };
 
-                {hasToken && (
-                    <>
-                        <div className="flex justify-end">
-                            <AddProjectButton
-                                modalOpen={() => setIsModalOpen(true)}
-                            />
-                        </div>
-                        {isModalOpen && (
-                            <ProjectModal
-                                mode={"create"}
-                                onClose={() => setIsModalOpen(false)}
-                                onCreated={async () => {
-                                    await fetchProjects({
-                                        currentPage,
-                                        offset,
-                                    });
-                                    setCurrentPage(1);
-                                }}
-                            />
-                        )}
-                    </>
-                )}
-            </div>
-            <div className="flex flex-col items-center w-full gap-6 md:gap-10 text-gray-600">
-                {projects.length === 0 ? (
-                    <p className="text-gray-400 py-8">
+    return (
+        <section className="flex flex-col items-center gap-6 max-w-screen-lg mx-auto my-6">
+            <ProjectProgressHeader
+                totalCount={totalCount}
+                isLogedIn={hasToken}
+                onClick={() => setIsModalOpen(true)}
+            />
+
+            <div className="flex flex-col w-full gap-6">
+                {totalCount === 0 ? (
+                    <p className="text-2xl text-center font-bold text-gray-400 py-12">
                         등록된 프로젝트가 없습니다.
                     </p>
                 ) : (
-                    // currentPageProjects.map((p) => (
-                    projects.map((p) => (
-                        <ProjectListCard key={p.projectId} project={p} />
+                    projects.map((project) => (
+                        <ProjectListCard
+                            key={project.projectId}
+                            project={project}
+                            onClick={() => goToProjectDetail(project.projectId)}
+                        />
                     ))
                 )}
             </div>
 
             {/* 페이지네이션 */}
-            <nav
-                className="flex gap-6 items-center mt-10"
-                aria-label="Pagination"
-            >
-                <button
+            <nav className="flex gap-4" aria-label="Pagination">
+                <PagenationButton
+                    label="첫 페이지"
+                    isNumber={false}
                     onClick={() => movePage(1)}
-                    disabled={currentPage === 1}
-                    className="w-13 md:w-20 px-3 py-1 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-md cursor-pointer disabled:opacity-0 disabled:cursor-default"
-                >
-                    <p className="hidden md:block">첫 페이지</p>
-                    <p className="md:hidden">처음</p>
-                </button>
+                    isDisabled={currentPage === 1}
+                />
 
                 {/* 페이지 번호 */}
                 <ul className="flex items-center gap-2">
@@ -143,30 +111,38 @@ export default function Home() {
 
                         return pages.map((page) => (
                             <li key={page}>
-                                <button
+                                <PagenationButton
+                                    label={page}
+                                    isNumber={true}
                                     onClick={() => movePage(page as number)}
-                                    className={`px-3 py-1 text-sm rounded-md border cursor-pointer ${
-                                        currentPage === page
-                                            ? "bg-blue-600 text-white border-blue-600"
-                                            : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
-                                    }`}
-                                >
-                                    {page}
-                                </button>
+                                    isSelected={currentPage === page}
+                                />
                             </li>
                         ));
                     })()}
                 </ul>
-
-                <button
+                <PagenationButton
+                    label="끝 페이지"
+                    isNumber={false}
                     onClick={() => movePage(totalPages)}
-                    disabled={currentPage === totalPages}
-                    className="w-13 md:w-20 px-3 py-1 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-md cursor-pointer disabled:opacity-0 disabled:cursor-default"
-                >
-                    <p className="hidden md:block">끝 페이지</p>
-                    <p className="md:hidden">끝</p>
-                </button>
+                    isDisabled={currentPage === totalPages}
+                />
             </nav>
+
+            {/* 작성 모달 */}
+            {isModalOpen && (
+                <ProjectModal
+                    mode={"create"}
+                    onClose={() => setIsModalOpen(false)}
+                    onCreated={async () => {
+                        await fetchProjects({
+                            currentPage,
+                            offset,
+                        });
+                        setCurrentPage(1);
+                    }}
+                />
+            )}
         </section>
     );
 }
