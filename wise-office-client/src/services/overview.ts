@@ -2,7 +2,6 @@ import { api } from "@/lib/clientApi";
 import {
     ApproveDetailResponse,
     ApproveList,
-    ApproveListResponse,
     MinutesInfo,
     MinutesList,
 } from "@/types/document";

@@ -9,7 +9,7 @@ export default function PrintButton({
     minutesInfo?: MinutesInfo | null;
     approveInfo?: ApproveDetailResponse | null;
 }) {
-    const { setPreview, onOpen } = usePreviewStore();
+    const { setPreview } = usePreviewStore();
 
     const onPrint = () => {
         if (minutesInfo) {

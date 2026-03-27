@@ -1,6 +1,5 @@
 import Button from "@/components/ui/Button";
 import { ApproveDetailResponse } from "@/types/document";
-import Image from "next/image";
 import { Edit, Printer, FileSearch } from "lucide-react";
 import { SelectedDocument } from "@/types/project";
 import ApproveDocument from "@/components/document/ApproveDocument";
