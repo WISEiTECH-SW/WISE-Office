@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import kr.co.wise.office.api.dto.approve.*;
 import kr.co.wise.office.application.ApproveServiceApi;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
-import kr.co.wise.office.external.hoilday.HolidayProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,8 +29,6 @@ import java.util.List;
 public class ApproveController {
 
     private final ApproveServiceApi approveServiceApi;
-
-    private final HolidayProvider holidayProvider;
 
     @Operation(summary = "품의서 목록 조회 API",
             security = @SecurityRequirement(name = "bearerAuth"))

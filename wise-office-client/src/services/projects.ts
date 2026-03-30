@@ -22,7 +22,7 @@ export async function getCurrentPageProjects({
     currentPage,
     offset,
 }: PageParams): Promise<currentPageProjects> {
-    const res = await api.get<currentPageProjects>(`v3/projects`, {
+    const res = await api.get<currentPageProjects>(`v1/projects`, {
         params: {
             page: currentPage,
             offset,
@@ -33,7 +33,7 @@ export async function getCurrentPageProjects({
 
 export async function getProjectsGroupByYear(): Promise<ProjectGroupByYear[]> {
     const { data } = await api.get<ProjectGroupByYear[]>(
-        "v3/projects/groupByYear",
+        "v1/projects/groupByYear",
     );
     return data;
 }
@@ -45,7 +45,7 @@ export async function getProjectsGroupByYear(): Promise<ProjectGroupByYear[]> {
  */
 export async function getProjectById(projectId: number): Promise<ProjectInfo> {
     return await api
-        .get<ProjectInfo>(`/v2/projects/${projectId}`)
+        .get<ProjectInfo>(`/v1/projects/${projectId}`)
         .then((res) => res.data);
 }
 
@@ -55,7 +55,7 @@ export async function getProjectById(projectId: number): Promise<ProjectInfo> {
  * @returns ProjectInfo 객체 또는 undefined
  */
 export async function postProject(data: CreateProject) {
-    return await api.post("/v2/projects", data).then((res) => res.data);
+    return await api.post("/v1/projects", data).then((res) => res.data);
 }
 
 /**
@@ -66,7 +66,7 @@ export async function postProject(data: CreateProject) {
  */
 export async function updateProject(data: CreateProject, projectId: number) {
     return await api
-        .patch(`/v2/projects/${projectId}`, data)
+        .patch(`/v1/projects/${projectId}`, data)
         .then((res) => res.data);
 }
 
@@ -77,6 +77,6 @@ export async function updateProject(data: CreateProject, projectId: number) {
  */
 export async function deleteProject(projectId: number) {
     return await api
-        .delete(`/v2/projects/${projectId}`)
+        .delete(`/v1/projects/${projectId}`)
         .then((res) => res.data);
 }
