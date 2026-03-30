@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import type { Project } from "@/types/project";
 import {
     calculateProjectDuration,
@@ -8,22 +7,19 @@ import {
 
 type Props = {
     project: Project;
+    onClick: () => void;
 };
 
-export default function ProjectListCard({ project }: Props) {
-    const router = useRouter();
+export default function ProjectListCard({ project, onClick }: Props) {
     const titleDuration = calculationDuration(project.start);
     const { duration, state, stateColor, textColor } = calculateProjectDuration(
         project.start,
         project.end,
     );
 
-    const handleProjectClick = () => {
-        router.push(`/projects/${project.projectId}`);
-    };
     return (
         <div
-            onClick={handleProjectClick}
+            onClick={onClick}
             className="block w-full bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group overflow-hidden cursor-pointer pt-1"
         >
             {/* project-card-header */}
