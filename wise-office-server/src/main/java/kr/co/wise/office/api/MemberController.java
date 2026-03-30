@@ -19,6 +19,7 @@ import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
+import kr.co.wise.office.util.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+
+import static kr.co.wise.office.util.Constants.COOKIE_EXPIRATION_MINUTES;
 
 @Tag(name = "member", description = "회원 조회 관련 API 입니다.")
 @RestController
@@ -93,6 +97,27 @@ public class MemberController {
         // null로 저장하면 프론트에서 default 이미지 보여줌
         memberService.signUp(signUpRequest, null);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/extend")
+    @Operation(summary = "로그인 연장", description = "로그인 시간을 30분 연장 합니다.")
+    public ResponseEntity<LoginResponse> extendLogin(
+            @Parameter(hidden = true) HttpServletResponse response,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser
+    ) {
+        String email = loginUser.getName();
+        String role = loginUser.getAuthorities().iterator().next().getAuthority();
+
+        //JWT 토큰 재발급
+        String extendedJWT = JWTUtil.createJWT(email, role);
+        Cookie cookie = new Cookie("jwt", extendedJWT);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(COOKIE_EXPIRATION_MINUTES);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now().plusSeconds(COOKIE_EXPIRATION_MINUTES)));
     }
 
     @PostMapping("/login")

@@ -3,6 +3,7 @@ import {
     ChangePasswordForm,
     EmailVerificationResponse,
     GroupedMember,
+    LoginResponse,
     SignupForm,
 } from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
@@ -112,4 +113,13 @@ export async function verifyFindPasswordCode(
 // 비밀번호 변경 요청
 export async function changePassword(req: ChangePasswordForm): Promise<void> {
     await api.patch("/members/email/find-password/verification", req);
+}
+
+//로그인 연장 요청
+export async function extendLoginSession(): Promise<string> {
+    const result = await api
+        .post<LoginResponse>("/members/extend")
+        .then((res) => res.data.expiredAt);
+
+    return result;
 }

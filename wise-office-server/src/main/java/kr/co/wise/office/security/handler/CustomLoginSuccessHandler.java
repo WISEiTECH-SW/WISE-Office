@@ -18,12 +18,13 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import static kr.co.wise.office.util.Constants.COOKIE_EXPIRATION_MINUTES;
+
 @Component
 @Qualifier("customLoginSuccessHandler")
 @AllArgsConstructor
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler  {
 
-    private static final int COOKIE_EXPIRE_SECOND = 1800;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -32,13 +33,13 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler  
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
         String token = JWTUtil.createJWT(email, role);
-        LoginResponse loginResponse = new LoginResponse(LocalDateTime.now().plusSeconds(COOKIE_EXPIRE_SECOND));
+        LoginResponse loginResponse = new LoginResponse(LocalDateTime.now().plusSeconds(COOKIE_EXPIRATION_MINUTES));
 
         Cookie cookie = new Cookie("jwt", token);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
         cookie.setPath("/");
-        cookie.setMaxAge(COOKIE_EXPIRE_SECOND);
+        cookie.setMaxAge(COOKIE_EXPIRATION_MINUTES);
         String body = objectMapper.writeValueAsString(loginResponse);
 
         response.setStatus(HttpStatus.OK.value());
