@@ -2,13 +2,18 @@ import { extendLoginSession } from "@/services/members";
 import { useEffect, useState } from "react";
 
 export default function ExtendLoginSession() {
-    const [expiredAt, setExpiredAt] = useState(
-        localStorage.getItem("expiredAt"),
-    );
+    const [expiredAt, setExpiredAt] = useState<string | null>(null);
     const [timeLeft, setTimeLeft] = useState("");
 
     useEffect(() => {
-        if (!expiredAt) return;
+        setExpiredAt(localStorage.getItem("expiredAt"));
+    }, []);
+
+    useEffect(() => {
+        if (!expiredAt) {
+            setTimeLeft("");
+            return;
+        }
 
         // 남은 시간을 계산하는 함수
         const calculateTimeLeft = () => {
@@ -18,7 +23,7 @@ export default function ExtendLoginSession() {
 
             if (difference <= 0) {
                 setTimeLeft("만료됨");
-                return;
+                return true;
             }
 
             const minutes = Math.floor((difference / 1000 / 60) % 60);
@@ -27,18 +32,35 @@ export default function ExtendLoginSession() {
             setTimeLeft(
                 `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
             );
+
+            return false;
         };
-        calculateTimeLeft();
-        const timer = setInterval(calculateTimeLeft, 1000);
+
+        //만료된 경우 타이머 동작 X
+        if (calculateTimeLeft()) {
+            return;
+        }
+
+        const timer = setInterval(() => {
+            if (calculateTimeLeft()) {
+                clearInterval(timer);
+            }
+        }, 1000);
+
         return () => clearInterval(timer);
     }, [expiredAt]);
 
     const extendLogin = async () => {
         const result = confirm("로그인을 연장하시겠습니까?");
         if (result) {
-            const newExpiredAt = await extendLoginSession();
-            localStorage.setItem("expiredAt", newExpiredAt!);
-            setExpiredAt(newExpiredAt);
+            try {
+                const newExpiredAt = await extendLoginSession();
+                localStorage.setItem("expiredAt", newExpiredAt);
+                setExpiredAt(newExpiredAt);
+            } catch (err) {
+                console.error("로그인 연장 실패 : ", err);
+                alert("로그인 연장이 실패했습니다.");
+            }
         }
     };
 

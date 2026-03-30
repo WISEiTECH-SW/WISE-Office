@@ -117,9 +117,6 @@ export async function changePassword(req: ChangePasswordForm): Promise<void> {
 
 //로그인 연장 요청
 export async function extendLoginSession(): Promise<string> {
-    const result = await api
-        .post<LoginResponse>("/members/extend")
-        .then((res) => res.data.expiredAt);
-
-    return result;
+    const { data } = await api.post<LoginResponse>("/members/extend");
+    return data.expiredAt;
 }

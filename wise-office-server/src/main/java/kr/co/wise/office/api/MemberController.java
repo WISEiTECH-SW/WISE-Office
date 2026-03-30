@@ -19,6 +19,7 @@ import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
+import kr.co.wise.office.util.CookieUtils;
 import kr.co.wise.office.util.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-
-import static kr.co.wise.office.util.Constants.COOKIE_EXPIRATION_MINUTES;
 
 @Tag(name = "member", description = "회원 조회 관련 API 입니다.")
 @RestController
@@ -110,14 +109,10 @@ public class MemberController {
 
         //JWT 토큰 재발급
         String extendedJWT = JWTUtil.createJWT(email, role);
-        Cookie cookie = new Cookie("jwt", extendedJWT);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(COOKIE_EXPIRATION_MINUTES);
+        Cookie cookie = CookieUtils.createCookie("jwt", extendedJWT);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now().plusSeconds(COOKIE_EXPIRATION_MINUTES)));
+        return ResponseEntity.ok(new LoginResponse(LocalDateTime.now().plusSeconds(CookieUtils.COOKIE_EXPIRATION_SECONDES)));
     }
 
     @PostMapping("/login")
