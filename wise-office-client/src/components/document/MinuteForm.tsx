@@ -8,6 +8,10 @@ import {
 } from "@/types/document";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useMemo } from "react";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+import { Korean } from "flatpickr/dist/l10n/ko.js";
+import { dateToString } from "@/utils/dateToString";
 
 interface MinuteFormProps {
     projectName: string;
@@ -152,20 +156,38 @@ export default function MinuteForm({
                                 input?.showPicker?.();
                             }}
                         >
-                            <input
-                                type="date"
+                            <Flatpickr
+                                options={{
+                                    locale: Korean,
+                                    disableMobile: true,
+                                    allowInput: true,
+                                    maxDate: "today",
+                                    dateFormat: "Y-m-d",
+                                    altInput: true,
+                                    altFormat: "Y-m-d",
+                                }}
                                 value={form.minutesDate}
                                 onChange={(e) =>
                                     setForm((prev) => ({
                                         ...prev,
-                                        minutesDate: e.target.value,
+                                        minutesDate: dateToString(e[0]),
                                     }))
                                 }
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     e.currentTarget.showPicker?.();
                                 }}
-                                className="w-full h-full p-2 text-sm text-center outline-none cursor-pointer hover:bg-gray-50 bg-transparent screen-only"
+                                onClose={(selectedDates) => {
+                                    if (selectedDates?.[0])
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            minutesDate: dateToString(
+                                                selectedDates[0],
+                                            ),
+                                        }));
+                                }}
+                                className="w-full pl-10 px-3 py-2 rounded-md outline-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="회의 날짜를 선택하세요"
                             />
                             {/* 출력용 */}
                             <div className="hidden print:block w-full h-full p-2 text-sm text-center">
