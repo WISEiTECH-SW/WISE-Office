@@ -54,7 +54,7 @@ export default function CompanyMemberSelector({
                     {selectedCompanyMembers.map((member) => (
                         <div
                             key={member.memberId}
-                            className="flex justify-between items-center group px-1 py-1"
+                            className="flex justify-between items-center group px-1 py-1 hover:bg-blue-50"
                         >
                             <span>
                                 {member.name} {member.rank}
