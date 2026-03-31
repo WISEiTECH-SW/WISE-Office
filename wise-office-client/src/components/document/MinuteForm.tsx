@@ -225,7 +225,7 @@ export default function MinuteForm({
                                     <TimeSelect
                                         value={form.endTime}
                                         onChange={(t) =>
-                                            handleTimeChange(t, true)
+                                            handleTimeChange(t, false)
                                         }
                                         options={timeOptions}
                                         className={editableClass}

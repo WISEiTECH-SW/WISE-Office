@@ -64,6 +64,9 @@ export default function MemberSelector({
                             key={member.memberId}
                             className="flex justify-between items-center group px-1 py-1"
                         >
+                            <span>
+                                {member.name} {member.rank}
+                            </span>
                             {/* hover 시 나타나는 삭제 버튼 */}
                             <button
                                 onClick={() => toggleMember(member)}
