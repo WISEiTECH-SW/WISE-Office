@@ -62,11 +62,15 @@ export default function MemberSelector({
                     {selectedMembers.map((member) => (
                         <div
                             key={member.memberId}
-                            className="flex justify-between"
+                            className="flex justify-between items-center group px-1 py-1"
                         >
-                            <span>
-                                {member.name} {member.rank}
-                            </span>
+                            {/* hover 시 나타나는 삭제 버튼 */}
+                            <button
+                                onClick={() => toggleMember(member)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700 cursor-pointer"
+                            >
+                                ✕
+                            </button>
                         </div>
                     ))}
                 </div>
