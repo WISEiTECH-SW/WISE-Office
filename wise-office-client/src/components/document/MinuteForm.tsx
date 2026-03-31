@@ -12,6 +12,7 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Korean } from "flatpickr/dist/l10n/ko.js";
 import { dateToString } from "@/utils/dateToString";
+import TimeSelect from "./TimeSelect";
 
 interface MinuteFormProps {
     projectName: string;
@@ -202,28 +203,14 @@ export default function MinuteForm({
                                     <span className="text-[11px] text-gray-500 text-center screen-only">
                                         시작
                                     </span>
-                                    <select
-                                        value={form.startTime || ""}
-                                        onChange={(e) =>
-                                            handleTimeChange(
-                                                e.target.value,
-                                                true,
-                                            )
+                                    <TimeSelect
+                                        value={form.startTime}
+                                        onChange={(t) =>
+                                            handleTimeChange(t, true)
                                         }
-                                        className={`w-full py-2 text-sm text-center border border-gray-300 rounded-md custom-scroll ${editableClass} cursor-pointer screen-only`}
-                                    >
-                                        <option value="" disabled>
-                                            --:--
-                                        </option>
-                                        {timeOptions.map((t) => (
-                                            <option
-                                                key={`start-${t}`}
-                                                value={t}
-                                            >
-                                                {t}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        options={timeOptions}
+                                        className={editableClass}
+                                    />
                                 </div>
 
                                 <span className="text-gray-400 mt-4 screen-only">
@@ -235,25 +222,14 @@ export default function MinuteForm({
                                     <span className="text-[11px] text-gray-500 text-center screen-only">
                                         종료
                                     </span>
-                                    <select
-                                        value={form.endTime || ""}
-                                        onChange={(e) =>
-                                            handleTimeChange(
-                                                e.target.value,
-                                                false,
-                                            )
+                                    <TimeSelect
+                                        value={form.endTime}
+                                        onChange={(t) =>
+                                            handleTimeChange(t, true)
                                         }
-                                        className={`w-full py-2 text-sm text-center border border-gray-300 rounded-md custom-scroll ${editableClass} cursor-pointer screen-only`}
-                                    >
-                                        <option value="" disabled>
-                                            --:--
-                                        </option>
-                                        {timeOptions.map((t) => (
-                                            <option key={`end-${t}`} value={t}>
-                                                {t}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        options={timeOptions}
+                                        className={editableClass}
+                                    />
                                 </div>
                             </div>
 
