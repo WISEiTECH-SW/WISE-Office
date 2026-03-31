@@ -50,6 +50,10 @@ public class ProposalAttendantEntity {
     @Column(name = "exit_date")
     private LocalDate exitDate;
 
+    // 역할 -> PM, NORMAL
+    @Enumerated(EnumType.STRING)
+    private ProposalAttendantRole role;
+
     @OneToMany(mappedBy = "proposalAttendantEntity")
     @Builder.Default
     private List<MinutesAttendantEntity> minutesAttendantEntities = new ArrayList<>();
@@ -58,6 +62,9 @@ public class ProposalAttendantEntity {
         this.exitDate = LocalDate.now();
     }
 
+    public void changeRole(ProposalAttendantRole role){
+        this.role = role;
+    }
 
     public boolean equals(Object o) {
         if (this == o) return true;

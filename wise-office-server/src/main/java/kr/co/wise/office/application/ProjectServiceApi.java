@@ -12,6 +12,7 @@ import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantService;
 import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
 import kr.co.wise.office.exception.custom.UnAuthorizationException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,7 @@ public class ProjectServiceApi {
         MemberEntity loginUser = memberService.findByEmail(userEmail);
 
         // 프로젝트 조회
-        ProjectDetailResponse response = projectService.searchProjectWithManager(projectId, userEmail);
+        ProjectDetailResponse response = projectService.searchProjectWithManager(projectId);
 
         // 참여자 설정 및 수정 유무 확인
         attendantService.getDetailAttendants(response, loginUser);
@@ -50,10 +51,17 @@ public class ProjectServiceApi {
 
     @Transactional
     public ProjectCreateResponse createProject(ProjectCreateRequest request, String userEmail) {
+        if (request.projectLeaderId() == null) {
+            throw new ApplicationRuntimeException(ErrorMessage.PROJECT_LEADER_REQUIRED);
+        }
+        if (request.projectManagerId() == null) {
+            throw new ApplicationRuntimeException(ErrorMessage.PROJECT_MANAGER_REQUIRED);
+        }
+
         // 프로젝트 생성자 정보 조회
         MemberEntity creator = memberService.findByEmail(userEmail);
         // 매니저 정보 조회
-        MemberEntity pm = memberService.findById(request.projectManagerId());
+        MemberEntity pm = memberService.findById(request.projectLeaderId());
 
         // 프로젝트 생성
         ProjectEntity project = projectService.makeProject(request, creator);
@@ -64,7 +72,7 @@ public class ProjectServiceApi {
 
         // 편성인원 등록
         List<CompanyMemberEntity> proposalAttendants = companyMemberService.findByIds(request.proposalAttendants());
-        List<String> proposalAttendantsName = proposalAttendantService.makeProposalAttendants(proposalAttendants,project);
+        List<String> proposalAttendantsName = proposalAttendantService.makeProposalAttendants(proposalAttendants, project, request.projectManagerId());
 
         ProjectCreateResponse response = ProjectCreateResponse.from(project, attendantsName, pm.getName(), proposalAttendantsName);
         return response;
@@ -72,8 +80,15 @@ public class ProjectServiceApi {
 
     @Transactional
     public ProjectDetailResponse updateProject(long projectId, String userEmail, ProjectUpdateRequest request) {
+        if (request.projectLeaderId() == null) {
+            throw new ApplicationRuntimeException(ErrorMessage.PROJECT_LEADER_REQUIRED);
+        }
+        if (request.projectManagerId() == null) {
+            throw new ApplicationRuntimeException(ErrorMessage.PROJECT_MANAGER_REQUIRED);
+        }
+
         MemberEntity loginUser = memberService.findByEmail(userEmail);
-        MemberEntity newManager = memberService.findById(request.projectManagerId());
+        MemberEntity newManager = memberService.findById(request.projectLeaderId());
         ProjectEntity project = projectService.findById(projectId);
 
         //권한 확인
@@ -83,13 +98,13 @@ public class ProjectServiceApi {
         projectService.updateProject(project, request);
         List<MemberEntity> updateAttendantList = memberService.findByIds(request.attendants());
         // 참여자 업데이트
-        attendantService.updateAttendants(project, newManager, updateAttendantList);
+        attendantService.updateAttendants2(project, newManager, updateAttendantList);
         // 편성인원 업데이트
         List<CompanyMemberEntity> updateProposalAttendantList = companyMemberService.findByIds(request.proposalAttendants());
-        proposalAttendantService.updateProposalAttendants(project, updateProposalAttendantList);
+        proposalAttendantService.updateProposalAttendants(project, updateProposalAttendantList, request.projectManagerId());
 
         // 수정된 정보 반환
-        ProjectDetailResponse response = projectService.searchProjectWithManager(projectId, userEmail);
+        ProjectDetailResponse response = projectService.searchProjectWithManager(projectId);
         attendantService.getDetailAttendants(response, loginUser);
         return response;
     }

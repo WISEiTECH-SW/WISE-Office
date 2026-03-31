@@ -7,7 +7,7 @@ import kr.co.wise.office.api.dto.minutes.MinutesAttendantsInfo;
 import kr.co.wise.office.api.dto.minutes.MinutesCreateRequest;
 import kr.co.wise.office.api.dto.minutes.MinutesUpdateRequest;
 import kr.co.wise.office.application.MinutesServiceApi;
-import kr.co.wise.office.application.ProjectServiceApiV2;
+import kr.co.wise.office.application.ProjectServiceApi;
 import kr.co.wise.office.domain.Project.dto.ProjectCreateRequest;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.approve.entity.ApproveEntity;
@@ -22,8 +22,8 @@ import kr.co.wise.office.domain.minutes.repository.MinutesEntityRepository;
 import kr.co.wise.office.domain.minutesattendant.repository.MinutesAttendantEntityRepository;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import kr.co.wise.office.domain.proposalattendant.repository.ProposalAttendantEntityRepository;
-import kr.co.wise.office.external.hoilday.dto.HolidayCalculator;
 import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.external.hoilday.dto.HolidayCalculator;
 import kr.co.wise.office.security.WithMockCustomUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -46,10 +46,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -78,7 +76,7 @@ class MinutesControllerTest {
     private CompanyMemberEntityRepository companyMemberEntityRepository;
 
     @Autowired
-    private ProjectServiceApiV2 projectServiceApiV2;
+    private ProjectServiceApi projectServiceApiV2;
 
     @Autowired
     private MinutesServiceApi minutesServiceApi;
@@ -134,7 +132,8 @@ class MinutesControllerTest {
                 "회의록 테스트용 프로젝트",
                 manager.getId(),
                 List.of(worker.getId()),
-                List.of(writerCompanyMember.getId(), firstAttendant.getId(), secondAttendant.getId())
+                List.of(writerCompanyMember.getId(), firstAttendant.getId(), secondAttendant.getId()),
+                2l
         );
 
         ProjectCreateRequest request2 = new ProjectCreateRequest(
@@ -146,10 +145,11 @@ class MinutesControllerTest {
                 "회의록 테스트용 프로젝트",
                 manager.getId(),
                 List.of(worker.getId()),
-                List.of(writerCompanyMember.getId(), firstAttendant.getId(), secondAttendant.getId())
+                List.of(writerCompanyMember.getId(), firstAttendant.getId(), secondAttendant.getId()),
+                100l
         );
 
-        projectId = projectServiceApiV2.createProjectV2(request, creator.getEmail()).getProjectId();
+        projectId = projectServiceApiV2.createProject(request, creator.getEmail()).getProjectId();
 
         writerProposalAttendant = createProposalAttendants(
                 ProjectEntity.builder().id(projectId).build(),
@@ -413,7 +413,7 @@ class MinutesControllerTest {
             ));
             long minutesId = createdMinutes.get("minutesId").asLong();
             MinutesEntity createdMinutesEntity = minutesEntityRepository.findById(minutesId).orElseThrow();
-            ApproveEntity approve = approveEntityRepository.save(ApproveEntity.from(createdMinutesEntity, BASE_DATE.plusDays(4), writerInfo.getCompanyMember().getName()));
+            ApproveEntity approve = approveEntityRepository.save(ApproveEntity.from(createdMinutesEntity, BASE_DATE.plusDays(4), writerProposalAttendant.getCompanyMember().getName()));
             String previousReportNo = approve.getReportNo();
             LocalDate updatedMinutesDate = BASE_DATE.plusDays(8);
             LocalDate expectedSubmitDate = BASE_DATE.plusDays(7);
@@ -447,7 +447,7 @@ class MinutesControllerTest {
                     .andDo(print());
             assertThat(response.get("approveId").asLong()).isEqualTo(approve.getId());
             assertThat(updatedApprove.getReportNo()).isNotEqualTo(previousReportNo);
-            assertThat(updatedApprove.getReportNo()).isEqualTo(ApproveEntity.from(updatedMinutes, expectedSubmitDate, writerInfo.getCompanyMember().getName()).getReportNo());
+            assertThat(updatedApprove.getReportNo()).isEqualTo(ApproveEntity.from(updatedMinutes, expectedSubmitDate, writerProposalAttendant.getCompanyMember().getName()).getReportNo());
             assertThat(updatedApprove.getWriteDate()).isEqualTo(expectedSubmitDate);
             assertThat(updatedApprove.getSubmitDate()).isEqualTo(expectedSubmitDate);
             assertThat(updatedApprove.getWriter()).isEqualTo(secondAttendant.getName());

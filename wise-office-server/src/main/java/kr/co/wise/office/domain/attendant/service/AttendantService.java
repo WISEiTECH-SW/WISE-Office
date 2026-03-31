@@ -2,13 +2,12 @@ package kr.co.wise.office.domain.attendant.service;
 
 import kr.co.wise.office.domain.Project.dto.ProjectDetailResponse;
 import kr.co.wise.office.domain.Project.dto.ProjectListResponse;
+import kr.co.wise.office.domain.Project.dto.ProjectProposalAttendantList;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.dto.AttendantDetail;
 import kr.co.wise.office.domain.attendant.entity.AttendantEntity;
 import kr.co.wise.office.domain.attendant.entity.AttendantRoleType;
 import kr.co.wise.office.domain.attendant.repository.AttendantRepository;
-import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
-import kr.co.wise.office.domain.member.dto.MemberListResponse;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import kr.co.wise.office.domain.proposalattendant.repository.ProposalAttendantEntityRepository;
@@ -152,12 +151,14 @@ public class AttendantService {
 
         response.setProposalAttendant(
                 proposalAttendants.stream()
-                        .map(ProposalAttendantEntity::getCompanyMember)
-                        .map(MemberListResponse::convertCompanyMembertoMember)
+                        .map(a -> ProjectProposalAttendantList.of(
+                                a.getCompanyMember(),
+                                a.getRole() != null ? a.getRole().name() : "NORMAL"
+                        ))
                         .toList()
         );
 
-//        기존 회원 추가
+        //기존 회원 추가
         List<AttendantEntity> attendants = attendantRepository
                 .findAllWithMemberAndProject(List.of(response.getProjectId())).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT));
 
@@ -294,6 +295,78 @@ public class AttendantService {
         attendantRepository.saveAll(newAttendants);
     }
 
+    public void updateAttendants2(ProjectEntity project, MemberEntity newPM, List<MemberEntity> newAttendants) {
+        List<AttendantEntity> nowAttendants = attendantRepository.findAttendantsByProjectIdWithMember(project);
+
+        Set<Long> newMemberIdSet = newAttendants.stream().map(MemberEntity::getId).collect(Collectors.toSet());;
+        Set<Long> existingMemberIds = nowAttendants.stream().map(a -> a.getMember().getId()).collect(Collectors.toSet());
+        Long creatorId = nowAttendants.stream().filter(att -> att.hasRole(AttendantRoleType.CREATOR))
+                .map(att -> att.getMember().getId())
+                .findFirst().orElse(null);
+
+        List<AttendantEntity> result = new ArrayList<>();
+        boolean newPMRowExists = false;
+
+        // 현재 참석자 정리
+        for (AttendantEntity att : nowAttendants) {
+            switch (att.getRole()) {
+                case CREATOR -> { // CREATOR가 프로젝트를 탈퇴하는 경우
+                    if (!newMemberIdSet.contains(att.getMember().getId())) {
+                        att.leaveProject();
+                        result.add(att);
+                    }
+                }
+                case PM -> {
+                    Long currentPMId = att.getMember().getId();
+                    if (currentPMId.equals(newPM.getId())) { // PM이 바뀌지 않은 경우
+                        newPMRowExists = true;
+                    } else {
+                        // 기존 PM이 새 멤버 목록에 남아있고, CREATOR가 아니면, WORKER로 변환, 아니면 탈퇴
+                        if (newMemberIdSet.contains(currentPMId) && !currentPMId.equals(creatorId)) {
+                            att.changeRole(AttendantRoleType.WORKER);
+                        } else {
+                            att.leaveProject();
+                        }
+                        result.add(att);
+                    }
+                }
+                case WORKER ->  {
+                    Long workerId = att.getMember().getId();
+                    if (workerId.equals(newPM.getId())) { // 현재 WORKER가 PM이 되는 경우
+                        att.changeRole(AttendantRoleType.PM);
+                        newPMRowExists = true;
+                        result.add(att);
+                    } else if(!newMemberIdSet.contains(workerId)) { // WORKER 가 프로젝트를 떠나는 경우
+                        att.leaveProject();
+                        result.add(att);
+                    }
+                }
+            }
+        }
+
+        // 기존 PM이 없는 경우, 신규 PM 생성
+        if (!newPMRowExists) {
+            result.add(
+                    AttendantEntity.builder().member(newPM).project(project).role(AttendantRoleType.PM).build()
+            );
+        }
+
+        // 기존에 없던 신규 WORKER 생성 (CREATOR, newPM 제외)
+        newAttendants.stream()
+                .filter(m -> !m.getId().equals(newPM.getId()))
+                .filter(m -> !m.getId().equals(creatorId))
+                .filter(m -> !existingMemberIds.contains(m.getId()))
+                .forEach(m -> result.add(
+                        AttendantEntity.builder().member(m).project(project).role(AttendantRoleType.WORKER).build()
+                ));
+
+
+        if (!result.isEmpty()) {
+            attendantRepository.saveAll(result);
+        }
+
+    }
+
     /**
      * 모두 삭제하는 것이 아닌, 비교 후 업데이트만 하는 코드 => PM/CREATOR 구분이 필요함
      */
@@ -355,6 +428,7 @@ public class AttendantService {
 //            attendantRepository.saveAll(attendantsToSave);
 //        }
 //    }
+
     public void leaveAll(ProjectEntity project) {
         List<AttendantEntity> attendantsByProjectIdWithMember = attendantRepository.findAttendantsByProjectIdWithMember(project);
         attendantsByProjectIdWithMember.forEach(AttendantEntity::leaveProject);
