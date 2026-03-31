@@ -51,14 +51,26 @@ export function useLeaveSummary(params: { today: Date; joinDate?: string }) {
         } else {
             // 근속년수 계산
             const years = workingYears(joinDate_Date, today);
-
+            let extraLeavesPerThreeYears = 0;
             if (years < 1) {
                 // 1년 미만 : 월차
                 const n = workingMonths(joinDate_Date, today);
                 annualAvailable = n;
             } else {
+                for (let y = 1; y <= years; y++) {
+                    if (y >= 3) {
+                        // 3년차부터 2년마다 1일씩 추가
+                        let extra = Math.floor((y - 1) / 2);
+
+                        // 기본 15 + 가산일이 25를 넘지 않도록 조절
+                        if (15 + extra > 25) {
+                            extra = 10;
+                        }
+                        extraLeavesPerThreeYears += extra;
+                    }
+                }
                 // 1년 이상: 연차 (+15)
-                annualAvailable = 11 + years * 15;
+                annualAvailable = 11 + years * 15 + extraLeavesPerThreeYears;
             }
         }
 
