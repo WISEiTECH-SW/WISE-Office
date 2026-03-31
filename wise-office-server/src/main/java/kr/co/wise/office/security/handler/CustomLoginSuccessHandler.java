@@ -6,6 +6,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.wise.office.domain.member.dto.LoginResponse;
+import kr.co.wise.office.util.CookieUtils;
 import kr.co.wise.office.util.JWTUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +24,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler  {
 
-    private static final int COOKIE_EXPIRE_SECOND = 1800;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -32,15 +32,11 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler  
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
         String token = JWTUtil.createJWT(email, role);
-        LoginResponse loginResponse = new LoginResponse(LocalDateTime.now().plusSeconds(COOKIE_EXPIRE_SECOND));
 
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(COOKIE_EXPIRE_SECOND);
+        Cookie cookie = CookieUtils.createCookie("jwt", token);
+        LoginResponse loginResponse = new LoginResponse(LocalDateTime.now().plusSeconds(CookieUtils.COOKIE_EXPIRATION_SECONDES));
+
         String body = objectMapper.writeValueAsString(loginResponse);
-
         response.setStatus(HttpStatus.OK.value());
         response.addCookie(cookie);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

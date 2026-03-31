@@ -29,3 +29,7 @@ export type ChangePasswordForm = {
     password: string;
     passwordCheck: string;
 };
+
+export type LoginResponse = {
+    expiredAt: string;
+};

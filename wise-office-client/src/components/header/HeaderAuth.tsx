@@ -1,9 +1,10 @@
-import { useRouter } from "next/router";
-import Link from "next/link";
 import LogoutButton from "@/components/header/LogoutButton";
-import ProfileImage from "./ProfileImage";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useProfileStore } from "@/store/useProfileStore";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import ExtendLoginSession from "./ExtendLoginSession";
+import ProfileImage from "./ProfileImage";
 
 export default function HeaderAuth() {
     const router = useRouter();
@@ -34,6 +35,7 @@ export default function HeaderAuth() {
             >
                 <ProfileImage imageUrl={profile?.imageUrl} />
             </div>
+            <ExtendLoginSession />
             <LogoutButton />
         </div>
     );
