@@ -228,7 +228,6 @@ export default function DocumentPage() {
             <main className="flex-1 overflow-y-auto flex flex-col bg-blue-50">
                 {/* Header */}
                 <ActionBar
-                    isNew={isNew}
                     isAutoSaved={isAutoSaved}
                     savedTime={savedTime}
                     isValid={

@@ -2,7 +2,6 @@ import { Save, Printer, OctagonX } from "lucide-react";
 import Button from "../ui/Button";
 
 interface ActionBarProps {
-    isNew: boolean;
     isAutoSaved: boolean;
     savedTime: string | null;
     isValid: boolean;
@@ -11,7 +10,6 @@ interface ActionBarProps {
 }
 
 export default function ActionBar({
-    isNew,
     isAutoSaved,
     savedTime,
     isValid,
