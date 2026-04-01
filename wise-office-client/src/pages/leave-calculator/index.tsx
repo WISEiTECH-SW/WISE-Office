@@ -1,5 +1,4 @@
 import InputSection from "@/components/leave-tracker/InputSection/index";
-import LeaveHeatmapSection from "@/components/leave-tracker/LeaveHeatmapSection";
 import LeaveTableSection from "@/components/leave-tracker/LeaveTableSection";
 import OutputSection from "@/components/leave-tracker/OutputSection/index";
 import { useLeaveStore } from "@/store/useLeaveStore";
@@ -36,7 +35,6 @@ export default function LeaveTracker() {
                 <OutputSection />
             </div>
             <LeaveTableSection />
-            <LeaveHeatmapSection />
         </div>
     );
 }
