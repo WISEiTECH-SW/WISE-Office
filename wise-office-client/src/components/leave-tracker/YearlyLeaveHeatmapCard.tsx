@@ -74,8 +74,13 @@ function buildCellBackground(cell: LeaveHeatmapCell) {
     return `linear-gradient(90deg, ${segments})`;
 }
 
+function getDayCountForCell(category: string): number {
+    const halfDayDirection = getHalfDayDirection(category);
+    return halfDayDirection !== null ? 0.5 : 1;
+}
+
 function formatDays(days: number) {
-    return Number.isInteger(days) ? `${days}일` : `${days}일`;
+    return `${days}일`;
 }
 
 function HeatmapTooltip({
@@ -121,7 +126,7 @@ function HeatmapTooltip({
                             <span className="font-medium text-gray-800">
                                 {entry.category}
                             </span>
-                            {` · ${formatDays(entry.days)}`}
+                            {` · ${formatDays(getDayCountForCell(entry.category))}`}
                         </span>
                     </li>
                 ))}

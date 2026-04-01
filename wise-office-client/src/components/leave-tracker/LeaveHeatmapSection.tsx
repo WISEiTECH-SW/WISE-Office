@@ -49,11 +49,9 @@ export default function LeaveHeatmapSection() {
                         <button
                             type="button"
                             onClick={() =>
-                                canMovePrev
-                                    ? setSelectedYear(
-                                          availableYears[selectedYearIndex - 1],
-                                      )
-                                    : undefined
+                                setSelectedYear(
+                                    availableYears[selectedYearIndex - 1],
+                                )
                             }
                             disabled={!canMovePrev}
                             className="cursor-pointer rounded-full px-2 py-1 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent"
@@ -64,11 +62,9 @@ export default function LeaveHeatmapSection() {
                         <button
                             type="button"
                             onClick={() =>
-                                canMoveNext
-                                    ? setSelectedYear(
-                                          availableYears[selectedYearIndex + 1],
-                                      )
-                                    : undefined
+                                setSelectedYear(
+                                    availableYears[selectedYearIndex + 1],
+                                )
                             }
                             disabled={!canMoveNext}
                             className="cursor-pointer rounded-full px-2 py-1 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent"
