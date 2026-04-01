@@ -45,8 +45,10 @@ export default function ProjectModal({
             start: data.start.toString(),
             end: data.end.toString(),
             content: data.detail,
-
-            projectManagerId: data.managerName.memberId,
+            projectLeaderId: data.managerName.memberId,
+            projectManagerId: data.proposalAttendant.find(
+                (m) => m.role === "PM",
+            )?.memberId,
             attendants: [
                 data.managerName.memberId,
                 ...data.attendant.map((member) => member.memberId),
@@ -69,6 +71,7 @@ export default function ProjectModal({
     };
 
     const handleSubmit = () => {
+        console.log(form);
         const newErrors = projectFormValidate(form);
 
         setErrors(newErrors);

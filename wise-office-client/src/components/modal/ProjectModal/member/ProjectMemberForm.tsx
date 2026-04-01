@@ -30,17 +30,13 @@ export default function ProjectMemberForm({
                     members={data.members}
                     initialMembers={form.attendants}
                     attendant="수행"
-                    managerId={form.projectManagerId}
-                    //manager={form.projectLeatherId}
+                    managerId={form.projectLeaderId}
                     attendatnError={errors.attendants}
-                    managerError={errors.projectManagerId}
+                    managerError={errors.projectLeaderId}
                     onSelectedMemberChange={(value) =>
                         onChange("attendants", value)
                     }
-                    setManagerId={(value) =>
-                        onChange("projectManagerId", value)
-                    }
-                    //setManager={(value) => onChange("projectLeatherId", value)}
+                    setManagerId={(value) => onChange("projectLeaderId", value)}
                 />
             </div>
             <div className="flex flex-col px-4">
@@ -50,7 +46,7 @@ export default function ProjectMemberForm({
                     attendant="편성"
                     managerId={form.projectManagerId}
                     attendatnError={errors.proposalAttendants}
-                    //managerError={errors.projectManagerId}
+                    managerError={errors.projectManagerId}
                     onSelectedMemberChange={(value) =>
                         onChange("proposalAttendants", value)
                     }

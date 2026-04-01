@@ -42,8 +42,12 @@ export const projectFormValidate = (form: CreateProject): FormErrors => {
         newErrors.content = "프로젝트 설명을 입력해주세요.";
     }
 
+    if (!form.projectLeaderId) {
+        newErrors.projectLeaderId = "실무 책임자를 선택해주세요.";
+    }
+
     if (!form.projectManagerId) {
-        newErrors.projectManagerId = "프로젝트 관리자를 선택해주세요.";
+        newErrors.projectManagerId = "과제 책임자를 선택해주세요.";
     }
 
     if (form.attendants.length === 0) {

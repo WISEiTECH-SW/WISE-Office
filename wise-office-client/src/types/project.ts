@@ -43,6 +43,7 @@ export interface CreateProject {
     start: string;
     end: string;
     content: string;
+    projectLeaderId: number | undefined;
     projectManagerId: number | undefined;
     attendants: number[];
     proposalAttendants: number[];

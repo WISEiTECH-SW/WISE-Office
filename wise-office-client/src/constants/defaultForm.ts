@@ -8,6 +8,7 @@ export const projectDefaultForm: CreateProject = {
     end: "",
     content: "",
     projectManagerId: undefined,
+    projectLeaderId: undefined,
     attendants: [],
     proposalAttendants: [],
 };

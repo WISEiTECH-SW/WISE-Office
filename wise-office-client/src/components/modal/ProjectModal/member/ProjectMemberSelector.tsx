@@ -96,8 +96,8 @@ export default function ProjectMemberSelector({
                             ? "실무 책임자 (PL) 선택"
                             : "과제 책임자 (PM) 선택"}
                     </label>
-                    {/* {selectedMembers.length === 0 ? ( */}
-                    {selectedMembers.length === 0 || attendant === "편성" ? (
+                    {selectedMembers.length === 0 ? (
+                        // {selectedMembers.length === 0 || attendant === "편성" ? (
                         <p className="text-sm font-light text-gray-500 italic">
                             참여 인력을 먼저 선택해주세요.
                         </p>
@@ -110,7 +110,7 @@ export default function ProjectMemberSelector({
                                 >
                                     <input
                                         type="radio"
-                                        name="manager"
+                                        name={`${attendant}-manager`}
                                         checked={managerId === member.memberId}
                                         onChange={() =>
                                             setManagerId(member.memberId)
