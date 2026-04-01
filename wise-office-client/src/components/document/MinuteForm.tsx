@@ -191,6 +191,8 @@ export default function MinuteForm({
                                     dateFormat: "Y-m-d",
                                     altInput: true,
                                     altFormat: "Y-m-d",
+                                    altInputClass:
+                                        "w-full pl-10 px-3 py-2 rounded-md outline-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 screen-only text-sm",
                                 }}
                                 value={form.minutesDate}
                                 onChange={(e) =>
@@ -212,7 +214,8 @@ export default function MinuteForm({
                                             ),
                                         }));
                                 }}
-                                className="w-full pl-10 px-3 py-2 rounded-md outline-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500  screen-only"
+                                className="text-[11px] w-full pl-10 px-3 py-2 rounded-md outline-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 screen-only"
+                                id="date-input"
                                 placeholder="회의 날짜를 선택하세요"
                             />
                             {/* 출력용 */}
