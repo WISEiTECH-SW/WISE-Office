@@ -8,6 +8,11 @@ import {
 } from "@/types/document";
 import { toastMessage } from "@/lib/common/toastMessage";
 import { useMemo } from "react";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+import { Korean } from "flatpickr/dist/l10n/ko.js";
+import { dateToString } from "@/utils/dateToString";
+import TimeSelect from "./TimeSelect";
 
 interface MinuteFormProps {
     projectName: string;
@@ -152,20 +157,38 @@ export default function MinuteForm({
                                 input?.showPicker?.();
                             }}
                         >
-                            <input
-                                type="date"
+                            <Flatpickr
+                                options={{
+                                    locale: Korean,
+                                    disableMobile: true,
+                                    allowInput: true,
+                                    maxDate: "today",
+                                    dateFormat: "Y-m-d",
+                                    altInput: true,
+                                    altFormat: "Y-m-d",
+                                }}
                                 value={form.minutesDate}
                                 onChange={(e) =>
                                     setForm((prev) => ({
                                         ...prev,
-                                        minutesDate: e.target.value,
+                                        minutesDate: dateToString(e[0]),
                                     }))
                                 }
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     e.currentTarget.showPicker?.();
                                 }}
-                                className="w-full h-full p-2 text-sm text-center outline-none cursor-pointer hover:bg-gray-50 bg-transparent screen-only"
+                                onClose={(selectedDates) => {
+                                    if (selectedDates?.[0])
+                                        setForm((prev) => ({
+                                            ...prev,
+                                            minutesDate: dateToString(
+                                                selectedDates[0],
+                                            ),
+                                        }));
+                                }}
+                                className="w-full pl-10 px-3 py-2 rounded-md outline-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="회의 날짜를 선택하세요"
                             />
                             {/* 출력용 */}
                             <div className="hidden print:block w-full h-full p-2 text-sm text-center">
@@ -180,28 +203,14 @@ export default function MinuteForm({
                                     <span className="text-[11px] text-gray-500 text-center screen-only">
                                         시작
                                     </span>
-                                    <select
-                                        value={form.startTime || ""}
-                                        onChange={(e) =>
-                                            handleTimeChange(
-                                                e.target.value,
-                                                true,
-                                            )
+                                    <TimeSelect
+                                        value={form.startTime}
+                                        onChange={(t) =>
+                                            handleTimeChange(t, true)
                                         }
-                                        className={`w-full py-2 text-sm text-center border border-gray-300 rounded-md custom-scroll ${editableClass} cursor-pointer screen-only`}
-                                    >
-                                        <option value="" disabled>
-                                            --:--
-                                        </option>
-                                        {timeOptions.map((t) => (
-                                            <option
-                                                key={`start-${t}`}
-                                                value={t}
-                                            >
-                                                {t}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        options={timeOptions}
+                                        className={editableClass}
+                                    />
                                 </div>
 
                                 <span className="text-gray-400 mt-4 screen-only">
@@ -213,25 +222,14 @@ export default function MinuteForm({
                                     <span className="text-[11px] text-gray-500 text-center screen-only">
                                         종료
                                     </span>
-                                    <select
-                                        value={form.endTime || ""}
-                                        onChange={(e) =>
-                                            handleTimeChange(
-                                                e.target.value,
-                                                false,
-                                            )
+                                    <TimeSelect
+                                        value={form.endTime}
+                                        onChange={(t) =>
+                                            handleTimeChange(t, false)
                                         }
-                                        className={`w-full py-2 text-sm text-center border border-gray-300 rounded-md custom-scroll ${editableClass} cursor-pointer screen-only`}
-                                    >
-                                        <option value="" disabled>
-                                            --:--
-                                        </option>
-                                        {timeOptions.map((t) => (
-                                            <option key={`end-${t}`} value={t}>
-                                                {t}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        options={timeOptions}
+                                        className={editableClass}
+                                    />
                                 </div>
                             </div>
 
