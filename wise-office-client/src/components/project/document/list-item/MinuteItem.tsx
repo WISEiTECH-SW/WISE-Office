@@ -24,15 +24,18 @@ export default function MinuteItem({
                     : ""
             }`}
         >
-            <div className="flex justify-between items-start mb-4">
-                <h3 className="font-medium text-sm text-gray-800 truncate">
-                    {minute.title}
+            <div className="flex items-start mb-4">
+                <h3 className="font-medium text-sm text-gray-800 truncate mr-1">
+                    {minute.purpose}
+                </h3>
+                <h3 className="font-normal text-xs text-gray-500 truncate pt-1">
+                    · {minute.title}
                 </h3>
             </div>
 
             <div className="flex mt-2 justify-between">
                 <div className="text-xs text-gray-500">{minute.writer}</div>
-                <div className="flex items-center text-xs text-gray-500">
+                <div className="flex items-center text-xs text-gray-800">
                     <CalendarDays className="w-3 h-3 mr-1" />
                     {minute.minutesAt}
                 </div>

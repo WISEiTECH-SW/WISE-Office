@@ -44,6 +44,7 @@ export interface MinutesListResponse {
     title: string;
     minutesAt: string;
     writer: string;
+    purpose: string;
 }
 
 export interface MinutesDetail {
