@@ -32,33 +32,44 @@ export default function AttendantList({
                 />
 
                 {selectAttendant === "수행 인원" ? (
-                    <div className="md:max-h-85 pt-4 flex flex-nowrap gap-2 md:flex-col">
-                        <AttendantListItem
-                            isPm={true}
-                            name={pm.name}
-                            rank={pm.rank}
-                            imageUrl={pm.imageUrl}
-                        />
-                        {attendants.map((participant, index) => (
+                    <div className="flex flex-col gap-2 pt-2">
+                        <div className="md:max-h-85 pt-4 flex flex-nowrap gap-4 md:flex-col">
                             <AttendantListItem
-                                key={index}
-                                isPm={false}
-                                name={participant.name}
-                                rank={participant.rank}
-                                imageUrl={participant.imageUrl}
+                                isPl={true}
+                                name={pm.name}
+                                rank={pm.rank}
+                                imageUrl={pm.imageUrl}
                             />
-                        ))}
+                            {attendants.map((participant, index) => (
+                                <AttendantListItem
+                                    key={index}
+                                    name={participant.name}
+                                    rank={participant.rank}
+                                    imageUrl={participant.imageUrl}
+                                />
+                            ))}
+                        </div>
                     </div>
                 ) : (
-                    <div className="flex flex-col gap-2 pt-4">
-                        {proposalAttendant.map((member, index) => (
-                            <AttendantListItem
-                                key={index}
-                                isPm={false}
-                                name={member.name}
-                                rank={member.rank}
-                            />
-                        ))}
+                    <div className="flex flex-col gap-2 pt-2">
+                        <div className="md:max-h-85 pt-4 flex flex-nowrap gap-4 md:flex-col">
+                            {[...proposalAttendant]
+                                .sort((a, b) =>
+                                    a.role === "PM"
+                                        ? -1
+                                        : b.role === "PM"
+                                          ? 1
+                                          : 0,
+                                )
+                                .map((participant, index) => (
+                                    <AttendantListItem
+                                        key={index}
+                                        isPm={participant.role === "PM"}
+                                        name={participant.name}
+                                        rank={participant.rank}
+                                    />
+                                ))}
+                        </div>
                     </div>
                 )}
             </div>
