@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
     const token = req.cookies.get("jwt")?.value;
-    const { pathname, searchParams } = req.nextUrl;
+    const { pathname } = req.nextUrl;
 
     const protectedPath =
         pathname === "/projects" ||
