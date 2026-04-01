@@ -76,11 +76,18 @@ export default function ProjectMemberSelector({
                         {selectedMembers.map((member) => (
                             <div
                                 key={member.memberId}
-                                className="flex justify-between"
+                                className="flex justify-between items-center group px-1 py-1 hover:bg-blue-50"
                             >
                                 <span>
                                     {member.name} {member.rank}
                                 </span>
+
+                                <button
+                                    onClick={() => toggleMember(member)}
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity text-red-500 hover:text-red-700 cursor-pointer"
+                                >
+                                    ✕
+                                </button>
                             </div>
                         ))}
                     </div>
