@@ -16,6 +16,7 @@ export interface Project {
 export interface ProjectAttendant {
     memberId: number;
     name: string;
+    rank: string;
     imageUrl: string;
 }
 

@@ -3,12 +3,14 @@ import ProfileImage from "@/components/header/ProfileImage";
 type AttendantListItemProps = {
     isPm: boolean;
     name: string;
+    rank: string;
     imageUrl?: string;
 };
 
 export default function AttendantListItem({
     isPm,
     name,
+    rank,
     imageUrl,
 }: AttendantListItemProps) {
     if (isPm) {
@@ -22,7 +24,7 @@ export default function AttendantListItem({
                 </div>
 
                 <span className="text-xs md:text-sm font-medium text-gray-800 truncate max-w-[10rem] md:max-w-[14rem]">
-                    {name}
+                    {name} {rank}
                 </span>
             </div>
         );
@@ -34,7 +36,7 @@ export default function AttendantListItem({
                 <ProfileImage imageUrl={imageUrl} />
             </div>
             <span className="text-xs md:text-sm font-medium text-gray-800">
-                {name}
+                {name} {rank}
             </span>
         </div>
     );
