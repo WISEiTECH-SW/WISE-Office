@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Member } from "@/types/member";
 import { ProjectAttendant } from "@/types/project";
-import Tab from "../Tab";
 import AttendantListItem from "./AttendantListItem";
+import Tab from "@/components/ui/Tab";
 
 type AttendantListProps = {
     pm: ProjectAttendant;

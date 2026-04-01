@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { PossibleAttendantsResponse } from "@/types/document";
-import MinuteAttendanceSelector from "./ProjectModal/MinuteAttendanceSelector";
-import LoadingIndicator from "../ui/LoadingIndicator";
-import Button from "../ui/Button";
+import LoadingIndicator from "@/components/ui/LoadingIndicator";
+import MinuteAttendanceSelector from "./MinuteAttendanceSelector";
+import Button from "@/components/ui/Button";
 
 interface ModalProps {
     selectedIds: number[];

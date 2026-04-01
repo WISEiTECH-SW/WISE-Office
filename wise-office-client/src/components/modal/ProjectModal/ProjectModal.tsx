@@ -6,7 +6,7 @@ import { useProjectDetail, useProjectMutation } from "@/hooks/queries";
 
 import ProjectInfoForm from "./info/ProjectInfoForm";
 import ProjectMemberForm from "./member/ProjectMemberForm";
-import Tab from "@/components/project/Tab";
+import Tab from "@/components/ui/Tab";
 import LoadingIndicator from "@/components/ui/LoadingIndicator";
 
 import { projectDefaultForm } from "@/constants/defaultForm";

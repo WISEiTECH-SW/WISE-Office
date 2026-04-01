@@ -4,7 +4,6 @@ export interface Member {
     role: string; // "PM" | "NORMAL"
     team: string;
     name: string;
-    role: string;
 }
 
 export interface SignupForm {
