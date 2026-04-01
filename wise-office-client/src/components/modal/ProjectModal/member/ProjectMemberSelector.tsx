@@ -31,7 +31,7 @@ export default function ProjectMemberSelector({
                 initialMembers.includes(member.memberId),
             ),
         );
-    }, [initialMembers]);
+    }, [initialMembers, members]);
 
     const filteredMembers = members.filter(
         (m) =>
