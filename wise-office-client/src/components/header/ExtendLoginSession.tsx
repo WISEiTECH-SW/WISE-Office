@@ -33,6 +33,12 @@ export default function ExtendLoginSession() {
             const minutes = Math.floor((difference / 1000 / 60) % 60);
             const seconds = Math.floor((difference / 1000) % 60);
 
+            if (isNaN(minutes) || isNaN(seconds)) {
+                setMinuteLeft(0);
+                setSecondLeft(0);
+                return true;
+            }
+
             setMinuteLeft(minutes);
             setSecondLeft(seconds);
 
@@ -78,7 +84,7 @@ export default function ExtendLoginSession() {
             </div>
             <button
                 onClick={() => extendLogin()}
-                className="px-4 py-2 text-xs font-medium text-blue-700 bg-white rounded-md cursor-pointer hover:bg-gray-100"
+                className="h-8 px-4 py-2 text-xs font-medium text-blue-700 bg-white rounded-md cursor-pointer hover:bg-gray-100"
             >
                 로그인 연장
             </button>
