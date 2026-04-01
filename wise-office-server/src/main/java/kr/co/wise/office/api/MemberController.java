@@ -74,19 +74,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(memberService.getMyAccountInfo(loginUser.getName()));
     }
 
-    @Operation(summary = "직급 및 소속 변경 API", description = "직급과 소속을 변경합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "직급 소속 변경 성공", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = MemberPositionUpdateResponse.class))),
-    })
-    @PatchMapping
-    public ResponseEntity<MemberPositionUpdateResponse> updateInfo(
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "업데이트 할 직급 및 소속") @Valid @RequestBody MemberPositionUpdateRequest request) {
-        memberService.updateMemberPosition(request, loginUser.getName());
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new MemberPositionUpdateResponse(request.team(), request.rank()));
-    }
-
     @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "자체 회원가입", description = "이메일, 비밀번호, 이름으로 회원가입합니다.")
     public ResponseEntity<Void> signup(@Valid @RequestPart("request") SignupRequest signUpRequest,
@@ -119,18 +106,6 @@ public class MemberController {
     @Operation(summary = "자체 로그인", description = "이메일, 비밀번호로 로그인하고 JWT를 발급받습니다.")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest,
                                       HttpServletResponse response) throws IOException {
-//        String token = memberService.login(loginRequest);
-//
-//        final int COOKIE_EXPIRE_SECOND = 1800;
-//        LoginResponse loginResponse = new LoginResponse(LocalDateTime.now().plusSeconds(COOKIE_EXPIRE_SECOND));
-//
-//        Cookie cookie = new Cookie("jwt", token);
-//        cookie.setHttpOnly(true);
-//        cookie.setSecure(false);
-//        cookie.setPath("/");
-//        cookie.setMaxAge(COOKIE_EXPIRE_SECOND);
-//        response.addCookie(cookie);
-
         return ResponseEntity.ok().build();
     }
 
@@ -162,39 +137,27 @@ public class MemberController {
 
     @PatchMapping("/images")
     @Operation(summary = "프로필 사진 수정", description = "프로필 사진을 수정합니다.")
-    public ResponseEntity<MemberUpdateResponse> updateProfile(
+    public ResponseEntity<MemberImageUpdateResponse> updateProfile(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "업데이트할 이미지 이름, key = profile로 전달") @RequestPart("profile") MultipartFile image) {
         String savedImageName = imageService.saveImage(image);
         memberService.updateMemberProfile(savedImageName, loginUser.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(new MemberUpdateResponse(savedImageName));
+        return ResponseEntity.status(HttpStatus.OK).body(new MemberImageUpdateResponse(savedImageName));
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("jwt", "");
-        cookie.setMaxAge(0);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setSecure(false);
-        response.addCookie(cookie);
-        return ResponseEntity.ok().build();
+    @PatchMapping("/account")
+    @Operation(summary = "계정 정보 수정", description = "부서, 직급, 입사일, 비밀번호를 수정합니다. 변경된 값만 업데이트됩니다.")
+    public ResponseEntity<MemberUpdateResponse> updateAccountInfo(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+            @RequestBody MemberUpdateRequest request) {
+        MemberUpdateResponse response = memberService.updateMember(loginUser.getName(), request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/hire-date")
     public ResponseEntity<HireDateResponse> getHireDateLoginUser(
     @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser){
         HireDateResponse response = memberService.getHireDate(loginUser.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @PatchMapping("/hire-date")
-    @Operation(summary = "입사 일자 수정")
-    public ResponseEntity<HireDateResponse> updateHireDate(
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "업데이트할 입사일자 2020-01-01 형태") @Valid @RequestBody HireDateUpdateRequest request
-    ) {
-        HireDateResponse response = memberService.updateMemberHireDate(loginUser.getName(), request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -225,12 +188,23 @@ public class MemberController {
     }
 
     @PatchMapping("/email/find-password/verification")
-    @Operation(summary = "비밀번호 변경")
+    @Operation(summary = "비밀번호 초기화")
     public ResponseEntity<Void> changePassword(
-            @Parameter(description = "비밀번호 변경 요청 DTO") @RequestBody ChangePasswordRequest request
+            @Parameter(description = "비밀번호 초기화") @RequestBody ChangePasswordRequest request
     ) {
         String email = emailService.verificationSuccessToken(request.successToken());
         memberService.changePassword(email, request.password(), request.passwordCheck());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt", "");
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setSecure(false);
+        response.addCookie(cookie);
         return ResponseEntity.ok().build();
     }
 

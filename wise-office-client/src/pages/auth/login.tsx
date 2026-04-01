@@ -107,7 +107,7 @@ const LoginPage = () => {
                         비밀번호를 잊으셨나요?{" "}
                         <Link href="/auth/find-password">
                             <span className="font-medium text-indigo-600 cursor-pointer hover:text-indigo-500">
-                                비밀번호 찾기
+                                비밀번호 초기화
                             </span>
                         </Link>
                     </p>

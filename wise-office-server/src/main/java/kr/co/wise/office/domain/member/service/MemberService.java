@@ -179,14 +179,6 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional
-    public MemberPositionUpdateResponse updateMemberPosition(MemberPositionUpdateRequest request, String loginUserEmail) {
-        MemberEntity loginMember = findUserWithEmail(loginUserEmail);
-        loginMember.updatePosition(request);
-        memberRepository.save(loginMember);
-        return new MemberPositionUpdateResponse(loginMember.getTeam(), loginMember.getRank());
-    }
-
-    @Transactional
     public void updateMemberProfile(String savedImageName, String loginUserEmail) {
         MemberEntity member = findUserWithEmail(loginUserEmail);
         member.updateInfo(member.getName(), savedImageName);
@@ -205,14 +197,6 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
         return new HireDateResponse(member.getHireDate());
     }
 
-    @Transactional
-    public HireDateResponse updateMemberHireDate(String loginUserEmail, HireDateUpdateRequest request) {
-        MemberEntity member = findUserWithEmail(loginUserEmail);
-        member.updateHireDate(request.hireDate());
-        memberRepository.save(member);
-        return new HireDateResponse(request.hireDate());
-    }
-
     @Transactional(readOnly = true)
     public void checkSignUp(String email) {
         memberRepository.findByEmail(email).orElseThrow(() ->
@@ -222,6 +206,36 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
 
     private MemberEntity findUserWithEmail(String loginUserEmail) {
         return memberRepository.findByEmail(loginUserEmail).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MEMBER));
+    }
+
+    @Transactional
+    public MemberUpdateResponse updateMember(String email, MemberUpdateRequest req) {
+        MemberEntity member = findUserWithEmail(email);
+        boolean passwordChanged = false; // 비밀번호 변경 유무
+
+        // 바뀐 값만 변경되도록 수정 
+        if (req.team() != null && !req.team().equals(member.getTeam())) {
+            member.updateTeam(req.team());
+        }
+
+        if (req.rank() != null && !req.rank().equals(member.getRank())) {
+            member.updateRank(req.rank());
+        }
+
+        if (req.hireDate() != null && !req.hireDate().equals(member.getHireDate())) {
+            member.updateHireDate(req.hireDate());
+        }
+
+        if (req.password() != null) {
+            if (!req.password().equals(req.passwordCheck())) {
+                throw new ApplicationRuntimeException(ErrorMessage.REJECT_PASSWORD_CHANGE);
+            }
+            member.updatePassword(passwordEncoder.encode(req.password()));
+            passwordChanged = true;
+        }
+
+        memberRepository.save(member);
+        return new MemberUpdateResponse(passwordChanged);
     }
 
     @Transactional

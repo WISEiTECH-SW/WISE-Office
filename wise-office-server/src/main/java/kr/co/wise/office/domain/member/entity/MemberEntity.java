@@ -63,7 +63,6 @@ public class MemberEntity {
     @Builder.Default
     private List<LogEntity> logs = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "member")
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
@@ -88,5 +87,13 @@ public class MemberEntity {
 
     public void updatePassword(String changePassword) {
         this.password = changePassword;
+    }
+
+    public void updateTeam(String team) {
+        this.team = team;
+    }
+
+    public void updateRank(String rank) {
+        this.rank = rank;
     }
 }

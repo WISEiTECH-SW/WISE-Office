@@ -34,3 +34,15 @@ export type ChangePasswordForm = {
 export type LoginResponse = {
     expiredAt: string;
 };
+
+export type MemberAccountUpdateRequest = {
+    team?: string;
+    rank?: string;
+    hireDate?: string;
+    password?: string;
+    passwordCheck?: string;
+};
+
+export type MemberAccountUpdateResponse = {
+    passwordChanged: boolean;
+};
