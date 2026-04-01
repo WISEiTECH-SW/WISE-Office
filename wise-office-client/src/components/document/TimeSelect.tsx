@@ -40,7 +40,7 @@ export default function TimeSelect({
     }, []);
 
     return (
-        <div ref={wrapperRef} className="relative w-full">
+        <div ref={wrapperRef} className="relative w-full  screen-only">
             <input
                 value={open ? search : value}
                 onChange={(e) => {
