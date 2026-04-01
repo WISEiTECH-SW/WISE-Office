@@ -298,7 +298,7 @@ public class AttendantService {
     public void updateAttendants2(ProjectEntity project, MemberEntity newPM, List<MemberEntity> newAttendants) {
         List<AttendantEntity> nowAttendants = attendantRepository.findAttendantsByProjectIdWithMember(project);
 
-        Set<Long> newMemberIdSet = newAttendants.stream().map(MemberEntity::getId).collect(Collectors.toSet());;
+        Set<Long> newMemberIdSet = newAttendants.stream().map(MemberEntity::getId).collect(Collectors.toSet());
         Set<Long> existingMemberIds = nowAttendants.stream().map(a -> a.getMember().getId()).collect(Collectors.toSet());
         Long creatorId = nowAttendants.stream().filter(att -> att.hasRole(AttendantRoleType.CREATOR))
                 .map(att -> att.getMember().getId())

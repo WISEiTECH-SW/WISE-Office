@@ -61,7 +61,6 @@ export default function ProjectMemberSelector({
         setSelectedMembers(updatedMembers);
         const changedMemberId = updatedMembers.map((m) => m.memberId);
 
-        console.log(changedMemberId);
         onSelectedMemberChange(changedMemberId);
     };
 

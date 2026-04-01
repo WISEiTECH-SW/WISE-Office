@@ -59,7 +59,7 @@ export const useProjectMutation = () => {
     const deleteMutation = useMutation({
         mutationFn: (projectId: number) => deleteProject(projectId),
         onSuccess: () => {
-            //queryClient.invalidateQueries({ queryKey: queryKeys.projects() });
+            queryClient.invalidateQueries({ queryKey: queryKeys.all });
             toastMessage.successDoc("project", "delete");
         },
     });

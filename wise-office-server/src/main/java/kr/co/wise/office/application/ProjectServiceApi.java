@@ -1,5 +1,6 @@
 package kr.co.wise.office.application;
 
+import jakarta.validation.Valid;
 import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.dto.*;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
