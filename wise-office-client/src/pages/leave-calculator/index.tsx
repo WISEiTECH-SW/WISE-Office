@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react";
-import { validateTsv } from "@/utils/validateTsv";
-import { useLeaveStore } from "@/store/useLeaveStore";
 import InputSection from "@/components/leave-tracker/InputSection/index";
-import OutputSection from "@/components/leave-tracker/OutputSection/index";
 import LeaveTableSection from "@/components/leave-tracker/LeaveTableSection";
+import OutputSection from "@/components/leave-tracker/OutputSection/index";
+import { useLeaveStore } from "@/store/useLeaveStore";
+import { validateTsv } from "@/utils/validateTsv";
+import { useCallback, useState } from "react";
 
 export default function LeaveTracker() {
     const [text, setText] = useState("");

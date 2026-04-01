@@ -1,4 +1,5 @@
 import { useLeaveStore } from "@/store/useLeaveStore";
+import LeaveHeatmapSection from "./LeaveHeatmapSection";
 
 export default function LeaveTableSection() {
     const { inputData } = useLeaveStore();
@@ -72,6 +73,7 @@ export default function LeaveTableSection() {
                     </tbody>
                 </table>
             </div>
+            <LeaveHeatmapSection />
         </div>
     );
 }
