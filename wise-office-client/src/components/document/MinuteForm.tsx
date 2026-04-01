@@ -58,10 +58,35 @@ export default function MinuteForm({
         return options;
     }, []);
 
-    // 회의 시작 유효성 검사
+    // 회의 시작 유효성 검사 (처음 시작시간/종료시간 선택 시 한 시간 간격 디폴트 설정)
     const handleTimeChange = (newString: string, isStartTime: boolean) => {
         if (!newString) {
             toastMessage.info("올바른 시간을 선택해 주세요.");
+            return;
+        }
+        const idx = timeOptions.indexOf(newString);
+
+        // 둘 다 초기값일 때
+        const isEmptyTime = (t?: string) => !t || t === "--:--";
+        if (isEmptyTime(form.startTime) && isEmptyTime(form.endTime)) {
+            if (isStartTime) {
+                const autoEnd =
+                    timeOptions[idx + 2] || timeOptions[timeOptions.length - 1];
+
+                setForm((prev) => ({
+                    ...prev,
+                    startTime: newString,
+                    endTime: autoEnd,
+                }));
+            } else {
+                const autoStart = timeOptions[idx - 2] || timeOptions[0];
+
+                setForm((prev) => ({
+                    ...prev,
+                    startTime: autoStart,
+                    endTime: newString,
+                }));
+            }
             return;
         }
         const startNum = isStartTime
