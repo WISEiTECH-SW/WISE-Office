@@ -1,5 +1,6 @@
 package kr.co.wise.office.domain.Project.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,6 +26,11 @@ public record ProjectCreateRequest(
         @NotNull(message = "{project.start}") LocalDate start,
         @NotNull(message = "{project.end}") LocalDate end,
         @NotBlank(message = "{project.content}") @Size(max = 500, message = "{project.content.size}") String content,
-        @NotNull(message = "{project.pm}") Long projectManagerId,
-        List<Long> attendants, List<Long> proposalAttendants) {
+        @Schema(description = "수행인원상에서 PL로 표시될 사람의 ID") @NotNull(message = "{project.pl}")
+        Long projectLeaderId, // PL (수행 인원, MemberEntity의 ID 값)
+        List<Long> attendants,
+        List<Long> proposalAttendants,
+        @Schema(description = "참석인원 상에서 PM으로 표시될 사람의 ID") @NotNull(message = "{project.pm}")
+        Long projectManagerId // PM (참석 인원, CompanyMemberEntity의 ID 값)
+) {
 }

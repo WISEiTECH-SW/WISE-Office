@@ -3,7 +3,6 @@ package kr.co.wise.office.domain.Project.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.dto.AttendantDetail;
-import kr.co.wise.office.domain.member.dto.MemberListResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +23,7 @@ public class ProjectDetailResponse {
     private int currentYear;
     private AttendantDetail managerName;
     private List<AttendantDetail> attendant;
-    private List<MemberListResponse> proposalAttendant;
+    private List<ProjectProposalAttendantList> proposalAttendant;
 
     @Schema(description = "상세 조회 프로젝트 수정/삭제 권한 보유 여부 (true: 삭제/수정 가능)")
     private boolean canModify; // 수정 가능한 사람인지 유무

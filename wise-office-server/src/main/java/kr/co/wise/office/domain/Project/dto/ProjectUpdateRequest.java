@@ -25,8 +25,11 @@ public record ProjectUpdateRequest(
         @NotNull(message = "{project.start}") LocalDate start,
         @NotNull(message = "{project.end}") LocalDate end,
         @NotBlank(message = "{project.content}") @Size(max = 500, message = "{project.content.size}") String content,
-        @NotNull(message = "{project.pm}") Long projectManagerId,
+        @NotNull(message = "{project.pl}") Long projectLeaderId, // PL (수행 인원, MemberEntity의 ID 값)
         List<Long> attendants,
-        List<Long> proposalAttendants) {
+        List<Long> proposalAttendants,
+        @NotNull(message = "{project.pm}") Long projectManagerId // PM (참석 인원, CompanyMemberEntity의 ID 값)
+){
+
 }
 

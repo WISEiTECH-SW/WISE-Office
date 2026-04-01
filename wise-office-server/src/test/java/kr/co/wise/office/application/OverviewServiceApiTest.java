@@ -112,7 +112,7 @@ class OverviewServiceApiTest {
                 "3월 회의록 - 품의서 포함"
         );
         saveMinutesAttendants(marchMinutesWithApprove, writerAProposal, attendantA1Proposal, attendantA2Proposal);
-        marchApprove = approveEntityRepository.save(ApproveEntity.from(marchMinutesWithApprove, LocalDate.of(2026, 3, 19), writerInfo.getCompanyMember().getName()));
+        marchApprove = approveEntityRepository.save(ApproveEntity.from(marchMinutesWithApprove, LocalDate.of(2026, 3, 19), writerAProposal.getCompanyMember().getName()));
 
         MinutesEntity previousMonthMinutesWithCurrentApprove = saveMinutes(
                 projectA,
@@ -124,7 +124,7 @@ class OverviewServiceApiTest {
                 "2월 회의록 - 품의서 포함"
         );
         saveMinutesAttendants(previousMonthMinutesWithCurrentApprove, writerAProposal, attendantA1Proposal);
-        approveEntityRepository.save(ApproveEntity.from(previousMonthMinutesWithCurrentApprove, LocalDate.of(2026, 3, 2), writerInfo.getCompanyMember().getName()));
+        approveEntityRepository.save(ApproveEntity.from(previousMonthMinutesWithCurrentApprove, LocalDate.of(2026, 3, 2), writerAProposal.getCompanyMember().getName()));
 
         marchMinutesWithoutApprove = saveMinutes(
                 projectB,
