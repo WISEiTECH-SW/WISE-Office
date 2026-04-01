@@ -68,7 +68,6 @@ public class ProjectController {
             @Parameter(description = "업데이트할 프로젝트 번호", required = true) @PathVariable("projectId") long projectId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @Parameter(description = "업데이트할 프로젝트 정보") @Valid @RequestBody ProjectUpdateRequest request) {
-        ;
         return ResponseEntity.status(HttpStatus.OK)
                 .body(projectServiceApi.updateProject(projectId, loginUser.getName(), request));
     }

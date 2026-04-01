@@ -43,10 +43,13 @@ export interface CreateProject {
     start: string;
     end: string;
     content: string;
+    projectLeaderId: number | undefined;
     projectManagerId: number | undefined;
     attendants: number[];
     proposalAttendants: number[];
 }
+
+export type FormErrors = Partial<Record<keyof CreateProject, string>>;
 
 export interface ProjectItem {
     projectId: number;

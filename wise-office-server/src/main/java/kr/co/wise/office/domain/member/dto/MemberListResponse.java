@@ -11,7 +11,7 @@ public class MemberListResponse {
     private String rank;
     private String team;
     private String name;
-
+    private String role;
 
     public static MemberListResponse loadMemberInfo(MemberEntity member) {
         MemberListResponse response = new MemberListResponse();

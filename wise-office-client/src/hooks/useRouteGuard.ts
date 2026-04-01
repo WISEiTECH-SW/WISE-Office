@@ -17,5 +17,5 @@ export function useRouteGuard() {
                 router.replace("/auth/login", undefined, { shallow: true });
             }
         }
-    }, [router]);
+    }, [router, hasToken]);
 }

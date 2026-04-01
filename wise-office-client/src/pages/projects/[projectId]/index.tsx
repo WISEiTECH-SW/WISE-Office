@@ -198,7 +198,6 @@ export default function ProjectById() {
             {/* Project Update Modal */}
             {isEditOpen && projectDetail.data.projectId && (
                 <ProjectModal
-                    mode={"update"}
                     projectId={projectDetail.data.projectId}
                     onClose={() => setIsEditOpen(false)}
                 />

@@ -6,7 +6,6 @@ import kr.co.wise.office.domain.Project.repository.ProjectRepository;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
-import kr.co.wise.office.exception.custom.UnAuthorizationException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,19 +58,13 @@ public class ProjectService {
 
     /**
      * @param projectId        상세 조회할 프로젝트 페이지 번호
-     * @param currentUserEmail 현재 로그인 중인 유저의 email
      */
     @Transactional(readOnly = true)
-    public ProjectDetailResponse searchProjectWithManager(long projectId, String currentUserEmail) {
-        if (currentUserEmail.equals("anonymousUser")) {
-            throw new UnAuthorizationException(ErrorMessage.NOT_FOUND_MEMBER);
-        }
-
+    public ProjectDetailResponse searchProjectWithManager(long projectId) {
         ProjectEntity projectWithManager = projectRepository.findProjectWithManager(projectId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_PROJECT));
 
         ProjectDetailResponse response = ProjectDetailResponse.loadProjectInfo(projectWithManager);
-
         return response;
     }
     
@@ -89,6 +82,7 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
+    @Transactional(readOnly = true)
     public Page<ProjectEntity> searchProjectWithManagerWithPaging(PageRequest pageable) {
         Page<ProjectEntity> projectsWithPaging = projectRepository.findProjectsWithPaging(pageable);
         return projectsWithPaging;

@@ -1,4 +1,4 @@
-type dataType = "project" | "log" | "minute" | "approve";
+type dataType = "main" | "member" | "project" | "log" | "minute" | "approve";
 
 interface LoadingIndicatorProps {
     type: dataType;
@@ -6,6 +6,8 @@ interface LoadingIndicatorProps {
 
 export default function LoadingIndicator({ type }: LoadingIndicatorProps) {
     const dataTypeLabel: Record<dataType, string[]> = {
+        main: ["프로젝트", "프로젝트 진행 현황을"],
+        member: ["사용자", "사용자 정보를"],
         project: ["프로젝트", "문서와 참여자 정보를"],
         log: ["로그", "로그와 댓글을"],
         minute: ["회의록", "회의 내역과 관련 품의서를"],

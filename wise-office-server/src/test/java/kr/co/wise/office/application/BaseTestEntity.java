@@ -23,7 +23,7 @@ public abstract class BaseTestEntity {
     @Autowired
     protected EntityManager em;
     @Autowired
-    protected ProjectServiceApiV2 projectServiceApiV2;
+    protected ProjectServiceApi projectServiceApiV2;
     @Autowired
     protected MemberRepository memberRepository;
     @Autowired
@@ -54,8 +54,8 @@ public abstract class BaseTestEntity {
         this.admin = createMember(adminInfo.email, adminInfo.name, MemberRoleType.MASTER);
 
         ProjectCreateRequest request = new ProjectCreateRequest("title","institution", "businessName", BASE_DATE, BASE_DATE.plusDays(10),
-                "content", pm.getId(), List.of(worker1.getId(), worker2.getId(), creator.getId()), List.of());
-        ProjectCreateResponse response = projectServiceApiV2.createProjectV2(request, creator.getEmail());
+                "content", pm.getId(), List.of(worker1.getId(), worker2.getId(), creator.getId()), List.of(), 100L);
+        ProjectCreateResponse response = projectServiceApiV2.createProject(request, creator.getEmail());
         this.projectId = response.getProjectId();
     }
 
@@ -90,7 +90,8 @@ public abstract class BaseTestEntity {
                 content,
                 pmId,
                 workerIds,
-                proposalAttendantsIds
+                proposalAttendantsIds,
+                100L
                 );
     }
 

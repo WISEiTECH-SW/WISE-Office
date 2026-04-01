@@ -1,7 +1,13 @@
+import { PageParams } from "@/types/page";
+
 export const queryKeys = {
+    all: ["projects"] as const,
+
+    // 사용자
+    members: () => [...queryKeys.all, "members"] as const,
+
     // 프로젝트
-    all: ["project"] as const,
-    projects: () => [...queryKeys.all, "projects"] as const,
+    projectsPaged: (params: PageParams) => [...queryKeys.all, params] as const,
     projectDetail: (projectId: number) =>
         [...queryKeys.all, projectId] as const,
 

@@ -8,7 +8,7 @@ import ApproveForm from "@/components/document/ApproveForm";
 import MinuteForm from "@/components/document/MinuteForm";
 import ActionBar from "@/components/document/ActionBar";
 import Sidebar from "@/components/document/side-bar/SideBar";
-import AttendanceModal from "@/components/modal/AttendanceModal";
+import AttendanceModal from "@/components/modal/minute/AttendanceModal";
 import ErrorIndicator from "@/components/ui/ErrorIndicator";
 import LoadingIndicator from "@/components/ui/LoadingIndicator";
 
