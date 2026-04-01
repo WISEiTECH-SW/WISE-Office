@@ -28,7 +28,7 @@ export default function MinuteItem({
                 <h3 className="font-medium text-sm text-gray-800 truncate mr-1">
                     {minute.purpose}
                 </h3>
-                <h3 className="font-small text-xs text-gray-500 truncate pt-1">
+                <h3 className="font-normal text-xs text-gray-500 truncate pt-1">
                     · {minute.title}
                 </h3>
             </div>
