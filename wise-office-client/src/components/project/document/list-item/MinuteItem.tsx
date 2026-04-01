@@ -35,7 +35,7 @@ export default function MinuteItem({
 
             <div className="flex mt-2 justify-between">
                 <div className="text-xs text-gray-500">{minute.writer}</div>
-                <div className="flex items-center text-xs text-gray-500">
+                <div className="flex items-center text-xs text-gray-800">
                     <CalendarDays className="w-3 h-3 mr-1" />
                     {minute.minutesAt}
                 </div>
