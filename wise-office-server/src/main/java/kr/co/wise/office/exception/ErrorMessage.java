@@ -16,8 +16,9 @@ public enum ErrorMessage {
     INVALID_MEMBER(HttpStatus.UNAUTHORIZED, "이메일 혹은 비밀번호를 잘못 입력했습니다."),
     FORBIDDEN_SIGNUP(HttpStatus.BAD_REQUEST, "불가능한 이메일입니다. 회사 도메인의 이메일을 사용해주세요."),
     AlREADY_SIGNUP_EMAIL(HttpStatus.BAD_REQUEST, "이미 가입한 이메일입니다. 다른 이메일을 이용하세요."),
-    REJECT_PASSWORD_CHANGE(HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
     REJECT_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "불가능한 프로필 이미지 형식입니다."),
+    INVALID_PASSWORD_LENGTH(HttpStatus.BAD_REQUEST, "비밀번호는 8자 이상, 20자 이하로 설정해 주세요."),
+    NOT_EQUAL_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 확인 값이 다릅니다."),
 
     // Minutes
     NOT_FOUND_MINUTES(HttpStatus.BAD_REQUEST, "존재하지 않는 회의록입니다."),

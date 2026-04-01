@@ -34,11 +34,15 @@ export default function Account() {
     }, []);
 
     const handleUpdateAccountInfo = async () => {
+        const MIN_PASSWORD_LENGTH = 8;
+        const MAX_PASSWORD_LENGTH = 20;
+
         if (newPassword) {
             if (newPassword.length < 8 || newPassword.length > 20) {
                 toastMessage.error(
-                    "비밀번호는 8자 이상 20자 이하로 입력해 주세요.",
+                    `비밀번호는 ${MIN_PASSWORD_LENGTH}자 이상 ${MAX_PASSWORD_LENGTH}자 이하로 입력해 주세요.`,
                 );
+
                 return;
             }
             if (newPassword !== newPasswordCheck) {

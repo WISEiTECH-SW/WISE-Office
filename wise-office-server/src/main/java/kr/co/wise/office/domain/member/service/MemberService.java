@@ -38,6 +38,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MemberService extends DefaultOAuth2UserService implements UserDetailsService {
 
+    private static final int MIN_PASSWORD_LENGTH = 8;
+    private static final int MAX_PASSWORD_LENGTH = 20;
+
     private final MemberRepository memberRepository;
     private final AttendantService attendantService;
     private final PasswordEncoder passwordEncoder;
@@ -58,6 +61,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
         if (memberRepository.findByEmail(request.email()).isPresent()) {
             throw new UnAuthorizationException(ErrorMessage.AlREADY_SIGNUP_EMAIL);
         }
+        validatePassword(request.password(), request.passwordMatch());
 
         MemberEntity newMember = MemberEntity.builder()
                 .name(request.name())
@@ -226,25 +230,29 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
             member.updateHireDate(req.hireDate());
         }
 
-        if (req.password() != null) {
-            if (!req.password().equals(req.passwordCheck())) {
-                throw new ApplicationRuntimeException(ErrorMessage.REJECT_PASSWORD_CHANGE);
-            }
+        if (req.password() != null && req.passwordCheck() != null) {
+            validatePassword(req.password(), req.passwordCheck());
             member.updatePassword(passwordEncoder.encode(req.password()));
             passwordChanged = true;
         }
 
-        memberRepository.save(member);
         return new MemberUpdateResponse(passwordChanged);
     }
 
     @Transactional
     public void changePassword(String email, String password, String passwordCheck) {
-        if (!password.equals(passwordCheck)) {
-            throw new ApplicationRuntimeException(ErrorMessage.REJECT_PASSWORD_CHANGE);
-        }
-
+        validatePassword(password, passwordCheck);
         MemberEntity changeMember = findUserWithEmail(email);
         changeMember.updatePassword(passwordEncoder.encode(password));
     }
+
+    private void validatePassword(String password, String passwordCheck) {
+        if (password.length() < MIN_PASSWORD_LENGTH || password.length() > MAX_PASSWORD_LENGTH) {
+            throw new ApplicationRuntimeException(ErrorMessage.INVALID_PASSWORD_LENGTH);
+        }
+        if (!password.equals(passwordCheck)) {
+            throw new ApplicationRuntimeException(ErrorMessage.NOT_EQUAL_PASSWORD);
+        }
+    }
+
 }

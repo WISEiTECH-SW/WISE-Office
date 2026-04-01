@@ -149,7 +149,7 @@ public class MemberController {
     @Operation(summary = "계정 정보 수정", description = "부서, 직급, 입사일, 비밀번호를 수정합니다. 변경된 값만 업데이트됩니다.")
     public ResponseEntity<MemberUpdateResponse> updateAccountInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @RequestBody MemberUpdateRequest request) {
+            @RequestBody @Valid MemberUpdateRequest request) {
         MemberUpdateResponse response = memberService.updateMember(loginUser.getName(), request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
