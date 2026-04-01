@@ -191,7 +191,7 @@ public class AttendantService {
             // 매니저인 경우 Manager 이름까지 설정
             if (attendant.getRole().equals(AttendantRoleType.PM)) {
                 MemberEntity pm = attendant.getMember();
-                response.setManagerName(new AttendantDetail(pm.getId(), pm.getName(), pm.getImageUrl()));
+                response.setManagerName(new AttendantDetail(pm.getId(), pm.getName(), pm.getImageUrl(), pm.getRank()));
             }
         }
     }

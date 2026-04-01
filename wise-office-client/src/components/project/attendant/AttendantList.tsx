@@ -36,6 +36,7 @@ export default function AttendantList({
                         <AttendantListItem
                             isPm={true}
                             name={pm.name}
+                            rank={pm.rank}
                             imageUrl={pm.imageUrl}
                         />
                         {attendants.map((participant, index) => (
@@ -43,6 +44,7 @@ export default function AttendantList({
                                 key={index}
                                 isPm={false}
                                 name={participant.name}
+                                rank={participant.rank}
                                 imageUrl={participant.imageUrl}
                             />
                         ))}
@@ -54,6 +56,7 @@ export default function AttendantList({
                                 key={index}
                                 isPm={false}
                                 name={member.name}
+                                rank={member.rank}
                             />
                         ))}
                     </div>
