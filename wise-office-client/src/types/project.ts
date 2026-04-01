@@ -48,6 +48,8 @@ export interface CreateProject {
     proposalAttendants: number[];
 }
 
+export type FormErrors = Partial<Record<keyof CreateProject, string>>;
+
 export interface ProjectItem {
     projectId: number;
     projectTitle: string;

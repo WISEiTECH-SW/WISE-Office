@@ -11,24 +11,24 @@ export function dateToString(d: Date): string {
     return toYYYYMMDD(d);
 }
 
+export function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
 export function isOverOneYear(today: Date, joinDate: string): boolean {
     const plusOneYear = new Date(joinDate);
     plusOneYear.setFullYear(plusOneYear.getFullYear() + 1);
     return dateToString(today) >= dateToString(plusOneYear);
 }
 
-export const formatMeetingDate = (
-    minutesDate: string,
-    // startTime?: string,
-    // endTime?: string,
-) => {
+export const formatMeetingDate = (minutesDate: string) => {
     if (!minutesDate) return "";
 
     return dayjs(minutesDate).format("YYYY년 MM월 DD일 dddd");
-
-    // if (!startTime || !endTime) return date;
-
-    // return `${date}, ${startTime} ~ ${endTime}`;
 };
 
 export const formatMeetingTime = (startTime: string, endTime: string) => {

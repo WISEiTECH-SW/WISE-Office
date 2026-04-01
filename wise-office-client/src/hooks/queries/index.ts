@@ -1,5 +1,5 @@
 export {
-    useProjects,
+    useProjectsPaged,
     useProjectDetail,
     useProjectMutation,
 } from "./useProject";
@@ -17,3 +17,5 @@ export {
 } from "./useApprove";
 
 export { usePossibleAttendants } from "./useAttendant";
+
+export { useMembers } from "./useMember";
