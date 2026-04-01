@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
     const token = req.cookies.get("jwt")?.value;
-    const { pathname, searchParams } = req.nextUrl;
+    const { pathname } = req.nextUrl;
 
     const protectedPath =
         pathname === "/projects" ||
@@ -12,14 +12,10 @@ export function middleware(req: NextRequest) {
         pathname.startsWith("/overview");
 
     if (protectedPath && !token) {
-        // 절대 URL로 생성
-        const url = new URL("/", req.url);
-        if (!searchParams.get("toast"))
-            url.searchParams.set("toast", "login_required");
+        const loginUrl = new URL("/auth/login", req.url);
+        loginUrl.searchParams.set("toast", "login_required");
 
-        const redirectRes = NextResponse.redirect(url);
-
-        // 캐시 방지 (프리패치/미들웨어 캐시 모두 차단)
+        const redirectRes = NextResponse.redirect(loginUrl);
         redirectRes.headers.set("x-middleware-cache", "no-cache");
         redirectRes.headers.set("Cache-Control", "no-store");
         redirectRes.headers.set("Vary", "Cookie");
