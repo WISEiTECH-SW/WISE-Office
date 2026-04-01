@@ -3,6 +3,7 @@ export interface Member {
     rank: string;
     team: string;
     name: string;
+    role: string;
 }
 
 export interface SignupForm {

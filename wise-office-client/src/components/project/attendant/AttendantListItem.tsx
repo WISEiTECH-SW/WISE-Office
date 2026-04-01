@@ -1,7 +1,8 @@
 import ProfileImage from "@/components/header/ProfileImage";
 
 type AttendantListItemProps = {
-    isPm: boolean;
+    isPm?: boolean;
+    isPl?: boolean;
     name: string;
     rank: string;
     imageUrl?: string;
@@ -9,6 +10,7 @@ type AttendantListItemProps = {
 
 export default function AttendantListItem({
     isPm,
+    isPl,
     name,
     rank,
     imageUrl,
@@ -18,13 +20,30 @@ export default function AttendantListItem({
             <div className="min-x-10 flex flex-col md:flex-row rounded-full items-center gap-2 md:gap-4">
                 <div className="relative w-10 h-10 shrink-0">
                     <ProfileImage imageUrl={imageUrl} />
-                    <span className="absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-200 text-emerald-800 shadow-md ring-1 ring-white">
+                    <span className="w-8 absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-200 text-blue-800 shadow-md ring-1 ring-white text-center">
                         PM
                     </span>
                 </div>
 
                 <span className="text-xs md:text-sm font-medium text-gray-800 truncate max-w-[10rem] md:max-w-[14rem]">
-                    {name} {rank}
+                    {rank ? name + " " + rank : name}
+                </span>
+            </div>
+        );
+    }
+
+    if (isPl) {
+        return (
+            <div className="min-x-10 flex flex-col md:flex-row rounded-full items-center gap-2 md:gap-4">
+                <div className="relative w-10 h-10 shrink-0">
+                    <ProfileImage imageUrl={imageUrl} />
+                    <span className="w-8 absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-200 text-emerald-800 shadow-md ring-1 ring-white text-center">
+                        PL
+                    </span>
+                </div>
+
+                <span className="text-xs md:text-sm font-medium text-gray-800 truncate max-w-[10rem] md:max-w-[14rem]">
+                    {rank ? name + " " + rank : name}
                 </span>
             </div>
         );
@@ -36,7 +55,7 @@ export default function AttendantListItem({
                 <ProfileImage imageUrl={imageUrl} />
             </div>
             <span className="text-xs md:text-sm font-medium text-gray-800">
-                {name} {rank}
+                {rank ? name + " " + rank : name}
             </span>
         </div>
     );
