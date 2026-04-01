@@ -1,9 +1,11 @@
 import { extendLoginSession } from "@/services/members";
+import { Timer } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function ExtendLoginSession() {
     const [expiredAt, setExpiredAt] = useState<string | null>(null);
-    const [timeLeft, setTimeLeft] = useState("");
+    const [minuteLeft, setMinuteLeft] = useState(0);
+    const [secondLeft, setSecondLeft] = useState(0);
 
     useEffect(() => {
         setExpiredAt(localStorage.getItem("expiredAt"));
@@ -11,7 +13,8 @@ export default function ExtendLoginSession() {
 
     useEffect(() => {
         if (!expiredAt) {
-            setTimeLeft("");
+            setMinuteLeft(0);
+            setSecondLeft(0);
             return;
         }
 
@@ -22,16 +25,16 @@ export default function ExtendLoginSession() {
             const difference = expirationDate.getTime() - now.getTime();
 
             if (difference <= 0) {
-                setTimeLeft("만료됨");
+                setMinuteLeft(0);
+                setSecondLeft(0);
                 return true;
             }
 
             const minutes = Math.floor((difference / 1000 / 60) % 60);
             const seconds = Math.floor((difference / 1000) % 60);
 
-            setTimeLeft(
-                `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
-            );
+            setMinuteLeft(minutes);
+            setSecondLeft(seconds);
 
             return false;
         };
@@ -65,10 +68,20 @@ export default function ExtendLoginSession() {
     };
 
     return (
-        <button onClick={() => extendLogin()}>
-            <span className="px-4 py-2 text-sm font-medium text-blue-700 bg-white rounded-md cursor-pointer hover:bg-gray-100">
-                {timeLeft}
-            </span>
-        </button>
+        <>
+            <div className="flex gap-2 items-center">
+                <Timer size={16} />
+                <span className="tabular-nums block text-sm font-semibold">
+                    {String(minuteLeft).padStart(2, "0")}:
+                    {String(secondLeft).padStart(2, "0")}
+                </span>
+            </div>
+            <button
+                onClick={() => extendLogin()}
+                className="px-4 py-2 text-xs font-medium text-blue-700 bg-white rounded-md cursor-pointer hover:bg-gray-100"
+            >
+                로그인 연장
+            </button>
+        </>
     );
 }
