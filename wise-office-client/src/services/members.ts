@@ -1,11 +1,12 @@
 import { api } from "@/lib/clientApi";
 import {
-    ChangePasswordForm,
+    ChangePasswordRequest,
     EmailVerificationResponse,
     GroupedMember,
     LoginResponse,
     MemberAccountUpdateRequest,
     MemberAccountUpdateResponse,
+    ResetPasswordRequest,
     SignupForm,
 } from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
@@ -123,8 +124,8 @@ export async function updateMemberAccount(
     return data;
 }
 
-// 비밀번호 변경 요청
-export async function changePassword(req: ChangePasswordForm): Promise<void> {
+// 비밀번호 초기화 요청
+export async function resetPassword(req: ResetPasswordRequest): Promise<void> {
     await api.patch("/members/email/find-password/verification", req);
 }
 
@@ -132,4 +133,11 @@ export async function changePassword(req: ChangePasswordForm): Promise<void> {
 export async function extendLoginSession(): Promise<string> {
     const { data } = await api.post<LoginResponse>("/members/extend");
     return data.expiredAt;
+}
+
+// 비밀번호 변경 요청
+export async function updatePassword(
+    req: ChangePasswordRequest,
+): Promise<void> {
+    await api.patch("/members/password", req);
 }

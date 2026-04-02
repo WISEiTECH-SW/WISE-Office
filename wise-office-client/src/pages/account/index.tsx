@@ -8,6 +8,7 @@ import {
     getMyProfile,
     logout,
     updateMemberAccount,
+    updatePassword,
 } from "@/services/members";
 import { Profile } from "@/types/profile";
 import { getErrorMessage } from "@/utils/ErrorParser";
@@ -34,7 +35,7 @@ export default function Account() {
         fetchData();
     }, []);
 
-    const handleUpdateAccountInfo = async () => {
+    const handleUpdatePassword = async () => {
         const MIN_PASSWORD_LENGTH = 8;
         const MAX_PASSWORD_LENGTH = 20;
 
@@ -56,23 +57,32 @@ export default function Account() {
         }
 
         try {
-            const res = await updateMemberAccount({
+            await updatePassword({
+                password: newPassword,
+                passwordCheck: newPasswordCheck,
+            });
+            logout();
+            toastMessage.success("변경된 비밀번호로 다시 로그인해 주세요.");
+            router.push("/auth/login");
+        } catch (error) {
+            const errorMessage = getErrorMessage(error);
+            toastMessage.error(errorMessage, {
+                style: { whiteSpace: "pre-line" },
+            });
+        }
+    };
+
+    const handleUpdateAccountInfo = async () => {
+        try {
+            await updateMemberAccount({
                 team,
                 rank,
                 hireDate: joinDate || undefined,
-                password: newPassword || undefined,
-                passwordCheck: newPasswordCheck || undefined,
             });
 
-            if (res.passwordChanged) {
-                await logout();
-                router.push("/auth/login");
-            } else {
-                toastMessage.success("정보가 저장되었습니다.");
-            }
+            toastMessage.success("정보가 저장되었습니다.");
         } catch (error) {
             const errorMessage = getErrorMessage(error);
-            console.error(error);
             toastMessage.error(errorMessage, {
                 style: { whiteSpace: "pre-line" },
             });
@@ -89,6 +99,7 @@ export default function Account() {
 
                 {/* 개인정보 확인 및 변경 영역 */}
                 <section className="col-span-12 md:col-span-3 bg-white rounded-lg shadow-md p-6 flex flex-col justify-center space-y-6 mb-6">
+                    {/* 회사 정보 영역 */}
                     {profile && (
                         <MyInfo
                             team={team}
@@ -104,37 +115,42 @@ export default function Account() {
                         onChange={setJoinDate}
                         page="account"
                     />
-                    <div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 font-semibold mb-2">
-                                비밀번호 변경
-                            </label>
-                            <input
-                                type="password"
-                                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                value={newPassword || ""}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-gray-700 font-semibold mb-2">
-                                비밀번호 변경 확인
-                            </label>
-                            <input
-                                type="password"
-                                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                value={newPasswordCheck || ""}
-                                onChange={(e) =>
-                                    setNewPasswordCheck(e.target.value)
-                                }
-                            />
-                        </div>
-                    </div>
                     <button
                         onClick={handleUpdateAccountInfo}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded py-2 transition duration-300 cursor-pointer"
                     >
-                        정보 변경하기
+                        인사 정보 변경
+                    </button>
+                    {/* 비밀번호 변경 영역 */}
+                    <div className="mb-4">
+                        <label className="block text-gray-700 font-semibold mb-2">
+                            비밀번호 변경
+                        </label>
+                        <input
+                            type="password"
+                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            value={newPassword || ""}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700 font-semibold mb-2">
+                            비밀번호 변경 확인
+                        </label>
+                        <input
+                            type="password"
+                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            value={newPasswordCheck || ""}
+                            onChange={(e) =>
+                                setNewPasswordCheck(e.target.value)
+                            }
+                        />
+                    </div>
+                    <button
+                        onClick={handleUpdatePassword}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded py-2 transition duration-300 cursor-pointer"
+                    >
+                        비밀번호 변경
                     </button>
                 </section>
 

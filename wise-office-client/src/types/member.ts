@@ -25,8 +25,13 @@ export type EmailVerificationResponse = {
     successCode: string;
 };
 
-export type ChangePasswordForm = {
+export type ResetPasswordRequest = {
     successToken: string;
+    password: string;
+    passwordCheck: string;
+};
+
+export type ChangePasswordRequest = {
     password: string;
     passwordCheck: string;
 };
@@ -39,8 +44,6 @@ export type MemberAccountUpdateRequest = {
     team?: string;
     rank?: string;
     hireDate?: string;
-    password?: string;
-    passwordCheck?: string;
 };
 
 export type MemberAccountUpdateResponse = {
