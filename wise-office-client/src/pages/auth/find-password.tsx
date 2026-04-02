@@ -2,7 +2,7 @@ import { useCountDown } from "@/hooks/useCountDown";
 import { validateEmailForm, validateEmailLen } from "@/lib/auth/signup";
 import { toastMessage } from "@/lib/common/toastMessage";
 import {
-    changePassword,
+    resetPassword,
     requestFindPasswordCode,
     verifyFindPasswordCode,
 } from "@/services/members";
@@ -168,7 +168,7 @@ export default function FindPasswordPage() {
         setIsSubmitting(true);
 
         try {
-            await changePassword({
+            await resetPassword({
                 successToken,
                 password,
                 passwordCheck: passwordConfirm,

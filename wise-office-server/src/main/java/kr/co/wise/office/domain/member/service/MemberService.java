@@ -213,9 +213,8 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional
-    public MemberUpdateResponse updateMember(String email, MemberUpdateRequest req) {
+    public void updateMember(String email, MemberUpdateRequest req) {
         MemberEntity member = findUserWithEmail(email);
-        boolean passwordChanged = false; // 비밀번호 변경 유무
 
         // 바뀐 값만 변경되도록 수정 
         if (req.team() != null && !req.team().equals(member.getTeam())) {
@@ -229,14 +228,6 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
         if (req.hireDate() != null && !req.hireDate().equals(member.getHireDate())) {
             member.updateHireDate(req.hireDate());
         }
-
-        if (req.password() != null && req.passwordCheck() != null) {
-            validatePassword(req.password(), req.passwordCheck());
-            member.updatePassword(passwordEncoder.encode(req.password()));
-            passwordChanged = true;
-        }
-
-        return new MemberUpdateResponse(passwordChanged);
     }
 
     @Transactional

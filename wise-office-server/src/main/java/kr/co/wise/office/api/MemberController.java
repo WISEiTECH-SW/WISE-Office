@@ -146,12 +146,23 @@ public class MemberController {
     }
 
     @PatchMapping("/account")
-    @Operation(summary = "계정 정보 수정", description = "부서, 직급, 입사일, 비밀번호를 수정합니다. 변경된 값만 업데이트됩니다.")
-    public ResponseEntity<MemberUpdateResponse> updateAccountInfo(
+    @Operation(summary = "계정 정보 수정", description = "부서, 직급, 입사일을 수정합니다. 사용자가 변경된 값만 업데이트됩니다.")
+    public ResponseEntity<Void> updateAccountInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @RequestBody @Valid MemberUpdateRequest request) {
-        MemberUpdateResponse response = memberService.updateMember(loginUser.getName(), request);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        memberService.updateMember(loginUser.getName(), request);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/password")
+    @Operation(summary = "비밀번호 변경", description = "비밀번호를 변경합니다.")
+    public ResponseEntity<Void> updatePassword(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
+            @RequestBody @Valid ChangePasswordRequest request
+    ) {
+        memberService.changePassword(loginUser.getName(), request.password(), request.passwordCheck());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/hire-date")
@@ -189,8 +200,8 @@ public class MemberController {
 
     @PatchMapping("/email/find-password/verification")
     @Operation(summary = "비밀번호 초기화")
-    public ResponseEntity<Void> changePassword(
-            @Parameter(description = "비밀번호 초기화") @RequestBody ChangePasswordRequest request
+    public ResponseEntity<Void> resetPassword(
+            @Parameter(description = "비밀번호 초기화") @RequestBody ResetPasswordRequest request
     ) {
         String email = emailService.verificationSuccessToken(request.successToken());
         memberService.changePassword(email, request.password(), request.passwordCheck());
