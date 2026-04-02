@@ -81,7 +81,7 @@ export default function ProjectOverviewList() {
                 <p className="text-gray-400">등록된 문서가 없습니다.</p>
             ) : (
                 groupedByMonth
-                    .sort((a, b) => a.month - b.month)
+                    .sort((a, b) => b.month - a.month)
                     .map(({ month, minutesInfo }) => (
                         <div key={month} className="flex flex-col gap-4 pr-16">
                             <p className="text-lg font-semibold">{month}월</p>
