@@ -1,6 +1,6 @@
 import { api } from "@/lib/clientApi";
 import {
-    ApproveDetailResponse,
+    ApprovalDetailResponse,
     ApproveList,
     MinutesInfo,
     MinutesList,
@@ -30,7 +30,7 @@ export async function getMinutesInfo(
 export async function getApproveInfo(
     projectId: number,
     approveId: number,
-): Promise<ApproveDetailResponse> {
+): Promise<ApprovalDetailResponse> {
     const { data } = await api.get(
         `/projects/${projectId}/approves/${approveId}`,
     );

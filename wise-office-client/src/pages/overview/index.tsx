@@ -6,7 +6,7 @@ import MonthOverviewList from "@/components/overview/MonthOverviewList";
 import PreviewModal from "@/components/modal/PreviewModal";
 import { useOverviewStore, usePreviewStore } from "@/store/useOverviewStore";
 import MinuteDocument from "@/components/document/MinuteDocument";
-import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
+import { ApprovalDetailResponse, MinutesInfo } from "@/types/document";
 import ApproveDocument from "@/components/document/ApproveDocument";
 
 export default function Overview() {
@@ -48,7 +48,7 @@ export default function Overview() {
                     <MinuteDocument minuteDetail={data as MinutesInfo} />
                 )}
                 {type === "approve" && (
-                    <ApproveDocument approve={data as ApproveDetailResponse} />
+                    <ApproveDocument approve={data as ApprovalDetailResponse} />
                 )}
             </div>
         </div>

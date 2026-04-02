@@ -1,11 +1,11 @@
 import Button from "@/components/ui/Button";
-import { ApproveDetailResponse } from "@/types/document";
+import { ApprovalDetailResponse } from "@/types/document";
 import { Edit, Printer, FileSearch } from "lucide-react";
 import { SelectedDocument } from "@/types/project";
 import ApproveDocument from "@/components/document/ApproveDocument";
 
 interface Props {
-    approve: ApproveDetailResponse;
+    approve: ApprovalDetailResponse;
     isAttending: boolean;
     onEdit: () => void;
     onRelate: (doc: SelectedDocument) => void;

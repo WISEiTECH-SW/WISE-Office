@@ -1,7 +1,7 @@
 import { api } from "@/lib/clientApi";
 import {
     ApproveCreateResonse,
-    ApproveDetailResponse,
+    ApprovalDetailResponse,
     ApproveUpdateRequest,
     ApproveUpdateResponse,
     PossibleAttendantsResponse,
@@ -23,12 +23,12 @@ export async function createApprove(projectId: number, minutesId: number) {
 /**
  * approve를 조회하는 함수
  * @param projectId 해당 프로젝트의 ID, approveId 조회하고자 하는 품의서의 ID
- * @returns ApproveDetailResponse 객체
+ * @returns ApprovalDetailResponse 객체
  */
 export async function getApproveDetail(
     projectId: number,
     approveId: number,
-): Promise<ApproveDetailResponse> {
+): Promise<ApprovalDetailResponse> {
     const res = await api.get(`projects/${projectId}/approves/${approveId}`);
 
     return res.data;
@@ -37,7 +37,7 @@ export async function getApproveDetail(
 /**
  * approve를 수정하는 함수
  * @param projectId 해당 프로젝트의 ID, approveId 조회하고자 하는 품의서의 ID
- * @returns ApproveDetailResponse 객체
+ * @returns ApprovalDetailResponse 객체
  */
 export async function updateApprove(
     projectId: number,
