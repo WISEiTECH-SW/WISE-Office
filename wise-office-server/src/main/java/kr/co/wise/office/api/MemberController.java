@@ -146,7 +146,7 @@ public class MemberController {
     }
 
     @PatchMapping("/account")
-    @Operation(summary = "계정 정보 수정", description = "부서, 직급, 입사일, 비밀번호를 수정합니다. 변경된 값만 업데이트됩니다.")
+    @Operation(summary = "계정 정보 수정", description = "부서, 직급, 입사일을 수정합니다. 사용자가 변경된 값만 업데이트됩니다.")
     public ResponseEntity<Void> updateAccountInfo(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
             @RequestBody @Valid MemberUpdateRequest request) {

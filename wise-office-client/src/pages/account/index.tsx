@@ -61,7 +61,7 @@ export default function Account() {
                 password: newPassword,
                 passwordCheck: newPasswordCheck,
             });
-            logout();
+            await logout();
             toastMessage.success("변경된 비밀번호로 다시 로그인해 주세요.");
             router.push("/auth/login");
         } catch (error) {
