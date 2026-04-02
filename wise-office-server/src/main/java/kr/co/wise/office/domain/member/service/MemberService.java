@@ -38,6 +38,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MemberService extends DefaultOAuth2UserService implements UserDetailsService {
 
+    private static final int MIN_PASSWORD_LENGTH = 8;
+    private static final int MAX_PASSWORD_LENGTH = 20;
+
     private final MemberRepository memberRepository;
     private final AttendantService attendantService;
     private final PasswordEncoder passwordEncoder;
@@ -58,6 +61,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
         if (memberRepository.findByEmail(request.email()).isPresent()) {
             throw new UnAuthorizationException(ErrorMessage.AlREADY_SIGNUP_EMAIL);
         }
+        validatePassword(request.password(), request.passwordMatch());
 
         MemberEntity newMember = MemberEntity.builder()
                 .name(request.name())
@@ -179,14 +183,6 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional
-    public MemberPositionUpdateResponse updateMemberPosition(MemberPositionUpdateRequest request, String loginUserEmail) {
-        MemberEntity loginMember = findUserWithEmail(loginUserEmail);
-        loginMember.updatePosition(request);
-        memberRepository.save(loginMember);
-        return new MemberPositionUpdateResponse(loginMember.getTeam(), loginMember.getRank());
-    }
-
-    @Transactional
     public void updateMemberProfile(String savedImageName, String loginUserEmail) {
         MemberEntity member = findUserWithEmail(loginUserEmail);
         member.updateInfo(member.getName(), savedImageName);
@@ -205,14 +201,6 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
         return new HireDateResponse(member.getHireDate());
     }
 
-    @Transactional
-    public HireDateResponse updateMemberHireDate(String loginUserEmail, HireDateUpdateRequest request) {
-        MemberEntity member = findUserWithEmail(loginUserEmail);
-        member.updateHireDate(request.hireDate());
-        memberRepository.save(member);
-        return new HireDateResponse(request.hireDate());
-    }
-
     @Transactional(readOnly = true)
     public void checkSignUp(String email) {
         memberRepository.findByEmail(email).orElseThrow(() ->
@@ -225,12 +213,46 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     }
 
     @Transactional
-    public void changePassword(String email, String password, String passwordCheck) {
-        if (!password.equals(passwordCheck)) {
-            throw new ApplicationRuntimeException(ErrorMessage.REJECT_PASSWORD_CHANGE);
+    public MemberUpdateResponse updateMember(String email, MemberUpdateRequest req) {
+        MemberEntity member = findUserWithEmail(email);
+        boolean passwordChanged = false; // 비밀번호 변경 유무
+
+        // 바뀐 값만 변경되도록 수정 
+        if (req.team() != null && !req.team().equals(member.getTeam())) {
+            member.updateTeam(req.team());
         }
 
+        if (req.rank() != null && !req.rank().equals(member.getRank())) {
+            member.updateRank(req.rank());
+        }
+
+        if (req.hireDate() != null && !req.hireDate().equals(member.getHireDate())) {
+            member.updateHireDate(req.hireDate());
+        }
+
+        if (req.password() != null && req.passwordCheck() != null) {
+            validatePassword(req.password(), req.passwordCheck());
+            member.updatePassword(passwordEncoder.encode(req.password()));
+            passwordChanged = true;
+        }
+
+        return new MemberUpdateResponse(passwordChanged);
+    }
+
+    @Transactional
+    public void changePassword(String email, String password, String passwordCheck) {
+        validatePassword(password, passwordCheck);
         MemberEntity changeMember = findUserWithEmail(email);
         changeMember.updatePassword(passwordEncoder.encode(password));
     }
+
+    private void validatePassword(String password, String passwordCheck) {
+        if (password.length() < MIN_PASSWORD_LENGTH || password.length() > MAX_PASSWORD_LENGTH) {
+            throw new ApplicationRuntimeException(ErrorMessage.INVALID_PASSWORD_LENGTH);
+        }
+        if (!password.equals(passwordCheck)) {
+            throw new ApplicationRuntimeException(ErrorMessage.NOT_EQUAL_PASSWORD);
+        }
+    }
+
 }

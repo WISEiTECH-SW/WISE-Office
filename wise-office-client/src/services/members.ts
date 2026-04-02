@@ -4,6 +4,8 @@ import {
     EmailVerificationResponse,
     GroupedMember,
     LoginResponse,
+    MemberAccountUpdateRequest,
+    MemberAccountUpdateResponse,
     SignupForm,
 } from "@/types/member";
 import { Profile, ProfileRequest } from "@/types/profile";
@@ -106,6 +108,17 @@ export async function verifyFindPasswordCode(
                 code: inputCode,
             },
         },
+    );
+    return data;
+}
+
+// 계정 정보 수정, 비밀번호는 변경시 로그아웃 처리
+export async function updateMemberAccount(
+    req: MemberAccountUpdateRequest,
+): Promise<MemberAccountUpdateResponse> {
+    const { data } = await api.patch<MemberAccountUpdateResponse>(
+        "/members/account",
+        req,
     );
     return data;
 }
