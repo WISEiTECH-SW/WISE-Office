@@ -26,6 +26,9 @@ public class ProposalAttendantsService {
     }
 
     public List<ProposalAttendantEntity> findWriterInfos(List<Long> proposalIds, long projectId) {
+        if (proposalIds.isEmpty()) {
+            return List.of();
+        }
         List<ProposalAttendantEntity> writerInfos = proposalAttendantEntityRepository.findWriterInfos(proposalIds, projectId);
         if (writerInfos.isEmpty()) {
             throw new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT);

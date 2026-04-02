@@ -72,57 +72,56 @@ export default function ProjectOverviewList() {
         };
     }).filter((m) => m.data.length > 0);
 
-    if (!minutesList.length || !minutesInfos.length) {
-        return null;
-    }
-
     return (
         <div className="flex flex-col gap-10">
             <p className="text-2xl font-bold">{projectInfo.projectTitle}</p>
 
-            {groupedByMonth
-                .sort((a, b) => a.month - b.month)
-                .map(({ month, data }) => (
-                    <div key={month} className="flex flex-col gap-4 pr-16">
-                        <p className="text-lg font-semibold">{month}월</p>
+            {!minutesList.length ? (
+                <p className="text-gray-400">등록된 문서가 없습니다.</p>
+            ) : (
+                groupedByMonth
+                    .sort((a, b) => a.month - b.month)
+                    .map(({ month, data }) => (
+                        <div key={month} className="flex flex-col gap-4 pr-16">
+                            <p className="text-lg font-semibold">{month}월</p>
 
-                        {data.map((minutes, index) => {
-                            const minutesInfo = minutesInfos.find(
-                                (info) => info.minutesId === minutes.minutesId,
-                            );
-                            const relatedApproves = approveInfos.filter(
-                                (a) => a.minutesId === minutes.minutesId,
-                            );
+                            {data.map((minutes, index) => {
+                                const minutesInfo = minutesInfos.find(
+                                    (info) =>
+                                        info.minutesId === minutes.minutesId,
+                                );
+                                const relatedApproves = approveInfos.filter(
+                                    (a) => a.minutesId === minutes.minutesId,
+                                );
 
-                            return (
-                                <div
-                                    key={minutes.minutesId}
-                                    className={`flex flex-col gap-3 ${
-                                        index !== data.length - 1
-                                            ? "pb-4 border-b border-gray-200"
-                                            : ""
-                                    }`}
-                                >
-                                    {/* 회의록 */}
-                                    <OverviewCard
-                                        minutes={minutes}
-                                        minutesInfo={minutesInfo}
-                                    />
-                                    {/* 품의서 */}
-                                    {relatedApproves.map((approve) => (
+                                return (
+                                    <div
+                                        key={minutes.minutesId}
+                                        className={`flex flex-col gap-3 ${
+                                            index !== data.length - 1
+                                                ? "pb-4 border-b border-gray-200"
+                                                : ""
+                                        }`}
+                                    >
                                         <OverviewCard
-                                            key={approve.approveId}
                                             minutes={minutes}
                                             minutesInfo={minutesInfo}
-                                            approve={approve}
-                                            isApproval={true}
                                         />
-                                    ))}
-                                </div>
-                            );
-                        })}
-                    </div>
-                ))}
+                                        {relatedApproves.map((approve) => (
+                                            <OverviewCard
+                                                key={approve.approveId}
+                                                minutes={minutes}
+                                                minutesInfo={minutesInfo}
+                                                approve={approve}
+                                                isApproval={true}
+                                            />
+                                        ))}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ))
+            )}
         </div>
     );
 }
