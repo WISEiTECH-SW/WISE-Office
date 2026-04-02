@@ -10,6 +10,7 @@ import {
     updateMemberAccount,
 } from "@/services/members";
 import { Profile } from "@/types/profile";
+import { getErrorMessage } from "@/utils/ErrorParser";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -38,7 +39,10 @@ export default function Account() {
         const MAX_PASSWORD_LENGTH = 20;
 
         if (newPassword) {
-            if (newPassword.length < 8 || newPassword.length > 20) {
+            if (
+                newPassword.length < MIN_PASSWORD_LENGTH ||
+                newPassword.length > MAX_PASSWORD_LENGTH
+            ) {
                 toastMessage.error(
                     `비밀번호는 ${MIN_PASSWORD_LENGTH}자 이상 ${MAX_PASSWORD_LENGTH}자 이하로 입력해 주세요.`,
                 );
@@ -67,8 +71,11 @@ export default function Account() {
                 toastMessage.success("정보가 저장되었습니다.");
             }
         } catch (error) {
+            const errorMessage = getErrorMessage(error);
             console.error(error);
-            toastMessage.error("정보 변경 중 오류가 발생했습니다.");
+            toastMessage.error(errorMessage, {
+                style: { whiteSpace: "pre-line" },
+            });
         }
     };
 
