@@ -19,19 +19,17 @@ export default function OverviewCard({
 }: OverviewCardProps) {
     return (
         <div className="flex w-full bg-white border border-gray-300 rounded-lg px-2 gap-8 items-center justify-between text-sm">
-            {/* 날짜/시간 */}
-            <div
-                className={`flex min-w-0 pl-4 gap-2 font-normal ${approvalDetail ? "self-start py-4" : "self-center"}`}
-            >
-                <p>{minutesDetail?.minutesDate}</p>
-                <p>
-                    {minutesDetail?.startTime}~{minutesDetail?.endTime}
-                </p>
-            </div>
-
             <div className="flex flex-col flex-1 min-w-0">
                 {/* 회의록 행 */}
-                <div className="flex gap-6 justify-between">
+                <div className="flex justify-between gap-4">
+                    <div className="w-[200px] shrink-0 pl-4 gap-2 font-normal flex items-center">
+                        <p className="whitespace-nowrap">
+                            {minutesDetail?.minutesDate}
+                        </p>
+                        <p className="whitespace-nowrap">
+                            {minutesDetail?.startTime}~{minutesDetail?.endTime}
+                        </p>
+                    </div>
                     <div className="flex-1 flex px-2 py-3 items-center gap-6">
                         <p className="flex-1 flex justify-center text-sm">
                             회의록 · {minutesInfo.title}
@@ -42,8 +40,7 @@ export default function OverviewCard({
                                 .join(", ")}
                         </p>
                     </div>
-
-                    <div className="flex px-2 py-3 gap-2 shrink-0">
+                    <div className="flex items-center px-2 py-3 gap-2 shrink-0">
                         <PreviewButton minutesDetail={minutesDetail ?? null} />
                         <PrintButton minutesDetail={minutesDetail ?? null} />
                     </div>
@@ -51,7 +48,12 @@ export default function OverviewCard({
 
                 {/* 품의서 행 */}
                 {approvalDetail && (
-                    <div className="flex gap-6 justify-between">
+                    <div className="flex justify-between gap-4">
+                        <div className="w-[200px] shrink-0 pl-4 font-normal flex items-center">
+                            {approvalDetail.submitAt
+                                .replace(/\./g, "-")
+                                .replace(/-$/, "")}
+                        </div>
                         <div className="flex-1 flex px-2 py-3 items-center gap-6 border-t border-gray-200">
                             <p className="flex-1 flex justify-center text-sm">
                                 품의서 · {approvalDetail.approveNo}
@@ -60,7 +62,7 @@ export default function OverviewCard({
                                 {approvalDetail.writer}
                             </p>
                         </div>
-                        <div className="flex px-2 py-3 gap-2 shrink-0">
+                        <div className="flex items-center px-2 py-3 gap-2 shrink-0">
                             <PreviewButton
                                 approvalDetail={approvalDetail ?? null}
                             />
