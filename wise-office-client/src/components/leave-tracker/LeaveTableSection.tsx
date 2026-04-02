@@ -24,6 +24,7 @@ export default function LeaveTableSection() {
 
     return (
         <div className="w-full bg-white border border-gray-300 rounded-lg shadow-sm p-8">
+            <LeaveHeatmapSection />
             <p className="text-xl font-bold">테이블로 미리보기</p>
             <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-sm text-left my-4 md:my-6 ">
@@ -73,7 +74,6 @@ export default function LeaveTableSection() {
                     </tbody>
                 </table>
             </div>
-            <LeaveHeatmapSection />
         </div>
     );
 }
