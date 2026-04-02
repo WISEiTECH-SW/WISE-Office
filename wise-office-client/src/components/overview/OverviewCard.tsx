@@ -36,7 +36,7 @@ export default function OverviewCard({
                         </p>
                         <p className="flex-1 flex text-xs text-gray-600 line-clamp-3 break-keep">
                             {minutesDetail?.minutesAttendants
-                                .map((a) => `${a.name} ${a.rank}`)
+                                ?.map((a) => `${a.name} ${a.rank}`)
                                 .join(", ")}
                         </p>
                     </div>

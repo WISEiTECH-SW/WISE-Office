@@ -63,9 +63,13 @@ export default function ProjectOverviewList() {
     const groupedByMonth = Array.from({ length: 12 }, (_, i) => {
         const month = i;
 
-        const minutesInfo = filteredData.filter(
-            (m) => new Date(m.minutesAt).getMonth() === month,
-        );
+        const minutesInfo = filteredData
+            .filter((m) => new Date(m.minutesAt).getMonth() === month)
+            .sort(
+                (a, b) =>
+                    new Date(a.minutesAt).getTime() -
+                    new Date(b.minutesAt).getTime(),
+            );
 
         return {
             month: month + 1,
