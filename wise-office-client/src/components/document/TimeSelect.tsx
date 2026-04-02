@@ -53,7 +53,7 @@ export default function TimeSelect({
             />
 
             {open && (
-                <div className="absolute z-10 w-full max-h-40 overflow-y-auto bg-white border border-gray-300 rounded-md shadow">
+                <div className="absolute z-10 w-full max-h-40 overflow-y-auto bg-white border border-gray-300 rounded-md shadow custom-scroll">
                     {filteredOptions.length > 0 ? (
                         filteredOptions.map((t) => (
                             <div

@@ -37,7 +37,7 @@ export default function LeaveHeatmapSection() {
         selectedYearIndex >= 0 && selectedYearIndex < availableYears.length - 1;
 
     return (
-        <div className="mt-8 border-t border-gray-200 pt-6">
+        <div className="mb-8 border-b border-gray-200 pb-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                     <p className="text-lg font-semibold text-gray-900">
