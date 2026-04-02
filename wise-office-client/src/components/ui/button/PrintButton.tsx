@@ -1,24 +1,24 @@
 import { Printer } from "lucide-react";
 import { usePreviewStore } from "@/store/useOverviewStore";
-import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
+import { ApprovalDetailResponse, MinutesInfo } from "@/types/document";
 
 export default function PrintButton({
-    minutesInfo,
-    approveInfo,
+    minutesDetail,
+    approvalDetail,
 }: {
-    minutesInfo?: MinutesInfo | null;
-    approveInfo?: ApproveDetailResponse | null;
+    minutesDetail?: MinutesInfo | null;
+    approvalDetail?: ApprovalDetailResponse | null;
 }) {
     const { setPreview } = usePreviewStore();
 
     const onPrint = () => {
-        if (minutesInfo) {
-            setPreview("minutes", minutesInfo);
+        if (minutesDetail) {
+            setPreview("minutes", minutesDetail);
             setTimeout(() => {
                 window.print();
             }, 0);
-        } else if (approveInfo) {
-            setPreview("approve", approveInfo);
+        } else if (approvalDetail) {
+            setPreview("approve", approvalDetail);
             setTimeout(() => {
                 window.print();
             }, 0);

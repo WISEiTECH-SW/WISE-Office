@@ -1,26 +1,26 @@
 import { usePreviewStore } from "@/store/useOverviewStore";
-import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
+import { ApprovalDetailResponse, MinutesInfo } from "@/types/document";
 import { LucideFileSearch } from "lucide-react";
 
 export default function PreviewButton({
-    minutesInfo,
-    approveInfo,
+    minutesDetail,
+    approvalDetail,
 }: {
-    minutesInfo?: MinutesInfo | null;
-    approveInfo?: ApproveDetailResponse | null;
+    minutesDetail?: MinutesInfo | null;
+    approvalDetail?: ApprovalDetailResponse | null;
 }) {
     const { onOpen, setPreview } = usePreviewStore();
 
     const handleClick = () => {
-        if (minutesInfo) {
-            setPreview("minutes", minutesInfo);
+        if (minutesDetail) {
+            setPreview("minutes", minutesDetail);
             onOpen();
             return;
         }
 
         // 품의서
-        if (approveInfo) {
-            setPreview("approve", approveInfo);
+        if (approvalDetail) {
+            setPreview("approve", approvalDetail);
             onOpen();
             return;
         }

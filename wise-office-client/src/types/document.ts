@@ -95,7 +95,7 @@ export interface ApproveCreateResonse {
     minutesPurpose: string;
 }
 
-export interface ApproveDetailResponse {
+export interface ApprovalDetailResponse {
     approveId: number;
     minutesId: number; // 해당 품의서를 작성한 회의록 번호
     approveNo: string; // 문서번호
