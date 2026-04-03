@@ -17,7 +17,7 @@ export default function AttendantListItem({
 }: AttendantListItemProps) {
     if (isPm) {
         return (
-            <div className="min-x-10 flex flex-col md:flex-row rounded-full items-center gap-2 md:gap-4">
+            <div className="min-x-10 flex flex-col md:flex-row rounded-full items-center gap-2 md:gap-4 pb-4">
                 <div className="relative w-10 h-10 shrink-0">
                     <ProfileImage imageUrl={imageUrl} />
                     <span className="w-8 absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-200 text-blue-800 shadow-md ring-1 ring-white text-center">
@@ -34,7 +34,7 @@ export default function AttendantListItem({
 
     if (isPl) {
         return (
-            <div className="min-x-10 flex flex-col md:flex-row rounded-full items-center gap-2 md:gap-4">
+            <div className="min-x-10 flex flex-col md:flex-row rounded-full items-center gap-2 md:gap-4 pb-4">
                 <div className="relative w-10 h-10 shrink-0">
                     <ProfileImage imageUrl={imageUrl} />
                     <span className="w-8 absolute -top-2.5 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-200 text-emerald-800 shadow-md ring-1 ring-white text-center">
@@ -50,7 +50,7 @@ export default function AttendantListItem({
     }
 
     return (
-        <div className="flex flex-col md:flex-row rounded-full items-center justify-center md:justify-start gap-2 md:gap-4">
+        <div className="flex flex-col md:flex-row rounded-full items-center justify-center md:justify-start gap-2 md:gap-4 pb-4">
             <div className="relative w-10 h-10 rounded-full overflow-hidden">
                 <ProfileImage imageUrl={imageUrl} />
             </div>

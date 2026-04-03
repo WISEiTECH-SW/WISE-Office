@@ -33,7 +33,7 @@ export default function AttendantList({
 
                 {selectAttendant === "수행 인원" ? (
                     <div className="flex flex-col gap-2 pt-2">
-                        <div className="md:max-h-85 pt-4 flex flex-nowrap gap-4 md:flex-col">
+                        <div className="md:max-h-85 pt-4 flex flex-nowrap md:flex-col">
                             <AttendantListItem
                                 isPl={true}
                                 name={pm.name}
@@ -52,7 +52,7 @@ export default function AttendantList({
                     </div>
                 ) : (
                     <div className="flex flex-col gap-2 pt-2">
-                        <div className="md:max-h-85 pt-4 flex flex-nowrap gap-4 md:flex-col">
+                        <div className="md:max-h-85 pt-4 flex flex-nowrap md:flex-col">
                             {[...proposalAttendant]
                                 .sort((a, b) =>
                                     a.role === "PM"
