@@ -13,9 +13,10 @@ import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity
 import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
 import kr.co.wise.office.external.hoilday.dto.HolidayCalculator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -33,11 +34,12 @@ public class MinutesServiceApi {
 
     private final ProposalAttendantsService proposalAttendantsService;
 
-    public List<MinutesListResponse> getMinutesBriefInfo(
+    public Page<MinutesListResponse> getMinutesBriefInfo(
             long projectId,
-            String loginUserEmail
+            String loginUserEmail,
+            Pageable pageable
     ) {
-        return minutesService.getMinutesBriefInfo(projectId);
+        return minutesService.getMinutesBriefInfo(projectId, pageable);
     }
 
     @CheckProjectAuth

@@ -12,6 +12,11 @@ interface DocumentSidebarProps {
         minuteList: MinutesListResponse[];
         approveList: ApproveListResponse[];
     };
+    documnetPageInfo?: {
+        totalPages: number;
+        currentPage: number;
+    };
+    setDocumentPage?: (page: number) => void;
     selectedDoc: SelectedDocument;
     attending: boolean;
     setSelectedDoc: (document: SelectedDocument) => void;
@@ -20,6 +25,8 @@ interface DocumentSidebarProps {
 
 export default function DocumentSidebar({
     docData,
+    documnetPageInfo,
+    setDocumentPage,
     selectedDoc,
     attending,
     setSelectedDoc,
@@ -32,7 +39,8 @@ export default function DocumentSidebar({
     const selectDoc = (type: DocumentType, id: number) => {
         setSelectedDoc({ type: type, id: id });
     };
-
+    const totalPages = documnetPageInfo?.totalPages ?? 0;
+    const currentPage = documnetPageInfo?.currentPage ?? 0;
     const handleWrite = () => {
         if (selectedDoc.type === "minute") {
             onWrite("minute");
@@ -54,6 +62,21 @@ export default function DocumentSidebar({
                     docData={docData}
                     onSelectDoc={selectDoc}
                 />
+                <div className="flex justify-center gap-2 m-2 pb-2">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setDocumentPage?.(i)}
+                            className={`px-3 py-1  cursor-pointer rounded ${
+                                currentPage === i
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-gray-200"
+                            }`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {attending && selectedDoc?.type != "approve" && (

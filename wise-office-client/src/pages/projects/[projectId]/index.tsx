@@ -42,10 +42,10 @@ export default function ProjectById() {
     const [deleteModalState, setDeleteModalState] =
         useState<DeleteModalState>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
-
+    const [minutePage, setMinutePage] = useState(0);
     /* -----query ----- */
     const logs = useLogs(projectId);
-    const minutes = useMinutes(projectId);
+    const minutes = useMinutes(projectId, minutePage);
     const approves = useApproves(projectId);
 
     const projectDetail = useProjectDetail(projectId);
@@ -138,9 +138,14 @@ export default function ProjectById() {
                 <DocumentSidebar
                     docData={{
                         logList: logs.data ?? [],
-                        minuteList: minutes.data ?? [],
+                        minuteList: minutes.data?.content ?? [],
                         approveList: approves.data ?? [],
                     }}
+                    documnetPageInfo={{
+                        totalPages: minutes.data?.totalPages ?? 0,
+                        currentPage: minutePage,
+                    }}
+                    setDocumentPage={setMinutePage}
                     selectedDoc={selectedDoc}
                     attending={projectDetail.data.attending}
                     setSelectedDoc={setSelectedDoc}

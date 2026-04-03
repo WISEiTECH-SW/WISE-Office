@@ -45,6 +45,7 @@ export interface MinutesListResponse {
     minutesAt: string;
     writer: string;
     purpose: string;
+    number: number; // 현재 페이지
 }
 
 export interface MinutesDetail {
@@ -159,4 +160,11 @@ export interface MonthlyDocument {
     projectId: number;
     title: string;
     pair: DocumentPair[];
+}
+export interface PageResponse<T> {
+    content: T[];
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
 }
