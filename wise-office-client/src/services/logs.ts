@@ -1,4 +1,5 @@
 import { api } from "@/lib/clientApi";
+import { PageResponse } from "@/types/document";
 import type { Log, LogDetail, LogInput } from "@/types/log";
 
 /**
@@ -6,8 +7,14 @@ import type { Log, LogDetail, LogInput } from "@/types/log";
  * @param projectId 조회할 프로젝트의 ID
  * @returns Log 배열 또는 undefined
  */
-export async function getLogList(projectId: number): Promise<Log[]> {
-    const res = await api.get<Log[]>(`/v1/${projectId}/logs`);
+export async function getLogList(
+    projectId: number,
+    page: number,
+    size: number = 10,
+): Promise<PageResponse<Log>> {
+    const res = await api.get(`/v1/${projectId}/logs`, {
+        params: { page, size },
+    });
     return res.data;
 }
 
@@ -19,7 +26,7 @@ export async function getLogList(projectId: number): Promise<Log[]> {
  */
 export async function getLogDetail(
     projectId: number,
-    logId: number
+    logId: number,
 ): Promise<LogDetail> {
     const res = await api.get<LogDetail>(`/v1/${projectId}/logs/${logId}`);
     return res.data;
@@ -33,7 +40,7 @@ export async function getLogDetail(
  */
 export async function createLog(
     projectId: number,
-    logInput: LogInput
+    logInput: LogInput,
 ): Promise<LogDetail> {
     const res = await api.post<LogDetail>(`/v1/${projectId}/logs`, logInput);
     return res.data;
@@ -58,7 +65,7 @@ export async function deleteLog(projectId: number, logId: number) {
 export async function patchLog(
     projectId: number,
     logId: number,
-    logInput: LogInput
+    logInput: LogInput,
 ): Promise<LogDetail> {
     const res = await api.patch(`/v1/${projectId}/logs/${logId}`, logInput);
     return res.data;

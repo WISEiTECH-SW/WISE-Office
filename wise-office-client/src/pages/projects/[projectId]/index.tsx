@@ -42,10 +42,11 @@ export default function ProjectById() {
     const [deleteModalState, setDeleteModalState] =
         useState<DeleteModalState>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [logsPage, setLogsPage] = useState(0);
     const [minutesPage, setMinutesPage] = useState(0);
     const [approvalsPage, setApprovalsPage] = useState(0);
     /* -----query ----- */
-    const logs = useLogs(projectId);
+    const logs = useLogs(projectId, logsPage);
     const minutes = useMinutes(projectId, minutesPage);
     const approvals = useApproves(projectId, approvalsPage);
 
@@ -138,11 +139,15 @@ export default function ProjectById() {
                 {/* Left Side - Doc List */}
                 <DocumentSidebar
                     docData={{
-                        logList: logs.data ?? [],
+                        logList: logs.data?.content ?? [],
                         minutesList: minutes.data?.content ?? [],
                         approvalsList: approvals.data?.content ?? [],
                     }}
                     documnetPageInfo={{
+                        logsPage: {
+                            totalPages: logs.data?.totalPages ?? 0,
+                            currentPage: logsPage,
+                        },
                         minutesPage: {
                             totalPages: minutes.data?.totalPages ?? 0,
                             currentPage: minutesPage,
@@ -153,6 +158,7 @@ export default function ProjectById() {
                         },
                     }}
                     setDocumentPage={{
+                        logsPage: setLogsPage,
                         minutesPage: setMinutesPage,
                         approvalsPage: setApprovalsPage,
                     }}

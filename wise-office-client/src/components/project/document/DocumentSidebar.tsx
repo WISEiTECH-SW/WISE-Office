@@ -13,10 +13,12 @@ interface DocumentSidebarProps {
         approvalsList: ApproveListResponse[];
     };
     documnetPageInfo?: {
+        logsPage: { totalPages: number; currentPage: number };
         minutesPage: { totalPages: number; currentPage: number };
         approvalsPage: { totalPages: number; currentPage: number };
     };
     setDocumentPage?: {
+        logsPage: (page: number) => void;
         minutesPage: (page: number) => void;
         approvalsPage: (page: number) => void;
     };
@@ -43,14 +45,20 @@ export default function DocumentSidebar({
         setSelectedDoc({ type: type, id: id });
     };
 
-    const isMinute = selectedDoc.type === "minute";
-    const totalPages = isMinute
-        ? (documnetPageInfo?.minutesPage.totalPages ?? 0)
-        : (documnetPageInfo?.approvalsPage.totalPages ?? 0);
+    const totalPages =
+        selectedDoc.type === "minute"
+            ? (documnetPageInfo?.minutesPage.totalPages ?? 0)
+            : selectedDoc.type === "log"
+              ? (documnetPageInfo?.logsPage.totalPages ?? 0)
+              : (documnetPageInfo?.approvalsPage.totalPages ?? 0);
 
-    const currentPage = isMinute
-        ? (documnetPageInfo?.minutesPage.currentPage ?? 0)
-        : (documnetPageInfo?.approvalsPage.currentPage ?? 0);
+    const currentPage =
+        selectedDoc.type === "minute"
+            ? (documnetPageInfo?.minutesPage.currentPage ?? 0)
+            : selectedDoc.type === "log"
+              ? (documnetPageInfo?.logsPage.currentPage ?? 0)
+              : (documnetPageInfo?.approvalsPage.currentPage ?? 0);
+
     const handleWrite = () => {
         if (selectedDoc.type === "minute") {
             onWrite("minute");
@@ -83,41 +91,59 @@ export default function DocumentSidebar({
                         <button
                             onClick={() => {
                                 const prevPage = startPage - 1;
-                                isMinute
-                                    ? setDocumentPage?.minutesPage(prevPage)
-                                    : setDocumentPage?.approvalsPage(prevPage);
+
+                                if (selectedDoc.type === "minute") {
+                                    setDocumentPage?.minutesPage(prevPage);
+                                } else if (selectedDoc.type === "log") {
+                                    setDocumentPage?.logsPage(prevPage);
+                                } else {
+                                    setDocumentPage?.approvalsPage(prevPage);
+                                }
                             }}
                             className="px-2 py-1 rounded cursor-pointer"
                         >
                             {"<<"}
                         </button>
                     )}
-                    {Array.from({ length: totalPages }, (_, i) => (
-                        <button
-                            key={i}
-                            onClick={() =>
-                                isMinute
-                                    ? setDocumentPage?.minutesPage(i)
-                                    : setDocumentPage?.approvalsPage(i)
-                            }
-                            className={`w-6 h-6 flex items-center px-3 py-1 justify-center cursor-pointer rounded text-sm ${
-                                currentPage === i
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-gray-200"
-                            }`}
-                        >
-                            {i + 1}
-                        </button>
-                    ))}
+                    {Array.from({ length: endPage - startPage }, (_, i) => {
+                        const page = startPage + i;
+
+                        return (
+                            <button
+                                key={page}
+                                onClick={() => {
+                                    if (selectedDoc.type === "minute") {
+                                        setDocumentPage?.minutesPage(page);
+                                    } else if (selectedDoc.type === "log") {
+                                        setDocumentPage?.logsPage(page);
+                                    } else {
+                                        setDocumentPage?.approvalsPage(page);
+                                    }
+                                }}
+                                className={`min-w-[28px] h-7 flex items-center justify-center cursor-pointer rounded text-sm ${
+                                    currentPage === page
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-200"
+                                }`}
+                            >
+                                {page + 1}
+                            </button>
+                        );
+                    })}
 
                     {/* 다음 그룹 */}
                     {endPage < totalPages && (
                         <button
                             onClick={() => {
                                 const nextPage = endPage;
-                                isMinute
-                                    ? setDocumentPage?.minutesPage(nextPage)
-                                    : setDocumentPage?.approvalsPage(nextPage);
+
+                                if (selectedDoc.type === "minute") {
+                                    setDocumentPage?.minutesPage(nextPage);
+                                } else if (selectedDoc.type === "log") {
+                                    setDocumentPage?.logsPage(nextPage);
+                                } else {
+                                    setDocumentPage?.approvalsPage(nextPage);
+                                }
                             }}
                             className="px-2 py-1 rounded cursor-pointer"
                         >

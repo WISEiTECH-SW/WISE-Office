@@ -9,6 +9,8 @@ import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,10 @@ public class LogService {
 
     public List<LogEntity> searchAllLogs(ProjectEntity project) {
         return logRepository.findByLogWithComments(project).orElse(Collections.emptyList());
+    }
+
+    public Page<LogEntity> searchLogPages(ProjectEntity project, Pageable pageable) {
+        return logRepository.findByLogWithComments(project, pageable);
     }
 
     public LogEntity searchLog(long logId) {
