@@ -76,7 +76,7 @@ export default function MonthOverviewList() {
         minutesDetailList.map((m) => [m.minutesId, m]),
     );
     const approvalDetailMap = new Map(
-        approvalDetailList.map((a) => [a.minutesId, a]),
+        approvalDetailList.map((a) => [a.approveId, a]),
     );
 
     return (
