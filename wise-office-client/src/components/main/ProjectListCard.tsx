@@ -26,7 +26,7 @@ export default function ProjectListCard({ project, onClick }: Props) {
             <div className="px-6 py-3 md:px-10 md:py-7 border-b border-gray-100">
                 <div className="flex justify-between items-start gap-6">
                     <p className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                        {state === "진행중" && `(${titleDuration})`}
+                        {state === "진행중" && `(${titleDuration}) `}
                         {project.projectTitle}
                     </p>
                     <span
