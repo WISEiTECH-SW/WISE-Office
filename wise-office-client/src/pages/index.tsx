@@ -47,7 +47,7 @@ export default function Home() {
     if (!data) return <ErrorIndicator />;
 
     return (
-        <section className="flex flex-col items-center gap-6 max-w-screen-lg mx-auto my-6">
+        <section className="flex flex-col items-center gap-6 md:gap-10 max-w-screen-lg mx-auto my-10 md:my-20 px-2">
             <ProjectProgressHeader
                 totalCount={data.pageNationInfo.totalCount}
                 isLoggedIn={hasToken}
