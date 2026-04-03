@@ -1,8 +1,8 @@
-import { ApproveDetailResponse } from "@/types/document";
+import { ApprovalDetailResponse } from "@/types/document";
 import Image from "next/image";
 import ErrorIndicator from "../ui/ErrorIndicator";
 interface Prop {
-    approve: ApproveDetailResponse | null;
+    approve: ApprovalDetailResponse | null;
 }
 export default function ApproveDocument({ approve }: Prop) {
     if (!approve) return <ErrorIndicator />;

@@ -2,7 +2,7 @@ import Buttonbar from "./Buttonbar";
 import { usePreviewStore } from "@/store/useOverviewStore";
 import MinuteDocument from "@/components/document/MinuteDocument";
 import { useEffect } from "react";
-import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
+import { ApprovalDetailResponse, MinutesInfo } from "@/types/document";
 import ApproveDocument from "@/components/document/ApproveDocument";
 
 const A4_WIDTH = 720;
@@ -32,7 +32,7 @@ export default function PreviewModal() {
                 <MinuteDocument minuteDetail={data as MinutesInfo} />
             )}
             {type === "approve" && (
-                <ApproveDocument approve={data as ApproveDetailResponse} />
+                <ApproveDocument approve={data as ApprovalDetailResponse} />
             )}
 
             <Buttonbar

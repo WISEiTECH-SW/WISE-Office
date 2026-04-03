@@ -1,26 +1,26 @@
 import { usePreviewStore } from "@/store/useOverviewStore";
-import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
+import { ApprovalDetailResponse, MinutesInfo } from "@/types/document";
 import { LucideFileSearch } from "lucide-react";
 
 export default function PreviewButton({
-    minutesInfo,
-    approveInfo,
+    minutesDetail,
+    approvalDetail,
 }: {
-    minutesInfo?: MinutesInfo | null;
-    approveInfo?: ApproveDetailResponse | null;
+    minutesDetail?: MinutesInfo | null;
+    approvalDetail?: ApprovalDetailResponse | null;
 }) {
     const { onOpen, setPreview } = usePreviewStore();
 
     const handleClick = () => {
-        if (minutesInfo) {
-            setPreview("minutes", minutesInfo);
+        if (minutesDetail) {
+            setPreview("minutes", minutesDetail);
             onOpen();
             return;
         }
 
         // 품의서
-        if (approveInfo) {
-            setPreview("approve", approveInfo);
+        if (approvalDetail) {
+            setPreview("approve", approvalDetail);
             onOpen();
             return;
         }
@@ -29,7 +29,7 @@ export default function PreviewButton({
     return (
         <button
             onClick={handleClick}
-            className="flex border border-gray-400 rounded-md p-1 items-center bg-background-default hover:bg-gray-200 cursor-pointer"
+            className="h-6 flex border border-gray-400 rounded-md p-2 items-center bg-background-default hover:bg-gray-200 cursor-pointer"
         >
             <LucideFileSearch size={12} strokeWidth={1} />
             <p className="text-xs px-1">미리보기</p>

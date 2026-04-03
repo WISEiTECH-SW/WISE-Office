@@ -8,7 +8,7 @@ import {
     getMinutesInfo,
 } from "@/services/overview";
 import {
-    ApproveDetailResponse,
+    ApprovalDetailResponse,
     MinutesInfo,
     MinutesList,
 } from "@/types/document";
@@ -16,36 +16,37 @@ import {
 export default function ProjectOverviewList() {
     const { year, projectInfo } = useOverviewStore();
     const [minutesList, setMinutesList] = useState<MinutesList>([]);
-    const [minutesInfos, setMinutesInfos] = useState<MinutesInfo[]>([]);
-
-    const [approveInfos, setApproveInfo] = useState<ApproveDetailResponse[]>(
+    const [minutesDetailList, setMinutesDetailList] = useState<MinutesInfo[]>(
         [],
     );
+    const [approvalDetailList, setApprovalDetailList] = useState<
+        ApprovalDetailResponse[]
+    >([]);
 
     useEffect(() => {
         const fetchMinutes = async () => {
             const data = await getMinutes(projectInfo.projectId);
             setMinutesList(data);
 
-            const infos = await Promise.all(
+            const minutesDetailResponse = await Promise.all(
                 data.map((m) =>
                     getMinutesInfo(projectInfo.projectId, m.minutesId),
                 ),
             );
 
-            setMinutesInfos(infos);
+            setMinutesDetailList(minutesDetailResponse);
         };
 
         const fetchApproves = async () => {
             const data = await getApproves(projectInfo.projectId);
 
-            const infos = await Promise.all(
+            const approvalDetailResponse = await Promise.all(
                 data.map((m) =>
                     getApproveInfo(projectInfo.projectId, m.approveId),
                 ),
             );
 
-            setApproveInfo(infos);
+            setApprovalDetailList(approvalDetailResponse);
         };
 
         if (projectInfo.projectId) {
@@ -62,67 +63,64 @@ export default function ProjectOverviewList() {
     const groupedByMonth = Array.from({ length: 12 }, (_, i) => {
         const month = i;
 
-        const data = filteredData.filter(
-            (m) => new Date(m.minutesAt).getMonth() === month,
-        );
+        const minutesInfo = filteredData
+            .filter((m) => new Date(m.minutesAt).getMonth() === month)
+            .sort(
+                (a, b) =>
+                    new Date(a.minutesAt).getTime() -
+                    new Date(b.minutesAt).getTime(),
+            );
 
         return {
             month: month + 1,
-            data,
+            minutesInfo,
         };
-    }).filter((m) => m.data.length > 0);
-
-    if (!minutesList.length || !minutesInfos.length) {
-        return null;
-    }
+    }).filter((m) => m.minutesInfo.length > 0);
 
     return (
         <div className="flex flex-col gap-10">
             <p className="text-2xl font-bold">{projectInfo.projectTitle}</p>
 
-            {groupedByMonth
-                .sort((a, b) => a.month - b.month)
-                .map(({ month, data }) => (
-                    <div key={month} className="flex flex-col gap-4 pr-16">
-                        <p className="text-lg font-semibold">{month}월</p>
+            {!minutesList.length ? (
+                <p className="text-gray-400">등록된 문서가 없습니다.</p>
+            ) : (
+                groupedByMonth
+                    .sort((a, b) => b.month - a.month)
+                    .map(({ month, minutesInfo }) => (
+                        <div key={month} className="flex flex-col gap-4 pr-16">
+                            <p className="text-lg font-semibold">{month}월</p>
+                            {minutesInfo.map((info, index) => {
+                                const minutesDetail = minutesDetailList.find(
+                                    (minutesDetail) =>
+                                        minutesDetail.minutesId ===
+                                        info.minutesId,
+                                );
+                                const approvalDetail = approvalDetailList.find(
+                                    (approvalDetail) =>
+                                        approvalDetail.minutesId ===
+                                        info.minutesId,
+                                );
 
-                        {data.map((minutes, index) => {
-                            const minutesInfo = minutesInfos.find(
-                                (info) => info.minutesId === minutes.minutesId,
-                            );
-                            const relatedApproves = approveInfos.filter(
-                                (a) => a.minutesId === minutes.minutesId,
-                            );
-
-                            return (
-                                <div
-                                    key={minutes.minutesId}
-                                    className={`flex flex-col gap-3 ${
-                                        index !== data.length - 1
-                                            ? "pb-4 border-b border-gray-200"
-                                            : ""
-                                    }`}
-                                >
-                                    {/* 회의록 */}
-                                    <OverviewCard
-                                        minutes={minutes}
-                                        minutesInfo={minutesInfo}
-                                    />
-                                    {/* 품의서 */}
-                                    {relatedApproves.map((approve) => (
+                                return (
+                                    <div
+                                        key={info.minutesId}
+                                        className={`flex flex-col gap-3 ${
+                                            index !== minutesInfo.length - 1
+                                                ? "pb-4 border-b border-gray-200"
+                                                : ""
+                                        }`}
+                                    >
                                         <OverviewCard
-                                            key={approve.approveId}
-                                            minutes={minutes}
-                                            minutesInfo={minutesInfo}
-                                            approve={approve}
-                                            isApproval={true}
+                                            minutesInfo={info}
+                                            minutesDetail={minutesDetail}
+                                            approvalDetail={approvalDetail}
                                         />
-                                    ))}
-                                </div>
-                            );
-                        })}
-                    </div>
-                ))}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ))
+            )}
         </div>
     );
 }

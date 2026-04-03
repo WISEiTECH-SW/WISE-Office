@@ -1,73 +1,76 @@
 import PreviewButton from "@/components/ui/button/PreviewButton";
 import PrintButton from "@/components/ui/button/PrintButton";
 import {
-    ApproveDetailResponse,
+    ApprovalDetailResponse,
     MinutesInfo,
     MinutesItem,
 } from "@/types/document";
 
-interface Props {
-    minutes: MinutesItem;
-    minutesInfo?: MinutesInfo;
-    approve?: ApproveDetailResponse;
-    isApproval?: boolean;
+interface OverviewCardProps {
+    minutesInfo: MinutesItem;
+    minutesDetail?: MinutesInfo;
+    approvalDetail?: ApprovalDetailResponse;
 }
 
 export default function OverviewCard({
-    minutes,
     minutesInfo,
-    approve,
-    isApproval,
-}: Props) {
+    minutesDetail,
+    approvalDetail,
+}: OverviewCardProps) {
     return (
-        <div className="flex w-full bg-white border border-gray-300 rounded-lg px-4 py-2 items-center justify-between gap-6">
-            {/* 문서 정보 */}
-            <div className="flex flex-1 gap-6 items-center min-w-0">
-                {/* 날짜/시간 */}
-                <div className="flex flex-col 2xl:flex-row gap-2 shrink-0 w-[220px]">
-                    <p>
-                        {isApproval && approve
-                            ? approve.writtenAt
-                            : minutes.minutesAt}
-                    </p>
-                    {!isApproval && (
-                        <p>
-                            {minutesInfo?.startTime}~{minutesInfo?.endTime}
+        <div className="flex w-full bg-white border border-gray-300 rounded-lg px-2 gap-8 items-center justify-between text-sm">
+            <div className="flex flex-col flex-1 min-w-0">
+                {/* 회의록 행 */}
+                <div className="flex justify-between gap-4">
+                    <div className="w-[200px] shrink-0 pl-4 gap-2 font-normal flex items-center">
+                        <p className="whitespace-nowrap">
+                            {minutesDetail?.minutesDate}
                         </p>
-                    )}
-                </div>
-
-                <div className="grid grid-cols-2 flex-1 min-w-0 gap-6">
-                    <div className="col-span-1 flex justify-center items-center">
-                        {/* 문서번호 */}
-                        {isApproval && approve
-                            ? `품의서 · ${approve?.approveNo}`
-                            : `회의록 · ${minutes?.title}`}
+                        <p className="whitespace-nowrap">
+                            {minutesDetail?.startTime}~{minutesDetail?.endTime}
+                        </p>
                     </div>
-                    {/* 참석자 명단 */}
-                    <div className="col-span-1 text-xs flex items-center">
-                        {isApproval
-                            ? approve?.writer
-                            : minutesInfo?.minutesAttendants?.length
-                              ? minutesInfo.minutesAttendants
-                                    .map((m) => `${m.name} ${m.rank}`)
-                                    .join(", ")
-                              : ""}
+                    <div className="flex-1 flex px-2 py-3 items-center gap-6">
+                        <p className="flex-1 flex justify-center text-sm">
+                            회의록 · {minutesInfo.title}
+                        </p>
+                        <p className="flex-1 flex text-xs text-gray-600 line-clamp-3 break-keep">
+                            {minutesDetail?.minutesAttendants
+                                ?.map((a) => `${a.name} ${a.rank}`)
+                                .join(", ")}
+                        </p>
+                    </div>
+                    <div className="flex items-center px-2 py-3 gap-2 shrink-0">
+                        <PreviewButton minutesDetail={minutesDetail ?? null} />
+                        <PrintButton minutesDetail={minutesDetail ?? null} />
                     </div>
                 </div>
-            </div>
 
-            {/* 버튼 */}
-            <div className="flex justify-between gap-2 shrink-0">
-                {isApproval ? (
-                    <PreviewButton approveInfo={approve ?? null} />
-                ) : (
-                    <PreviewButton minutesInfo={minutesInfo ?? null} />
-                )}
-                {isApproval ? (
-                    <PrintButton approveInfo={approve ?? null} />
-                ) : (
-                    <PrintButton minutesInfo={minutesInfo ?? null} />
+                {/* 품의서 행 */}
+                {approvalDetail && (
+                    <div className="flex justify-between gap-4">
+                        <div className="w-[200px] shrink-0 pl-4 font-normal flex items-center">
+                            {approvalDetail.submitAt
+                                .replace(/\./g, "-")
+                                .replace(/-$/, "")}
+                        </div>
+                        <div className="flex-1 flex px-2 py-3 items-center gap-6 border-t border-gray-200">
+                            <p className="flex-1 flex justify-center text-sm">
+                                품의서 · {approvalDetail.approveNo}
+                            </p>
+                            <p className="flex-1 flex text-xs text-gray-600 line-clamp-3 break-keep">
+                                {approvalDetail.writer}
+                            </p>
+                        </div>
+                        <div className="flex items-center px-2 py-3 gap-2 shrink-0">
+                            <PreviewButton
+                                approvalDetail={approvalDetail ?? null}
+                            />
+                            <PrintButton
+                                approvalDetail={approvalDetail ?? null}
+                            />
+                        </div>
+                    </div>
                 )}
             </div>
         </div>

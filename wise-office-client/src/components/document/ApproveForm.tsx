@@ -1,8 +1,8 @@
-import { ApproveDetailResponse, ApproveUpdateRequest } from "@/types/document";
+import { ApprovalDetailResponse, ApproveUpdateRequest } from "@/types/document";
 import Image from "next/image";
 
 interface ApproveFormProps {
-    approveDetail: ApproveDetailResponse;
+    approveDetail: ApprovalDetailResponse;
     form: ApproveUpdateRequest;
     setForm: React.Dispatch<React.SetStateAction<ApproveUpdateRequest>>;
 }

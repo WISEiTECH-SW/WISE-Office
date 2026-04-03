@@ -1,4 +1,4 @@
-import OverviewCard from "./OverviewCard";
+// import OverviewCard from "./OverviewCard";
 import { useOverviewStore } from "@/store/useOverviewStore";
 import { MINUTES } from "@/lib/data/overview";
 
@@ -29,7 +29,8 @@ export default function MonthOverviewList() {
                                 : ""
                         }`}
                     >
-                        <OverviewCard
+                        {/* 다음 작업 예정 */}
+                        {/* <OverviewCard
                             key={`${minutes.minutes_pk}-minutes`}
                             minutes={{
                                 minutesId: minutes.minutes_pk,
@@ -45,7 +46,7 @@ export default function MonthOverviewList() {
                                 minutesAt: minutes.minutes_date.toISOString(),
                             }}
                             isApproval={true}
-                        />
+                        /> */}
                     </div>
                 ))}
             </div>

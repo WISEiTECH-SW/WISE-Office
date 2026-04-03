@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { ProjectGroupByYear } from "@/types/project";
 import { getProjectsGroupByYear } from "@/services/projects";
-import { ApproveDetailResponse, MinutesInfo } from "@/types/document";
+import { ApprovalDetailResponse, MinutesInfo } from "@/types/document";
 
 type ProjectInfo = {
     projectId: number;
@@ -87,12 +87,12 @@ type PreviewType = "minutes" | "approve";
 type PreviewState = {
     isOpen: boolean;
     type: PreviewType | null;
-    data: MinutesInfo | ApproveDetailResponse | null;
+    data: MinutesInfo | ApprovalDetailResponse | null;
 
     setIsOpen: (isOpen: boolean) => void;
     setPreview: (
         type: PreviewType,
-        data: MinutesInfo | ApproveDetailResponse,
+        data: MinutesInfo | ApprovalDetailResponse,
     ) => void;
 
     onOpen: () => void;
