@@ -30,29 +30,27 @@ export default function MonthOverviewList() {
 
     useEffect(() => {
         const fetchMinutes = async (projectIds: number[]) => {
-            for (const projectId of projectIds) {
-                const data = await getMinutes(projectId);
-                const minutesDetailResponse = await Promise.all(
-                    data.map((m) => getMinutesInfo(projectId, m.minutesId)),
-                );
-                setMinutesDetailList((prev) => [
-                    ...prev,
-                    ...minutesDetailResponse,
-                ]);
-            }
+            const allDetails = await Promise.all(
+                projectIds.map(async (projectId) => {
+                    const data = await getMinutes(projectId);
+                    return Promise.all(
+                        data.map((m) => getMinutesInfo(projectId, m.minutesId)),
+                    );
+                }),
+            );
+            setMinutesDetailList(allDetails.flat());
         };
 
-        const fetchApproves = async (projectIds: number[]) => {
-            for (const projectId of projectIds) {
-                const data = await getApproves(projectId);
-                const approvalDetailResponse = await Promise.all(
-                    data.map((m) => getApproveInfo(projectId, m.approveId)),
-                );
-                setApprovalDetailList((prev) => [
-                    ...prev,
-                    ...approvalDetailResponse,
-                ]);
-            }
+        const fetchApprovals = async (projectIds: number[]) => {
+            const allDetails = await Promise.all(
+                projectIds.map(async (projectId) => {
+                    const data = await getApproves(projectId);
+                    return Promise.all(
+                        data.map((m) => getApproveInfo(projectId, m.approveId)),
+                    );
+                }),
+            );
+            setApprovalDetailList(allDetails.flat());
         };
 
         const fetchData = async () => {
@@ -67,12 +65,19 @@ export default function MonthOverviewList() {
 
             await Promise.all([
                 fetchMinutes(projectIds),
-                fetchApproves(projectIds),
+                fetchApprovals(projectIds),
             ]).finally(() => setIsLoading(false));
         };
 
         fetchData();
     }, [year, month]);
+
+    const minutesDetailMap = new Map(
+        minutesDetailList.map((m) => [m.minutesId, m]),
+    );
+    const approvalDetailMap = new Map(
+        approvalDetailList.map((a) => [a.minutesId, a]),
+    );
 
     return (
         <div className="flex flex-col gap-10">
@@ -89,7 +94,7 @@ export default function MonthOverviewList() {
             ) : (
                 monthlyDocumentList.map((documentList) => (
                     <div
-                        key={documentList.title}
+                        key={documentList.projectId}
                         className="flex flex-col gap-4 pr-16"
                     >
                         <p className="text-lg font-semibold">
@@ -97,15 +102,14 @@ export default function MonthOverviewList() {
                         </p>
 
                         {documentList.pair.map((document) => {
-                            const minutesDetail = minutesDetailList.find(
-                                (m) =>
-                                    m.minutesId ===
-                                    Number(document.minutes.minutesId),
+                            const minutesDetail = minutesDetailMap.get(
+                                Number(document.minutes.minutesId),
                             );
-                            const approvalDetail = approvalDetailList.find(
-                                (a) =>
-                                    a.approveId === document.approve?.approveId,
-                            );
+                            const approvalDetail = document.approve?.approveId
+                                ? approvalDetailMap.get(
+                                      document.approve.approveId,
+                                  )
+                                : undefined;
 
                             return (
                                 <div

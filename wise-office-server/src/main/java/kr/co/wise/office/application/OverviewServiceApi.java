@@ -55,9 +55,9 @@ public class OverviewServiceApi {
         Map<Long, String> attendantsByMinutesId = getAttendantsByMinutesId(minutesIds);
         Map<Long, ApproveEntity> approveByMinutesId = getApproveByMinutesId(minutesIds);
 
-        // 과제명, 해당 과제에 기록된 회의록 및 품의서 목록 리스트
+        // 과제 id, 과제명, 해당 과제에 기록된 회의록 및 품의서 목록 리스트
         Map<Long, String> projectInfo = new HashMap<>();
-        Map<Long, List<MonthlyDocumentPairResponse>> result = new HashMap<>(); 
+        Map<Long, List<MonthlyDocumentPairResponse>> result = new HashMap<>();
         for (MinutesEntity minutes : targetMinutes) {
             Long projectId = minutes.getProject().getId();
             projectInfo.put(projectId, minutes.getProject().getTitle());
