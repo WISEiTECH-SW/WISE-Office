@@ -13,28 +13,28 @@ export const projectFormValidate = (form: CreateProject): FormErrors => {
     const newErrors: FormErrors = {};
 
     if (!form.projectTitle.trim()) {
-        newErrors.projectTitle = "프로젝트명을 입력해주세요.";
-    }
-
-    if (!form.institution.trim()) {
-        newErrors.institution = "전담기관명을 입력해주세요.";
+        newErrors.projectTitle = "연구개발과제명을 입력해주세요.";
     }
 
     if (!form.businessName.trim()) {
         newErrors.businessName = "사업명을 입력해주세요.";
     }
 
+    if (!form.institution.trim()) {
+        newErrors.institution = "전담기관명을 입력해주세요.";
+    }
+
     if (!form.start) {
-        newErrors.start = "시작일을 선택해주세요.";
+        newErrors.start = "시작 월을 선택해주세요.";
     }
 
     if (!form.end) {
-        newErrors.end = "종료일을 선택해주세요.";
+        newErrors.end = "종료 월을 선택해주세요.";
     }
 
     if (form.start && form.end) {
         if (new Date(form.start) > new Date(form.end)) {
-            newErrors.end = "종료일은 시작일보다 이후여야 합니다.";
+            newErrors.end = "종료 월은 시작 월 이후여야 합니다.";
         }
     }
 
@@ -51,7 +51,7 @@ export const projectFormValidate = (form: CreateProject): FormErrors => {
     }
 
     if (form.attendants.length === 0) {
-        newErrors.attendants = "프로젝트 수행 인원을 선택해주세요.";
+        newErrors.attendants = "프로젝트 참여 인원을 선택해주세요.";
     }
 
     if (form.proposalAttendants.length === 0) {

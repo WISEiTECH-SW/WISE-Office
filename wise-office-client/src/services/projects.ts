@@ -6,7 +6,8 @@ import type {
     ProjectGroupByYear,
 } from "@/types/project";
 
-import { PageInfo, PageParams } from "@/types/page";
+import { PageInfo } from "@/types/page";
+import { OFFSET } from "@/constants/config";
 
 interface currentPageProjects {
     pageNationInfo: PageInfo;
@@ -18,16 +19,16 @@ export async function getProjects(): Promise<Project[]> {
     return data;
 }
 
-export async function getCurrentPageProjects({
-    currentPage,
-    offset,
-}: PageParams): Promise<currentPageProjects> {
+export async function getCurrentPageProjects(
+    currentPage: number,
+): Promise<currentPageProjects> {
     const res = await api.get<currentPageProjects>(`v1/projects`, {
         params: {
             page: currentPage,
-            offset,
+            offset: OFFSET,
         },
     });
+
     return res.data;
 }
 

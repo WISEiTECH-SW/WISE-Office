@@ -1,5 +1,5 @@
 export {
-    useProjectsPaged,
+    useProjectPages,
     useProjectDetail,
     useProjectMutation,
 } from "./useProject";
