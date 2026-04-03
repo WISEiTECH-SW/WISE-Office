@@ -13,6 +13,7 @@ import {
     MonthlyDocument,
 } from "@/types/document";
 import OverviewCard from "./OverviewCard";
+import LoadingIndicator from "../ui/LoadingIndicator";
 
 export default function MonthOverviewList() {
     const { year, month, projectInfo } = useOverviewStore();
@@ -25,6 +26,7 @@ export default function MonthOverviewList() {
     const [approvalDetailList, setApprovalDetailList] = useState<
         ApprovalDetailResponse[]
     >([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchMinutes = async () => {
@@ -50,10 +52,13 @@ export default function MonthOverviewList() {
         };
 
         const fetchData = async () => {
+            setIsLoading(true);
             const projectList = await getMonthlyDocuments(year, month);
             setMonthlyDocumentList(projectList);
 
-            await Promise.all([fetchMinutes(), fetchApproves()]);
+            await Promise.all([fetchMinutes(), fetchApproves()]).finally(() =>
+                setIsLoading(false),
+            );
         };
 
         fetchData();
@@ -65,7 +70,11 @@ export default function MonthOverviewList() {
                 {year}년 {month}월
             </p>
 
-            {!monthlyDocumentList.length ? (
+            {isLoading ? (
+                <div className="-translate-y-30">
+                    <LoadingIndicator type="minutes" />
+                </div>
+            ) : !monthlyDocumentList.length ? (
                 <p className="text-gray-400">등록된 문서가 없습니다.</p>
             ) : (
                 monthlyDocumentList.map((documentList) => (
