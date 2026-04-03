@@ -13,7 +13,7 @@ public record MonthlyMinutesSummaryResponse(
         @Schema(type = "string", description = "회의 종료 시간") @JsonFormat(pattern = "HH:mm") LocalTime endTime,
         @Schema(type = "string", description = "회의록 번호") String minutesTitle,
         @Schema(type = "string", description = "참여자 리스트") String attendants,
-        @Schema(type = "string", description = "회의록 ID") Long minutesId
+        @Schema(description = "회의록 ID") Long minutesId
 ) {
 
 
