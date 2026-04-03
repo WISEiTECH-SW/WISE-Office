@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    keepPreviousData,
+} from "@tanstack/react-query";
 import { queryKeys } from "./queryKeys";
 import { ApproveUpdateRequest } from "@/types/document";
 import {
@@ -21,10 +26,11 @@ interface UpdateApproveParams {
     request: ApproveUpdateRequest;
 }
 
-export const useApproves = (projectId: number) => {
+export const useApproves = (projectId: number, page: number) => {
     return useQuery({
-        queryKey: queryKeys.approves(projectId),
-        queryFn: () => getApproveList(projectId),
+        queryKey: ["approves", projectId, page],
+        queryFn: () => getApproveList(projectId, page),
+        placeholderData: keepPreviousData,
     });
 };
 

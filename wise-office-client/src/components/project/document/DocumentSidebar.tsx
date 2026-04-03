@@ -9,14 +9,17 @@ import { Pen } from "lucide-react";
 interface DocumentSidebarProps {
     docData: {
         logList: Log[];
-        minuteList: MinutesListResponse[];
-        approveList: ApproveListResponse[];
+        minutesList: MinutesListResponse[];
+        approvalsList: ApproveListResponse[];
     };
     documnetPageInfo?: {
-        totalPages: number;
-        currentPage: number;
+        minutesPage: { totalPages: number; currentPage: number };
+        approvalsPage: { totalPages: number; currentPage: number };
     };
-    setDocumentPage?: (page: number) => void;
+    setDocumentPage?: {
+        minutesPage: (page: number) => void;
+        approvalsPage: (page: number) => void;
+    };
     selectedDoc: SelectedDocument;
     attending: boolean;
     setSelectedDoc: (document: SelectedDocument) => void;
@@ -39,8 +42,15 @@ export default function DocumentSidebar({
     const selectDoc = (type: DocumentType, id: number) => {
         setSelectedDoc({ type: type, id: id });
     };
-    const totalPages = documnetPageInfo?.totalPages ?? 0;
-    const currentPage = documnetPageInfo?.currentPage ?? 0;
+
+    const isMinute = selectedDoc.type === "minute";
+    const totalPages = isMinute
+        ? (documnetPageInfo?.minutesPage.totalPages ?? 0)
+        : (documnetPageInfo?.approvalsPage.totalPages ?? 0);
+
+    const currentPage = isMinute
+        ? (documnetPageInfo?.minutesPage.currentPage ?? 0)
+        : (documnetPageInfo?.approvalsPage.currentPage ?? 0);
     const handleWrite = () => {
         if (selectedDoc.type === "minute") {
             onWrite("minute");
@@ -66,7 +76,11 @@ export default function DocumentSidebar({
                     {Array.from({ length: totalPages }, (_, i) => (
                         <button
                             key={i}
-                            onClick={() => setDocumentPage?.(i)}
+                            onClick={() =>
+                                isMinute
+                                    ? setDocumentPage?.minutesPage(i)
+                                    : setDocumentPage?.approvalsPage(i)
+                            }
                             className={`px-3 py-1  cursor-pointer rounded ${
                                 currentPage === i
                                     ? "bg-blue-500 text-white"

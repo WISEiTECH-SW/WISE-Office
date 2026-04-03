@@ -42,11 +42,12 @@ export default function ProjectById() {
     const [deleteModalState, setDeleteModalState] =
         useState<DeleteModalState>(null);
     const [isEditOpen, setIsEditOpen] = useState(false);
-    const [minutePage, setMinutePage] = useState(0);
+    const [minutesPage, setMinutesPage] = useState(0);
+    const [approvalsPage, setApprovalsPage] = useState(0);
     /* -----query ----- */
     const logs = useLogs(projectId);
-    const minutes = useMinutes(projectId, minutePage);
-    const approves = useApproves(projectId);
+    const minutes = useMinutes(projectId, minutesPage);
+    const approvals = useApproves(projectId, approvalsPage);
 
     const projectDetail = useProjectDetail(projectId);
 
@@ -138,14 +139,23 @@ export default function ProjectById() {
                 <DocumentSidebar
                     docData={{
                         logList: logs.data ?? [],
-                        minuteList: minutes.data?.content ?? [],
-                        approveList: approves.data ?? [],
+                        minutesList: minutes.data?.content ?? [],
+                        approvalsList: approvals.data?.content ?? [],
                     }}
                     documnetPageInfo={{
-                        totalPages: minutes.data?.totalPages ?? 0,
-                        currentPage: minutePage,
+                        minutesPage: {
+                            totalPages: minutes.data?.totalPages ?? 0,
+                            currentPage: minutesPage,
+                        },
+                        approvalsPage: {
+                            totalPages: approvals.data?.totalPages ?? 0,
+                            currentPage: approvalsPage,
+                        },
                     }}
-                    setDocumentPage={setMinutePage}
+                    setDocumentPage={{
+                        minutesPage: setMinutesPage,
+                        approvalsPage: setApprovalsPage,
+                    }}
                     selectedDoc={selectedDoc}
                     attending={projectDetail.data.attending}
                     setSelectedDoc={setSelectedDoc}

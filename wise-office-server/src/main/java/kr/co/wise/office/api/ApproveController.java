@@ -14,13 +14,14 @@ import kr.co.wise.office.api.dto.approve.*;
 import kr.co.wise.office.application.ApproveServiceApi;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,10 +40,10 @@ public class ApproveController {
                     ))
     })
     @GetMapping("/approves")
-    public ResponseEntity<List<ApproveListResponse>> getApproveList(
-            @Parameter(description = "프로젝트 ID") @PathVariable long projectId) {
+    public ResponseEntity<Page<ApproveListResponse>> getApproveList(
+            @Parameter(description = "프로젝트 ID") @PathVariable long projectId, Pageable pageable) {
 
-        return ResponseEntity.ok(approveServiceApi.getApproveList(projectId));
+        return ResponseEntity.ok(approveServiceApi.getApproveList(projectId, pageable));
     }
 
     @PostMapping("/minutes/{minutesId}/approves")
