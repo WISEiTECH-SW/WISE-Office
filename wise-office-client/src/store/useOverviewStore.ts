@@ -23,7 +23,7 @@ type OverviewState = {
 export const useOverviewStore = create<OverviewState>((set) => ({
     optionIndex: 0,
     year: new Date().getFullYear(),
-    month: new Date().getMonth(),
+    month: new Date().getMonth() + 1,
     projectInfo: { projectId: 0, projectTitle: "" },
 
     setOptionIndex: (optionIndex) => set({ optionIndex }),
