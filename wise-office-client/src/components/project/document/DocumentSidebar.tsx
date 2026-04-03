@@ -58,6 +58,11 @@ export default function DocumentSidebar({
             onWrite("log");
         }
     };
+    const PAGE_SIZE = 5;
+
+    const currentGroup = Math.floor(currentPage / PAGE_SIZE);
+    const startPage = currentGroup * PAGE_SIZE;
+    const endPage = Math.min(startPage + PAGE_SIZE, totalPages);
 
     return (
         <div className="order-2 md:order-1 md:col-span-3 mb-6">
@@ -72,7 +77,21 @@ export default function DocumentSidebar({
                     docData={docData}
                     onSelectDoc={selectDoc}
                 />
-                <div className="flex justify-center gap-2 m-2 pb-2">
+                <div className=" flex justify-center items-center gap-2 m-2 pb-2">
+                    {/* 이전 그룹 */}
+                    {startPage > 0 && (
+                        <button
+                            onClick={() => {
+                                const prevPage = startPage - 1;
+                                isMinute
+                                    ? setDocumentPage?.minutesPage(prevPage)
+                                    : setDocumentPage?.approvalsPage(prevPage);
+                            }}
+                            className="px-2 py-1 rounded cursor-pointer"
+                        >
+                            {"<<"}
+                        </button>
+                    )}
                     {Array.from({ length: totalPages }, (_, i) => (
                         <button
                             key={i}
@@ -81,7 +100,7 @@ export default function DocumentSidebar({
                                     ? setDocumentPage?.minutesPage(i)
                                     : setDocumentPage?.approvalsPage(i)
                             }
-                            className={`px-3 py-1  cursor-pointer rounded ${
+                            className={`w-6 h-6 flex items-center px-3 py-1 justify-center cursor-pointer rounded text-sm ${
                                 currentPage === i
                                     ? "bg-blue-500 text-white"
                                     : "bg-gray-200"
@@ -90,6 +109,21 @@ export default function DocumentSidebar({
                             {i + 1}
                         </button>
                     ))}
+
+                    {/* 다음 그룹 */}
+                    {endPage < totalPages && (
+                        <button
+                            onClick={() => {
+                                const nextPage = endPage;
+                                isMinute
+                                    ? setDocumentPage?.minutesPage(nextPage)
+                                    : setDocumentPage?.approvalsPage(nextPage);
+                            }}
+                            className="px-2 py-1 rounded cursor-pointer"
+                        >
+                            {">>"}
+                        </button>
+                    )}
                 </div>
             </div>
 

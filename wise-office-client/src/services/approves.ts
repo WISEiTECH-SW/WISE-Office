@@ -61,7 +61,7 @@ export async function updateApprove(
 export async function getApproveList(
     projectId: number,
     page: number,
-    size: number = 4,
+    size: number = 10,
 ): Promise<PageResponse<ApproveListResponse>> {
     const res = await api.get(`projects/${projectId}/approves`, {
         params: { page, size },

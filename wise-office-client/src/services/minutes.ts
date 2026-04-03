@@ -32,7 +32,7 @@ export async function createMinute(
 export async function getMinuteList(
     projectId: number,
     page: number,
-    size: number = 4,
+    size: number = 10,
 ): Promise<PageResponse<MinutesListResponse>> {
     const res = await api.get(`/projects/${projectId}/minutes`, {
         params: { page, size },

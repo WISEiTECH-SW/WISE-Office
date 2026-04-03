@@ -33,7 +33,7 @@ export default function DocumentList({
     };
 
     return (
-        <div className="md:max-h-90 flex flex-nowrap pb-1 overflow-x-auto md:flex-col scrollbar-auto-hide">
+        <div className="flex flex-nowrap pb-1 overflow-x-auto md:flex-col">
             {selectedDoc.type === "log" &&
                 (docData.logList.length === 0
                     ? renderEmpty("로그가")
