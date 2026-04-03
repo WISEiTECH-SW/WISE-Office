@@ -1,19 +1,24 @@
 import { useState, useEffect, useRef } from "react";
-import { useOverviewStore } from "@/store/useOverviewStore";
-import { menus } from "@/lib/data/overview";
+import {
+    useOverviewStore,
+    useProjectsGroupByYearStore,
+} from "@/store/useOverviewStore";
 
-const days = ["일", "월", "화", "수", "목", "금", "토"];
+const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 
 export default function Calendar() {
-    const years = menus.map((m) => m.year).sort((a, b) => b - a);
     const { year, month, setYear, setMonth } = useOverviewStore();
+    const { groupByYear } = useProjectsGroupByYearStore();
 
     const [openYear, setOpenYear] = useState(false);
     const [openMonth, setOpenMonth] = useState(false);
 
     const firstDay = new Date(year, month, 1).getDay();
-    const lastDate = new Date(year, month + 1, 0).getDate();
-    const prevMonthLastDate = new Date(year, month, 0).getDate();
+    const lastDate = new Date(year, month, 0).getDate();
+    const prevMonthLastDate = new Date(year, month - 1, 0).getDate();
+
+    const YEARS = groupByYear.map((m) => m.year);
 
     const dates: { day: number; dim: boolean }[] = [];
 
@@ -71,7 +76,7 @@ export default function Calendar() {
 
                 <div className="flex gap-2">
                     {/* 연도 드롭다운 */}
-                    <button className="relative rounded-md">
+                    <div className="relative">
                         <button
                             onClick={() => {
                                 setOpenYear(!openYear);
@@ -84,7 +89,7 @@ export default function Calendar() {
 
                         {openYear && (
                             <div className="absolute z-10 mt-1 w-20 rounded-md border border-gray-300 bg-white shadow">
-                                {years.map((y) => (
+                                {YEARS.map((y) => (
                                     <div
                                         key={y}
                                         onClick={() => {
@@ -102,10 +107,10 @@ export default function Calendar() {
                                 ))}
                             </div>
                         )}
-                    </button>
+                    </div>
 
                     {/* 월 드롭다운 */}
-                    <button className="relative">
+                    <div className="relative">
                         <button
                             onClick={() => {
                                 setOpenMonth(!openMonth);
@@ -118,7 +123,7 @@ export default function Calendar() {
 
                         {openMonth && (
                             <div className="absolute z-10 mt-1 w-20 rounded-md border border-gray-300 bg-white shadow">
-                                {Array.from({ length: 12 }).map((_, i) => (
+                                {MONTHS.map((i) => (
                                     <div
                                         key={i}
                                         onClick={() => {
@@ -131,12 +136,12 @@ export default function Calendar() {
                                                 : ""
                                         }`}
                                     >
-                                        {i + 1}월
+                                        {i}월
                                     </div>
                                 ))}
                             </div>
                         )}
-                    </button>
+                    </div>
                 </div>
 
                 <button
@@ -148,7 +153,7 @@ export default function Calendar() {
             </div>
 
             <div className="grid grid-cols-7 text-xs text-gray-400 mb-1">
-                {days.map((d) => (
+                {DAYS.map((d) => (
                     <div key={d} className="text-center">
                         {d}
                     </div>
