@@ -114,7 +114,7 @@ export default function MonthOverviewList() {
                             return (
                                 <div
                                     key={document.minutes.minutesId}
-                                    className="flex flex-col gap-4 pr-16"
+                                    className="flex flex-col gap-3"
                                 >
                                     <OverviewCard
                                         minutesTitle={
