@@ -1,4 +1,4 @@
-type dataType = "main" | "member" | "project" | "log" | "minute" | "approve";
+type dataType = "main" | "member" | "project" | "log" | "minutes" | "approval";
 
 interface LoadingIndicatorProps {
     type: dataType;
@@ -10,8 +10,8 @@ export default function LoadingIndicator({ type }: LoadingIndicatorProps) {
         member: ["사용자", "사용자 정보를"],
         project: ["프로젝트", "문서와 참여자 정보를"],
         log: ["로그", "로그와 댓글을"],
-        minute: ["회의록", "회의 내역과 관련 품의서를"],
-        approve: ["품의서", "품의 내역과 관련 회의록을"],
+        minutes: ["회의록", "회의 내역과 관련 품의서를"],
+        approval: ["품의서", "품의 내역과 관련 회의록을"],
     };
 
     return (

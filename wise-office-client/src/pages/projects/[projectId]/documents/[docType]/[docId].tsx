@@ -218,7 +218,7 @@ export default function DocumentPage() {
     if (isLoading)
         return (
             <LoadingIndicator
-                type={docType === "minute" ? "minute" : "approve"}
+                type={docType === "minute" ? "minutes" : "approval"}
             />
         );
     if (!projectDetail.data) return <ErrorIndicator />;

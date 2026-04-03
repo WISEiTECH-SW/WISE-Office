@@ -94,7 +94,7 @@ export default function AttendanceModal({
     };
 
     /* ------ ui ----- */
-    if (isLoading) return <LoadingIndicator type="minute" />;
+    if (isLoading) return <LoadingIndicator type="minutes" />;
 
     return (
         <div className="flex items-center justify-center">

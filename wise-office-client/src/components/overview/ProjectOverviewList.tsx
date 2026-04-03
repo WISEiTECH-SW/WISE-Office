@@ -12,6 +12,7 @@ import {
     MinutesInfo,
     MinutesList,
 } from "@/types/document";
+import LoadingIndicator from "../ui/LoadingIndicator";
 
 export default function ProjectOverviewList() {
     const { year, projectInfo } = useOverviewStore();
@@ -22,6 +23,7 @@ export default function ProjectOverviewList() {
     const [approvalDetailList, setApprovalDetailList] = useState<
         ApprovalDetailResponse[]
     >([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchMinutes = async () => {
@@ -50,8 +52,11 @@ export default function ProjectOverviewList() {
         };
 
         if (projectInfo.projectId) {
-            fetchMinutes();
-            fetchApproves();
+            setIsLoading(true);
+
+            Promise.all([fetchMinutes(), fetchApproves()]).finally(() =>
+                setIsLoading(false),
+            );
         }
     }, [projectInfo.projectId]);
 
@@ -81,7 +86,11 @@ export default function ProjectOverviewList() {
         <div className="flex flex-col gap-10">
             <p className="text-2xl font-bold">{projectInfo.projectTitle}</p>
 
-            {!minutesList.length ? (
+            {isLoading ? (
+                <div className="-translate-y-30">
+                    <LoadingIndicator type="minutes" />
+                </div>
+            ) : !minutesList.length ? (
                 <p className="text-gray-400">등록된 문서가 없습니다.</p>
             ) : (
                 groupedByMonth
@@ -89,7 +98,7 @@ export default function ProjectOverviewList() {
                     .map(({ month, minutesInfo }) => (
                         <div key={month} className="flex flex-col gap-4 pr-16">
                             <p className="text-lg font-semibold">{month}월</p>
-                            {minutesInfo.map((info, index) => {
+                            {minutesInfo.map((info) => {
                                 const minutesDetail = minutesDetailList.find(
                                     (minutesDetail) =>
                                         minutesDetail.minutesId ===
@@ -104,14 +113,10 @@ export default function ProjectOverviewList() {
                                 return (
                                     <div
                                         key={info.minutesId}
-                                        className={`flex flex-col gap-3 ${
-                                            index !== minutesInfo.length - 1
-                                                ? "pb-4 border-b border-gray-200"
-                                                : ""
-                                        }`}
+                                        className="flex flex-col gap-3"
                                     >
                                         <OverviewCard
-                                            minutesInfo={info}
+                                            minutesTitle={info.title}
                                             minutesDetail={minutesDetail}
                                             approvalDetail={approvalDetail}
                                         />

@@ -55,21 +55,24 @@ public class OverviewServiceApi {
         Map<Long, String> attendantsByMinutesId = getAttendantsByMinutesId(minutesIds);
         Map<Long, ApproveEntity> approveByMinutesId = getApproveByMinutesId(minutesIds);
 
-        // 과제명, 해당 과제에 기록된 회의록 및 품의서 목록 리스트
-        Map<String, List<MonthlyDocumentPairResponse>> result = new HashMap<>();
+        // 과제 id, 과제명, 해당 과제에 기록된 회의록 및 품의서 목록 리스트
+        Map<Long, String> projectInfo = new HashMap<>();
+        Map<Long, List<MonthlyDocumentPairResponse>> result = new HashMap<>();
         for (MinutesEntity minutes : targetMinutes) {
+            Long projectId = minutes.getProject().getId();
+            projectInfo.put(projectId, minutes.getProject().getTitle());
             String attendantsName = attendantsByMinutesId.getOrDefault(minutes.getId(), "");
             MonthlyMinutesSummaryResponse minutesSummary = MonthlyMinutesSummaryResponse.from(minutes, attendantsName);
 
             ApproveEntity approve = approveByMinutesId.get(minutes.getId());
             MonthlyApproveSummaryResponse approveSummary = approve == null ? null : new MonthlyApproveSummaryResponse(approve.getReportNo(), approve.getId());
 
-            result.computeIfAbsent(minutes.getProject().getTitle(), ignored -> new ArrayList<>())
-                    .add(new MonthlyDocumentPairResponse(minutesSummary, approveSummary));
+            result.computeIfAbsent(projectId, ignored -> new ArrayList<>())
+                .add(new MonthlyDocumentPairResponse(minutesSummary, approveSummary));
         }
 
         return result.entrySet().stream()
-                .map(entry -> new MonthlyDocumentGroupResponse(entry.getKey(), entry.getValue()))
+                .map(entry -> new MonthlyDocumentGroupResponse(entry.getKey(), projectInfo.get(entry.getKey()), entry.getValue()))
                 .toList();
     }
 

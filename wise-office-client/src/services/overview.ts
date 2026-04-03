@@ -4,6 +4,7 @@ import {
     ApproveList,
     MinutesInfo,
     MinutesList,
+    MonthlyDocument,
 } from "@/types/document";
 
 export async function getMinutes(projectId: number): Promise<MinutesList> {
@@ -34,6 +35,17 @@ export async function getApproveInfo(
     const { data } = await api.get(
         `/projects/${projectId}/approves/${approveId}`,
     );
+
+    return data;
+}
+
+export async function getMonthlyDocuments(
+    year: number,
+    month: number,
+): Promise<MonthlyDocument[]> {
+    const { data } = await api.get(`/projects/documents`, {
+        params: { year, month },
+    });
 
     return data;
 }

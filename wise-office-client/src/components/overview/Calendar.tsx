@@ -30,9 +30,9 @@ export default function Calendar() {
     }
 
     const changeMonth = (diff: number) => {
-        const newDate = new Date(year, month + diff, 1);
+        const newDate = new Date(year, month - 1 + diff, 1);
         setYear(newDate.getFullYear());
-        setMonth(newDate.getMonth());
+        setMonth(newDate.getMonth() + 1);
     };
 
     // 바깥 클릭 감지
@@ -113,7 +113,7 @@ export default function Calendar() {
                             }}
                             className="px-2 py-1 rounded-md hover:bg-gray-100 cursor-pointer"
                         >
-                            {month + 1}월
+                            {month}월
                         </button>
 
                         {openMonth && (
