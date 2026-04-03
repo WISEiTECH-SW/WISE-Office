@@ -59,6 +59,15 @@ export default function Sidebar({
                     셀을 클릭해 셀 안에 내용을 직접 입력하세요.
                 </p>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
+                    회의 일시의{" "}
+                    <span className="text-blue-500 font-medium">회의 날짜</span>
+                    를 선택하면,{" "}
+                    <span className="text-blue-500 font-medium">
+                        참석 가능한 인원
+                    </span>
+                    이 나타납니다.
+                </p>
+                <p className="text-[11px] text-slate-400 leading-relaxed">
                     좌측의{" "}
                     <span className="text-blue-500 font-medium">
                         편성 인원 검색

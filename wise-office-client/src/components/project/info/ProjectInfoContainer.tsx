@@ -9,18 +9,15 @@ import {
     Edit,
     Trash2,
     Building2,
-    Activity,
+    UserPen,
     UserPlus,
     UserCheck,
     FileText,
     Briefcase,
 } from "lucide-react";
 
-import {
-    calculateProjectDuration,
-    calculationDuration,
-    formatYearMonth,
-} from "@/lib/common/util";
+import { calculateProjectDuration, formatYearMonth } from "@/lib/common/util";
+import ProjectInfoTitle from "./ProjectInfoTitle";
 
 type ProjectContainerProps = {
     projectInfo: ProjectInfo;
@@ -37,15 +34,14 @@ export default function ProjectInfoContainer({
         projectInfo.start,
         projectInfo.end,
     );
-    const titleDuration = calculationDuration(projectInfo.start);
-
     return (
         <div className="bg-white rounded-lg shadow-sm p-6 mb-4 md:mb-6 md:mt-4">
             <div className="flex justify-between items-start mb-4">
-                <p className="text-lg md:text-2xl font-bold text-gray-800 break-words whitespace-normal">
-                    {duration.state === "진행중" && `(${titleDuration})`}
-                    {projectInfo.projectTitle}
-                </p>
+                <ProjectInfoTitle
+                    state={duration.state}
+                    duration={duration.duration}
+                    title={projectInfo.projectTitle}
+                />
                 {projectInfo.canModify && (
                     <div className="flex ml-4 gap-2 flex-shrink-0">
                         <Button
@@ -72,11 +68,6 @@ export default function ProjectInfoContainer({
                     )} ~ ${formatYearMonth(projectInfo.end)}`}
                 />
                 <ProjectInfoItem
-                    icon={<Activity className="w-5 h-5 md:w-6 md:h-6" />}
-                    label="진행 상태"
-                    value={duration.duration}
-                />
-                <ProjectInfoItem
                     icon={<Briefcase className="w-5 h-5 md:w-6 md:h-6" />}
                     label="사업명"
                     value={projectInfo.businessName}
@@ -86,11 +77,16 @@ export default function ProjectInfoContainer({
                     label="전담기관"
                     value={projectInfo.institution}
                 />
+                <ProjectInfoItem
+                    icon={<FileText className="w-5 h-5 md:w-6 md:h-6" />}
+                    label="프로젝트 설명"
+                    value={projectInfo.detail}
+                />
             </div>
             <div className="grid md:grid-cols-4 gap-2 md:gap-6">
                 <ProjectInfoItem
-                    icon={<UserCheck className="w-5 h-5 md:w-6 md:h-6" />}
-                    label="책임자"
+                    icon={<UserPen className="w-5 h-5 md:w-6 md:h-6" />}
+                    label="실무 책임자 (PL)"
                     value={projectInfo.managerName.name}
                 />
                 <ProjectInfoItem
@@ -99,15 +95,18 @@ export default function ProjectInfoContainer({
                     value={`${projectInfo.attendant.length + 1}명`}
                 />
                 <ProjectInfoItem
+                    icon={<UserCheck className="w-5 h-5 md:w-6 md:h-6" />}
+                    label="과제 책임자 (PM)"
+                    value={
+                        projectInfo.proposalAttendant.find(
+                            (member) => member.role === "PM",
+                        )?.name ?? " "
+                    }
+                />
+                <ProjectInfoItem
                     icon={<UserPlus className="w-5 h-5 md:w-6 md:h-6" />}
                     label="편성 인원"
                     value={`${projectInfo.proposalAttendant.length}명`}
-                />
-
-                <ProjectInfoItem
-                    icon={<FileText className="w-5 h-5 md:w-6 md:h-6" />}
-                    label="프로젝트 설명"
-                    value={projectInfo.detail}
                 />
             </div>
         </div>

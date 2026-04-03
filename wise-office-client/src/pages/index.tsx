@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import { useAuthStore } from "@/store/useAuthStore";
 import { useReturnTargetDocStore } from "@/store/useReturnTargetDoc";
-import { useProjectsPaged } from "@/hooks/queries";
+import { useProjectPages } from "@/hooks/queries";
 
 import {
     ProjectProgressHeader,
@@ -13,19 +13,18 @@ import {
 import ProjectModal from "@/components/modal/ProjectModal/ProjectModal";
 import LoadingIndicator from "@/components/ui/LoadingIndicator";
 import ErrorIndicator from "@/components/ui/ErrorIndicator";
+import { usePageStore } from "@/store/usePageStore";
 
 export default function Home() {
     const router = useRouter();
     const { hasToken } = useAuthStore();
     const { clearReturnTargetDoc } = useReturnTargetDocStore();
-
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const offset = 6;
+    const { currentPage, setProjectPage } = usePageStore();
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     /* ----- query ----- */
-    const { data, isLoading } = useProjectsPaged({ currentPage, offset });
+    const { data, isLoading } = useProjectPages(currentPage);
 
     /* ----- hook ----- */
     useEffect(() => {
@@ -36,7 +35,7 @@ export default function Home() {
     const movePage = (page: number) => {
         if (!data) return;
         if (page < 1 || page > data.pageNationInfo.totalPages) return;
-        setCurrentPage(page);
+        setProjectPage(page);
     };
 
     const goToProjectDetail = (projectId: number) => {

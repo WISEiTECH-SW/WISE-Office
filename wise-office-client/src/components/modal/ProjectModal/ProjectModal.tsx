@@ -12,6 +12,7 @@ import LoadingIndicator from "@/components/ui/LoadingIndicator";
 import { projectDefaultForm } from "@/constants/defaultForm";
 import { projectFormValidate } from "@/utils/formValidation";
 import { toastMessage } from "@/lib/common/toastMessage";
+import { useScrollLock } from "@/hooks/useBodyScrollLock";
 
 type ProjectModalProps = {
     projectId?: number;
@@ -57,6 +58,8 @@ export default function ProjectModal({
         });
     }, [data]);
 
+    useScrollLock();
+
     /* ----- func -----*/
     const handleChange = <K extends keyof CreateProject>(
         key: K,
@@ -97,18 +100,19 @@ export default function ProjectModal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10">
-            <div className="flex flex-col p-4 gap-6 items-center max-w-[1100px] max-h-[600px] w-full h-full bg-white rounded-xl shadow-xl overflow-hidden">
+            <div className="flex flex-col p-4 gap-6 items-center max-w-[1100px] max-h-[630px] w-full h-full bg-white rounded-xl shadow-xl overflow-hidden">
                 {/* 제목 */}
-                <div className="relative w-full">
-                    <h2 className="text-center text-2xl font-extrabold">
+                <div className="relative w-full flex items-center justify-center">
+                    <h2 className="text-2xl font-extrabold">
                         {projectId ? "프로젝트 수정" : "프로젝트 생성"}
                     </h2>
                     <button
                         onClick={onClose}
-                        className="absolute top-3 right-3 w-12 h-12 flex items-center justify-center
-                       rounded-full text-gray-600 hover:bg-gray-100 cursor-pointer"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 
+               w-12 h-12 flex items-center justify-center
+               rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700 cursor-pointer"
                     >
-                        <X className="w-5 h-5 text-gray-500" />
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
 

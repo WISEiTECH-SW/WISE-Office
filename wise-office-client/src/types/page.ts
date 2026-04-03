@@ -4,8 +4,3 @@ export interface PageInfo {
     totalCount: number;
     totalPages: number;
 }
-
-export interface PageParams {
-    currentPage: number;
-    offset: number;
-}

@@ -9,7 +9,7 @@ type ProjectState = {
 
 export const calculateProjectDuration = (
     start: Date,
-    end: Date
+    end: Date,
 ): ProjectState => {
     const currentDate = new Date();
     const startDate = new Date(start);
@@ -28,8 +28,8 @@ export const calculateProjectDuration = (
         return {
             duration: "진행 예정",
             state: "진행전",
-            stateColor: "bg-cyan-100",
-            textColor: "text-cyan-700",
+            stateColor: "bg-yellow-100",
+            textColor: "text-yellow-700",
         };
     }
 
@@ -40,8 +40,8 @@ export const calculateProjectDuration = (
     return {
         duration: `${duration}차년도`,
         state: "진행중",
-        stateColor: "bg-emerald-100",
-        textColor: "text-emerald-700",
+        stateColor: "bg-green-100",
+        textColor: "text-green-700",
     };
 };
 

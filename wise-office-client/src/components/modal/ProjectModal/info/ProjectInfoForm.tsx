@@ -1,6 +1,7 @@
 import { CreateProject, FormErrors } from "@/types/project";
 import ProjectInput from "./ProjectInput";
 import TimePicker from "./TimePicker";
+import { MAX_LENGTH } from "@/constants/config";
 
 interface ProjectInfoFormProps {
     form: CreateProject;
@@ -23,7 +24,7 @@ export default function ProjectInfoForm({
                     label="연구개발과제명"
                     value={form.projectTitle}
                     placeholder="연구개발과제명을 입력하세요."
-                    maxLength={50}
+                    maxLength={MAX_LENGTH.SHORT}
                     error={errors.projectTitle}
                     onChange={(value) => onChange("projectTitle", value)}
                 />
@@ -33,7 +34,7 @@ export default function ProjectInfoForm({
                         등)"
                     value={form.businessName}
                     placeholder="사업명을 입력하세요."
-                    maxLength={50}
+                    maxLength={MAX_LENGTH.SHORT}
                     error={errors.businessName}
                     onChange={(value) => onChange("businessName", value)}
                 />
@@ -42,14 +43,14 @@ export default function ProjectInfoForm({
                     label="전담기관"
                     value={form.institution}
                     placeholder="전담기관을 입력하세요."
-                    maxLength={50}
+                    maxLength={MAX_LENGTH.SHORT}
                     error={errors.institution}
                     onChange={(value) => onChange("institution", value)}
                 />
             </div>
             <div className="flex flex-col px-4 justify-between h-full">
-                <div className="flex flex-col gap-3">
-                    <label className="block font-semibold text-gray-700 text-sm">
+                <div className="flex flex-col">
+                    <label className="block font-semibold mb-4 text-gray-700 text-sm">
                         프로젝트 기간
                     </label>
                     <div className="flex justify-between items-center">
@@ -59,7 +60,7 @@ export default function ProjectInfoForm({
                             error={errors.start}
                             onChange={(value) => onChange("start", value)}
                         />
-                        <span className="mb-4 px-2 text-lg font-semibold text-gray-600">
+                        <span className="mb-2 px-2 text-lg font-semibold text-gray-700">
                             →
                         </span>
                         <TimePicker
@@ -75,7 +76,7 @@ export default function ProjectInfoForm({
                     label="프로젝트 설명"
                     value={form.content}
                     placeholder="프로젝트에 대한 설명을 입력하세요."
-                    maxLength={500}
+                    maxLength={MAX_LENGTH.LONG}
                     error={errors.content}
                     onChange={(value) => onChange("content", value)}
                 />

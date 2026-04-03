@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "./queryKeys";
 
 import { CreateProject } from "@/types/project";
-import { PageParams } from "@/types/page";
 
 import {
     getProjectById,
@@ -12,17 +11,18 @@ import {
     getCurrentPageProjects,
 } from "@/services/projects";
 import { toastMessage } from "@/lib/common/toastMessage";
+import { usePageStore } from "@/store/usePageStore";
 
 interface UpdateProjectParams {
     data: CreateProject;
     projectId: number;
 }
 
-export const useProjectsPaged = (params: PageParams) => {
+export const useProjectPages = (page: number) => {
     return useQuery({
-        queryKey: queryKeys.projectsPaged(params),
-        queryFn: () => getCurrentPageProjects(params),
-        enabled: !!params,
+        queryKey: queryKeys.projectPages(page),
+        queryFn: () => getCurrentPageProjects(page),
+        enabled: !!page,
     });
 };
 
@@ -36,11 +36,14 @@ export const useProjectDetail = (projectId?: number) => {
 
 export const useProjectMutation = () => {
     const queryClient = useQueryClient();
+    const { currentPage } = usePageStore();
 
     const createMutation = useMutation({
         mutationFn: (data: CreateProject) => postProject(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: queryKeys.all });
+            queryClient.invalidateQueries({
+                queryKey: [...queryKeys.all, "pages"],
+            });
             toastMessage.successDoc("project", "create");
         },
     });
@@ -52,6 +55,9 @@ export const useProjectMutation = () => {
             queryClient.invalidateQueries({
                 queryKey: queryKeys.projectDetail(variables.projectId),
             });
+            queryClient.invalidateQueries({
+                queryKey: queryKeys.projectPages(currentPage),
+            });
             toastMessage.successDoc("project", "update");
         },
     });
@@ -59,7 +65,9 @@ export const useProjectMutation = () => {
     const deleteMutation = useMutation({
         mutationFn: (projectId: number) => deleteProject(projectId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: queryKeys.all });
+            queryClient.invalidateQueries({
+                queryKey: [...queryKeys.all, "pages"],
+            });
             toastMessage.successDoc("project", "delete");
         },
     });
