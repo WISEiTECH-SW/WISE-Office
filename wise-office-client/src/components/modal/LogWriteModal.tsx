@@ -9,6 +9,7 @@ import { useLogDetail, useLogMutation } from "@/hooks/queries";
 import Button from "../ui/Button";
 import LoadingIndicator from "../ui/LoadingIndicator";
 import { MAX_LENGTH } from "@/constants/config";
+import { useScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface LogWriteModalProps {
     projectId: number;
@@ -45,14 +46,7 @@ export default function LogWriteModal({
         }
     }, [isEditMode, data]);
 
-    useEffect(() => {
-        const originalStyle = window.getComputedStyle(document.body).overflow;
-        document.body.style.overflow = "hidden";
-
-        return () => {
-            document.body.style.overflow = originalStyle;
-        };
-    }, []);
+    useScrollLock();
 
     /* ----- func -----*/
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -7,7 +7,7 @@ interface ProjectMemberSelectorProps {
     initialMembers: number[];
     isProposal: boolean;
     managerId?: number;
-    attendatnError?: string;
+    attendantError?: string;
     managerError?: string;
     onSelectedMemberChange: (value: number[]) => void;
     setManagerId: (value: number | undefined) => void;
@@ -18,7 +18,7 @@ export default function ProjectMemberSelector({
     initialMembers,
     isProposal,
     managerId,
-    attendatnError,
+    attendantError,
     managerError,
     onSelectedMemberChange,
     setManagerId,
@@ -76,7 +76,7 @@ export default function ProjectMemberSelector({
                         {`${attendant} 인원 리스트`}
                     </label>
                     {/* 선택된 수행 인원 */}
-                    <div className="border border-gray-300 rounded-md h-42 gap-2 overflow-y-auto custom-scroll">
+                    <div className="border border-gray-300 rounded-md h-[168px] gap-2 overflow-y-auto custom-scroll">
                         {selectedMembers.map((member) => (
                             <div
                                 key={member.memberId}
@@ -104,7 +104,7 @@ export default function ProjectMemberSelector({
                             ? "과제 책임자 (PM) 선택"
                             : "실무 책임자 (PL) 선택"}
                     </label>
-                    <div className="h-26 border border-gray-300 rounded-md p-2 shadow-inner overflow-y-auto custom-scroll">
+                    <div className="h-[104px] border border-gray-300 rounded-md p-2 shadow-inner overflow-y-auto custom-scroll">
                         {selectedMembers.length === 0 ? (
                             <p className="text-sm font-light text-gray-500 italic">
                                 {`${attendant} 인원을 선택해주세요.`}
@@ -166,7 +166,7 @@ export default function ProjectMemberSelector({
                     ))}
                 </div>
                 <p className="h-2 ml-1 text-red-500 text-xs mt-1">
-                    {attendatnError}
+                    {attendantError}
                 </p>
             </div>
         </div>

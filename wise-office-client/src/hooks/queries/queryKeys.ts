@@ -1,5 +1,3 @@
-// import { PageParams } from "@/types/page";
-
 export const queryKeys = {
     all: ["projects"] as const,
 

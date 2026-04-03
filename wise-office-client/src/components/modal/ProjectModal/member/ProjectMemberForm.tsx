@@ -31,7 +31,7 @@ export default function ProjectMemberForm({
                     initialMembers={form.attendants}
                     isProposal={false}
                     managerId={form.projectLeaderId}
-                    attendatnError={errors.attendants}
+                    attendantError={errors.attendants}
                     managerError={errors.projectLeaderId}
                     onSelectedMemberChange={(value) =>
                         onChange("attendants", value)
@@ -45,7 +45,7 @@ export default function ProjectMemberForm({
                     initialMembers={form.proposalAttendants}
                     isProposal={true}
                     managerId={form.projectManagerId}
-                    attendatnError={errors.proposalAttendants}
+                    attendantError={errors.proposalAttendants}
                     managerError={errors.projectManagerId}
                     onSelectedMemberChange={(value) =>
                         onChange("proposalAttendants", value)

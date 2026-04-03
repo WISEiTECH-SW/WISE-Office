@@ -43,7 +43,7 @@ export default function ProjectInput({
                     value={value}
                     maxLength={maxLength}
                     onChange={handleChange}
-                    className="border border-gray-300 rounded-md p-2 w-full h-50 resize-none 
+                    className="border border-gray-300 rounded-md p-2 w-full h-[200px] resize-none 
                             focus:outline-none focus:ring-2 focus:ring-blue-500
                             custom-scroll cursor-text [&::-webkit-scrollbar-thumb]:cursor-default 
                             [&::-webkit-scrollbar-thumb:hover]:cursor-default"
