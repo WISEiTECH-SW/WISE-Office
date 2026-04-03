@@ -29,7 +29,7 @@ export default function ProjectMemberForm({
                 <ProjectMemberSelector
                     members={data.members}
                     initialMembers={form.attendants}
-                    attendant="수행"
+                    isProposal={false}
                     managerId={form.projectLeaderId}
                     attendatnError={errors.attendants}
                     managerError={errors.projectLeaderId}
@@ -43,7 +43,7 @@ export default function ProjectMemberForm({
                 <ProjectMemberSelector
                     members={data.companyMembers}
                     initialMembers={form.proposalAttendants}
-                    attendant="편성"
+                    isProposal={true}
                     managerId={form.projectManagerId}
                     attendatnError={errors.proposalAttendants}
                     managerError={errors.projectManagerId}

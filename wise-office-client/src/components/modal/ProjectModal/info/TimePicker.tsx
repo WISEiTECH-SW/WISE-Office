@@ -45,7 +45,7 @@ export default function TimePicker({
                 className="border border-gray-300 rounded-md p-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={placeholder}
             />
-            <p className="h-2 ml-1 px-1 text-red-500 text-xs mt-1">{error}</p>
+            <p className="ml-1 mt-1 text-red-500 text-xs h-4">{error}</p>
         </div>
     );
 }
