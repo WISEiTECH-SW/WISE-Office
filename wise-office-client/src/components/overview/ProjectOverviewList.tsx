@@ -111,7 +111,7 @@ export default function ProjectOverviewList() {
                                         }`}
                                     >
                                         <OverviewCard
-                                            minutesInfo={info}
+                                            minutesTitle={info.title}
                                             minutesDetail={minutesDetail}
                                             approvalDetail={approvalDetail}
                                         />

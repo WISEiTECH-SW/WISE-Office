@@ -1,19 +1,15 @@
 import PreviewButton from "@/components/ui/button/PreviewButton";
 import PrintButton from "@/components/ui/button/PrintButton";
-import {
-    ApprovalDetailResponse,
-    MinutesInfo,
-    MinutesItem,
-} from "@/types/document";
+import { ApprovalDetailResponse, MinutesInfo } from "@/types/document";
 
 interface OverviewCardProps {
-    minutesInfo: MinutesItem;
+    minutesTitle: string;
     minutesDetail?: MinutesInfo;
     approvalDetail?: ApprovalDetailResponse;
 }
 
 export default function OverviewCard({
-    minutesInfo,
+    minutesTitle,
     minutesDetail,
     approvalDetail,
 }: OverviewCardProps) {
@@ -32,7 +28,7 @@ export default function OverviewCard({
                     </div>
                     <div className="flex-1 flex px-2 py-3 items-center gap-6">
                         <p className="flex-1 flex justify-center text-sm">
-                            회의록 · {minutesInfo.title}
+                            회의록 · {minutesTitle}
                         </p>
                         <p className="flex-1 flex text-xs text-gray-600 line-clamp-3 break-keep">
                             {minutesDetail?.minutesAttendants

@@ -135,3 +135,27 @@ export interface PossibleAttendantsResponse {
     rank: string;
     canAttend: boolean;
 }
+
+export interface MinutesSummary {
+    minutesId: string;
+    minutesDate: string;
+    startTime: string;
+    endTime: string;
+    minutesTitle: string;
+    attendants: string;
+}
+
+export interface ApprovalSummary {
+    approveId: number;
+    approveTitle: string;
+}
+
+export interface DocumentPair {
+    minutes: MinutesSummary;
+    approve: ApprovalSummary | null;
+}
+
+export interface MonthlyDocument {
+    title: string;
+    pair: DocumentPair[];
+}
