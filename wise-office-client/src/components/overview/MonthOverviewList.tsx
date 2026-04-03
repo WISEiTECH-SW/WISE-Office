@@ -16,7 +16,7 @@ import OverviewCard from "./OverviewCard";
 import LoadingIndicator from "../ui/LoadingIndicator";
 
 export default function MonthOverviewList() {
-    const { year, month, projectInfo } = useOverviewStore();
+    const { year, month } = useOverviewStore();
     const [monthlyDocumentList, setMonthlyDocumentList] = useState<
         MonthlyDocument[]
     >([]);
@@ -29,42 +29,50 @@ export default function MonthOverviewList() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchMinutes = async () => {
-            const data = await getMinutes(projectInfo.projectId);
-
-            const minutesDetailResponse = await Promise.all(
-                data.map((m) =>
-                    getMinutesInfo(projectInfo.projectId, m.minutesId),
-                ),
-            );
-            setMinutesDetailList(minutesDetailResponse);
+        const fetchMinutes = async (projectIds: number[]) => {
+            for (const projectId of projectIds) {
+                const data = await getMinutes(projectId);
+                const minutesDetailResponse = await Promise.all(
+                    data.map((m) => getMinutesInfo(projectId, m.minutesId)),
+                );
+                setMinutesDetailList((prev) => [
+                    ...prev,
+                    ...minutesDetailResponse,
+                ]);
+            }
         };
 
-        const fetchApproves = async () => {
-            const data = await getApproves(projectInfo.projectId);
-
-            const approvalDetailResponse = await Promise.all(
-                data.map((m) =>
-                    getApproveInfo(projectInfo.projectId, m.approveId),
-                ),
-            );
-            setApprovalDetailList(approvalDetailResponse);
+        const fetchApproves = async (projectIds: number[]) => {
+            for (const projectId of projectIds) {
+                const data = await getApproves(projectId);
+                const approvalDetailResponse = await Promise.all(
+                    data.map((m) => getApproveInfo(projectId, m.approveId)),
+                );
+                setApprovalDetailList((prev) => [
+                    ...prev,
+                    ...approvalDetailResponse,
+                ]);
+            }
         };
 
         const fetchData = async () => {
             setIsLoading(true);
+            setMinutesDetailList([]);
+            setApprovalDetailList([]);
+
             const projectList = await getMonthlyDocuments(year, month);
             setMonthlyDocumentList(projectList);
 
-            await Promise.all([fetchMinutes(), fetchApproves()]).finally(() =>
-                setIsLoading(false),
-            );
+            const projectIds = projectList.map((m) => m.projectId);
+
+            await Promise.all([
+                fetchMinutes(projectIds),
+                fetchApproves(projectIds),
+            ]).finally(() => setIsLoading(false));
         };
 
         fetchData();
     }, [year, month]);
-
-    console.log(projectInfo);
 
     return (
         <div className="flex flex-col gap-10">

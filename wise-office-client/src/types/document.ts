@@ -156,6 +156,7 @@ export interface DocumentPair {
 }
 
 export interface MonthlyDocument {
+    projectId: number;
     title: string;
     pair: DocumentPair[];
 }
