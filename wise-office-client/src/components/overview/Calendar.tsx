@@ -4,7 +4,8 @@ import {
     useProjectsGroupByYearStore,
 } from "@/store/useOverviewStore";
 
-const days = ["일", "월", "화", "수", "목", "금", "토"];
+const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 
 export default function Calendar() {
     const { year, month, setYear, setMonth } = useOverviewStore();
@@ -14,11 +15,10 @@ export default function Calendar() {
     const [openMonth, setOpenMonth] = useState(false);
 
     const firstDay = new Date(year, month, 1).getDay();
-    const lastDate = new Date(year, month + 1, 0).getDate();
-    const prevMonthLastDate = new Date(year, month, 0).getDate();
+    const lastDate = new Date(year, month, 0).getDate();
+    const prevMonthLastDate = new Date(year, month - 1, 0).getDate();
 
     const YEARS = groupByYear.map((m) => m.year);
-    const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 
     const dates: { day: number; dim: boolean }[] = [];
 
@@ -76,7 +76,7 @@ export default function Calendar() {
 
                 <div className="flex gap-2">
                     {/* 연도 드롭다운 */}
-                    <button className="relative rounded-md">
+                    <div className="relative">
                         <button
                             onClick={() => {
                                 setOpenYear(!openYear);
@@ -107,10 +107,10 @@ export default function Calendar() {
                                 ))}
                             </div>
                         )}
-                    </button>
+                    </div>
 
                     {/* 월 드롭다운 */}
-                    <button className="relative">
+                    <div className="relative">
                         <button
                             onClick={() => {
                                 setOpenMonth(!openMonth);
@@ -141,7 +141,7 @@ export default function Calendar() {
                                 ))}
                             </div>
                         )}
-                    </button>
+                    </div>
                 </div>
 
                 <button
@@ -153,7 +153,7 @@ export default function Calendar() {
             </div>
 
             <div className="grid grid-cols-7 text-xs text-gray-400 mb-1">
-                {days.map((d) => (
+                {DAYS.map((d) => (
                     <div key={d} className="text-center">
                         {d}
                     </div>
