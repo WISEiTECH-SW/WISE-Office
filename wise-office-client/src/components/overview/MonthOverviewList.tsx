@@ -64,6 +64,8 @@ export default function MonthOverviewList() {
         fetchData();
     }, [year, month]);
 
+    console.log(projectInfo);
+
     return (
         <div className="flex flex-col gap-10">
             <p className="text-2xl font-bold">

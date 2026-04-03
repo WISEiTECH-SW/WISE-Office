@@ -75,7 +75,7 @@ export default function PreviewContainer({
     const isError = queries.some((q) => q.isError);
 
     if (!selectedDoc) return <BasePreview type="log" />;
-    if (isLoading) return <LoadingIndicator type={"minute"} />;
+    if (isLoading) return <LoadingIndicator type="minutes" />;
     if (isError) return <div>에러 발생</div>;
 
     switch (docType) {

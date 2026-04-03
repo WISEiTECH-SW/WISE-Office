@@ -98,7 +98,7 @@ export default function ProjectOverviewList() {
                     .map(({ month, minutesInfo }) => (
                         <div key={month} className="flex flex-col gap-4 pr-16">
                             <p className="text-lg font-semibold">{month}월</p>
-                            {minutesInfo.map((info, index) => {
+                            {minutesInfo.map((info) => {
                                 const minutesDetail = minutesDetailList.find(
                                     (minutesDetail) =>
                                         minutesDetail.minutesId ===
