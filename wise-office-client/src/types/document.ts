@@ -45,7 +45,6 @@ export interface MinutesListResponse {
     minutesAt: string;
     writer: string;
     purpose: string;
-    number: number; // 현재 페이지
 }
 
 export interface MinutesDetail {

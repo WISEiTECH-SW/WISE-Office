@@ -56,7 +56,7 @@ public class ApproveService {
         Page<ApproveEntity> approveEntities = approveEntityRepository.findByProjectId(projectId, pageable);
         List<ApproveListResponse> content = approveEntities.getContent().stream().map(ApproveListResponse::from).toList();
 
-        return new PageImpl<>(content,pageable,approveEntities.getTotalElements());
+        return new PageImpl<>(content, pageable, approveEntities.getTotalElements());
     }
 
     public ApproveEntity getApproveWithMinutes(long approveId) {

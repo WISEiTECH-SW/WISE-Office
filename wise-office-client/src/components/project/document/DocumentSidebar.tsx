@@ -12,7 +12,7 @@ interface DocumentSidebarProps {
         minutesList: MinutesListResponse[];
         approvalsList: ApproveListResponse[];
     };
-    documnetPageInfo?: {
+    documentPageInfo?: {
         logsPage: { totalPages: number; currentPage: number };
         minutesPage: { totalPages: number; currentPage: number };
         approvalsPage: { totalPages: number; currentPage: number };
@@ -30,7 +30,7 @@ interface DocumentSidebarProps {
 
 export default function DocumentSidebar({
     docData,
-    documnetPageInfo,
+    documentPageInfo,
     setDocumentPage,
     selectedDoc,
     attending,
@@ -45,19 +45,15 @@ export default function DocumentSidebar({
         setSelectedDoc({ type: type, id: id });
     };
 
-    const totalPages =
+    const pageInfo =
         selectedDoc.type === "minute"
-            ? (documnetPageInfo?.minutesPage.totalPages ?? 0)
+            ? documentPageInfo?.minutesPage
             : selectedDoc.type === "log"
-              ? (documnetPageInfo?.logsPage.totalPages ?? 0)
-              : (documnetPageInfo?.approvalsPage.totalPages ?? 0);
+              ? documentPageInfo?.logsPage
+              : documentPageInfo?.approvalsPage;
 
-    const currentPage =
-        selectedDoc.type === "minute"
-            ? (documnetPageInfo?.minutesPage.currentPage ?? 0)
-            : selectedDoc.type === "log"
-              ? (documnetPageInfo?.logsPage.currentPage ?? 0)
-              : (documnetPageInfo?.approvalsPage.currentPage ?? 0);
+    const totalPages = pageInfo?.totalPages ?? 0;
+    const currentPage = pageInfo?.currentPage ?? 0;
 
     const handleWrite = () => {
         if (selectedDoc.type === "minute") {

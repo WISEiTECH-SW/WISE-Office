@@ -143,7 +143,7 @@ export default function ProjectById() {
                         minutesList: minutes.data?.content ?? [],
                         approvalsList: approvals.data?.content ?? [],
                     }}
-                    documnetPageInfo={{
+                    documentPageInfo={{
                         logsPage: {
                             totalPages: logs.data?.totalPages ?? 0,
                             currentPage: logsPage,
