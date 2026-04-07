@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    keepPreviousData,
+} from "@tanstack/react-query";
 import { queryKeys } from "./queryKeys";
 import { LogInput } from "@/types/log";
 import {
@@ -26,10 +31,11 @@ interface DeleteLogParams {
     logId: number;
 }
 
-export const useLogs = (projectId: number) => {
+export const useLogs = (projectId: number, page: number) => {
     return useQuery({
-        queryKey: queryKeys.logs(projectId),
-        queryFn: () => getLogList(projectId),
+        queryKey: ["logs", projectId, page],
+        queryFn: () => getLogList(projectId, page),
+        placeholderData: keepPreviousData,
     });
 };
 

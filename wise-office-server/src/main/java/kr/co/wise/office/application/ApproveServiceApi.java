@@ -9,6 +9,8 @@ import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
 import kr.co.wise.office.external.hoilday.dto.HolidayCalculator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +33,8 @@ public class ApproveServiceApi {
      * 해당 프로젝트에 참여하지 않아도 품의서 목록 조회는 가능
      */
     @Transactional(readOnly = true)
-    public List<ApproveListResponse> getApproveList(long projectId) {
-        List<ApproveEntity> approves = approveService.getApprovesByProjectId(projectId);
-        return approves.stream().map(ApproveListResponse::from).toList();
+    public Page<ApproveListResponse> getApproveList(long projectId, Pageable pageable) {
+        return approveService.getApprovesByProjectId(projectId, pageable);
     }
 
     /**

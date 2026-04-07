@@ -9,8 +9,8 @@ interface DocumentListProps {
     selectedDoc: SelectedDocument;
     docData: {
         logList: Log[];
-        minuteList: MinutesListResponse[];
-        approveList: ApproveListResponse[];
+        minutesList: MinutesListResponse[];
+        approvalsList: ApproveListResponse[];
     };
     onSelectDoc: (type: DocumentType, id: number) => void;
 }
@@ -33,7 +33,7 @@ export default function DocumentList({
     };
 
     return (
-        <div className="md:max-h-85 flex flex-nowrap pb-1 overflow-x-auto md:flex-col scrollbar-auto-hide">
+        <div className="flex flex-nowrap pb-1 overflow-x-auto md:flex-col">
             {selectedDoc.type === "log" &&
                 (docData.logList.length === 0
                     ? renderEmpty("로그가")
@@ -47,25 +47,25 @@ export default function DocumentList({
                       )))}
 
             {selectedDoc.type === "minute" &&
-                (docData.minuteList.length === 0
+                (docData.minutesList.length === 0
                     ? renderEmpty("회의록이")
-                    : docData.minuteList.map((minute) => (
+                    : docData.minutesList.map((minutes) => (
                           <MinuteItem
-                              key={minute.minutesId}
-                              minute={minute}
-                              isSelected={selectedDoc.id === minute.minutesId}
+                              key={minutes.minutesId}
+                              minute={minutes}
+                              isSelected={selectedDoc.id === minutes.minutesId}
                               onSelect={handleSelectDoc}
                           />
                       )))}
 
             {selectedDoc.type === "approve" &&
-                (docData.approveList.length === 0
+                (docData.approvalsList.length === 0
                     ? renderEmpty("품의서가")
-                    : docData.approveList.map((approve) => (
+                    : docData.approvalsList.map((approval) => (
                           <ApproveItem
-                              key={approve.approveId}
-                              approve={approve}
-                              isSelected={selectedDoc.id === approve.approveId}
+                              key={approval.approveId}
+                              approve={approval}
+                              isSelected={selectedDoc.id === approval.approveId}
                               onSelect={handleSelectDoc}
                           />
                       )))}

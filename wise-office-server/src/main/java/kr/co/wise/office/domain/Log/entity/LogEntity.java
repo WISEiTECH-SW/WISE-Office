@@ -5,6 +5,7 @@ import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.comment.entity.CommentEntity;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -51,6 +52,7 @@ public class LogEntity {
     private ProjectEntity project;
 
     @OneToMany(mappedBy = "log")
+    @BatchSize(size = 100)
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
 

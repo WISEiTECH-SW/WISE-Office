@@ -2,8 +2,10 @@ import { api } from "@/lib/clientApi";
 import {
     ApproveCreateResonse,
     ApprovalDetailResponse,
+    ApproveListResponse,
     ApproveUpdateRequest,
     ApproveUpdateResponse,
+    PageResponse,
     PossibleAttendantsResponse,
 } from "@/types/document";
 
@@ -56,8 +58,14 @@ export async function updateApprove(
  * @param projectId 해당 프로젝트의 ID
  * @returns ApproveListResopnse 객체
  */
-export async function getApproveList(projectId: number) {
-    const res = await api.get(`projects/${projectId}/approves`);
+export async function getApproveList(
+    projectId: number,
+    page: number,
+    size: number = 10,
+): Promise<PageResponse<ApproveListResponse>> {
+    const res = await api.get(`projects/${projectId}/approves`, {
+        params: { page, size },
+    });
     return res.data;
 }
 

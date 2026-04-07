@@ -15,6 +15,8 @@ import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.UnAuthorizationException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +65,32 @@ public class LogServiceApi {
                 .map(log -> LogListResponse.from(log, modifyChecker.apply(log),
                         (int) log.getComments().stream().filter(c -> !c.isDeleted()).count()))
                 .toList();
+    }
+
+    public Page<LogListResponse> searchLogPages(long projectId, String loginUserEmail, Pageable pageable) {
+        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
+        ProjectEntity project = projectService.findById(projectId);
+
+        Page<LogEntity> logPage = logService.searchLogPages(project, pageable);
+
+        Function<LogEntity, Boolean> modifyChecker;
+        if (isAdmin(loginUser)) {
+            modifyChecker = log -> true;
+        } else {
+            AttendantEntity attendant =
+                    attendantService.validateParticipatingProjectForViewing(loginUser, project);
+            modifyChecker = log -> hasModifyPermission(loginUser, attendant, log);
+        }
+
+        return logPage.map(log ->
+                LogListResponse.from(
+                        log,
+                        modifyChecker.apply(log),
+                        (int) log.getComments().stream()
+                                .filter(c -> !c.isDeleted())
+                                .count()
+                )
+        );
     }
 
     public LogDetailResponse getDetailLog(long logId, long projectId, String loginUserEmail) {

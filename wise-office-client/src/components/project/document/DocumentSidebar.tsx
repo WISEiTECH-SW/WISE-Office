@@ -9,8 +9,18 @@ import { Pen } from "lucide-react";
 interface DocumentSidebarProps {
     docData: {
         logList: Log[];
-        minuteList: MinutesListResponse[];
-        approveList: ApproveListResponse[];
+        minutesList: MinutesListResponse[];
+        approvalsList: ApproveListResponse[];
+    };
+    documentPageInfo?: {
+        logsPage: { totalPages: number; currentPage: number };
+        minutesPage: { totalPages: number; currentPage: number };
+        approvalsPage: { totalPages: number; currentPage: number };
+    };
+    setDocumentPage?: {
+        logsPage: (page: number) => void;
+        minutesPage: (page: number) => void;
+        approvalsPage: (page: number) => void;
     };
     selectedDoc: SelectedDocument;
     attending: boolean;
@@ -20,6 +30,8 @@ interface DocumentSidebarProps {
 
 export default function DocumentSidebar({
     docData,
+    documentPageInfo,
+    setDocumentPage,
     selectedDoc,
     attending,
     setSelectedDoc,
@@ -33,6 +45,16 @@ export default function DocumentSidebar({
         setSelectedDoc({ type: type, id: id });
     };
 
+    const pageInfo =
+        selectedDoc.type === "minute"
+            ? documentPageInfo?.minutesPage
+            : selectedDoc.type === "log"
+              ? documentPageInfo?.logsPage
+              : documentPageInfo?.approvalsPage;
+
+    const totalPages = pageInfo?.totalPages ?? 0;
+    const currentPage = pageInfo?.currentPage ?? 0;
+
     const handleWrite = () => {
         if (selectedDoc.type === "minute") {
             onWrite("minute");
@@ -40,6 +62,11 @@ export default function DocumentSidebar({
             onWrite("log");
         }
     };
+    const PAGE_SIZE = 5;
+
+    const currentGroup = Math.floor(currentPage / PAGE_SIZE);
+    const startPage = currentGroup * PAGE_SIZE;
+    const endPage = Math.min(startPage + PAGE_SIZE, totalPages);
 
     return (
         <div className="order-2 md:order-1 md:col-span-3 mb-6">
@@ -54,6 +81,72 @@ export default function DocumentSidebar({
                     docData={docData}
                     onSelectDoc={selectDoc}
                 />
+                <div className=" flex justify-center items-center gap-2 m-2 pb-2">
+                    {/* 이전 그룹 */}
+                    {startPage > 0 && (
+                        <button
+                            onClick={() => {
+                                const prevPage = startPage - 1;
+
+                                if (selectedDoc.type === "minute") {
+                                    setDocumentPage?.minutesPage(prevPage);
+                                } else if (selectedDoc.type === "log") {
+                                    setDocumentPage?.logsPage(prevPage);
+                                } else {
+                                    setDocumentPage?.approvalsPage(prevPage);
+                                }
+                            }}
+                            className="px-2 py-1 rounded cursor-pointer"
+                        >
+                            {"<<"}
+                        </button>
+                    )}
+                    {Array.from({ length: endPage - startPage }, (_, i) => {
+                        const page = startPage + i;
+
+                        return (
+                            <button
+                                key={page}
+                                onClick={() => {
+                                    if (selectedDoc.type === "minute") {
+                                        setDocumentPage?.minutesPage(page);
+                                    } else if (selectedDoc.type === "log") {
+                                        setDocumentPage?.logsPage(page);
+                                    } else {
+                                        setDocumentPage?.approvalsPage(page);
+                                    }
+                                }}
+                                className={`min-w-[28px] h-7 flex items-center justify-center cursor-pointer rounded text-sm ${
+                                    currentPage === page
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-200"
+                                }`}
+                            >
+                                {page + 1}
+                            </button>
+                        );
+                    })}
+
+                    {/* 다음 그룹 */}
+                    {endPage < totalPages && (
+                        <button
+                            onClick={() => {
+                                const nextPage = endPage;
+
+                                if (selectedDoc.type === "minute") {
+                                    setDocumentPage?.minutesPage(nextPage);
+                                } else if (selectedDoc.type === "log") {
+                                    setDocumentPage?.logsPage(nextPage);
+                                } else {
+                                    setDocumentPage?.approvalsPage(nextPage);
+                                }
+                            }}
+                            className="px-2 py-1 rounded cursor-pointer"
+                        >
+                            {">>"}
+                        </button>
+                    )}
+                </div>
             </div>
 
             {attending && selectedDoc?.type != "approve" && (

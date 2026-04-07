@@ -1,6 +1,7 @@
 package kr.co.wise.office.domain.approve.service;
 
 import kr.co.wise.office.api.dto.approve.ApproveCreateResponse;
+import kr.co.wise.office.api.dto.approve.ApproveListResponse;
 import kr.co.wise.office.api.dto.approve.ApproveUpdateRequest;
 import kr.co.wise.office.domain.approve.entity.ApproveEntity;
 import kr.co.wise.office.domain.approve.repository.ApproveEntityRepository;
@@ -11,6 +12,9 @@ import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsServ
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,8 +52,11 @@ public class ApproveService {
         return approveEntity;
     }
 
-    public List<ApproveEntity> getApprovesByProjectId(long projectId) {
-        return approveEntityRepository.findByProjectId(projectId);
+    public Page<ApproveListResponse> getApprovesByProjectId(long projectId, Pageable pageable) {
+        Page<ApproveEntity> approveEntities = approveEntityRepository.findByProjectId(projectId, pageable);
+        List<ApproveListResponse> content = approveEntities.getContent().stream().map(ApproveListResponse::from).toList();
+
+        return new PageImpl<>(content, pageable, approveEntities.getTotalElements());
     }
 
     public ApproveEntity getApproveWithMinutes(long approveId) {

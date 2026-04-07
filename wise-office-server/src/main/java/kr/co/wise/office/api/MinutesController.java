@@ -14,13 +14,13 @@ import kr.co.wise.office.api.dto.minutes.*;
 import kr.co.wise.office.application.MinutesServiceApi;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @AllArgsConstructor
@@ -39,11 +39,12 @@ public class MinutesController {
                             array = @ArraySchema(schema = @Schema(implementation = MinutesListResponse.class))
                     )),
     })
-    public ResponseEntity<List<MinutesListResponse>> getMinutesList(
+    public ResponseEntity<Page<MinutesListResponse>> getMinutesList(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "회의록을 조회할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId
+            @Parameter(description = "회의록을 조회할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId,
+            Pageable pageable
     ) {
-        return ResponseEntity.ok(minutesServiceApi.getMinutesBriefInfo(projectId, loginUser.getName()));
+        return ResponseEntity.ok(minutesServiceApi.getMinutesBriefInfo(projectId, loginUser.getName(), pageable));
     }
 
 

@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    keepPreviousData,
+} from "@tanstack/react-query";
 import { queryKeys } from "./queryKeys";
 import { MinutesCreateRequest } from "@/types/document";
 import {
@@ -27,10 +32,11 @@ interface UpdateMinuteParams {
     request: MinutesCreateRequest;
 }
 
-export const useMinutes = (projectId: number) => {
+export const useMinutes = (projectId: number, page: number) => {
     return useQuery({
-        queryKey: queryKeys.minutes(projectId),
-        queryFn: () => getMinuteList(projectId),
+        queryKey: ["minutes", projectId, page],
+        queryFn: () => getMinuteList(projectId, page),
+        placeholderData: keepPreviousData,
     });
 };
 

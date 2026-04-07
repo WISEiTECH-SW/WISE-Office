@@ -16,13 +16,17 @@ import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsServ
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,24 +41,32 @@ public class MinutesService {
 
     private final ProposalAttendantsService proposalAttendantsService;
 
-    public List<MinutesListResponse> getMinutesBriefInfo(
-            long projectId
+    public Page<MinutesListResponse> getMinutesBriefInfo(
+            long projectId,
+            Pageable pageable
     ) {
-        List<MinutesEntity> minutesEntities = minutesEntityRepository.findByProjectIdOrderByIdDesc(projectId);
-        List<Long> proposalAttendantId = minutesEntities.stream().map(a -> Long.parseLong(a.getWriter())).toList();
+        Page<MinutesEntity> minutesEntities = minutesEntityRepository.findByProjectIdOrderByIdDesc(projectId, pageable);
+        List<Long> proposalAttendantId = minutesEntities.getContent().stream().map(a -> Long.parseLong(a.getWriter())).toList();
         List<ProposalAttendantEntity> writerInfos = proposalAttendantsService.findWriterInfos(proposalAttendantId, projectId);
 
         List<MinutesListResponse> result = new ArrayList<>();
-        for (MinutesEntity minutesEntity : minutesEntities) {
+        Map<Long, ProposalAttendantEntity> writerMap =
+                writerInfos.stream()
+                        .collect(Collectors.toMap(ProposalAttendantEntity::getId, w -> w));
+
+        for (MinutesEntity minutesEntity : minutesEntities.getContent()) {
             Long writerId = Long.parseLong(minutesEntity.getWriter());
-            for (ProposalAttendantEntity writerInfo : writerInfos) {
-                if (writerId.equals(writerInfo.getId())) {
-                    result.add(MinutesListResponse.from(minutesEntity, writerInfo.getCompanyMember()));
-                }
+            ProposalAttendantEntity writerInfo = writerMap.get(writerId);
+
+            if (writerInfo != null) {
+                result.add(MinutesListResponse.from(
+                        minutesEntity,
+                        writerInfo.getCompanyMember()
+                ));
             }
         }
 
-        return result;
+        return new PageImpl<>(result, pageable, minutesEntities.getTotalElements());
     }
 
     @Transactional

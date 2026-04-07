@@ -15,6 +15,8 @@ import kr.co.wise.office.domain.Log.dto.*;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import kr.co.wise.office.exception.dto.ErrorResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +45,12 @@ public class LogController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = kr.co.wise.office.exception.dto.ErrorResponse.class)))
     })
-    public ResponseEntity<List<LogListResponse>> listAllLogs(
+    public ResponseEntity<Page<LogListResponse>> listAllLogs(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "로그 조회할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId) {
+            @Parameter(description = "로그 조회할 프로젝트 번호(pk값)") @PathVariable(value = "projectId") long projectId,
+            Pageable pageable) {
 
-        List<LogListResponse> responses = logServiceApi.getAllLogs(projectId, loginUser.getName());
+        Page<LogListResponse> responses = logServiceApi.searchLogPages(projectId, loginUser.getName(), pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
 
