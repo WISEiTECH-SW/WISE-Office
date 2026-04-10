@@ -17,46 +17,64 @@ import LoadingIndicator from "../ui/LoadingIndicator";
 export default function ProjectOverviewList() {
     const { year, projectInfo } = useOverviewStore();
     const [minutesList, setMinutesList] = useState<MinutesList>([]);
-    const [minutesDetailList, setMinutesDetailList] = useState<MinutesInfo[]>(
-        [],
-    );
-    const [approvalDetailList, setApprovalDetailList] = useState<
-        ApprovalDetailResponse[]
-    >([]);
+    const [docDetailList, setDocDetailList] = useState<{
+        minutesDetail: Map<number, MinutesInfo>;
+        approvalDetail: Map<number, ApprovalDetailResponse>;
+    }>({
+        minutesDetail: new Map(),
+        approvalDetail: new Map(),
+    });
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchMinutes = async () => {
-            const data = await getMinutesAll(projectInfo.projectId);
-            setMinutesList(data);
+        const fetchData = async () => {
+            const [minutesList, approvalList] = await Promise.all([
+                getMinutesAll(projectInfo.projectId),
+                getApprovesAll(projectInfo.projectId),
+            ]);
 
-            const minutesDetailResponse = await Promise.all(
-                data.map((m) =>
-                    getMinutesInfo(projectInfo.projectId, m.minutesId),
+            setMinutesList(minutesList);
+
+            const [minutesDetailResponse, approvalDetailResponse] =
+                await Promise.all([
+                    Promise.all(
+                        minutesList.map((minutes) =>
+                            getMinutesInfo(
+                                projectInfo.projectId,
+                                minutes.minutesId,
+                            ),
+                        ),
+                    ),
+                    Promise.all(
+                        approvalList.map((approval) =>
+                            getApproveInfo(
+                                projectInfo.projectId,
+                                approval.approveId,
+                            ),
+                        ),
+                    ),
+                ]);
+
+            setDocDetailList({
+                minutesDetail: new Map(
+                    minutesDetailResponse.map((minutes) => [
+                        minutes.minutesId,
+                        minutes,
+                    ]),
                 ),
-            );
-
-            setMinutesDetailList(minutesDetailResponse);
-        };
-
-        const fetchApproves = async () => {
-            const data = await getApprovesAll(projectInfo.projectId);
-
-            const approvalDetailResponse = await Promise.all(
-                data.map((m) =>
-                    getApproveInfo(projectInfo.projectId, m.approveId),
+                approvalDetail: new Map(
+                    approvalDetailResponse.map((approval) => [
+                        approval.approveId,
+                        approval,
+                    ]),
                 ),
-            );
-
-            setApprovalDetailList(approvalDetailResponse);
+            });
         };
 
         if (projectInfo.projectId) {
             setIsLoading(true);
 
-            Promise.all([fetchMinutes(), fetchApproves()]).finally(() =>
-                setIsLoading(false),
-            );
+            fetchData().finally(() => setIsLoading(false));
         }
     }, [projectInfo.projectId]);
 
@@ -99,16 +117,14 @@ export default function ProjectOverviewList() {
                         <div key={month} className="flex flex-col gap-4 pr-16">
                             <p className="text-lg font-semibold">{month}월</p>
                             {minutesInfo.map((info) => {
-                                const minutesDetail = minutesDetailList.find(
-                                    (minutesDetail) =>
-                                        minutesDetail.minutesId ===
+                                const minutesDetail =
+                                    docDetailList.minutesDetail.get(
                                         info.minutesId,
-                                );
-                                const approvalDetail = approvalDetailList.find(
-                                    (approvalDetail) =>
-                                        approvalDetail.minutesId ===
+                                    );
+                                const approvalDetail =
+                                    docDetailList.approvalDetail.get(
                                         info.minutesId,
-                                );
+                                    );
 
                                 return (
                                     <div
