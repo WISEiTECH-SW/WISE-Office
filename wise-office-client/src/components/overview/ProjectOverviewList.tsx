@@ -28,17 +28,19 @@ export default function ProjectOverviewList() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const [minutesList, approvalList] = await Promise.all([
-                getMinutesAll(projectInfo.projectId),
-                getApprovesAll(projectInfo.projectId),
-            ]);
+            const [fetchedMinutesList, fetchedApprovalList] = await Promise.all(
+                [
+                    getMinutesAll(projectInfo.projectId),
+                    getApprovesAll(projectInfo.projectId),
+                ],
+            );
 
-            setMinutesList(minutesList);
+            setMinutesList(fetchedMinutesList);
 
             const [minutesDetailResponse, approvalDetailResponse] =
                 await Promise.all([
                     Promise.all(
-                        minutesList.map((minutes) =>
+                        fetchedMinutesList.map((minutes) =>
                             getMinutesInfo(
                                 projectInfo.projectId,
                                 minutes.minutesId,
@@ -46,7 +48,7 @@ export default function ProjectOverviewList() {
                         ),
                     ),
                     Promise.all(
-                        approvalList.map((approval) =>
+                        fetchedApprovalList.map((approval) =>
                             getApproveInfo(
                                 projectInfo.projectId,
                                 approval.approveId,
@@ -64,7 +66,7 @@ export default function ProjectOverviewList() {
                 ),
                 approvalDetail: new Map(
                     approvalDetailResponse.map((approval) => [
-                        approval.approveId,
+                        approval.minutesId,
                         approval,
                     ]),
                 ),
