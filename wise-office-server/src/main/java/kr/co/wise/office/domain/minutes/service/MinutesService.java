@@ -40,7 +40,25 @@ public class MinutesService {
     private final ApproveEntityRepository approveEntityRepository;
 
     private final ProposalAttendantsService proposalAttendantsService;
+    public List<MinutesListResponse> getMinutesBriefInfo(
+            long projectId
+    ) {
+        List<MinutesEntity> minutesEntities = minutesEntityRepository.findByProjectIdOrderByIdDesc(projectId);
+        List<Long> proposalAttendantId = minutesEntities.stream().map(a -> Long.parseLong(a.getWriter())).toList();
+        List<ProposalAttendantEntity> writerInfos = proposalAttendantsService.findWriterInfos(proposalAttendantId, projectId);
 
+        List<MinutesListResponse> result = new ArrayList<>();
+        for (MinutesEntity minutesEntity : minutesEntities) {
+            Long writerId = Long.parseLong(minutesEntity.getWriter());
+            for (ProposalAttendantEntity writerInfo : writerInfos) {
+                if (writerId.equals(writerInfo.getId())) {
+                    result.add(MinutesListResponse.from(minutesEntity, writerInfo.getCompanyMember()));
+                }
+            }
+        }
+
+        return result;
+    }
     public Page<MinutesListResponse> getMinutesBriefInfo(
             long projectId,
             Pageable pageable

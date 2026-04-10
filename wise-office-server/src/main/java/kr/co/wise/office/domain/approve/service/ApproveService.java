@@ -52,6 +52,10 @@ public class ApproveService {
         return approveEntity;
     }
 
+    public List<ApproveEntity> getApprovesByProjectId(long projectId) {
+        return approveEntityRepository.findByProjectId(projectId);
+    }
+
     public Page<ApproveListResponse> getApprovesByProjectId(long projectId, Pageable pageable) {
         Page<ApproveEntity> approveEntities = approveEntityRepository.findByProjectId(projectId, pageable);
         List<ApproveListResponse> content = approveEntities.getContent().stream().map(ApproveListResponse::from).toList();

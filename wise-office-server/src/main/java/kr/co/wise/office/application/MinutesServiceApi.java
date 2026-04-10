@@ -34,6 +34,12 @@ public class MinutesServiceApi {
 
     private final ProposalAttendantsService proposalAttendantsService;
 
+    public List<MinutesListResponse> getMinutesBriefInfo(
+            long projectId,
+            String loginUserEmail
+    ) {
+        return minutesService.getMinutesBriefInfo(projectId);
+    }
     public Page<MinutesListResponse> getMinutesBriefInfo(
             long projectId,
             String loginUserEmail,

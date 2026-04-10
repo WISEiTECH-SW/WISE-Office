@@ -22,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +32,21 @@ import org.springframework.web.bind.annotation.*;
 public class ApproveController {
 
     private final ApproveServiceApi approveServiceApi;
+
+    @Operation(summary = "품의서 목록 조회 API",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "품의서 목록 조회 결과 전체 반환, 해당 프로젝트에 참여하지 않아도 조회 가능",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = ApproveListResponse.class))
+                    ))
+    })
+    @GetMapping("/approves/all")
+    public ResponseEntity<List<ApproveListResponse>> getApproveList(
+            @Parameter(description = "프로젝트 ID") @PathVariable long projectId) {
+
+        return ResponseEntity.ok(approveServiceApi.getApproveList(projectId));
+    }
 
     @Operation(summary = "품의서 목록 조회 API",
             security = @SecurityRequirement(name = "bearerAuth"))

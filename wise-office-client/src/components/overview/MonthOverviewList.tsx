@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useOverviewStore } from "@/store/useOverviewStore";
 import {
     getApproveInfo,
-    getApproves,
-    getMinutes,
+    getApprovesAll,
+    getMinutesAll,
     getMinutesInfo,
     getMonthlyDocuments,
 } from "@/services/overview";
@@ -32,7 +32,7 @@ export default function MonthOverviewList() {
         const fetchMinutes = async (projectIds: number[]) => {
             const allDetails = await Promise.all(
                 projectIds.map(async (projectId) => {
-                    const data = await getMinutes(projectId);
+                    const data = await getMinutesAll(projectId);
                     return Promise.all(
                         data.map((m) => getMinutesInfo(projectId, m.minutesId)),
                     );
@@ -44,7 +44,7 @@ export default function MonthOverviewList() {
         const fetchApprovals = async (projectIds: number[]) => {
             const allDetails = await Promise.all(
                 projectIds.map(async (projectId) => {
-                    const data = await getApproves(projectId);
+                    const data = await getApprovesAll(projectId);
                     return Promise.all(
                         data.map((m) => getApproveInfo(projectId, m.approveId)),
                     );

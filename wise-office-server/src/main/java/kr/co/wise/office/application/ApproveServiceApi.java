@@ -29,6 +29,16 @@ public class ApproveServiceApi {
     private final HolidayCalculator holidayCalculator;
 
     /**
+     * 해당 프로젝트에 작성된 품의서 목록 전체 조회 메소드
+     * 해당 프로젝트에 참여하지 않아도 품의서 목록 조회는 가능
+     */
+    @Transactional(readOnly = true)
+    public List<ApproveListResponse> getApproveList(long projectId) {
+        List<ApproveEntity> approves = approveService.getApprovesByProjectId(projectId);
+        return approves.stream().map(ApproveListResponse::from).toList();
+    }
+
+    /**
      * 해당 프로젝트에 작성된 품의서 목록 조회 메소드
      * 해당 프로젝트에 참여하지 않아도 품의서 목록 조회는 가능
      */
