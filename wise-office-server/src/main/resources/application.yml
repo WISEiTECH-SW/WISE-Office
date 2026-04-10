@@ -52,7 +52,7 @@ domain:
 
 image:
   dir: ${IMAGE_UPLOAD_DIR}
-  prefix: http://localhost:${SERVER_PORT}/images/
+  prefix: http://${SERVER_HOST}:${SERVER_PORT}/images/
 
 front:
   url: ${CLIENT_URL}

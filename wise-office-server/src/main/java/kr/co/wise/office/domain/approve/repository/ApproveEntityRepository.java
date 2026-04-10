@@ -13,6 +13,8 @@ import java.util.Optional;
 
 public interface ApproveEntityRepository extends JpaRepository<ApproveEntity, Long> {
 
+    @Query("select a from ApproveEntity a join fetch a.minutesEntity m where m.project.id = :projectId order by a.id desc")
+    List<ApproveEntity> findByProjectId(@Param("projectId") long projectId);
 
     @Query("select a from ApproveEntity a join fetch a.minutesEntity m where m.project.id = :projectId order by a.id desc")
     Page<ApproveEntity> findByProjectId(@Param("projectId") long projectId, Pageable pageable);

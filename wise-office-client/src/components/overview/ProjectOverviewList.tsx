@@ -3,8 +3,8 @@ import OverviewCard from "./OverviewCard";
 import { useOverviewStore } from "@/store/useOverviewStore";
 import {
     getApproveInfo,
-    getApproves,
-    getMinutes,
+    getApprovesAll,
+    getMinutesAll,
     getMinutesInfo,
 } from "@/services/overview";
 import {
@@ -27,7 +27,7 @@ export default function ProjectOverviewList() {
 
     useEffect(() => {
         const fetchMinutes = async () => {
-            const data = await getMinutes(projectInfo.projectId);
+            const data = await getMinutesAll(projectInfo.projectId);
             setMinutesList(data);
 
             const minutesDetailResponse = await Promise.all(
@@ -40,7 +40,7 @@ export default function ProjectOverviewList() {
         };
 
         const fetchApproves = async () => {
-            const data = await getApproves(projectInfo.projectId);
+            const data = await getApprovesAll(projectInfo.projectId);
 
             const approvalDetailResponse = await Promise.all(
                 data.map((m) =>

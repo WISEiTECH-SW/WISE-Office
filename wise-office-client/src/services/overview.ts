@@ -12,8 +12,18 @@ export async function getMinutes(projectId: number): Promise<MinutesList> {
     return data;
 }
 
+export async function getMinutesAll(projectId: number): Promise<MinutesList> {
+    const { data } = await api.get(`/projects/${projectId}/minutes/all`);
+    return data;
+}
+
 export async function getApproves(projectId: number): Promise<ApproveList> {
     const { data } = await api.get(`/projects/${projectId}/approves`);
+    return data;
+}
+
+export async function getApprovesAll(projectId: number): Promise<ApproveList> {
+    const { data } = await api.get(`/projects/${projectId}/approves/all`);
     return data;
 }
 

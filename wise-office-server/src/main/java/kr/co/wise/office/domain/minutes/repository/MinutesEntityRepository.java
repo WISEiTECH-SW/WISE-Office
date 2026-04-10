@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface MinutesEntityRepository extends JpaRepository<MinutesEntity, Long> {
-
+    List<MinutesEntity> findByProjectIdOrderByIdDesc(long projectId);
     Page<MinutesEntity> findByProjectIdOrderByIdDesc(long projectId, Pageable pageable);
 
     @Query("select count(m) from MinutesEntity m where m.minutesDate = :minutesDate and m.project.id = :projectId")
