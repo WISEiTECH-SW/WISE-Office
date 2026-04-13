@@ -48,12 +48,15 @@ public class MinutesService {
         List<ProposalAttendantEntity> writerInfos = proposalAttendantsService.findWriterInfos(proposalAttendantId, projectId);
 
         List<MinutesListResponse> result = new ArrayList<>();
+        Map<Long, ProposalAttendantEntity> writerMap = writerInfos.stream()
+                .collect(Collectors.toMap(ProposalAttendantEntity::getId, w -> w));
+
         for (MinutesEntity minutesEntity : minutesEntities) {
             Long writerId = Long.parseLong(minutesEntity.getWriter());
-            for (ProposalAttendantEntity writerInfo : writerInfos) {
-                if (writerId.equals(writerInfo.getId())) {
-                    result.add(MinutesListResponse.from(minutesEntity, writerInfo.getCompanyMember()));
-                }
+            ProposalAttendantEntity writerInfo = writerMap.get(writerId);
+
+            if (writerInfo != null) {
+                result.add(MinutesListResponse.from(minutesEntity, writerInfo.getCompanyMember()));
             }
         }
 
