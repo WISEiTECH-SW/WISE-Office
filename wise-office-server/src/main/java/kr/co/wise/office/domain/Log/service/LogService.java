@@ -1,5 +1,6 @@
 package kr.co.wise.office.domain.Log.service;
 
+import kr.co.wise.office.api.dto.log.LogWithCountDto;
 import kr.co.wise.office.domain.Log.dto.LogCreateRequest;
 import kr.co.wise.office.domain.Log.dto.LogUpdateRequest;
 import kr.co.wise.office.domain.Log.entity.LogEntity;
@@ -33,9 +34,12 @@ public class LogService {
         return logRepository.findByLogWithComments(project).orElse(Collections.emptyList());
     }
 
-    public Page<LogEntity> searchLogPages(ProjectEntity project, Pageable pageable) {
-        return logRepository.findByLogWithComments(project, pageable);
-    }
+//    public Page<LogEntity> searchLogPages(ProjectEntity project, Pageable pageable) {
+//        return logRepository.findByLogWithComments(project, pageable);
+//    }
+public Page<LogWithCountDto> searchLogPages(ProjectEntity project, Pageable pageable) {
+    return logRepository.findLogsWithCommentCount(project, pageable);
+}
 
     public LogEntity searchLog(long logId) {
         return logRepository.findByIdWithMember(logId).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_LOG));

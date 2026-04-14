@@ -1,5 +1,6 @@
 package kr.co.wise.office.domain.Log.repository;
 
+import kr.co.wise.office.api.dto.log.LogWithCountDto;
 import kr.co.wise.office.domain.Log.entity.LogEntity;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import org.springframework.data.domain.Page;
@@ -33,4 +34,27 @@ public interface LogRepository extends JpaRepository<LogEntity, Long> {
     @Query("update LogEntity l set l.deleted = true where l.id = :logId")
     void deleteLog(@Param("logId") long logId);
 
+    @Query(
+            value = """
+        select new kr.co.wise.office.api.dto.log.LogWithCountDto(
+            l,
+            count(c)
+        )
+        from LogEntity l
+        left join l.comments c on c.deleted = false
+        where l.deleted = false
+          and l.project = :project
+        group by l
+    """,
+            countQuery = """
+        select count(l)
+        from LogEntity l
+        where l.deleted = false
+          and l.project = :project
+    """
+    )
+    Page<LogWithCountDto> findLogsWithCommentCount(
+            @Param("project") ProjectEntity project,
+            Pageable pageable
+    );
 }

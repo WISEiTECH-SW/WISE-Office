@@ -1,5 +1,6 @@
 package kr.co.wise.office.application;
 
+import kr.co.wise.office.api.dto.log.LogWithCountDto;
 import kr.co.wise.office.domain.Log.dto.*;
 import kr.co.wise.office.domain.Log.entity.LogEntity;
 import kr.co.wise.office.domain.Log.service.LogService;
@@ -67,11 +68,37 @@ public class LogServiceApi {
                 .toList();
     }
 
+//    public Page<LogListResponse> searchLogPages(long projectId, String loginUserEmail, Pageable pageable) {
+//        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
+//        ProjectEntity project = projectService.findById(projectId);
+//
+//        Page<LogEntity> logPage = logService.searchLogPages(project, pageable);
+//
+//        Function<LogEntity, Boolean> modifyChecker;
+//        if (isAdmin(loginUser)) {
+//            modifyChecker = log -> true;
+//        } else {
+//            AttendantEntity attendant =
+//                    attendantService.validateParticipatingProjectForViewing(loginUser, project);
+//            modifyChecker = log -> hasModifyPermission(loginUser, attendant, log);
+//        }
+//
+//        return logPage.map(log ->
+//                LogListResponse.from(
+//                        log,
+//                        modifyChecker.apply(log),
+//                        (int) log.getComments().stream()
+//                                .filter(c -> !c.isDeleted())
+//                                .count()
+//                )
+//        );
+//    }
     public Page<LogListResponse> searchLogPages(long projectId, String loginUserEmail, Pageable pageable) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
 
-        Page<LogEntity> logPage = logService.searchLogPages(project, pageable);
+        Page<LogWithCountDto> logPage =
+                logService.searchLogPages(project, pageable);
 
         Function<LogEntity, Boolean> modifyChecker;
         if (isAdmin(loginUser)) {
@@ -82,13 +109,11 @@ public class LogServiceApi {
             modifyChecker = log -> hasModifyPermission(loginUser, attendant, log);
         }
 
-        return logPage.map(log ->
+        return logPage.map(dto ->
                 LogListResponse.from(
-                        log,
-                        modifyChecker.apply(log),
-                        (int) log.getComments().stream()
-                                .filter(c -> !c.isDeleted())
-                                .count()
+                        dto.getLog(),
+                        modifyChecker.apply(dto.getLog()),
+                        dto.getCommentCount().intValue()
                 )
         );
     }

@@ -52,7 +52,6 @@ public class LogEntity {
     private ProjectEntity project;
 
     @OneToMany(mappedBy = "log")
-    @BatchSize(size = 100)
     @Builder.Default
     private List<CommentEntity> comments = new ArrayList<>();
 
