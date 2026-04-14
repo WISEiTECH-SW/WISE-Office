@@ -68,31 +68,6 @@ public class LogServiceApi {
                 .toList();
     }
 
-//    public Page<LogListResponse> searchLogPages(long projectId, String loginUserEmail, Pageable pageable) {
-//        MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
-//        ProjectEntity project = projectService.findById(projectId);
-//
-//        Page<LogEntity> logPage = logService.searchLogPages(project, pageable);
-//
-//        Function<LogEntity, Boolean> modifyChecker;
-//        if (isAdmin(loginUser)) {
-//            modifyChecker = log -> true;
-//        } else {
-//            AttendantEntity attendant =
-//                    attendantService.validateParticipatingProjectForViewing(loginUser, project);
-//            modifyChecker = log -> hasModifyPermission(loginUser, attendant, log);
-//        }
-//
-//        return logPage.map(log ->
-//                LogListResponse.from(
-//                        log,
-//                        modifyChecker.apply(log),
-//                        (int) log.getComments().stream()
-//                                .filter(c -> !c.isDeleted())
-//                                .count()
-//                )
-//        );
-//    }
     public Page<LogListResponse> searchLogPages(long projectId, String loginUserEmail, Pageable pageable) {
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);

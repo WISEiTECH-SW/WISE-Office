@@ -34,9 +34,6 @@ public class LogService {
         return logRepository.findByLogWithComments(project).orElse(Collections.emptyList());
     }
 
-//    public Page<LogEntity> searchLogPages(ProjectEntity project, Pageable pageable) {
-//        return logRepository.findByLogWithComments(project, pageable);
-//    }
 public Page<LogWithCountDto> searchLogPages(ProjectEntity project, Pageable pageable) {
     return logRepository.findLogsWithCommentCount(project, pageable);
 }
