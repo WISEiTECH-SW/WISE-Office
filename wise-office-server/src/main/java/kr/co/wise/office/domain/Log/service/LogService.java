@@ -34,9 +34,13 @@ public class LogService {
         return logRepository.findByLogWithComments(project).orElse(Collections.emptyList());
     }
 
-public Page<LogWithCountDto> searchLogPages(ProjectEntity project, Pageable pageable) {
-    return logRepository.findLogsWithCommentCount(project, pageable);
-}
+    public Page<LogEntity> findLogs(ProjectEntity project, Pageable pageable) {
+        return logRepository.findLogs(project, pageable);
+    }
+
+    public List<Object[]> countComments(List<LogEntity> logs) {
+        return logRepository.countComments(logs);
+    }
 
     public LogEntity searchLog(long logId) {
         return logRepository.findByIdWithMember(logId).orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_LOG));

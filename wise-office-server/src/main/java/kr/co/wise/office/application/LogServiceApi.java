@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -67,13 +69,22 @@ public class LogServiceApi {
                         (int) log.getComments().stream().filter(c -> !c.isDeleted()).count()))
                 .toList();
     }
-
     public Page<LogListResponse> searchLogPages(long projectId, String loginUserEmail, Pageable pageable) {
+
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
 
-        Page<LogWithCountDto> logPage =
-                logService.searchLogPages(project, pageable);
+        Page<LogEntity> logPage = logService.findLogs(project, pageable);
+
+        List<LogEntity> logs = logPage.getContent();
+
+        List<Object[]> commentCounts = logService.countComments(logs);
+
+        Map<Long, Long> countMap = commentCounts.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],   // logId
+                        row -> (Long) row[1]    // count
+                ));
 
         Function<LogEntity, Boolean> modifyChecker;
         if (isAdmin(loginUser)) {
@@ -84,14 +95,15 @@ public class LogServiceApi {
             modifyChecker = log -> hasModifyPermission(loginUser, attendant, log);
         }
 
-        return logPage.map(dto ->
+        return logPage.map(log ->
                 LogListResponse.from(
-                        dto.getLog(),
-                        modifyChecker.apply(dto.getLog()),
-                        dto.getCommentCount().intValue()
+                        log,
+                        modifyChecker.apply(log),
+                        countMap.getOrDefault(log.getId(), 0L).intValue()
                 )
         );
     }
+
 
     public LogDetailResponse getDetailLog(long logId, long projectId, String loginUserEmail) {
         // 필요한 정보 조회
