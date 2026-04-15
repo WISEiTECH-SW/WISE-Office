@@ -1,5 +1,6 @@
 package kr.co.wise.office.domain.Log.service;
 
+import kr.co.wise.office.api.dto.log.LogWithCountDto;
 import kr.co.wise.office.domain.Log.dto.LogCreateRequest;
 import kr.co.wise.office.domain.Log.dto.LogUpdateRequest;
 import kr.co.wise.office.domain.Log.entity.LogEntity;
@@ -33,8 +34,12 @@ public class LogService {
         return logRepository.findByLogWithComments(project).orElse(Collections.emptyList());
     }
 
-    public Page<LogEntity> searchLogPages(ProjectEntity project, Pageable pageable) {
-        return logRepository.findByLogWithComments(project, pageable);
+    public Page<LogEntity> findLogs(ProjectEntity project, Pageable pageable) {
+        return logRepository.findLogs(project, pageable);
+    }
+
+    public List<Object[]> countComments(List<LogEntity> logs) {
+        return logRepository.countComments(logs);
     }
 
     public LogEntity searchLog(long logId) {

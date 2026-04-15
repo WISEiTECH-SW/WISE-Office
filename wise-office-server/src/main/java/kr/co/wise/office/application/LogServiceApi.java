@@ -1,5 +1,6 @@
 package kr.co.wise.office.application;
 
+import kr.co.wise.office.api.dto.log.LogWithCountDto;
 import kr.co.wise.office.domain.Log.dto.*;
 import kr.co.wise.office.domain.Log.entity.LogEntity;
 import kr.co.wise.office.domain.Log.service.LogService;
@@ -21,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -66,12 +69,22 @@ public class LogServiceApi {
                         (int) log.getComments().stream().filter(c -> !c.isDeleted()).count()))
                 .toList();
     }
-
     public Page<LogListResponse> searchLogPages(long projectId, String loginUserEmail, Pageable pageable) {
+
         MemberEntity loginUser = memberService.findByEmail(loginUserEmail);
         ProjectEntity project = projectService.findById(projectId);
 
-        Page<LogEntity> logPage = logService.searchLogPages(project, pageable);
+        Page<LogEntity> logPage = logService.findLogs(project, pageable);
+
+        List<LogEntity> logs = logPage.getContent();
+
+        List<Object[]> commentCounts = logService.countComments(logs);
+
+        Map<Long, Long> countMap = commentCounts.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],   // logId
+                        row -> (Long) row[1]    // count
+                ));
 
         Function<LogEntity, Boolean> modifyChecker;
         if (isAdmin(loginUser)) {
@@ -86,12 +99,11 @@ public class LogServiceApi {
                 LogListResponse.from(
                         log,
                         modifyChecker.apply(log),
-                        (int) log.getComments().stream()
-                                .filter(c -> !c.isDeleted())
-                                .count()
+                        countMap.getOrDefault(log.getId(), 0L).intValue()
                 )
         );
     }
+
 
     public LogDetailResponse getDetailLog(long logId, long projectId, String loginUserEmail) {
         // 필요한 정보 조회
