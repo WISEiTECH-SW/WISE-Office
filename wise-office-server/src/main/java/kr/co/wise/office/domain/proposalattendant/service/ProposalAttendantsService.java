@@ -1,11 +1,13 @@
 package kr.co.wise.office.domain.proposalattendant.service;
 
+import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import kr.co.wise.office.domain.proposalattendant.repository.ProposalAttendantEntityRepository;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,4 +38,11 @@ public class ProposalAttendantsService {
         return writerInfos;
     }
 
+    // 모든 프로젝트 탈퇴처리
+    @Transactional
+    public void exitAllProject(List<CompanyMemberEntity> exitCompanyMembers) {
+        List<ProposalAttendantEntity> exitProposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberIn(exitCompanyMembers);
+        exitProposalAttendants.forEach(ProposalAttendantEntity::leaveProject);
+        proposalAttendantEntityRepository.saveAll(exitProposalAttendants);
+    }
 }

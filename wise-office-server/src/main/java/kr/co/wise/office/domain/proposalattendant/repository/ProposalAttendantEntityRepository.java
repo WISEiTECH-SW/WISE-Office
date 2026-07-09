@@ -1,6 +1,7 @@
 package kr.co.wise.office.domain.proposalattendant.repository;
 
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
+import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,5 +33,7 @@ public interface ProposalAttendantEntityRepository extends JpaRepository<Proposa
     @Query("select p from ProposalAttendantEntity p join fetch p.companyMember where p.id in :proposalIds and p.project.id = :projectId")
     List<ProposalAttendantEntity> findWriterInfos(@Param("proposalIds") List<Long> proposalIds,
                                                   @Param("projectId") long projectId);
+
+    List<ProposalAttendantEntity> findByCompanyMemberIn(List<CompanyMemberEntity> companyMember);
 
 }
