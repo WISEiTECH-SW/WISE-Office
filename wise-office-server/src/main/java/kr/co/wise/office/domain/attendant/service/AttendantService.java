@@ -147,7 +147,7 @@ public class AttendantService {
     public void getDetailAttendants(ProjectDetailResponse response, MemberEntity loginUser) {
 //        편성인원 추가
         List<ProposalAttendantEntity> proposalAttendants =
-                proposalAttendantEntityRepository.findAllByProject_Id(response.getProjectId());
+                proposalAttendantEntityRepository.findByProjectIdWithCompanyName(response.getProjectId());
 
         response.setProposalAttendant(
                 proposalAttendants.stream()

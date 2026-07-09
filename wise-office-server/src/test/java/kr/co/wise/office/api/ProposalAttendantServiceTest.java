@@ -217,7 +217,7 @@ class ProposalAttendantServiceTest extends ApiControllerTestSupport {
     }
 
     private Map<Long, ProposalAttendantEntity> findResultAsMap() {
-        return proposalAttendantEntityRepository.findAllByProject_Id(projectId).stream()
+        return proposalAttendantEntityRepository.findByProjectIdWithCompanyName(projectId).stream()
                 .collect(Collectors.toMap(
                         a -> a.getCompanyMember().getId(),
                         Function.identity()

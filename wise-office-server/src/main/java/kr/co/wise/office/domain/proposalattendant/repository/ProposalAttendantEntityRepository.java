@@ -12,10 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProposalAttendantEntityRepository extends JpaRepository<ProposalAttendantEntity, Long> {
-    List<ProposalAttendantEntity> findAllByProject_Id(Long projectId);
 
     @Query("select a from ProposalAttendantEntity a join fetch a.companyMember where a.exitDate is null and a.project = :project")
-    List<ProposalAttendantEntity> findProposalAttendantsByProjectIdWithCompanyMember(@Param("project")ProjectEntity project);
+    List<ProposalAttendantEntity> findProposalAttendantsByProjectIdWithCompanyMember(@Param("project") ProjectEntity project);
 
 
     @Query("select p from ProposalAttendantEntity p join fetch p.companyMember where p.id in :proposalIds and p.project.id = :projectId and " +
