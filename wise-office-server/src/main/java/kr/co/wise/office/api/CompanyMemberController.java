@@ -1,12 +1,17 @@
 package kr.co.wise.office.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.wise.office.domain.companymember.service.CompanyMemberService;
 import kr.co.wise.office.domain.member.dto.CustomOAuthUser;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +25,19 @@ public class CompanyMemberController {
 
     private final CompanyMemberService companyMemberService;
 
-
-    @PatchMapping
+    @Operation(summary = "사원 목록 업데이트", description = "편성 인원에 선택될 사원 목록 업데이트",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateCompanyMember(
             @AuthenticationPrincipal CustomOAuthUser loginUser,
-            @Parameter(description = "업데이트 리스트, 사원 조회 쪽 복사") @RequestPart("list") MultipartFile list
+
+            @Parameter(
+                    description = "업데이트 리스트 파일, 사원 조회 쪽 복사(사원명 컬럼부터 Email 컬럼까지)",
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE),
+                    schema = @Schema(type = "string", format = "binary")
+            )
+            @RequestPart("list") MultipartFile list
+
     ) {
         if (list == null || list.isEmpty()) {
             throw new ApplicationRuntimeException(ErrorMessage.REJECT_REQUEST);
