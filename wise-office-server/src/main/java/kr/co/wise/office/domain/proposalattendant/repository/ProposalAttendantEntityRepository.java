@@ -33,6 +33,6 @@ public interface ProposalAttendantEntityRepository extends JpaRepository<Proposa
     List<ProposalAttendantEntity> findWriterInfos(@Param("proposalIds") List<Long> proposalIds,
                                                   @Param("projectId") long projectId);
 
-    List<ProposalAttendantEntity> findByCompanyMemberIn(List<CompanyMemberEntity> companyMember);
+    List<ProposalAttendantEntity> findByCompanyMemberInAndExitDateIsNull(List<CompanyMemberEntity> companyMember);
 
 }

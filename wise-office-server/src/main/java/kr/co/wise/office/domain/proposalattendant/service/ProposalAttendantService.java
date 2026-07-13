@@ -55,7 +55,7 @@ public class ProposalAttendantService {
                 .filter(a -> !newIds.contains(a.getCompanyMember().getId()))
                 .toList();
 
-        proposalAttendantEntityRepository.deleteAllInBatch(deleteTargets);
+        deleteTargets.forEach(ProposalAttendantEntity::leaveProject);
 
         // 기존 유지 멤버의 role 변경 처리
         nowAttendants.stream()

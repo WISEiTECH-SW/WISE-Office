@@ -41,7 +41,7 @@ public class ProposalAttendantsService {
     // 모든 프로젝트 탈퇴처리
     @Transactional
     public void exitAllProject(List<CompanyMemberEntity> exitCompanyMembers) {
-        List<ProposalAttendantEntity> exitProposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberIn(exitCompanyMembers);
+        List<ProposalAttendantEntity> exitProposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberInAndExitDateIsNull(exitCompanyMembers);
         exitProposalAttendants.forEach(ProposalAttendantEntity::leaveProject);
         proposalAttendantEntityRepository.saveAll(exitProposalAttendants);
     }

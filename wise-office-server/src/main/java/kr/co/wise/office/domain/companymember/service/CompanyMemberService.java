@@ -31,12 +31,12 @@ public class CompanyMemberService {
 
     @Transactional(readOnly = true)
     public List<CompanyMemberEntity> findByIds(List<Long> attendants) {
-        return companyMemberEntityRepository.findByIds(attendants).orElse(new ArrayList<>());
+        return companyMemberEntityRepository.findByIdsAndLeftAtIsNull(attendants).orElse(new ArrayList<>());
     }
 
     @Transactional
     public void updateCompanyMemberInfo(MultipartFile list) {
-        Map<String, CompanyMemberEntity> currentMemberMap = companyMemberEntityRepository.findAll().stream()
+        Map<String, CompanyMemberEntity> currentMemberMap = companyMemberEntityRepository.findByLeftAtIsNull().stream()
                 .filter(c -> c.getEmailPrefix() != null)
                 .collect(Collectors.toMap(m -> m.getEmailPrefix(), Function.identity()));
         List<CompanyMemberEntity> updateCompanyMember = parseRow(list);
@@ -47,7 +47,7 @@ public class CompanyMemberService {
             // 기존 입사자 업데이트
             if (currentMemberMap.containsKey(update.getEmailPrefix())) {
                 CompanyMemberEntity currentMember = currentMemberMap.get(update.getEmailPrefix());
-                currentMember.updateInfo(update.getTeam(), update.getRank());
+                currentMember.updateInfo(update.getName(), update.getTeam(), update.getRank());
                 currentMemberMap.remove(update.getEmailPrefix());
             }
             else { // 신규 입사자 정보 저장

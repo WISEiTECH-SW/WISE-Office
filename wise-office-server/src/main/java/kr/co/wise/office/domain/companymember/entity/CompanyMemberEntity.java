@@ -42,7 +42,7 @@ public class CompanyMemberEntity {
     @Column(name = "email_prefix")
     private String emailPrefix;
 
-    // 퇴사 처리
+    // 퇴사 처리 시간 => NULL이 아닌 경우 퇴사자
     @Column(name = "left_at")
     private LocalDateTime leftAt;
 
@@ -54,7 +54,8 @@ public class CompanyMemberEntity {
         this.leftAt = LocalDateTime.now();
     }
 
-    public void updateInfo(String team, String rank) {
+    public void updateInfo(String name, String team, String rank) {
+        this.name = name;
         this.team = team;
         this.rank = rank;
     }

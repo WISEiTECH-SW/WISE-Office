@@ -165,7 +165,7 @@ public class MemberService extends DefaultOAuth2UserService implements UserDetai
     @Transactional(readOnly = true)
     public MemberGroupedResponse searchAllMemberInfo(String loginUserEmail) {
         List<MemberEntity> members = memberRepository.findAll();
-        List<CompanyMemberEntity> cMembers = companyMemberEntityRepository.findAll();
+        List<CompanyMemberEntity> cMembers = companyMemberEntityRepository.findByLeftAtIsNull();
 
         List<MemberListResponse> projectMembers = members.stream().map(MemberListResponse::loadMemberInfo).toList();
         List<MemberListResponse> companyMembers = cMembers.stream().map(MemberListResponse::convertCompanyMembertoMember).toList();

@@ -10,10 +10,8 @@ import java.util.Optional;
 
 public interface CompanyMemberEntityRepository extends JpaRepository<CompanyMemberEntity, Long> {
 
+    List<CompanyMemberEntity> findByLeftAtIsNull();
 
-    List<CompanyMemberEntity> findByNameIn(List<String> names);
-
-
-    @Query("select m from CompanyMemberEntity m where m.id in :ids")
-    Optional<List<CompanyMemberEntity>> findByIds(@Param("ids")List<Long> ids);
+    @Query("select m from CompanyMemberEntity m where m.id in :ids and m.leftAt is null")
+    Optional<List<CompanyMemberEntity>> findByIdsAndLeftAtIsNull(@Param("ids")List<Long> ids);
 }
