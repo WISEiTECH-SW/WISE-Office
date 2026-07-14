@@ -7,13 +7,14 @@ import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +36,15 @@ public class CompanyMemberService {
     }
 
     @Transactional
-    public void updateCompanyMemberInfo(MultipartFile list) {
+    public void updateCompanyMemberInfo(InputStreamSource source) {
         Map<String, CompanyMemberEntity> currentMemberMap = companyMemberEntityRepository.findByLeftAtIsNull().stream()
                 .filter(c -> c.getEmailPrefix() != null)
                 .collect(Collectors.toMap(m -> m.getEmailPrefix(), Function.identity()));
-        List<CompanyMemberEntity> updateCompanyMember = parseRow(list);
+
+        List<CompanyMemberEntity> updateCompanyMember = parseRow(source);
+        if (updateCompanyMember.isEmpty()) {
+            throw new ApplicationRuntimeException(ErrorMessage.REJECT_REQUEST);
+        }
 
         List<CompanyMemberEntity> newCompanyMembers = new ArrayList<>(); // 신규 입사자 리스트
 
@@ -74,8 +79,8 @@ public class CompanyMemberService {
     }
 
     // Map<EmailPrefix, Entity> 형태로 전달
-    private List<CompanyMemberEntity> parseRow(MultipartFile list) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(list.getInputStream()))) {
+    private List<CompanyMemberEntity> parseRow(InputStreamSource source) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(source.getInputStream(), StandardCharsets.UTF_8))) {
             List<CompanyMemberEntity> newCompanyMembers = reader.lines().map(line -> {
                 String[] split = line.split("\t");
                 if (split.length != 9) {
