@@ -5,11 +5,15 @@ import kr.co.wise.office.api.dto.proposal_attendant.PossibleAttendantsResponse;
 import kr.co.wise.office.domain.Project.Service.ProjectService;
 import kr.co.wise.office.domain.Project.entity.ProjectEntity;
 import kr.co.wise.office.domain.attendant.service.AttendantService;
+import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.domain.minutesattendant.service.MinutesAttendantsService;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
-import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
+import kr.co.wise.office.domain.proposalattendant.repository.ProposalAttendantEntityRepository;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantService;
+import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +26,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ProposalAttendantsServiceApi {
 
-    private final ProposalAttendantsService proposalAttendantsService;
+    private final ProposalAttendantService proposalAttendantService;
     private final MinutesAttendantsService minutesAttendantsService;
     private final AttendantService attendantService;
     private final ProjectService projectService;
@@ -41,7 +45,7 @@ public class ProposalAttendantsServiceApi {
         }
 
         // 현재 프로젝트에 참여 중인 편성 인원 리스트 조회
-        List<ProposalAttendantEntity> proposalAttendants = proposalAttendantsService.findByProjectId(projectId);
+        List<ProposalAttendantEntity> proposalAttendants = proposalAttendantService.findByProjectId(projectId);
 
         // 회의 생성 당일날 다른 회의에 참석 중인 리스트 조회
         Set<Long> busyAttendants = minutesAttendantsService.findOverlappingMembers(minutesDate);
@@ -53,4 +57,36 @@ public class ProposalAttendantsServiceApi {
 
         return statusList;
     }
+
+    private final ProposalAttendantEntityRepository proposalAttendantEntityRepository;
+
+    public List<ProposalAttendantEntity> findByProjectId(long projectId) {
+        //제안서상 편성 인원 조회
+        return proposalAttendantEntityRepository.findByProjectIdWithCompanyName(projectId);
+    }
+
+    public ProposalAttendantEntity findWriterInfo(long writerProposalAttendantId, long projectId) {
+        return proposalAttendantEntityRepository.findWriterInfo(writerProposalAttendantId, projectId)
+                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.REJECT_CREATE_MINUTES));
+    }
+
+    public List<ProposalAttendantEntity> findWriterInfos(List<Long> proposalIds, long projectId) {
+        if (proposalIds.isEmpty()) {
+            return List.of();
+        }
+        List<ProposalAttendantEntity> writerInfos = proposalAttendantEntityRepository.findWriterInfos(proposalIds, projectId);
+        if (writerInfos.isEmpty()) {
+            throw new NotFoundResourceException(ErrorMessage.NOT_FOUND_ATTENDANT);
+        }
+        return writerInfos;
+    }
+
+    // 모든 프로젝트 탈퇴처리
+    @Transactional
+    public void exitAllProject(List<CompanyMemberEntity> exitCompanyMembers) {
+        List<ProposalAttendantEntity> exitProposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberInAndExitDateIsNull(exitCompanyMembers);
+        exitProposalAttendants.forEach(ProposalAttendantEntity::leaveProject);
+        proposalAttendantEntityRepository.saveAll(exitProposalAttendants);
+    }
+
 }

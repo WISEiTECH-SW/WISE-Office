@@ -52,7 +52,7 @@ class EmailServiceTest {
 
         SimpleMailMessage sentMessage = messageCaptor.getValue();
         assertThat(sentMessage.getTo()).contains(testEmail);
-        assertThat(sentMessage.getSubject()).isEqualTo("WISE-Backoffice 이메일 인증 번호");
+        assertThat(sentMessage.getSubject()).isEqualTo("[WISE-BackOffice] 이메일 인증 번호");
         assertThat(sentMessage.getText()).isNotNull();
         assertThat(sentMessage.getText().length()).isEqualTo(6);
     }
@@ -67,7 +67,8 @@ class EmailServiceTest {
         // ArgumentCaptor를 사용해 전송된 실제 코드를 가져옴
         ArgumentCaptor<SimpleMailMessage> messageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
         verify(mailSender).send(messageCaptor.capture());
-        String sentCode = messageCaptor.getValue().getText();
+        String text = messageCaptor.getValue().getText();
+        String sentCode = text.substring(text.lastIndexOf(":") + 1).trim();
 
         // when
         // 2. 올바른 코드로 인증 시도

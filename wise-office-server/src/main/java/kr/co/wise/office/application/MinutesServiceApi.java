@@ -10,13 +10,14 @@ import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.service.MinutesService;
 import kr.co.wise.office.domain.minutesattendant.service.MinutesAttendantsService;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
-import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantService;
 import kr.co.wise.office.external.hoilday.dto.HolidayCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class MinutesServiceApi {
 
     private final HolidayCalculator holidayCalculator;
 
-    private final ProposalAttendantsService proposalAttendantsService;
+    private final ProposalAttendantService proposalAttendantService;
 
     public List<MinutesListResponse> getMinutesBriefInfo(
             long projectId,
@@ -54,7 +55,7 @@ public class MinutesServiceApi {
         // 회의록 작성 번호 확인 => 마지막 회의 번호 + 1
         ProjectEntity project = projectService.findById(projectId);
         long currentMinutesNumber = minutesService.countByMinutesDate(request.minutesDate(), projectId) + 1;
-        ProposalAttendantEntity writerInfo = proposalAttendantsService.findWriterInfo(request.writer(), projectId);
+        ProposalAttendantEntity writerInfo = proposalAttendantService.findWriterInfo(request.writer(), projectId);
 
         MinutesEntity minutes = minutesService.createMinutes(project, request, currentMinutesNumber);
 
@@ -79,7 +80,7 @@ public class MinutesServiceApi {
         // 회의록 수정
         MinutesEntity minutes = minutesService.getMinutesInfoWithProject(minutesId, projectId);
         long updateCurrentMinutesNumber = minutesService.countByMinutesDate(request.minutesDate(), projectId) + 1;
-        ProposalAttendantEntity writerInfo = proposalAttendantsService.findWriterInfo(request.writer(), projectId);
+        ProposalAttendantEntity writerInfo = proposalAttendantService.findWriterInfo(request.writer(), projectId);
         minutes.update(request, updateCurrentMinutesNumber);
 
         // 작성자의 참석자 중복 방지를 위해 set으로 정제 (list와 writerId가 둘 다 존재하는 경우)

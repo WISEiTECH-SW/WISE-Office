@@ -116,7 +116,7 @@ abstract class ApiControllerTestSupport {
                 creator.getEmail()
         ).getProjectId();
 
-        Map<Long, ProposalAttendantEntity> proposalsByCompanyMemberId = proposalAttendantEntityRepository.findAllByProject_Id(projectId).stream()
+        Map<Long, ProposalAttendantEntity> proposalsByCompanyMemberId = proposalAttendantEntityRepository.findByProjectIdWithCompanyName(projectId).stream()
                 .collect(Collectors.toMap(
                         proposal -> proposal.getCompanyMember().getId(),
                         Function.identity()

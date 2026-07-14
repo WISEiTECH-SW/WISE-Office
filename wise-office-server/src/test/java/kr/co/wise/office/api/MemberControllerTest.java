@@ -1,17 +1,16 @@
 package kr.co.wise.office.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.wise.office.application.ImageService;
 import kr.co.wise.office.domain.member.dto.*;
 import kr.co.wise.office.domain.member.entity.MemberEntity;
 import kr.co.wise.office.domain.member.entity.MemberRoleType;
 import kr.co.wise.office.domain.member.repository.MemberRepository;
 import kr.co.wise.office.domain.member.service.MemberService;
 import kr.co.wise.office.exception.ErrorMessage;
+import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
 import kr.co.wise.office.security.WithMockCustomUser;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,7 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,11 +54,13 @@ public class MemberControllerTest {
 
     @MockBean private JavaMailSender mailSender;
 
+    @MockBean private ImageService imageService;
+
     private final String email = "test@wise.co.kr";
     private final String password = "password123!";
     private final String username = "testUser";
-    private static final LocalDate HIRE_DATE = LocalDate.of(2020, 1, 1);
 
+    private static final LocalDate HIRE_DATE = LocalDate.of(2020, 1, 1);
 
     @Nested
     @DisplayName("이메일 인증 테스트")
@@ -67,11 +70,12 @@ public class MemberControllerTest {
         @DisplayName("성공: 이메일 인증코드 발송 및 검증")
         void emailVerification_Success() throws Exception {
             // given
+            String verificationEmail = "verification-success@wise.co.kr";
             ArgumentCaptor<SimpleMailMessage> messageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
             doNothing().when(mailSender).send(messageCaptor.capture());
 
             // when: 인증 코드 발송 요청
-            VerificationCodeCreationRequest verificationRequest = new VerificationCodeCreationRequest(email);
+            VerificationCodeCreationRequest verificationRequest = new VerificationCodeCreationRequest(verificationEmail);
             mockMvc.perform(post("/api/members/emails/verification")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(verificationRequest)))
@@ -79,12 +83,13 @@ public class MemberControllerTest {
                     .andDo(print());
 
             // then: 발송된 메시지(인증 코드) 캡처 및 검증
-            String verificationCode = messageCaptor.getValue().getText();
+            String messageText = messageCaptor.getValue().getText();
+            String verificationCode = messageText.substring(messageText.lastIndexOf(":") + 1).trim();
             assertThat(verificationCode).isNotNull();
             assertThat(verificationCode.length()).isEqualTo(6);
 
             mockMvc.perform(get("/api/members/emails/verification")
-                            .param("email", email)
+                            .param("email", verificationEmail)
                             .param("code", verificationCode))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.verification").value(true))
@@ -169,7 +174,6 @@ public class MemberControllerTest {
             mockMvc.perform(multipart("/api/members/signup").file(jsonRequest).file(uploadImage))
                     .andExpect(status().isOk())
                     .andDo(print());
-
 
             // then
             MemberEntity savedMember = memberRepository.findByEmail(email).get();
@@ -365,6 +369,7 @@ public class MemberControllerTest {
         void update_image_success() throws Exception {
             //given
             MockMultipartFile mockImage = new MockMultipartFile("profile", "update.jpg", MediaType.IMAGE_JPEG_VALUE, "update content".getBytes());
+            when(imageService.saveImage(any())).thenReturn("updated-image.jpg");
 
             //when
             ResultActions result = mockMvc.perform(multipart(HttpMethod.PATCH, "/api/members/images").file(mockImage));
@@ -383,6 +388,8 @@ public class MemberControllerTest {
         void update_image_fail_overSize() throws Exception {
             String notSupportMediaType = MediaType.APPLICATION_PDF_VALUE;
             MockMultipartFile mockImage = new MockMultipartFile("profile", "update.jpg", notSupportMediaType, "test".getBytes());
+            when(imageService.saveImage(any()))
+                    .thenThrow(new ApplicationRuntimeException(ErrorMessage.REJECT_IMAGE_FORMAT));
             System.out.println("생성된 파일 크기: " + mockImage.getSize() + " bytes");
 
             //when
@@ -401,15 +408,13 @@ public class MemberControllerTest {
             // given
             final String blueTeam = "BLUE";
             final String rank = "WORKER";
-            MemberPositionUpdateRequest updateRequest = new MemberPositionUpdateRequest(blueTeam, rank);
+            MemberUpdateRequest updateRequest = new MemberUpdateRequest(blueTeam, rank, null);
 
             // when & then
-            mockMvc.perform(patch("/api/members")
+            mockMvc.perform(patch("/api/members/account")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateRequest)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.team").value(blueTeam))
-                    .andExpect(jsonPath("$.rank").value(rank))
                     .andDo(print());
 
             MemberEntity member = memberRepository.findByEmail(email).get();
@@ -424,14 +429,13 @@ public class MemberControllerTest {
         void update_hire_date_test() throws Exception {
             //given => 오늘 날짜로 입사일자 업데이트
             final LocalDate updateDate = LocalDate.now();
-            final HireDateUpdateRequest request = new HireDateUpdateRequest(updateDate);
+            final MemberUpdateRequest request = new MemberUpdateRequest(null, null, updateDate);
 
             //when&then
-            mockMvc.perform(patch("/api/members/hire-date")
+            mockMvc.perform(patch("/api/members/account")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.hireDate").value(updateDate.toString()))
                     .andDo(print());
 
             MemberEntity member = memberRepository.findByEmail(email).get();

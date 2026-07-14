@@ -66,6 +66,7 @@ front:
 
 member:
   init-path: init/memberList.txt
+  init-enabled: false
 
 holiday:
   api:

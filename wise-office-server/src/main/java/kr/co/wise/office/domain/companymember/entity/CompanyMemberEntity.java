@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,9 +38,27 @@ public class CompanyMemberEntity {
     @Column(name = "rank")
     private String rank;
 
+    // 이메일 prefix
+    @Column(name = "email_prefix")
+    private String emailPrefix;
+
+    // 퇴사 처리 시간 => NULL이 아닌 경우 퇴사자
+    @Column(name = "left_at")
+    private LocalDateTime leftAt;
+
     @OneToMany(mappedBy = "companyMember")
     @Builder.Default
     private List<ProposalAttendantEntity> proposalAttendantEntities = new ArrayList<>();
+
+    public void leaveCompany(){
+        this.leftAt = LocalDateTime.now();
+    }
+
+    public void updateInfo(String name, String team, String rank) {
+        this.name = name;
+        this.team = team;
+        this.rank = rank;
+    }
 
     @Override
     public boolean equals(Object o) {
