@@ -13,7 +13,7 @@ import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.repository.MinutesEntityRepository;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
 import kr.co.wise.office.domain.proposalattendant.repository.ProposalAttendantEntityRepository;
-import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class CompanyMemberServiceTest {
     private CompanyMemberService companyMemberService;
 
     @Autowired
-    private ProposalAttendantsService proposalAttendantsService;
+    private ProposalAttendantService proposalAttendantService;
 
     @Autowired
     private CompanyMemberEntityRepository companyMemberRepository;
@@ -113,7 +113,7 @@ class CompanyMemberServiceTest {
         CompanyMemberEntity retiredMember = companyMemberRepository.findById(retiringMember.getId()).orElseThrow();
         ProposalAttendantEntity preservedAttendant = proposalAttendantRepository.findById(proposalAttendant.getId()).orElseThrow();
         MinutesEntity preservedMinutes = minutesRepository.findById(minutes.getId()).orElseThrow();
-        ProposalAttendantEntity writer = proposalAttendantsService.findWriterInfo(
+        ProposalAttendantEntity writer = proposalAttendantService.findWriterInfo(
                 Long.parseLong(preservedMinutes.getWriter()),
                 project.getId()
         );

@@ -52,7 +52,7 @@ class ProposalAttendantsServiceApiTest extends BaseTestEntity {
         ProposalAttendantEntity gilDongAttend = saveProposalAttendant(targetProject, gildong);
         ProposalAttendantEntity minSuAttend = saveProposalAttendant(targetProject, minsu);
 
-        MinutesEntity minutes = saveMinutes(targetProject, minutesDate, List.of(gildong.getId(), minSuAttend.getId()), gilDongAttend);
+        MinutesEntity minutes = saveMinutes(targetProject, minutesDate, List.of(gilDongAttend.getId(), minSuAttend.getId()), gilDongAttend);
         saveMinutesAttendants(minutes, gilDongAttend);
 
         em.flush();
@@ -74,8 +74,8 @@ class ProposalAttendantsServiceApiTest extends BaseTestEntity {
                         PossibleAttendantsResponse::canAttend
                 )
                 .containsExactlyInAnyOrder(
-                        tuple(gildong.getId(), gildong.getName(), false),
-                        tuple(minsu.getId(), minsu.getName(), true)
+                        tuple(gilDongAttend.getId(), gildong.getName(), false),
+                        tuple(minSuAttend.getId(), minsu.getName(), true)
                 );
     }
 
@@ -88,8 +88,8 @@ class ProposalAttendantsServiceApiTest extends BaseTestEntity {
         ProjectEntity targetProject = projectRepository.findById(projectId).orElseThrow();
         CompanyMemberEntity gildong = saveCompanyMember("홍길동");
         CompanyMemberEntity minsu = saveCompanyMember("김민수");
-        saveProposalAttendant(targetProject, gildong);
-        saveProposalAttendant(targetProject, minsu);
+        ProposalAttendantEntity gilDongAttend = saveProposalAttendant(targetProject, gildong);
+        ProposalAttendantEntity minsuAttend = saveProposalAttendant(targetProject, minsu);
 
         ProjectEntity anotherProject = saveProject("프로젝트2222");
         ProposalAttendantEntity minsuAnthoerProjectAttend = saveProposalAttendant(anotherProject, minsu);
@@ -115,8 +115,8 @@ class ProposalAttendantsServiceApiTest extends BaseTestEntity {
                         PossibleAttendantsResponse::canAttend
                 )
                 .containsExactlyInAnyOrder(
-                        tuple(gildong.getId(), gildong.getName(), true),
-                        tuple(minsu.getId(), minsu.getName(), false)
+                        tuple(gilDongAttend.getId(), gildong.getName(), true),
+                        tuple( minsuAttend.getId(), minsu.getName(), false)
                 );
     }
 
