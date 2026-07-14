@@ -34,7 +34,7 @@ public class CompanyMemberInitRunner implements CommandLineRunner {
         }
 
         companyMemberService.updateCompanyMemberInfo(memberList);
-        log.info("사원 정보 초기화 완료: {}", memberInitPath);
+        log.warn("사원 정보 초기화 완료: {}", memberInitPath);
     }
 
 }

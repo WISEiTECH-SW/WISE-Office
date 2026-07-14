@@ -24,6 +24,9 @@ public class CompanyMemberController {
 
     private final CompanyMemberService companyMemberService;
 
+    /**
+     * 26-07-14 회사 사원 업데이트는 서버 재실행시 진행되도록 설정하여 API 주석처리 진행  
+     */
 //    @Operation(summary = "사원 목록 업데이트", description = "편성 인원에 선택될 사원 목록 업데이트",
 //            security = @SecurityRequirement(name = "bearerAuth"))
 //    @PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -37,8 +37,8 @@ public class ProposalAttendantService {
                 .toList();
     }
 
-    public void updateProposalAttendants(ProjectEntity project, List<CompanyMemberEntity> newMembers, Long pmId){
-        // 현재 참석자 정보 조회 
+    public void updateProposalAttendants(ProjectEntity project, List<CompanyMemberEntity> newMembers, Long pmId) {
+        // 현재 참석자 정보 조회
         List<ProposalAttendantEntity> nowAttendants =
                 proposalAttendantEntityRepository.findProposalAttendantsByProjectIdWithCompanyMember(project);
         Map<Long, ProposalAttendantEntity> nowMap = nowAttendants.stream()
@@ -110,6 +110,9 @@ public class ProposalAttendantService {
     @Transactional
     public void exitAllProject(List<CompanyMemberEntity> exitCompanyMembers) {
         List<ProposalAttendantEntity> exitProposalAttendants = proposalAttendantEntityRepository.findByCompanyMemberInAndExitDateIsNull(exitCompanyMembers);
+        if (exitCompanyMembers.isEmpty()) {
+            return;
+        }
         exitProposalAttendants.forEach(ProposalAttendantEntity::leaveProject);
         proposalAttendantEntityRepository.saveAll(exitProposalAttendants);
     }

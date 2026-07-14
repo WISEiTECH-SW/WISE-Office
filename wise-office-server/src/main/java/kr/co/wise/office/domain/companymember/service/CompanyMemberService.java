@@ -65,6 +65,7 @@ public class CompanyMemberService {
             }
         }
 
+
         // 퇴사자 리스트
         List<CompanyMemberEntity> removeCompanyMembers = new ArrayList<>(currentMemberMap.values());
 
@@ -76,6 +77,15 @@ public class CompanyMemberService {
 
         // 신규 입사자 저장
         companyMemberEntityRepository.saveAllAndFlush(newCompanyMembers);
+
+        for (CompanyMemberEntity cme : newCompanyMembers) {
+            log.info("신규 입사자 = 이름 : {} 직급 : {} 소속 : {}", cme.getName(), cme.getRank(), cme.getTeam());
+        }
+
+        for (CompanyMemberEntity cme : removeCompanyMembers) {
+            log.info("퇴사자 = 이름 : {} 직급 : {} 소속 : {}", cme.getName(), cme.getRank(), cme.getTeam());
+        }
+
     }
 
     // Map<EmailPrefix, Entity> 형태로 전달
