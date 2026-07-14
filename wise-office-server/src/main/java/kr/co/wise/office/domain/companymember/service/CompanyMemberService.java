@@ -2,7 +2,7 @@ package kr.co.wise.office.domain.companymember.service;
 
 import kr.co.wise.office.domain.companymember.entity.CompanyMemberEntity;
 import kr.co.wise.office.domain.companymember.repository.CompanyMemberEntityRepository;
-import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.ApplicationRuntimeException;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class CompanyMemberService {
 
     private final CompanyMemberEntityRepository companyMemberEntityRepository;
 
-    private final ProposalAttendantsService proposalAttendantsService;
+    private final ProposalAttendantService proposalAttendantService;
 
     @Transactional(readOnly = true)
     public List<CompanyMemberEntity> findByIds(List<Long> attendants) {
@@ -64,7 +64,7 @@ public class CompanyMemberService {
         List<CompanyMemberEntity> removeCompanyMembers = new ArrayList<>(currentMemberMap.values());
 
         // 참여 과제 exit 처리
-        proposalAttendantsService.exitAllProject(removeCompanyMembers);
+        proposalAttendantService.exitAllProject(removeCompanyMembers);
 
         // 퇴사 처리
         removeCompanyMembers.forEach(CompanyMemberEntity::leaveCompany);

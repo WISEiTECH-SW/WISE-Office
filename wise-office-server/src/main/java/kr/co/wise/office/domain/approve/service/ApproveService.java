@@ -8,7 +8,7 @@ import kr.co.wise.office.domain.approve.repository.ApproveEntityRepository;
 import kr.co.wise.office.domain.minutes.entity.MinutesEntity;
 import kr.co.wise.office.domain.minutes.repository.MinutesEntityRepository;
 import kr.co.wise.office.domain.proposalattendant.entity.ProposalAttendantEntity;
-import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantsService;
+import kr.co.wise.office.domain.proposalattendant.service.ProposalAttendantService;
 import kr.co.wise.office.exception.ErrorMessage;
 import kr.co.wise.office.exception.custom.NotFoundResourceException;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +30,14 @@ public class ApproveService {
 
     private final MinutesEntityRepository minutesEntityRepository;
 
-    private final ProposalAttendantsService proposalAttendantsService;
+    private final ProposalAttendantService proposalAttendantService;
 
     @Transactional
     public ApproveCreateResponse createApprove(long minutesId, long projectId, LocalDate submitDate) {
         MinutesEntity minutes = minutesEntityRepository.findByIdWithProject(minutesId, projectId)
                 .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.NOT_FOUND_MINUTES));
 
-        ProposalAttendantEntity writerInfo = proposalAttendantsService.findWriterInfo(Long.parseLong(minutes.getWriter()), projectId);
+        ProposalAttendantEntity writerInfo = proposalAttendantService.findWriterInfo(Long.parseLong(minutes.getWriter()), projectId);
 
         ApproveEntity approve = approveEntityRepository.save(ApproveEntity.from(minutes, submitDate, writerInfo.getCompanyMember().getName()));
         return ApproveCreateResponse.of(minutes, approve, writerInfo.getCompanyMember().getName());
